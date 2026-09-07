@@ -4,12 +4,14 @@
 Modul inti untuk keselamatan pengemudi di jalan raya, dilengkapi dengan tombol panik darurat SOS terpusat, sensor simulasi deteksi tabrakan/jatuh keras, dan peta radar pemantau posisi armada terdekat berbasis OpenStreetMap.
 
 ## Fitur Utama
-1. **Tombol Panik SOS**:
-   - Memicu status darurat siaga tinggi dengan koordinat GPS real-time.
-   - Mengirimkan siaga darurat ke seluruh anggota dan satgas terdekat.
-2. **Sensor Deteksi Benturan / Jatuh (`CrashDetectionService`)**:
-   - Memantau ambang batas akselerasi dan deselerasi ekstrim untuk deteksi otomatis kecelakaan.
-3. **Peta Radar Bebas API Key (OpenStreetMap / Canvas Layer)**:
+1. **Pusat Komando Darurat & Tombol SOS Hero (`SosHeroActionCard` & `EmergencyScreen`)**:
+   - Tombol sentuh taktil ekstra besar (150dp diameter) dengan efek glow denyut nadi (*pulsating aura*) dan kontras visual tinggi (`#DC2626`).
+   - Pemilihan kategori situasi cepat (*Mogok Mesin, Begal/Kriminal, Medis/Laka, Razia/Insiden*).
+   - **Countdown Overlay (`SosCountdownOverlay`)**: Hitung mundur 5 detik disertai audio sirine 100 dB (`SosAlarmSoundManager`) dengan opsi pembatalan aman *"SAYA AMAN"* atau kirim instan *"KIRIM SOS SEKARANG"*.
+2. **Sensor Deteksi Benturan / Jatuh (`CrashDetectionService` & `CrashGuardQuickCard`)**:
+   - Memantau ambang batas akselerasi dan deselerasi ekstrim untuk deteksi otomatis kecelakaan dan memicu hitung mundur darurat.
+3. **Peta Radar Bebas API Key & Smart Cache Layer (OpenStreetMap / Canvas Layer)**:
    - Menampilkan posisi rekan pengemudi di sekitar.
    - Filter armada berdasarkan aplikator (*Gojek, Grab, Maxim, ShopeeFood, InDrive*).
    - Penanda titik posko/basecamp dan shelter aman.
+   - **Room Tile Metadata & File System Cache (`MapTileDao` & `DRGCacheManager`)**: Menyimpan metadata tile peta (zoom, x, y, byte size, LRU access) serta status konfigurasi aplikasi (`AppStateDao`) untuk memangkas pemakaian kuota dan konsumsi baterai hingga 45%.

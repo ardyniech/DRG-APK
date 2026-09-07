@@ -24,9 +24,11 @@ import com.example.shared.models.*
         RewardItem::class,
         HazardArea::class,
         PointTransaction::class,
-        NotificationPreference::class
+        NotificationPreference::class,
+        MapTileMetadata::class,
+        AppStateSetting::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -43,6 +45,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun gamificationDao(): GamificationDao
     abstract fun hazardDao(): HazardDao
     abstract fun notificationPrefDao(): NotificationPrefDao
+    abstract fun mapTileDao(): MapTileDao
+    abstract fun appStateDao(): AppStateDao
 
     companion object {
         @Volatile

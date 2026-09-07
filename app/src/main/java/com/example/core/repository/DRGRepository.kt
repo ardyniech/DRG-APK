@@ -22,6 +22,10 @@ class DRGRepository(private val db: AppDatabase) {
     val allRewards: Flow<List<RewardItem>> = db.gamificationDao().getAllRewards()
     val allHazards: Flow<List<HazardArea>> = db.hazardDao().getAllHazards()
     val allPointTransactions: Flow<List<PointTransaction>> = db.gamificationDao().getAllPointTransactions()
+    val allMapTiles: Flow<List<MapTileMetadata>> = db.mapTileDao().getAllTileMetadata()
+    val totalTileCount: Flow<Int> = db.mapTileDao().getTotalTileCount()
+    val totalTileSizeBytes: Flow<Long?> = db.mapTileDao().getTotalCacheSizeBytes()
+    val allAppSettings: Flow<List<AppStateSetting>> = db.appStateDao().getAllStateSettings()
 
     fun getPrefForMember(memberId: String): Flow<NotificationPreference?> =
         db.notificationPrefDao().getPrefForMember(memberId)
@@ -212,5 +216,17 @@ class DRGRepository(private val db: AppDatabase) {
 
     suspend fun saveNotificationPreference(pref: NotificationPreference) = withContext(Dispatchers.IO) {
         db.notificationPrefDao().savePref(pref)
+    }
+
+    suspend fun recordTileMetadata(tile: MapTileMetadata) = withContext(Dispatchers.IO) {
+        db.mapTileDao().insertOrUpdateTile(tile)
+    }
+
+    suspend fun clearMapTileCache() = withContext(Dispatchers.IO) {
+        db.mapTileDao().clearAllTileMetadata()
+    }
+
+    suspend fun saveAppSetting(setting: AppStateSetting) = withContext(Dispatchers.IO) {
+        db.appStateDao().saveSetting(setting)
     }
 }

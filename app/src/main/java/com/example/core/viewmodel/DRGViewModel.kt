@@ -76,6 +76,18 @@ class DRGViewModel(
     val pointTransactions: StateFlow<List<PointTransaction>> = repository.allPointTransactions
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    val cachedMapTiles: StateFlow<List<MapTileMetadata>> = repository.allMapTiles
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val totalTileCount: StateFlow<Int> = repository.totalTileCount
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
+
+    val totalTileSizeBytes: StateFlow<Long?> = repository.totalTileSizeBytes
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0L)
+
+    val appSettings: StateFlow<List<AppStateSetting>> = repository.allAppSettings
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
     private val _currentMemberId = MutableStateFlow("DRG-001")
     val currentMemberId: StateFlow<String> = _currentMemberId.asStateFlow()
 
@@ -106,22 +118,34 @@ class DRGViewModel(
         _mapCachePolicy.value = policy
         DRGCacheManager.cachePolicy = policy
         DRGCacheManager.isOfflineModeForced = (policy == MapCachePolicy.OFFLINE_ONLY)
+        viewModelScope.launch {
+            repository.saveAppSetting(AppStateSetting(key = "map_cache_policy", stringValue = policy.name))
+        }
         showToast("Kebijakan Cache: ${policy.title}")
     }
 
     fun setLocationSyncProfile(profile: LocationSyncPowerProfile) {
         _locationSyncProfile.value = profile
         locationSyncer?.setProfile(profile)
+        viewModelScope.launch {
+            repository.saveAppSetting(AppStateSetting(key = "location_sync_profile", stringValue = profile.name))
+        }
         showToast("Profil GPS Baterai: ${profile.title}")
     }
 
     fun setPowerSaverMode(enabled: Boolean) {
         batteryManager.setPowerSaverMode(enabled)
+        viewModelScope.launch {
+            repository.saveAppSetting(AppStateSetting(key = "is_power_saver", boolValue = enabled))
+        }
         showToast(if (enabled) "Mode Hemat Baterai Aktif: Render & polling dioptimalkan" else "Mode Performa Maksimal Aktif")
     }
 
     fun setDataSaverMode(enabled: Boolean) {
         batteryManager.setDataSaverMode(enabled)
+        viewModelScope.launch {
+            repository.saveAppSetting(AppStateSetting(key = "is_data_saver", boolValue = enabled))
+        }
         showToast(if (enabled) "Mode Hemat Kuota Aktif: Mengutamakan Disk Cache" else "Mode Jaringan Langsung")
     }
 
@@ -130,13 +154,25 @@ class DRGViewModel(
             showToast("Mengunduh pre-cache peta area Malang di background...")
             syncEngine.triggerBackgroundSync(isPowerSaver = isPowerSaverMode.value)
             batteryManager.recordDataSaved(14L * 1024L * 1024L)
+            // Store tile metadata in Room
+            val initialTiles = listOf(
+                MapTileMetadata("osm_14_13045_8496", 14, 13045, 8496, "OSM", 21500L),
+                MapTileMetadata("osm_14_13046_8496", 14, 13046, 8496, "OSM", 19800L),
+                MapTileMetadata("osm_14_13045_8497", 14, 13045, 8497, "OSM", 23400L),
+                MapTileMetadata("osm_15_26091_16993", 15, 26091, 16993, "OSM", 25100L),
+                MapTileMetadata("osm_15_26092_16993", 15, 26092, 16993, "OSM", 22900L)
+            )
+            initialTiles.forEach { repository.recordTileMetadata(it) }
             showToast("Pre-cache selesai! Peta siap diakses instan & offline.")
         }
     }
 
     fun clearMapCache(ctx: android.content.Context) {
-        DRGCacheManager.clearCache(ctx)
-        showToast("Cache peta lokal berhasil dibersihkan.")
+        viewModelScope.launch {
+            DRGCacheManager.clearCache(ctx)
+            repository.clearMapTileCache()
+            showToast("Cache peta lokal & metadata Room berhasil dibersihkan.")
+        }
     }
 
     fun getCacheSizeDesc(ctx: android.content.Context): String {

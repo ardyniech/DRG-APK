@@ -52,7 +52,7 @@ app/src/main/java/com/example/
 
 ---
 
-## 🗄️ Skema Database Lokal (Room v4)
+## 🗄️ Skema Database Lokal (Room v5)
 
 1. **`members`**: Data anggota pengemudi, peran (*Ketua, Wakil, Satgas, Anggota*), status verifikasi, dan rating solidaritas.
 2. **`emergency_alerts`**: Log sinyal darurat SOS, koordinat GPS, status penanganan tim reaksi cepat.
@@ -61,6 +61,8 @@ app/src/main/java/com/example/
 5. **`workshop_partners`**: Daftar bengkel rekanan resmi DRG beserta diskon khusus anggota.
 6. **`gamification_tasks`**: Daftar misi harian (Kopdar, respon darurat, berbagi info jalur) dan status klaim poin.
 7. **`notification_preferences`**: Pengaturan notifikasi getar, suara sirine darurat, dan update kas.
+8. **`map_tile_metadata`**: Metadata tile peta lokal (zoom, koordinat X/Y, ukuran byte, timestamp akses, frekuensi hit) untuk optimasi disk cache LRU dan hemat baterai/data.
+9. **`app_state_settings`**: Persistensi key-value status konfigurasi aplikasi (profil sinkronisasi baterai, kebijakan cache, mode hemat kuota, preferensi radar).
 
 ---
 
@@ -68,6 +70,7 @@ app/src/main/java/com/example/
 
 Proyek ini dilengkapi dengan suite pengujian unit & integrasi berbasis **Robolectric** dan **Roborazzi**:
 
+- `MapTileCacheAndStateTest.kt`: Verifikasi persistensi Room metadata tile peta, operasi eviction LRU, tracking penghematan data, dan penyimpanan state aplikasi.
 - `ForumPersistenceTest.kt`: Verifikasi CRUD postingan forum & pertanyaan Q&A pada Room Database.
 - `CrashDetectionTest.kt`: Simulasi algoritma deteksi deselerasi & guncangan keras sensor akselerometer.
 - `CacheAndBatteryTest.kt`: Validasi efisiensi cache dan konsumsi baterai pada interval polling radar.

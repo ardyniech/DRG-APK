@@ -153,7 +153,10 @@ fun DrgAppContent(
                     MainNavTab.EMERGENCY -> EmergencyScreen(
                         currentMember = currentMember,
                         alerts = activeAlerts,
-                        onTriggerEmergency = { showEmergencyTrigger = true },
+                        onTriggerEmergency = { type, msg, loc ->
+                            viewModel.triggerEmergency(type, msg, loc)
+                            scope.launch { snackbarHostState.showSnackbar("Sinyal SOS Dipancarkan ke Seluruh Satgas!") }
+                        },
                         onResolveEmergency = { viewModel.resolveEmergency(it) },
                         onRespondEmergency = { viewModel.respondToEmergency(it) },
                         onCallDriver = { phone ->
