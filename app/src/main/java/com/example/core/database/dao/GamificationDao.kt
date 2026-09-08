@@ -27,6 +27,9 @@ interface GamificationDao {
     @Query("SELECT * FROM rewards ORDER BY requiredPoints ASC")
     fun getAllRewards(): Flow<List<RewardItem>>
 
+    @Query("SELECT * FROM rewards WHERE id = :rewardId LIMIT 1")
+    suspend fun getRewardById(rewardId: String): RewardItem?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRewards(rewards: List<RewardItem>)
 

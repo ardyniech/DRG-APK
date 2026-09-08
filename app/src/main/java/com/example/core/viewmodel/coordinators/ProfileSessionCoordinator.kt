@@ -51,10 +51,12 @@ class ProfileSessionCoordinator(
     }
 
     fun registerNewDriver(name: String, phone: String, plate: String, model: String, area: String) {
+        val timestampHex = System.currentTimeMillis().toString(36).uppercase()
+        val randomEntropy = UUID.randomUUID().toString().replace("-", "").take(6).uppercase()
         val newDriver = DriverMember(
-            id = "DRG-${UUID.randomUUID().toString().take(8)}",
+            id = "DRG-$timestampHex-$randomEntropy",
             name = name,
-            driverId = "DRG-REG-${UUID.randomUUID().toString().take(6).uppercase()}",
+            driverId = "DRG-REG-$timestampHex",
             phone = phone,
             role = MemberRole.ANGGOTA,
             motorcyclePlate = plate,

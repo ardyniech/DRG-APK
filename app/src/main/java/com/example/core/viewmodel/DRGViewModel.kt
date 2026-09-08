@@ -51,16 +51,17 @@ class DRGViewModel(val repository: DRGRepository, val sharedPrefs: SharedPrefere
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
     fun setSearchQuery(q: String) { _searchQuery.value = q }
 
+    private val whileSubscribed = SharingStarted.WhileSubscribed(5000L)
     val activeAlerts = repository.activeAlerts.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-    val poskoList = repository.allPosko.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-    val notifications = repository.allNotifications.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-    val badges = repository.allBadges.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-    val tasks = repository.allTasks.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-    val rewards = repository.allRewards.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-    val hazards = repository.allHazards.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-    val pointTransactions = repository.allPointTransactions.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-    val posts = repository.allPosts.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-    val workshops = repository.allWorkshops.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    val poskoList = repository.allPosko.stateIn(viewModelScope, whileSubscribed, emptyList())
+    val notifications = repository.allNotifications.stateIn(viewModelScope, whileSubscribed, emptyList())
+    val badges = repository.allBadges.stateIn(viewModelScope, whileSubscribed, emptyList())
+    val tasks = repository.allTasks.stateIn(viewModelScope, whileSubscribed, emptyList())
+    val rewards = repository.allRewards.stateIn(viewModelScope, whileSubscribed, emptyList())
+    val hazards = repository.allHazards.stateIn(viewModelScope, whileSubscribed, emptyList())
+    val pointTransactions = repository.allPointTransactions.stateIn(viewModelScope, whileSubscribed, emptyList())
+    val posts = repository.allPosts.stateIn(viewModelScope, whileSubscribed, emptyList())
+    val workshops = repository.allWorkshops.stateIn(viewModelScope, whileSubscribed, emptyList())
     val adminLogs = governanceCoord.adminLogs
     val isSosAlarmSoundEnabled = emergencyCoord.isSosAlarmSoundEnabled
     val isSosAlarmEnabled get() = isSosAlarmSoundEnabled
@@ -74,7 +75,13 @@ class DRGViewModel(val repository: DRGRepository, val sharedPrefs: SharedPrefere
     val dataSavedBytes = batteryManager.savedDataBytes
 
     init {
-        viewModelScope.launch(Dispatchers.IO) { repository.initializeSeedDataIfNeeded() }
+        val hasSeeded = sharedPrefs?.getBoolean("drg_has_seeded_v5", false) ?: false
+        if (!hasSeeded) {
+            viewModelScope.launch(Dispatchers.IO) {
+                repository.initializeSeedDataIfNeeded()
+                sharedPrefs?.edit()?.putBoolean("drg_has_seeded_v5", true)?.apply()
+            }
+        }
         viewModelScope.launch {
             currentMember.filterNotNull().collect { member ->
                 if (radarCoord.locationSyncer == null) {

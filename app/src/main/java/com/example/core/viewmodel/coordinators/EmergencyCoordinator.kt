@@ -15,7 +15,7 @@ import java.util.UUID
 class EmergencyCoordinator(
     private val repository: DRGRepository,
     private val sharedPrefs: SharedPreferences?,
-    private val context: Context?,
+    private val context: Context,
     private val scope: CoroutineScope,
     private val syncEngine: BackgroundSyncEngine,
     private val showToast: (String) -> Unit

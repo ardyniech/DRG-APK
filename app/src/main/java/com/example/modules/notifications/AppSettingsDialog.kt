@@ -30,7 +30,7 @@ fun AppSettingsDialog(
     onSimulateCrash: () -> Unit,
     isLocationSharingConsent: Boolean,
     onToggleLocationSharing: (Boolean) -> Unit,
-    cacheSizeDesc: String = "14.2 MB",
+    cacheSizeDesc: String = "0.0 MB",
     selectedCachePolicy: MapCachePolicy = MapCachePolicy.CACHE_FIRST,
     onSelectCachePolicy: (MapCachePolicy) -> Unit = {},
     selectedSyncProfile: LocationSyncPowerProfile = LocationSyncPowerProfile.ADAPTIVE_ECO,

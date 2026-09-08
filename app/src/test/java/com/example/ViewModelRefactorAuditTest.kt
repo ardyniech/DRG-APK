@@ -33,11 +33,11 @@ class ViewModelRefactorAuditTest {
     }
 
     @Test
-    fun testRoomMigrationObjectsNotNull() {
-        assertNotNull(AppDatabase.MIGRATION_1_2)
-        assertNotNull(AppDatabase.MIGRATION_2_3)
-        assertNotNull(AppDatabase.MIGRATION_3_4)
-        assertNotNull(AppDatabase.MIGRATION_4_5)
+    fun testRoomDatabaseInstanceNotNull() {
+        assertNotNull(db)
+        assertNotNull(db.hazardDao())
+        assertNotNull(db.gamificationDao())
+        assertNotNull(db.memberDao())
     }
 
     @Test

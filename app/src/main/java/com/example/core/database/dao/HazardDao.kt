@@ -9,6 +9,9 @@ interface HazardDao {
     @Query("SELECT * FROM hazard_areas ORDER BY id DESC")
     fun getAllHazards(): Flow<List<HazardArea>>
 
+    @Query("SELECT * FROM hazard_areas WHERE id = :hazardId LIMIT 1")
+    suspend fun getHazardById(hazardId: String): HazardArea?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHazard(hazard: HazardArea)
 

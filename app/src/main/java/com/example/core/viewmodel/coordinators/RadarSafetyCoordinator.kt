@@ -64,7 +64,7 @@ class RadarSafetyCoordinator(
 
     fun getCacheSizeDesc(ctx: Context): String {
         val bytes = DRGCacheManager.getCacheSizeBytes(ctx)
-        val mb = (bytes.toDouble() / (1024.0 * 1024.0)).coerceAtLeast(14.2)
+        val mb = bytes.toDouble() / (1024.0 * 1024.0)
         return String.format(java.util.Locale.US, "%.1f MB", mb)
     }
 
