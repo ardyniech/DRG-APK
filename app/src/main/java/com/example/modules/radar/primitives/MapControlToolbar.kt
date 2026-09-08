@@ -3,6 +3,7 @@ package com.example.modules.radar.primitives
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -19,11 +20,83 @@ import com.example.modules.radar.models.FreeMapMode
 import com.example.ui.theme.*
 
 @Composable
-fun MapControlToolbar(
+fun MapTopControlBar(
     mapMode: FreeMapMode,
     onToggleMapMode: (FreeMapMode) -> Unit,
     isTrafficEnabled: Boolean,
     onToggleTraffic: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        color = Color.Black.copy(alpha = 0.82f),
+        shape = RoundedCornerShape(14.dp),
+        modifier = modifier.border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(14.dp))
+    ) {
+        Row(
+            modifier = Modifier.padding(4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            // Mode Peta (Jalan Raya vs Satelit) dengan Label & Ikon Jelas
+            val isRoad = mapMode == FreeMapMode.ROAD
+            Surface(
+                onClick = { onToggleMapMode(if (isRoad) FreeMapMode.SATELLITE else FreeMapMode.ROAD) },
+                shape = RoundedCornerShape(10.dp),
+                color = if (isRoad) DrgGreenPrimary else DrgGoldReward,
+                modifier = Modifier.height(34.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = if (isRoad) Icons.Default.Map else Icons.Default.Satellite,
+                        contentDescription = "Mode Peta",
+                        tint = Color.White,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text(
+                        text = if (isRoad) "Peta Jalan" else "Satelit",
+                        color = Color.White,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            // Toggle Layer Lalu Lintas (Traffic)
+            Surface(
+                onClick = { onToggleTraffic(!isTrafficEnabled) },
+                shape = RoundedCornerShape(10.dp),
+                color = if (isTrafficEnabled) DrgTrafficGreen.copy(alpha = 0.28f) else Color.White.copy(alpha = 0.08f),
+                modifier = Modifier.height(34.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Traffic,
+                        contentDescription = "Lalu Lintas",
+                        tint = if (isTrafficEnabled) DrgTrafficGreen else Color.Gray,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text(
+                        text = "Traffic",
+                        color = if (isTrafficEnabled) DrgTrafficGreen else Color.White.copy(alpha = 0.7f),
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MapSideControlColumn(
     isRadarSweepEnabled: Boolean,
     onToggleRadarSweep: (Boolean) -> Unit,
     onZoomIn: () -> Unit,
@@ -31,85 +104,53 @@ fun MapControlToolbar(
     onRecenterGps: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        color = Color.Black.copy(alpha = 0.78f),
-        shape = RoundedCornerShape(12.dp),
-        modifier = modifier
-            .border(0.5.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        // Recenter GPS Button
+        SmallFloatingActionButton(
+            onClick = onRecenterGps,
+            containerColor = DrgGreenPrimary,
+            contentColor = Color.White,
+            shape = CircleShape,
+            modifier = Modifier.size(42.dp)
         ) {
-            // Mode Toggle: Jalan Raya vs Satelit
-            IconButton(
-                onClick = {
-                    val next = if (mapMode == FreeMapMode.ROAD) FreeMapMode.SATELLITE else FreeMapMode.ROAD
-                    onToggleMapMode(next)
-                },
-                modifier = Modifier.size(32.dp)
-            ) {
-                Icon(
-                    imageVector = mapMode.icon,
-                    contentDescription = mapMode.title,
-                    tint = if (mapMode == FreeMapMode.SATELLITE) DrgGoldReward else Color.White,
-                    modifier = Modifier.size(18.dp)
-                )
-            }
+            Icon(Icons.Default.MyLocation, contentDescription = "Pusat GPS", modifier = Modifier.size(20.dp))
+        }
 
-            // Traffic Layer Toggle
-            Surface(
-                onClick = { onToggleTraffic(!isTrafficEnabled) },
-                shape = RoundedCornerShape(8.dp),
-                color = if (isTrafficEnabled) DrgTrafficGreen.copy(alpha = 0.25f) else Color.Transparent,
-                modifier = Modifier.height(28.dp)
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(if (isTrafficEnabled) DrgTrafficGreen else Color.Gray)
-                    )
-                    Text(
-                        text = "Traffic",
-                        color = if (isTrafficEnabled) DrgTrafficGreen else Color.White.copy(alpha = 0.7f),
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
+        // Radar Sweep Toggle Button
+        SmallFloatingActionButton(
+            onClick = { onToggleRadarSweep(!isRadarSweepEnabled) },
+            containerColor = if (isRadarSweepEnabled) DrgRadarGlow else Color.Black.copy(alpha = 0.78f),
+            contentColor = if (isRadarSweepEnabled) Color.Black else Color.White,
+            shape = CircleShape,
+            modifier = Modifier.size(42.dp)
+        ) {
+            Icon(Icons.Default.Sensors, contentDescription = "Pindai Radar", modifier = Modifier.size(20.dp))
+        }
 
-            // Radar Sweep Toggle
-            IconButton(
-                onClick = { onToggleRadarSweep(!isRadarSweepEnabled) },
-                modifier = Modifier.size(32.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Sensors,
-                    contentDescription = "Radar Sweep",
-                    tint = if (isRadarSweepEnabled) DrgRadarGlow else Color.Gray,
-                    modifier = Modifier.size(16.dp)
-                )
-            }
+        // Zoom In Button
+        SmallFloatingActionButton(
+            onClick = onZoomIn,
+            containerColor = Color.Black.copy(alpha = 0.78f),
+            contentColor = Color.White,
+            shape = CircleShape,
+            modifier = Modifier.size(42.dp)
+        ) {
+            Icon(Icons.Default.Add, contentDescription = "Perbesar Map", modifier = Modifier.size(20.dp))
+        }
 
-            // Zoom Controls
-            IconButton(onClick = onZoomIn, modifier = Modifier.size(28.dp)) {
-                Icon(Icons.Default.Add, contentDescription = "Zoom In", tint = Color.White, modifier = Modifier.size(16.dp))
-            }
-            IconButton(onClick = onZoomOut, modifier = Modifier.size(28.dp)) {
-                Icon(Icons.Default.Remove, contentDescription = "Zoom Out", tint = Color.White, modifier = Modifier.size(16.dp))
-            }
-
-            // Recenter GPS
-            IconButton(onClick = onRecenterGps, modifier = Modifier.size(28.dp)) {
-                Icon(Icons.Default.MyLocation, contentDescription = "Pusat GPS", tint = DrgGreenPrimary, modifier = Modifier.size(16.dp))
-            }
+        // Zoom Out Button
+        SmallFloatingActionButton(
+            onClick = onZoomOut,
+            containerColor = Color.Black.copy(alpha = 0.78f),
+            contentColor = Color.White,
+            shape = CircleShape,
+            modifier = Modifier.size(42.dp)
+        ) {
+            Icon(Icons.Default.Remove, contentDescription = "Perkecil Map", modifier = Modifier.size(20.dp))
         }
     }
 }

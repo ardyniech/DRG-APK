@@ -44,9 +44,9 @@ class SosEmergencyScreenTest {
             plateNumber = "N 1928 AB",
             type = EmergencyType.BEGAL,
             message = "Memerlukan bantuan darurat segera (Begal / Kriminalitas)",
+            lat = -7.9786,
+            lng = 112.6318,
             locationName = "Jl. Ijen No. 10, Malang",
-            latitude = -7.9786,
-            longitude = 112.6318,
             timestamp = System.currentTimeMillis(),
             isActive = true
         )
@@ -59,7 +59,7 @@ class SosEmergencyScreenTest {
         assertTrue(activeAlerts[0].isActive)
 
         // Resolve alert
-        db.emergencyDao().resolveAlert("EMG-TEST-99")
+        db.emergencyDao().resolveAlert("EMG-TEST-99", "Satgas-01")
         val activeAfterResolve = db.emergencyDao().getActiveAlerts().first()
         assertTrue(activeAfterResolve.isEmpty())
     }

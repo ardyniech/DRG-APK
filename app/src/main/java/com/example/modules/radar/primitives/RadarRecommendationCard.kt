@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -81,7 +80,7 @@ fun RadarConsentAndHazardBar(
         shape = RoundedCornerShape(12.dp)
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -89,10 +88,25 @@ fun RadarConsentAndHazardBar(
                 Text("Izin Lokasi Live Komunitas", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
                 Text("Privasi: Lokasi disiarkan di Radar", fontSize = 9.sp, color = DrgTextMuted)
             }
-            Switch(checked = isConsentOn, onCheckedChange = onToggleConsent, modifier = Modifier.scale(0.8f))
-            Spacer(modifier = Modifier.width(6.dp))
-            IconButton(onClick = onAddHazardClick, modifier = Modifier.size(32.dp)) {
-                Icon(Icons.Default.AddLocationAlt, contentDescription = "Tandai Area Rawan", tint = DrgRedPanic, modifier = Modifier.size(20.dp))
+            Switch(
+                checked = isConsentOn,
+                onCheckedChange = onToggleConsent,
+                modifier = Modifier.scale(0.8f)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Button(
+                onClick = onAddHazardClick,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = DrgRedPanic.copy(alpha = 0.12f),
+                    contentColor = DrgRedPanic
+                ),
+                shape = RoundedCornerShape(8.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                modifier = Modifier.height(32.dp)
+            ) {
+                Icon(Icons.Default.AddLocationAlt, contentDescription = null, modifier = Modifier.size(14.dp))
+                Spacer(modifier = Modifier.width(4.dp))
+                Text("Bahaya", fontSize = 11.sp, fontWeight = FontWeight.Bold)
             }
         }
     }

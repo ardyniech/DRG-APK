@@ -3,15 +3,10 @@ package com.example.modules.radar.primitives
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
@@ -23,7 +18,6 @@ import com.example.shared.models.DriverMember
 import com.example.shared.models.EmergencyAlert
 import com.example.shared.models.HazardArea
 import com.example.shared.models.PoskoLocation
-import com.example.ui.theme.DrgRedPanic
 
 @Composable
 fun FreeMapContainer(
@@ -43,7 +37,7 @@ fun FreeMapContainer(
     var isTrafficEnabled by remember { mutableStateOf(true) }
     var isRadarSweepEnabled by remember { mutableStateOf(false) }
 
-    val defaultLat = -7.9822 // Malang City Center
+    val defaultLat = -7.9822
     val defaultLng = 112.6303
     var centerLat by remember { mutableDoubleStateOf(defaultLat) }
     var centerLng by remember { mutableDoubleStateOf(defaultLng) }
@@ -77,85 +71,56 @@ fun FreeMapContainer(
         val w = containerSize.width.toFloat()
         val h = containerSize.height.toFloat()
 
-        // 1. Free Map Raster Tile Layer (OSM Road vs ESRI Satellite)
         FreeMapTileLayer(
-            mapMode = mapMode,
-            centerLat = centerLat,
-            centerLng = centerLng,
-            zoom = zoom,
-            screenWidth = w,
-            screenHeight = h
+            mapMode = mapMode, centerLat = centerLat, centerLng = centerLng,
+            zoom = zoom, screenWidth = w, screenHeight = h
         )
 
-        // 2. Real-Time Traffic Layering (Glowing flow lines & congestion points)
         TrafficOverlayCanvas(
-            roadSegments = roadSegments,
-            incidents = trafficIncidents,
-            centerLat = centerLat,
-            centerLng = centerLng,
-            zoom = zoom,
-            isTrafficLayerEnabled = isTrafficEnabled,
-            isPowerSaver = isPowerSaverEnabled
+            roadSegments = roadSegments, incidents = trafficIncidents,
+            centerLat = centerLat, centerLng = centerLng, zoom = zoom,
+            isTrafficLayerEnabled = isTrafficEnabled, isPowerSaver = isPowerSaverEnabled
         )
 
-        // 3. Driver Members, Posko, Hazards, and Radar Markers Layer
         MapMarkersLayer(
-            members = members,
-            alerts = alerts,
-            poskoList = poskoList,
-            hazards = hazards,
-            selectedFilter = selectedFilter,
-            centerLat = centerLat,
-            centerLng = centerLng,
-            zoom = zoom,
-            isConsentGranted = isConsentGranted,
+            members = members, alerts = alerts, poskoList = poskoList, hazards = hazards,
+            selectedFilter = selectedFilter, centerLat = centerLat, centerLng = centerLng,
+            zoom = zoom, isConsentGranted = isConsentGranted,
             showRadarSweep = isRadarSweepEnabled && !isPowerSaverEnabled,
-            onSelectDriver = onSelectDriver,
-            focusedDriver = focusedDriver
+            onSelectDriver = onSelectDriver, focusedDriver = focusedDriver
         )
 
-        // 4. Map Control Toolbar (Top Right)
-        MapControlToolbar(
+        // Top Control Bar (Peta/Satelit & Traffic Toggle)
+        MapTopControlBar(
             mapMode = mapMode,
             onToggleMapMode = { mapMode = it },
             isTrafficEnabled = isTrafficEnabled,
             onToggleTraffic = { isTrafficEnabled = it },
-            isRadarSweepEnabled = isRadarSweepEnabled,
-            onToggleRadarSweep = { isRadarSweepEnabled = it },
-            onZoomIn = { if (zoom < mapMode.maxZoom) zoom++ },
-            onZoomOut = { if (zoom > mapMode.minZoom) zoom-- },
-            onRecenterGps = {
-                centerLat = defaultLat
-                centerLng = defaultLng
-                zoom = 14
-            },
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(10.dp)
+                .padding(8.dp)
         )
 
-        // 5. Traffic Legend Card (Top Left if Traffic is active)
+        // Traffic Speed Legend (Top Start)
         if (isTrafficEnabled) {
             TrafficLegendCard(
                 avgSpeedKmh = 27,
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(10.dp)
+                    .padding(8.dp)
             )
         }
 
-        // 6. SOS Quick Trigger Button (Bottom Right)
-        FloatingActionButton(
-            onClick = onTriggerEmergency,
-            containerColor = DrgRedPanic,
-            contentColor = Color.White,
-            shape = RoundedCornerShape(14.dp),
+        // Side Control Column (Recenter GPS, Radar Sweep, Zoom In/Out) at Center End
+        MapSideControlColumn(
+            isRadarSweepEnabled = isRadarSweepEnabled,
+            onToggleRadarSweep = { isRadarSweepEnabled = it },
+            onZoomIn = { if (zoom < mapMode.maxZoom) zoom++ },
+            onZoomOut = { if (zoom > mapMode.minZoom) zoom-- },
+            onRecenterGps = { centerLat = defaultLat; centerLng = defaultLng; zoom = 14 },
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(12.dp)
-                .size(46.dp)
-        ) {
-            Icon(Icons.Default.Warning, contentDescription = "SOS Darurat", modifier = Modifier.size(22.dp))
-        }
+                .align(Alignment.CenterEnd)
+                .padding(end = 10.dp)
+        )
     }
 }

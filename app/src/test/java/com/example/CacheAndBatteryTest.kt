@@ -89,11 +89,12 @@ class CacheAndBatteryTest {
         )
 
         syncer.startSync(LocationSyncPowerProfile.ADAPTIVE_ECO)
-        testScope.advanceTimeBy(100) // Initial trigger
+        testScheduler.runCurrent() // Initial trigger
         assertEquals(1, syncedCount)
         assertTrue("Synced lat should be within reasonable bounds", lastSyncedLat != 0.0)
 
         syncer.setProfile(LocationSyncPowerProfile.ULTRA_SAVER)
+        testScheduler.runCurrent()
         val metrics = syncer.metrics.value
         assertEquals(LocationSyncPowerProfile.ULTRA_SAVER, metrics.profile)
 

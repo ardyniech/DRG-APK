@@ -12,15 +12,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.modules.treasury.primitives.KasTransactionStatusBadge
 import com.example.shared.models.KasTransaction
 import com.example.shared.models.TransactionType
 import com.example.ui.theme.*
 
 @Composable
-fun KasTransactionCard(transaction: KasTransaction) {
+fun KasTransactionCard(
+    transaction: KasTransaction,
+    modifier: Modifier = Modifier
+) {
     val isIncome = transaction.type == TransactionType.INCOME
     val context = androidx.compose.ui.platform.LocalContext.current
     val clipboardManager = androidx.compose.ui.platform.LocalClipboardManager.current
@@ -28,16 +33,32 @@ fun KasTransactionCard(transaction: KasTransaction) {
     Surface(
         shape = RoundedCornerShape(12.dp),
         color = DrgSurface,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+            .testTag("kas_transaction_card")
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.weight(1f)) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    KasTransactionStatusBadge(type = transaction.type)
+                    Text(
+                        text = transaction.category.label,
+                        fontSize = 10.sp,
+                        color = DrgTextMuted,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
                 Text(
                     text = transaction.title,
                     fontWeight = FontWeight.Bold,
@@ -48,11 +69,6 @@ fun KasTransactionCard(transaction: KasTransaction) {
                     text = "${transaction.dateString} • ${transaction.recordedBy}",
                     fontSize = 11.sp,
                     color = DrgTextSecondary
-                )
-                Text(
-                    text = "Kategori: ${transaction.category.label}",
-                    fontSize = 10.sp,
-                    color = DrgTextMuted
                 )
             }
 
@@ -99,3 +115,4 @@ fun KasTransactionCard(transaction: KasTransaction) {
         }
     }
 }
+

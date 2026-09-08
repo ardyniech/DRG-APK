@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.drg.driver.presentation.home.components.ShelterRadarCard
 import com.example.modules.radar.primitives.DriverRadarCard
 import com.example.modules.radar.primitives.FreeMapContainer
 import com.example.modules.radar.primitives.RadarConsentAndHazardBar
@@ -38,7 +39,7 @@ fun RadarScreen(
 ) {
     var selectedFilter by remember { mutableStateOf("Semua") }
     var focusedDriver by remember { mutableStateOf<DriverMember?>(null) }
-    val filters = listOf("Semua", "Satgas", "Posko", "Area Rawan", "Sedang Narik")
+    val filters = listOf("Semua", "Live Map (GPS)", "Satgas", "Posko", "Area Rawan", "Sedang Narik")
 
     val displayMembers = remember(members, selectedFilter) {
         when (selectedFilter) {
@@ -51,63 +52,79 @@ fun RadarScreen(
     val isConsentOn = currentMember?.isLocationSharingConsent ?: true
     val isVerified = currentMember?.verificationStatus?.name == "VERIFIED"
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(DrgBackground)
-            .padding(horizontal = 14.dp, vertical = 6.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        // 1. Smart Recommendation Card (Just-in-Time Otoritas)
-        RadarRecommendationCard(isConsentOn = isConsentOn, isVerified = isVerified)
-
-        // 2. Live Consent & Add Hazard Quick Action
-        RadarConsentAndHazardBar(
-            isConsentOn = isConsentOn,
-            onToggleConsent = onToggleConsent,
-            onAddHazardClick = onAddHazardClick
+    if (selectedFilter == "Live Map (GPS)") {
+        LiveMapScreen(
+            members = members,
+            currentMember = currentMember,
+            onCallDriver = onCallDriver,
+            modifier = modifier
         )
-
-        // 3. Horizontal Filter Chips
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
+    } else {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(DrgBackground)
+                .padding(horizontal = 14.dp, vertical = 6.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            filters.forEach { filter ->
-                FilterChip(
-                    selected = selectedFilter == filter,
-                    onClick = { selectedFilter = filter },
-                    label = { Text(filter, fontSize = 11.sp, fontWeight = FontWeight.SemiBold) },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = DrgGreenPrimary,
-                        selectedLabelColor = Color.White
+            RadarRecommendationCard(isConsentOn = isConsentOn, isVerified = isVerified)
+
+            RadarConsentAndHazardBar(
+                isConsentOn = isConsentOn,
+                onToggleConsent = onToggleConsent,
+                onAddHazardClick = onAddHazardClick
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                filters.forEach { filter ->
+                    FilterChip(
+                        selected = selectedFilter == filter,
+                        onClick = { selectedFilter = filter },
+                        label = { Text(filter, fontSize = 11.sp, fontWeight = FontWeight.SemiBold) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = DrgGreenPrimary,
+                            selectedLabelColor = Color.White
+                        )
                     )
+                }
+            }
+
+            Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                FreeMapContainer(
+                    members = displayMembers,
+                    alerts = alerts,
+                    poskoList = poskoList,
+                    hazards = hazards,
+                    selectedFilter = selectedFilter,
+                    isConsentGranted = isConsentOn,
+                    onSelectDriver = { focusedDriver = it },
+                    focusedDriver = focusedDriver,
+                    onTriggerEmergency = onTriggerEmergency,
+                    isPowerSaverEnabled = isPowerSaverEnabled
                 )
             }
-        }
 
-        // 4. Free Map Canvas (Satellite, Default Road OSM & Real-Time Traffic Layering)
-        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-            FreeMapContainer(
-                members = displayMembers,
-                alerts = alerts,
-                poskoList = poskoList,
-                hazards = hazards,
-                selectedFilter = selectedFilter,
-                isConsentGranted = isConsentOn,
-                onSelectDriver = { focusedDriver = it },
-                focusedDriver = focusedDriver,
-                onTriggerEmergency = onTriggerEmergency,
-                isPowerSaverEnabled = isPowerSaverEnabled
-            )
-        }
-
-        // 5. Selected Driver Radar Bottom Card
-        val target = focusedDriver ?: displayMembers.firstOrNull { it.isOnline && it.id != currentMember?.id }
-        if (target != null) {
-            DriverRadarCard(driver = target, onCall = { onCallDriver(target.phone) })
+            val posko = poskoList.firstOrNull()
+            if (selectedFilter == "Posko" && posko != null) {
+                ShelterRadarCard(
+                    name = posko.name,
+                    distanceKm = 1.2,
+                    availableSlots = posko.activeDriversCount,
+                    hasCoffee = true,
+                    hasPowerOutlet = true,
+                    onNavigateClick = { onCallDriver(posko.phone) }
+                )
+            } else {
+                val target = focusedDriver ?: displayMembers.firstOrNull { it.isOnline && it.id != currentMember?.id }
+                if (target != null) {
+                    DriverRadarCard(driver = target, onCall = { onCallDriver(target.phone) })
+                }
+            }
         }
     }
 }
