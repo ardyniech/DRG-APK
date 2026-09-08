@@ -38,8 +38,7 @@ class DRGRepository(private val db: AppDatabase) {
     fun getReviewsForDriver(driverId: String) = memberRepo.getReviewsForDriver(driverId)
 
     suspend fun initializeSeedDataIfNeeded() = withContext(Dispatchers.IO) {
-        val existingMembers = db.memberDao().getAllMembers().first()
-        if (existingMembers.isEmpty()) {
+        if (db.memberDao().getCount() == 0) {
             db.memberDao().insertMembers(SeedData.getInitialMembers())
             db.poskoDao().insertPoskoList(SeedDataExtra.getInitialPosko())
             db.emergencyDao().insertAlerts(SeedDataExtra.getInitialEmergency())
@@ -80,7 +79,6 @@ class DRGRepository(private val db: AppDatabase) {
     suspend fun registerMember(member: DriverMember) = memberRepo.registerMember(member)
     suspend fun addNotification(notification: CommunityNotification) = communityRepo.addNotification(notification)
     suspend fun saveNotificationPreference(pref: NotificationPreference) = communityRepo.saveNotificationPreference(pref)
-    suspend fun saveNotificationPref(pref: NotificationPreference) = communityRepo.saveNotificationPreference(pref)
     suspend fun recordTileMetadata(tile: MapTileMetadata) = radarHazardRepo.recordTileMetadata(tile)
     suspend fun clearMapTileCache() = radarHazardRepo.clearMapTileCache()
     suspend fun saveAppSetting(setting: AppStateSetting) = radarHazardRepo.saveAppSetting(setting)

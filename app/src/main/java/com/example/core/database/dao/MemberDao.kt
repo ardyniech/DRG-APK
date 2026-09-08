@@ -10,6 +10,9 @@ interface MemberDao {
     @Query("SELECT * FROM members ORDER BY name ASC")
     fun getAllMembers(): Flow<List<DriverMember>>
 
+    @Query("SELECT COUNT(*) FROM members")
+    suspend fun getCount(): Int
+
     @Query("SELECT * FROM members WHERE verificationStatus = :status")
     fun getMembersByStatus(status: VerificationStatus): Flow<List<DriverMember>>
 

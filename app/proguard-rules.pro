@@ -26,6 +26,12 @@
 # Keep Kotlin Coroutines
 -keep class kotlinx.coroutines.** { *; }
 
+# Keep Serialization
+-dontwarn kotlinx.serialization.**
+-keepclassmembers class * {
+    @kotlinx.serialization.Serializable <fields>;
+}
+
 # Keep ViewModels
 -keep class * extends androidx.lifecycle.ViewModel { *; }
 -keep class * extends androidx.lifecycle.AndroidViewModel { *; }

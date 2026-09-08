@@ -63,9 +63,20 @@ class RadarSafetyCoordinator(
     fun clearMapCache(ctx: Context) = cacheHelper.clearMapCache(ctx)
 
     fun getCacheSizeDesc(ctx: Context): String {
-        val bytes = DRGCacheManager.getCacheSizeBytes(ctx)
-        val mb = bytes.toDouble() / (1024.0 * 1024.0)
-        return String.format(java.util.Locale.US, "%.1f MB", mb)
+        return try {
+            val bytes = DRGCacheManager.getCacheSizeBytes(ctx)
+            if (bytes <= 0L) {
+                "0 B"
+            } else if (bytes < 1024L * 1024L) {
+                val kb = bytes.toDouble() / 1024.0
+                String.format(java.util.Locale.US, "%.1f KB", kb)
+            } else {
+                val mb = bytes.toDouble() / (1024.0 * 1024.0)
+                String.format(java.util.Locale.US, "%.1f MB", mb)
+            }
+        } catch (_: Exception) {
+            "0 B"
+        }
     }
 
     fun reportHazard(cur: DriverMember?, title: String, type: HazardType, loc: String, desc: String, lat: Double, lng: Double) {

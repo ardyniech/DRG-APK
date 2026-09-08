@@ -75,13 +75,6 @@ class DRGViewModel(val repository: DRGRepository, val sharedPrefs: SharedPrefere
     val dataSavedBytes = batteryManager.savedDataBytes
 
     init {
-        val hasSeeded = sharedPrefs?.getBoolean("drg_has_seeded_v5", false) ?: false
-        if (!hasSeeded) {
-            viewModelScope.launch(Dispatchers.IO) {
-                repository.initializeSeedDataIfNeeded()
-                sharedPrefs?.edit()?.putBoolean("drg_has_seeded_v5", true)?.apply()
-            }
-        }
         viewModelScope.launch {
             currentMember.filterNotNull().collect { member ->
                 if (radarCoord.locationSyncer == null) {
