@@ -51,18 +51,8 @@ fun AiCommunityHealthCard(memberCount: Int) {
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Column {
-                        Text(
-                            text = "ANALISIS KESEHATAN KOMUNITAS AI",
-                            fontWeight = FontWeight.Black,
-                            fontSize = 13.sp,
-                            color = DrgGreenPrimary
-                        )
-                        Text(
-                            text = "Skor Kesehatan Total: 82/100 (SEHAT & STABIL)",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp,
-                            color = DrgTextPrimary
-                        )
+                        Text(text = "ANALISIS KESEHATAN KOMUNITAS AI", fontWeight = FontWeight.Black, fontSize = 13.sp, color = DrgGreenPrimary)
+                        Text(text = "Skor Kesehatan Total: 82/100 (SEHAT & STABIL)", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
                     }
                 }
                 TextButton(onClick = { expanded = !expanded }) {
@@ -77,7 +67,7 @@ fun AiCommunityHealthCard(memberCount: Int) {
             )
 
             if (expanded) {
-                Divider(color = DrgOutline.copy(alpha = 0.5f))
+                HorizontalDivider(color = DrgOutline.copy(alpha = 0.5f))
                 Text("🔍 Temuan Audit & Risiko Utama:", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
 
                 HealthPointRow(status = "🟢 SOLID (92%)", title = "Respon SOS Satgas Lapangan", desc = "Kecepatan bantuan darurat saat anggota mengalami kecelakaan/mogok di jalan sangat memuaskan (< 7 menit).")
@@ -93,34 +83,6 @@ fun AiCommunityHealthCard(memberCount: Int) {
                 ImprovementStepRow(num = "3", title = "Piket Bergilir Satgas Radar", desc = "Jadwalkan giliran jam siaga Satgas secara sistematis.")
                 ImprovementStepRow(num = "4", title = "Unit Usaha Koperasi Berkelanjutan", desc = "Gunakan kas untuk kulakan oli/sparepart massal diskon.")
             }
-        }
-    }
-}
-
-@Composable
-private fun HealthPointRow(status: String, title: String, desc: String) {
-    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp)) {
-        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-            Text(title, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
-            Text(status, fontWeight = FontWeight.Bold, fontSize = 11.sp, color = DrgGreenDark)
-        }
-        Text(desc, fontSize = 11.sp, color = DrgTextSecondary)
-    }
-}
-
-@Composable
-private fun ImprovementStepRow(num: String, title: String, desc: String) {
-    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp)) {
-        Box(
-            modifier = Modifier.size(20.dp).background(DrgGreenContainer, RoundedCornerShape(10.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(num, fontWeight = FontWeight.Bold, fontSize = 11.sp, color = DrgGreenPrimary)
-        }
-        Spacer(modifier = Modifier.width(8.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Text(title, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
-            Text(desc, fontSize = 11.sp, color = DrgTextSecondary)
         }
     }
 }

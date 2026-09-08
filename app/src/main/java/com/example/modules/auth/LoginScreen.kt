@@ -1,11 +1,6 @@
 package com.example.modules.auth
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -22,8 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ui.theme.*
 import com.example.shared.models.DriverMember
+import com.example.ui.theme.*
 
 @Composable
 fun LoginScreen(
@@ -35,17 +30,9 @@ fun LoginScreen(
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var showHelpDialog by remember { mutableStateOf(false) }
     val haptic = LocalHapticFeedback.current
-    val context = androidx.compose.ui.platform.LocalContext.current
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-    ) {
-        IconButton(
-            onClick = onBack,
-            modifier = Modifier.padding(top = 16.dp).testTag("login_back_button")
-        ) {
+    Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+        IconButton(onClick = onBack, modifier = Modifier.padding(top = 16.dp).testTag("login_back_button")) {
             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
         }
 
@@ -56,10 +43,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(24.dp))
         OutlinedTextField(
             value = inputId,
-            onValueChange = {
-                inputId = it
-                errorMessage = null
-            },
+            onValueChange = { inputId = it; errorMessage = null },
             label = { Text("No. HP atau KTA ID") },
             placeholder = { Text("Contoh: 081298765431 atau DRG-001") },
             modifier = Modifier.fillMaxWidth().testTag("login_input_id"),
@@ -72,42 +56,10 @@ fun LoginScreen(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-        Text("Akses Cepat Pengurus / Anggota (Uji Demo):", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = DrgTextSecondary)
-        Spacer(modifier = Modifier.height(8.dp))
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = PaddingValues(vertical = 4.dp)
-        ) {
-            items(members.take(5)) { member ->
-                Box(
-                    modifier = Modifier
-                        .width(130.dp)
-                        .background(Color.White, RoundedCornerShape(12.dp))
-                        .border(
-                            width = 1.dp,
-                            color = if (inputId == member.id) DrgGrabGreenPrimary else DrgBorderLight,
-                            shape = RoundedCornerShape(12.dp)
-                        )
-                        .clickable {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            inputId = member.id
-                        }
-                        .padding(12.dp)
-                ) {
-                    Column {
-                        Text(member.name, fontSize = 12.sp, fontWeight = FontWeight.Bold, maxLines = 1, color = DrgTextDark)
-                        Text(member.role.shortName, fontSize = 10.sp, color = DrgGrabGreenPrimary, fontWeight = FontWeight.SemiBold)
-                        Text(member.motorcyclePlate, fontSize = 10.sp, color = DrgTextMuted, maxLines = 1)
-                    }
-                }
-            }
-        }
+        LoginQuickDemoRow(members = members, selectedId = inputId, onSelectMember = { inputId = it })
 
         Spacer(modifier = Modifier.height(12.dp))
-        TextButton(
-            onClick = { showHelpDialog = true },
-            modifier = Modifier.align(Alignment.CenterHorizontally).testTag("forgot_id_button")
-        ) {
+        TextButton(onClick = { showHelpDialog = true }, modifier = Modifier.align(Alignment.CenterHorizontally).testTag("forgot_id_button")) {
             Text("Lupa ID Anggota DRG? Tanya Pengurus", color = DrgGrabGreenPrimary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
         }
 
@@ -131,36 +83,6 @@ fun LoginScreen(
     }
 
     if (showHelpDialog) {
-        AlertDialog(
-            onDismissRequest = { showHelpDialog = false },
-            title = { Text("Bantuan Lupa ID / KTA", fontWeight = FontWeight.Bold, color = DrgTextDark) },
-            text = {
-                Column {
-                    Text("Jangan khawatir, KTA digital Anda aman tersimpan di pangkalan data DRG Malang Raya.", fontSize = 13.sp, color = DrgTextSlate)
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Text("Untuk mengetahui ID Anda, Anda bisa:", fontSize = 13.sp, color = DrgTextSlate)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text("• Menanyakan kepada Ketua Basis / Admin Grup WA Basis Anda.", fontSize = 12.sp, color = DrgTextMuted)
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text("• Menghubungi Satgas Pelayanan Keanggotaan DRG via WhatsApp.", fontSize = 12.sp, color = DrgTextMuted)
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        showHelpDialog = false
-                        android.widget.Toast.makeText(context, "Membuka WA Admin DRG Malang (Mock)...", android.widget.Toast.LENGTH_SHORT).show()
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = DrgGrabGreenPrimary)
-                ) {
-                    Text("Chat Admin WA", color = Color.White)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showHelpDialog = false }) {
-                    Text("Tutup", color = DrgTextMuted)
-                }
-            }
-        )
+        LoginHelpDialog(onDismiss = { showHelpDialog = false })
     }
 }

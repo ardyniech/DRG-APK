@@ -15,6 +15,9 @@ interface GamificationDao {
     @Query("SELECT * FROM community_tasks ORDER BY id DESC")
     fun getAllTasks(): Flow<List<CommunityTask>>
 
+    @Query("SELECT * FROM community_tasks WHERE id = :taskId LIMIT 1")
+    suspend fun getTaskById(taskId: String): CommunityTask?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: CommunityTask)
 

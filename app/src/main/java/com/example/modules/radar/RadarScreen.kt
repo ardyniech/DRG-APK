@@ -12,14 +12,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.drg.driver.presentation.home.components.ShelterRadarCard
-import com.example.modules.radar.primitives.DriverRadarCard
-import com.example.modules.radar.primitives.FreeMapContainer
-import com.example.modules.radar.primitives.RadarConsentAndHazardBar
-import com.example.modules.radar.primitives.RadarRecommendationCard
-import com.example.shared.models.DriverMember
-import com.example.shared.models.EmergencyAlert
-import com.example.shared.models.HazardArea
-import com.example.shared.models.PoskoLocation
+import com.example.modules.radar.primitives.*
+import com.example.shared.models.*
 import com.example.ui.theme.*
 
 @Composable
@@ -53,72 +47,37 @@ fun RadarScreen(
     val isVerified = currentMember?.verificationStatus?.name == "VERIFIED"
 
     if (selectedFilter == "Live Map (GPS)") {
-        LiveMapScreen(
-            members = members,
-            currentMember = currentMember,
-            onCallDriver = onCallDriver,
-            modifier = modifier
-        )
+        LiveMapScreen(members = members, currentMember = currentMember, onCallDriver = onCallDriver, modifier = modifier)
     } else {
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .background(DrgBackground)
-                .padding(horizontal = 14.dp, vertical = 6.dp),
+            modifier = modifier.fillMaxSize().background(DrgBackground).padding(horizontal = 14.dp, vertical = 6.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             RadarRecommendationCard(isConsentOn = isConsentOn, isVerified = isVerified)
+            RadarConsentAndHazardBar(isConsentOn = isConsentOn, onToggleConsent = onToggleConsent, onAddHazardClick = onAddHazardClick)
 
-            RadarConsentAndHazardBar(
-                isConsentOn = isConsentOn,
-                onToggleConsent = onToggleConsent,
-                onAddHazardClick = onAddHazardClick
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
+            Row(modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 filters.forEach { filter ->
                     FilterChip(
                         selected = selectedFilter == filter,
                         onClick = { selectedFilter = filter },
                         label = { Text(filter, fontSize = 11.sp, fontWeight = FontWeight.SemiBold) },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = DrgGreenPrimary,
-                            selectedLabelColor = Color.White
-                        )
+                        colors = FilterChipDefaults.filterChipColors(selectedContainerColor = DrgGreenPrimary, selectedLabelColor = Color.White)
                     )
                 }
             }
 
             Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
                 FreeMapContainer(
-                    members = displayMembers,
-                    alerts = alerts,
-                    poskoList = poskoList,
-                    hazards = hazards,
-                    selectedFilter = selectedFilter,
-                    isConsentGranted = isConsentOn,
-                    onSelectDriver = { focusedDriver = it },
-                    focusedDriver = focusedDriver,
-                    onTriggerEmergency = onTriggerEmergency,
-                    isPowerSaverEnabled = isPowerSaverEnabled
+                    members = displayMembers, alerts = alerts, poskoList = poskoList, hazards = hazards,
+                    selectedFilter = selectedFilter, isConsentGranted = isConsentOn, onSelectDriver = { focusedDriver = it },
+                    focusedDriver = focusedDriver, onTriggerEmergency = onTriggerEmergency, isPowerSaverEnabled = isPowerSaverEnabled
                 )
             }
 
             val posko = poskoList.firstOrNull()
             if (selectedFilter == "Posko" && posko != null) {
-                ShelterRadarCard(
-                    name = posko.name,
-                    distanceKm = 1.2,
-                    availableSlots = posko.activeDriversCount,
-                    hasCoffee = true,
-                    hasPowerOutlet = true,
-                    onNavigateClick = { onCallDriver(posko.phone) }
-                )
+                ShelterRadarCard(name = posko.name, distanceKm = 1.2, availableSlots = posko.activeDriversCount, hasCoffee = true, hasPowerOutlet = true, onNavigateClick = { onCallDriver(posko.phone) })
             } else {
                 val target = focusedDriver ?: displayMembers.firstOrNull { it.isOnline && it.id != currentMember?.id }
                 if (target != null) {

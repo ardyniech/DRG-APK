@@ -1,0 +1,61 @@
+package com.example.core.viewmodel.coordinators
+
+import com.example.core.repository.DRGRepository
+import com.example.shared.models.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+
+class GovernanceCoordinator(
+    private val repository: DRGRepository,
+    private val scope: CoroutineScope,
+    private val membersFlow: StateFlow<List<DriverMember>>,
+    private val showToast: (String) -> Unit
+) {
+    private val _adminLogs = MutableStateFlow<List<AdminLog>>(listOf(
+        AdminLog("log-1", "Slamet Rahardjo", "Ketua", "menyetujui pendaftaran & verifikasi", "Rudi Hermawan", "08:15"),
+        AdminLog("log-2", "Budi Santoso", "Sekretaris", "mengubah peran menjadi Satgas Korlap", "Agus Prasetyo", "Kemarin"),
+        AdminLog("log-3", "Dewi Anggraini", "Bendahara", "mencatatkan penerimaan kas Rp 500.000", "Pendaftaran Anggota", "2 hari lalu")
+    ))
+    val adminLogs: StateFlow<List<AdminLog>> = _adminLogs.asStateFlow()
+
+    fun approveMemberScreening(memberId: String, notes: String) {
+        scope.launch {
+            repository.updateScreening(memberId, VerificationStatus.VERIFIED, notes)
+            showToast("Anggota berhasil diverifikasi dan aktif di komunitas DRG.")
+        }
+    }
+
+    fun rejectMemberScreening(memberId: String, reason: String) {
+        scope.launch {
+            repository.updateScreening(memberId, VerificationStatus.REJECTED, reason)
+            showToast("Pendaftaran anggota ditolak.")
+        }
+    }
+
+    fun updateMemberRole(memberId: String, newRole: MemberRole, actor: DriverMember?) {
+        scope.launch {
+            val found = membersFlow.value.find { it.id == memberId } ?: return@launch
+            val updated = found.copy(role = newRole)
+            repository.updateMember(updated)
+            showToast("Peran ${found.name} berhasil diubah menjadi ${newRole.shortName}")
+
+            val log = AdminLogUtils.createLog(actor, "mengubah peran menjadi ${newRole.title}", found.name)
+            _adminLogs.value = listOf(log) + _adminLogs.value
+        }
+    }
+
+    fun updateMemberVerification(memberId: String, newStatus: VerificationStatus, actor: DriverMember?) {
+        scope.launch {
+            val found = membersFlow.value.find { it.id == memberId } ?: return@launch
+            val updated = found.copy(verificationStatus = newStatus)
+            repository.updateMember(updated)
+            showToast("Status verifikasi ${found.name} diubah menjadi ${newStatus.name}")
+
+            val log = AdminLogUtils.createLog(actor, "mengubah status verifikasi menjadi ${newStatus.name}", found.name)
+            _adminLogs.value = listOf(log) + _adminLogs.value
+        }
+    }
+}

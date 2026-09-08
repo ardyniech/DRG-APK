@@ -2,11 +2,8 @@ package com.example.modules.emergency
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -31,50 +28,13 @@ fun CommunityEmergencyModal(
         Surface(
             shape = RoundedCornerShape(20.dp),
             color = DrgSurface,
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .testTag("community_emergency_modal")
+            modifier = Modifier.fillMaxWidth().wrapContentHeight().testTag("community_emergency_modal")
         ) {
             Column(
                 modifier = Modifier.padding(18.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Warning,
-                            contentDescription = "Peringatan",
-                            tint = DrgRedDanger,
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Text(
-                            text = "Lapor Darurat Komunitas",
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = DrgRedDanger
-                        )
-                    }
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = if (isSosAlarmEnabled) DrgRedContainer else DrgSurfaceVariant
-                    ) {
-                        Text(
-                            text = if (isSosAlarmEnabled) "🔊 Sirine Siaga" else "🔇 Senyap",
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (isSosAlarmEnabled) DrgRedDanger else DrgTextSecondary,
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
-                        )
-                    }
-                }
+                CommunityEmergencyModalHeader(isSosAlarmEnabled = isSosAlarmEnabled)
 
                 Text(
                     text = "Pilih kategori situasi untuk disiarkan ke Satgas & driver sekitar:",
@@ -82,10 +42,7 @@ fun CommunityEmergencyModal(
                     color = DrgTextSecondary
                 )
 
-                EmergencyTypeSelectorList(
-                    selectedType = selectedType,
-                    onSelectType = { selectedType = it }
-                )
+                EmergencyTypeSelectorList(selectedType = selectedType, onSelectType = { selectedType = it })
 
                 OutlinedTextField(
                     value = locationNote,
@@ -109,10 +66,7 @@ fun CommunityEmergencyModal(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    OutlinedButton(
-                        onClick = onDismiss,
-                        modifier = Modifier.weight(1f).testTag("emergency_cancel_button")
-                    ) {
+                    OutlinedButton(onClick = onDismiss, modifier = Modifier.weight(1f).testTag("emergency_cancel_button")) {
                         Text("Batal")
                     }
                     Button(

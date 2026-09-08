@@ -14,10 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.example.modules.radar.logic.MapProjection
 import com.example.modules.radar.logic.TrafficDataRepository
 import com.example.modules.radar.models.FreeMapMode
-import com.example.shared.models.DriverMember
-import com.example.shared.models.EmergencyAlert
-import com.example.shared.models.HazardArea
-import com.example.shared.models.PoskoLocation
+import com.example.shared.models.*
 
 @Composable
 fun FreeMapContainer(
@@ -71,56 +68,23 @@ fun FreeMapContainer(
         val w = containerSize.width.toFloat()
         val h = containerSize.height.toFloat()
 
-        FreeMapTileLayer(
-            mapMode = mapMode, centerLat = centerLat, centerLng = centerLng,
-            zoom = zoom, screenWidth = w, screenHeight = h
-        )
+        FreeMapTileLayer(mapMode = mapMode, centerLat = centerLat, centerLng = centerLng, zoom = zoom, screenWidth = w, screenHeight = h)
+        TrafficOverlayCanvas(roadSegments = roadSegments, incidents = trafficIncidents, centerLat = centerLat, centerLng = centerLng, zoom = zoom, isTrafficLayerEnabled = isTrafficEnabled, isPowerSaver = isPowerSaverEnabled)
+        MapMarkersLayer(members = members, alerts = alerts, poskoList = poskoList, hazards = hazards, selectedFilter = selectedFilter, centerLat = centerLat, centerLng = centerLng, zoom = zoom, isConsentGranted = isConsentGranted, showRadarSweep = isRadarSweepEnabled && !isPowerSaverEnabled, onSelectDriver = onSelectDriver, focusedDriver = focusedDriver)
 
-        TrafficOverlayCanvas(
-            roadSegments = roadSegments, incidents = trafficIncidents,
-            centerLat = centerLat, centerLng = centerLng, zoom = zoom,
-            isTrafficLayerEnabled = isTrafficEnabled, isPowerSaver = isPowerSaverEnabled
-        )
+        MapTopControlBar(mapMode = mapMode, onToggleMapMode = { mapMode = it }, isTrafficEnabled = isTrafficEnabled, onToggleTraffic = { isTrafficEnabled = it }, modifier = Modifier.align(Alignment.TopEnd).padding(8.dp))
 
-        MapMarkersLayer(
-            members = members, alerts = alerts, poskoList = poskoList, hazards = hazards,
-            selectedFilter = selectedFilter, centerLat = centerLat, centerLng = centerLng,
-            zoom = zoom, isConsentGranted = isConsentGranted,
-            showRadarSweep = isRadarSweepEnabled && !isPowerSaverEnabled,
-            onSelectDriver = onSelectDriver, focusedDriver = focusedDriver
-        )
-
-        // Top Control Bar (Peta/Satelit & Traffic Toggle)
-        MapTopControlBar(
-            mapMode = mapMode,
-            onToggleMapMode = { mapMode = it },
-            isTrafficEnabled = isTrafficEnabled,
-            onToggleTraffic = { isTrafficEnabled = it },
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(8.dp)
-        )
-
-        // Traffic Speed Legend (Top Start)
         if (isTrafficEnabled) {
-            TrafficLegendCard(
-                avgSpeedKmh = 27,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(8.dp)
-            )
+            TrafficLegendCard(avgSpeedKmh = 27, modifier = Modifier.align(Alignment.TopStart).padding(8.dp))
         }
 
-        // Side Control Column (Recenter GPS, Radar Sweep, Zoom In/Out) at Center End
         MapSideControlColumn(
             isRadarSweepEnabled = isRadarSweepEnabled,
             onToggleRadarSweep = { isRadarSweepEnabled = it },
             onZoomIn = { if (zoom < mapMode.maxZoom) zoom++ },
             onZoomOut = { if (zoom > mapMode.minZoom) zoom-- },
             onRecenterGps = { centerLat = defaultLat; centerLng = defaultLng; zoom = 14 },
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 10.dp)
+            modifier = Modifier.align(Alignment.CenterEnd).padding(end = 10.dp)
         )
     }
 }

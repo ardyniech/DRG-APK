@@ -37,9 +37,9 @@ class CashManagementViewModel(
         recordedBy: String
     ) {
         viewModelScope.launch {
-            val dateStr = java.text.SimpleDateFormat("dd MMM yyyy, HH:mm", java.util.Locale.getDefault()).format(java.util.Date())
+            val dateStr = com.example.shared.utils.DateTimeUtils.formatCurrentDateTimeReadable()
             val tx = KasTransaction(
-                id = "TX-${System.currentTimeMillis()}",
+                id = "TX-${java.util.UUID.randomUUID().toString().take(8)}",
                 title = title,
                 amount = amount,
                 type = type,

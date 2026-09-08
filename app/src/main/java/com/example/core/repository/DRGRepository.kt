@@ -73,7 +73,7 @@ class DRGRepository(private val db: AppDatabase) {
         db.memberDao().addLoyaltyPoints(targetMemberId, weight)
 
         val tx = PointTransaction(
-            id = "PTX-${System.currentTimeMillis() % 100000}",
+            id = "PTX-${java.util.UUID.randomUUID().toString().take(8)}",
             targetMemberId = targetMemberId,
             targetMemberName = targetMemberName,
             giverMemberId = giverMember.id,
@@ -86,7 +86,7 @@ class DRGRepository(private val db: AppDatabase) {
         db.gamificationDao().insertPointTransaction(tx)
 
         val notif = CommunityNotification(
-            id = "NTF-${System.currentTimeMillis() % 100000}",
+            id = "NTF-${java.util.UUID.randomUUID().toString().take(8)}",
             title = "Apresiasi Poin Diterima! (+${weight} XP)",
             message = "${giverMember.name} (${if (isBeneficiary) "Korban Bantuan Direct" else giverMember.role.title}) memberikan +$weight poin: \"$reason\"",
             severity = NotificationSeverity.SUCCESS,
@@ -98,8 +98,7 @@ class DRGRepository(private val db: AppDatabase) {
     }
 
     suspend fun claimTask(taskId: String, member: DriverMember) = withContext(Dispatchers.IO) {
-        val tasks = db.gamificationDao().getAllTasks().first()
-        val task = tasks.find { it.id == taskId } ?: return@withContext
+        val task = db.gamificationDao().getTaskById(taskId) ?: return@withContext
         val updated = task.copy(
             assignedMemberId = member.id,
             assignedMemberName = member.name,
@@ -109,14 +108,13 @@ class DRGRepository(private val db: AppDatabase) {
     }
 
     suspend fun completeTask(taskId: String, memberId: String) = withContext(Dispatchers.IO) {
-        val tasks = db.gamificationDao().getAllTasks().first()
-        val task = tasks.find { it.id == taskId } ?: return@withContext
+        val task = db.gamificationDao().getTaskById(taskId) ?: return@withContext
         val updated = task.copy(status = TaskStatus.VERIFIED)
         db.gamificationDao().updateTask(updated)
         db.memberDao().addLoyaltyPoints(memberId, task.rewardPoints)
 
         val notif = CommunityNotification(
-            id = "NTF-${System.currentTimeMillis() % 100000}",
+            id = "NTF-${java.util.UUID.randomUUID().toString().take(8)}",
             title = "Tugas Komunitas Selesai (+${task.rewardPoints} XP)",
             message = "Tugas \"${task.title}\" telah diverifikasi. Poin loyalitas ditambahkan!",
             severity = NotificationSeverity.SUCCESS,
@@ -139,7 +137,7 @@ class DRGRepository(private val db: AppDatabase) {
     suspend fun addHazard(hazard: HazardArea) = withContext(Dispatchers.IO) {
         db.hazardDao().insertHazard(hazard)
         val notif = CommunityNotification(
-            id = "NTF-${System.currentTimeMillis() % 100000}",
+            id = "NTF-${java.util.UUID.randomUUID().toString().take(8)}",
             title = "Peringatan Jalur Rawan Baru: ${hazard.hazardType.label}",
             message = "Lokasi: ${hazard.locationName}. Dilaporkan oleh ${hazard.reportedBy}. Harap waspada!",
             severity = NotificationSeverity.WARNING,
@@ -204,6 +202,10 @@ class DRGRepository(private val db: AppDatabase) {
 
     suspend fun updateMember(member: DriverMember) = withContext(Dispatchers.IO) {
         db.memberDao().updateMember(member)
+    }
+
+    suspend fun updateMemberLocation(id: String, lat: Double, lng: Double, status: String = "Online") = withContext(Dispatchers.IO) {
+        db.memberDao().updateLocationAndStatus(id, lat, lng, status)
     }
 
     suspend fun registerMember(member: DriverMember) = withContext(Dispatchers.IO) {

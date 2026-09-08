@@ -1,21 +1,31 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Maintain line numbers and source file attributes for crash analysis
+-keepattributes SourceFile,LineNumberTable
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Keep DRG Shared Domain Models & Enums
+-keep class com.example.shared.models.** { *; }
+-keepclassmembers enum com.example.shared.models.** { *; }
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Keep Room Database, Entities, and DAOs
+-keep class * extends androidx.room.RoomDatabase
+-keep @androidx.room.Entity class * { *; }
+-keep @androidx.room.Dao interface * { *; }
+-keep class androidx.room.** { *; }
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Keep Moshi Kotlin models & adapters
+-keep class com.squareup.moshi.** { *; }
+-keep interface com.squareup.moshi.** { *; }
+-keepattributes *JsonQualifier*
+
+# Keep Retrofit & OkHttp
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+
+# Keep Kotlin Coroutines
+-keep class kotlinx.coroutines.** { *; }
+
+# Keep ViewModels
+-keep class * extends androidx.lifecycle.ViewModel { *; }
+-keep class * extends androidx.lifecycle.AndroidViewModel { *; }

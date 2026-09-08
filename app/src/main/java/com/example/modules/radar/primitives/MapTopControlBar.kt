@@ -1,17 +1,16 @@
 package com.example.modules.radar.primitives
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.Satellite
+import androidx.compose.material.icons.filled.Traffic
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,7 +36,6 @@ fun MapTopControlBar(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            // Mode Peta (Jalan Raya vs Satelit) dengan Label & Ikon Jelas
             val isRoad = mapMode == FreeMapMode.ROAD
             Surface(
                 onClick = { onToggleMapMode(if (isRoad) FreeMapMode.SATELLITE else FreeMapMode.ROAD) },
@@ -65,7 +63,6 @@ fun MapTopControlBar(
                 }
             }
 
-            // Toggle Layer Lalu Lintas (Traffic)
             Surface(
                 onClick = { onToggleTraffic(!isTrafficEnabled) },
                 shape = RoundedCornerShape(10.dp),
@@ -91,66 +88,6 @@ fun MapTopControlBar(
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun MapSideControlColumn(
-    isRadarSweepEnabled: Boolean,
-    onToggleRadarSweep: (Boolean) -> Unit,
-    onZoomIn: () -> Unit,
-    onZoomOut: () -> Unit,
-    onRecenterGps: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        // Recenter GPS Button
-        SmallFloatingActionButton(
-            onClick = onRecenterGps,
-            containerColor = DrgGreenPrimary,
-            contentColor = Color.White,
-            shape = CircleShape,
-            modifier = Modifier.size(42.dp)
-        ) {
-            Icon(Icons.Default.MyLocation, contentDescription = "Pusat GPS", modifier = Modifier.size(20.dp))
-        }
-
-        // Radar Sweep Toggle Button
-        SmallFloatingActionButton(
-            onClick = { onToggleRadarSweep(!isRadarSweepEnabled) },
-            containerColor = if (isRadarSweepEnabled) DrgRadarGlow else Color.Black.copy(alpha = 0.78f),
-            contentColor = if (isRadarSweepEnabled) Color.Black else Color.White,
-            shape = CircleShape,
-            modifier = Modifier.size(42.dp)
-        ) {
-            Icon(Icons.Default.Sensors, contentDescription = "Pindai Radar", modifier = Modifier.size(20.dp))
-        }
-
-        // Zoom In Button
-        SmallFloatingActionButton(
-            onClick = onZoomIn,
-            containerColor = Color.Black.copy(alpha = 0.78f),
-            contentColor = Color.White,
-            shape = CircleShape,
-            modifier = Modifier.size(42.dp)
-        ) {
-            Icon(Icons.Default.Add, contentDescription = "Perbesar Map", modifier = Modifier.size(20.dp))
-        }
-
-        // Zoom Out Button
-        SmallFloatingActionButton(
-            onClick = onZoomOut,
-            containerColor = Color.Black.copy(alpha = 0.78f),
-            contentColor = Color.White,
-            shape = CircleShape,
-            modifier = Modifier.size(42.dp)
-        ) {
-            Icon(Icons.Default.Remove, contentDescription = "Perkecil Map", modifier = Modifier.size(20.dp))
         }
     }
 }

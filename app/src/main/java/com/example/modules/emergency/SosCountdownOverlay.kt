@@ -1,10 +1,7 @@
 package com.example.modules.emergency
 
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -13,8 +10,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -48,18 +43,8 @@ fun SosCountdownOverlay(
     }
 
     DisposableEffect(Unit) {
-        onDispose {
-            SosAlarmSoundManager.stopAlarm()
-        }
+        onDispose { SosAlarmSoundManager.stopAlarm() }
     }
-
-    val infiniteTransition = rememberInfiniteTransition(label = "pulse")
-    val pulseScale by infiniteTransition.animateFloat(
-        initialValue = 0.92f,
-        targetValue = 1.08f,
-        animationSpec = infiniteRepeatable(tween(450, easing = FastOutSlowInEasing), RepeatMode.Reverse),
-        label = "pulseScale"
-    )
 
     Dialog(
         onDismissRequest = onCancel,
@@ -75,20 +60,7 @@ fun SosCountdownOverlay(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Surface(
-                    shape = CircleShape,
-                    color = DrgRedContainer,
-                    modifier = Modifier.size(90.dp).scale(pulseScale)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(
-                            text = "$secondsLeft",
-                            fontSize = 38.sp,
-                            fontWeight = FontWeight.Black,
-                            color = DrgRedDanger
-                        )
-                    }
-                }
+                SosCountdownCircle(secondsLeft = secondsLeft)
 
                 Text(
                     text = "MEMANCARKAN SOS DARURAT",

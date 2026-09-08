@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                 factory = object : ViewModelProvider.Factory {
                     @Suppress("UNCHECKED_CAST")
                     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                        return DRGViewModel(repository, sharedPrefs, applicationContext) as T
+                        return DRGViewModel(repository, sharedPrefs, application) as T
                     }
                 }
             )
