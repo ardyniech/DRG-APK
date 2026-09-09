@@ -6,7 +6,9 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import com.example.modules.radar.logic.MapProjection
@@ -20,10 +22,14 @@ fun LiveMapCanvasView(
     centerLat: Double,
     centerLng: Double,
     zoom: Int,
+    screenWidth: Float,
+    screenHeight: Float,
     focusedDriverId: String?,
     onSelectDriver: (DriverMember) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    if (screenWidth <= 0f || screenHeight <= 0f) return
+
     val infiniteTransition = rememberInfiniteTransition(label = "liveDriverPulse")
     val pulseScale by infiniteTransition.animateFloat(
         initialValue = 0.8f,
@@ -32,18 +38,31 @@ fun LiveMapCanvasView(
         label = "pulseScale"
     )
 
+    // Precompute nearby driver locations
+    val projectedDrivers = remember(membersWithDistance, centerLat, centerLng, zoom, screenWidth, screenHeight) {
+        membersWithDistance.map { (driver, dist) ->
+            Triple(
+                MapProjection.latLngToScreen(driver.currentLat, driver.currentLng, centerLat, centerLng, zoom, screenWidth, screenHeight),
+                driver,
+                dist
+            )
+        }
+    }
+
+    // Precompute my location
+    val myPt = remember(centerLat, centerLng, zoom, screenWidth, screenHeight) {
+        MapProjection.latLngToScreen(centerLat, centerLng, centerLat, centerLng, zoom, screenWidth, screenHeight)
+    }
+
     Canvas(
         modifier = modifier
             .fillMaxSize()
-            .pointerInput(membersWithDistance, centerLat, centerLng, zoom) {
+            .pointerInput(projectedDrivers) {
                 detectTapGestures { tapOffset ->
-                    val w = size.width.toFloat()
-                    val h = size.height.toFloat()
                     var closestDriver: DriverMember? = null
                     var minDistance = Float.MAX_VALUE
 
-                    membersWithDistance.forEach { (driver, _) ->
-                        val pt = MapProjection.latLngToScreen(driver.currentLat, driver.currentLng, centerLat, centerLng, zoom, w, h)
+                    projectedDrivers.forEach { (pt, driver, _) ->
                         val dx = tapOffset.x - pt.x
                         val dy = tapOffset.y - pt.y
                         val dist = sqrt(dx * dx + dy * dy)
@@ -56,19 +75,13 @@ fun LiveMapCanvasView(
                 }
             }
     ) {
-        val w = size.width
-        val h = size.height
-        if (w <= 0 || h <= 0) return@Canvas
-
         drawLiveMapGrid()
 
-        val myPt = MapProjection.latLngToScreen(centerLat, centerLng, centerLat, centerLng, zoom, w, h)
         drawCircle(color = DrgGreenPrimary.copy(alpha = 0.25f), radius = 24f * pulseScale, center = myPt)
         drawCircle(color = DrgGreenPrimary, radius = 9f, center = myPt)
         drawCircle(color = Color.White, radius = 4f, center = myPt)
 
-        membersWithDistance.forEach { (driver, _) ->
-            val pt = MapProjection.latLngToScreen(driver.currentLat, driver.currentLng, centerLat, centerLng, zoom, w, h)
+        projectedDrivers.forEach { (pt, driver, _) ->
             drawDriverMarker(pt = pt, driver = driver, isFocused = driver.id == focusedDriverId, pulseScale = pulseScale)
         }
     }

@@ -1,9 +1,11 @@
 package com.example.modules.main.primitives
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import com.example.core.viewmodel.CashManagementViewModel
 import com.example.core.viewmodel.DRGViewModel
 import com.example.core.viewmodel.MainNavTab
@@ -13,6 +15,7 @@ import com.example.modules.emergency.EmergencyScreen
 import com.example.modules.profile.ProfileScreen
 import com.example.modules.radar.RadarScreen
 import com.example.shared.models.*
+import com.example.shared.utils.WhatsAppLauncher
 import kotlinx.coroutines.launch
 
 @Composable
@@ -49,14 +52,20 @@ fun DrgTabContentSwitcher(
     onShowAwardPointDialog: (DriverMember) -> Unit
 ) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
-    Crossfade(targetState = currentTab, label = "tabTransition") { tab ->
+    Crossfade(
+        targetState = currentTab,
+        animationSpec = tween(durationMillis = 200),
+        label = "tabTransition"
+    ) { tab ->
         when (tab) {
             MainNavTab.DASHBOARD -> DashboardScreen(
                 currentMember = currentMember,
                 members = members,
                 activeAlerts = activeAlerts,
                 hazards = hazards,
+                announcements = notifications,
                 poskoCount = poskoList.size,
                 totalKasFormatted = String.format("%,d", netBalance),
                 onNavigateTab = { viewModel.selectTab(it) },
@@ -67,7 +76,7 @@ fun DrgTabContentSwitcher(
                 currentMember = currentMember, onToggleConsent = { viewModel.toggleLocationSharingConsent(it) },
                 onAddHazardClick = onShowAddHazardDialog, onConfirmHazard = { viewModel.confirmHazard(it) },
                 onTriggerEmergency = onShowEmergencyTrigger,
-                onCallDriver = { phone -> scope.launch { snackbarHostState.showSnackbar("Menghubungi $phone via telepon...") } },
+                onCallDriver = { phone -> WhatsAppLauncher.openChat(context, phone, "Halo rekan DRG, koordinasi tim satgas segera.") },
                 isPowerSaverEnabled = isPowerSaverMode
             )
             MainNavTab.EMERGENCY -> EmergencyScreen(
@@ -78,10 +87,11 @@ fun DrgTabContentSwitcher(
                 },
                 onResolveEmergency = { viewModel.resolveEmergency(it) },
                 onRespondEmergency = { viewModel.respondToEmergency(it) },
-                onCallDriver = { phone -> scope.launch { snackbarHostState.showSnackbar("Menghubungi $phone...") } },
+                onCallDriver = { phone -> WhatsAppLauncher.openChat(context, phone, "Halo rekan DRG, kami memantau sinyal darurat SOS Anda. Bagaimana kondisi terkini?") },
                 isSosAlarmEnabled = isSosAlarmEnabled, onToggleSosAlarm = { viewModel.toggleSosAlarmSound(it) },
                 isCrashGuardEnabled = isCrashGuardEnabled, crashSensitivity = crashSensitivity,
-                onSimulateCrash = { viewModel.simulateCrashImpact(3.2f) }, onOpenSettings = onShowSettingsDialog
+                onSimulateCrash = { viewModel.simulateCrashImpact(3.2f) }, onOpenSettings = onShowSettingsDialog,
+                onBack = { viewModel.selectTab(MainNavTab.DASHBOARD) }
             )
             MainNavTab.COMMUNITY, MainNavTab.KAS, MainNavTab.FORUM, MainNavTab.GAMIFICATION, MainNavTab.MEMBERS -> {
                 CommunityTabDelegate(

@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -25,16 +26,31 @@ import com.example.ui.theme.*
 @Composable
 fun RegisterScreen(
     onBack: () -> Unit,
-    onSubmit: (name: String, phone: String, plate: String, model: String, area: String) -> Unit
+    onSubmit: (name: String, phone: String, plate: String, model: String, area: String, pin: String) -> Unit
 ) {
     var name by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var plate by remember { mutableStateOf("N ") }
     var model by remember { mutableStateOf("") }
+    var pin by remember { mutableStateOf("") }
     val areaOptions = listOf("Klojen, Malang", "Lowokwaru, Malang", "Blimbing, Malang", "Sukun, Malang", "Kedungkandang, Malang", "Singosari, Malang", "Kota Batu")
     var selectedArea by remember { mutableStateOf(areaOptions[0]) }
     var expandedAreaMenu by remember { mutableStateOf(false) }
+
+    var nameTouched by remember { mutableStateOf(false) }
+    var phoneTouched by remember { mutableStateOf(false) }
+    var plateTouched by remember { mutableStateOf(false) }
+    var modelTouched by remember { mutableStateOf(false) }
+    var pinTouched by remember { mutableStateOf(false) }
+
+    val isNameError = nameTouched && name.isBlank()
+    val isPhoneError = phoneTouched && (phone.length < 10)
+    val isPlateError = plateTouched && (plate.trim().length <= 2)
+    val isModelError = modelTouched && model.isBlank()
+    val isPinError = pinTouched && (pin.length < 4)
+
     val haptic = LocalHapticFeedback.current
+    val isValid = name.isNotBlank() && phone.length >= 10 && plate.trim().length > 2 && model.isNotBlank() && pin.length == 4
 
     Column(modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState())) {
         IconButton(onClick = onBack, modifier = Modifier.padding(top = 16.dp).testTag("register_back_button")) {
@@ -43,26 +59,44 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(12.dp))
         Text("Daftar Anggota DRG", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = DrgTextDark)
         Text("Bergabung dengan solidaritas driver Arema Malang Raya.", fontSize = 13.sp, color = DrgTextMuted)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Nama Lengkap") }, modifier = Modifier.fillMaxWidth().testTag("reg_name"), shape = RoundedCornerShape(12.dp))
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
         OutlinedTextField(
-            value = phone, onValueChange = { phone = it }, label = { Text("Nomor HP Aktif") },
+            value = name, onValueChange = { name = it; nameTouched = true }, label = { Text("Nama Lengkap") },
+            isError = isNameError, supportingText = { if (isNameError) Text("Nama tidak boleh kosong", color = Color.Red) },
+            modifier = Modifier.fillMaxWidth().testTag("reg_name"), shape = RoundedCornerShape(12.dp)
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+
+        OutlinedTextField(
+            value = phone, onValueChange = { phone = it; phoneTouched = true }, label = { Text("Nomor HP Aktif") },
+            isError = isPhoneError, supportingText = { if (isPhoneError) Text("Nomor HP minimal 10 digit", color = Color.Red) },
             modifier = Modifier.fillMaxWidth().testTag("reg_phone"), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone), shape = RoundedCornerShape(12.dp)
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
         OutlinedTextField(
-            value = plate, onValueChange = { var clean = it.uppercase(); if (!clean.startsWith("N")) { clean = "N " + clean.trim() }; plate = clean },
-            label = { Text("Nomor Pelat Motor (Jatim Malang)") }, modifier = Modifier.fillMaxWidth().testTag("reg_plate"),
-            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters), shape = RoundedCornerShape(12.dp)
+            value = plate, onValueChange = { var clean = it.uppercase(); if (!clean.startsWith("N")) { clean = "N " + clean.trim() }; plate = clean; plateTouched = true },
+            label = { Text("Nomor Pelat Motor (Jatim Malang)") }, isError = isPlateError,
+            supportingText = { if (isPlateError) Text("Pelat motor wajib valid", color = Color.Red) },
+            modifier = Modifier.fillMaxWidth().testTag("reg_plate"), keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters), shape = RoundedCornerShape(12.dp)
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
-        OutlinedTextField(value = model, onValueChange = { model = it }, label = { Text("Model Motor") }, placeholder = { Text("Contoh: Honda Vario 160") }, modifier = Modifier.fillMaxWidth().testTag("reg_motor"), shape = RoundedCornerShape(12.dp))
-        Spacer(modifier = Modifier.height(10.dp))
+        OutlinedTextField(
+            value = model, onValueChange = { model = it; modelTouched = true }, label = { Text("Model Motor") },
+            isError = isModelError, supportingText = { if (isModelError) Text("Model motor wajib diisi", color = Color.Red) },
+            placeholder = { Text("Contoh: Honda Vario 160") }, modifier = Modifier.fillMaxWidth().testTag("reg_motor"), shape = RoundedCornerShape(12.dp)
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+
+        OutlinedTextField(
+            value = pin, onValueChange = { if (it.length <= 4) { pin = it; pinTouched = true } }, label = { Text("Setel 4-Digit PIN Baru") },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) }, isError = isPinError,
+            supportingText = { if (isPinError) Text("PIN wajib 4 digit angka", color = Color.Red) else Text("PIN ini akan digunakan untuk login anggota.") },
+            modifier = Modifier.fillMaxWidth().testTag("reg_pin"), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), shape = RoundedCornerShape(12.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
 
         ExposedDropdownMenuBox(expanded = expandedAreaMenu, onExpandedChange = { expandedAreaMenu = !expandedAreaMenu }, modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
@@ -77,16 +111,16 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(20.dp))
         Button(
             onClick = {
-                if (name.isNotBlank() && phone.isNotBlank() && plate.length > 2 && model.isNotBlank()) {
+                if (isValid) {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    onSubmit(name, phone, plate, model, selectedArea)
+                    onSubmit(name, phone, plate, model, selectedArea, pin)
                 }
             },
-            enabled = name.isNotBlank() && phone.isNotBlank() && plate.length > 2 && model.isNotBlank(),
+            enabled = isValid,
             modifier = Modifier.fillMaxWidth().height(52.dp).testTag("reg_submit_button"), shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(containerColor = DrgGrabGreenPrimary)
         ) {
-            Text("Kirim Formulir Pendaftaran", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            Text("Kirim Pendaftaran Terverifikasi", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color.White)
         }
     }
 }

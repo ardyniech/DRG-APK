@@ -77,13 +77,33 @@ class DRGViewModel(
 
     init {
         viewModelScope.launch {
-            currentMember.filterNotNull().collect { member ->
+            combine(currentMember, isLoggedIn) { member, loggedIn ->
+                if (loggedIn) member else null
+            }.filterNotNull().collect { member ->
                 if (radarCoord.locationSyncer == null) {
                     radarCoord.locationSyncer = BatteryAwareLocationSyncer(application, viewModelScope) { lat, lng ->
                         repository.updateMemberLocation(member.id, lat, lng)
                     }.apply { setProfile(radarCoord.locationSyncProfile.value) }
                 }
                 radarCoord.applyCommunityGpsPolicy(member)
+            }
+        }
+
+        // Real-Time System Notification Observer for Emergency SOS Alerts
+        viewModelScope.launch {
+            var knownAlertIds = emptySet<String>()
+            activeAlerts.collect { alerts ->
+                val newAlerts = alerts.filter { it.id !in knownAlertIds }
+                if (knownAlertIds.isNotEmpty() && newAlerts.isNotEmpty()) {
+                    newAlerts.forEach { alert ->
+                        com.example.shared.utils.NotificationService.sendSystemNotification(
+                            context = application,
+                            title = "🚨 SOS DARURAT: ${alert.driverName}",
+                            message = "${alert.type.label}: ${alert.message} di ${alert.locationName}"
+                        )
+                    }
+                }
+                knownAlertIds = alerts.map { it.id }.toSet()
             }
         }
     }
@@ -93,8 +113,8 @@ class DRGViewModel(
     fun logout() = profileCoord.logout()
     fun switchActiveMember(memberId: String) = profileCoord.switchActiveMember(memberId)
     fun switchRole(memberId: String) = switchActiveMember(memberId)
-    fun registerNewDriver(name: String, phone: String, plate: String, motorcycle: String, area: String) =
-        profileCoord.registerNewDriver(name, phone, plate, motorcycle, area)
+    fun registerNewDriver(name: String, phone: String, plate: String, motorcycle: String, area: String, pin: String) =
+        profileCoord.registerNewDriver(name, phone, plate, motorcycle, area, pin)
     fun updateProfile(phone: String, area: String, motorcycle: String, plate: String, photoUrl: String = "") =
         profileCoord.updateProfile(currentMember.value, phone, area, motorcycle, plate, photoUrl)
 

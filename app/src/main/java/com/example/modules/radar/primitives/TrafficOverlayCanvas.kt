@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.runtime.remember
 import com.example.modules.radar.logic.MapProjection
 import com.example.modules.radar.models.TrafficIncident
 import com.example.modules.radar.models.TrafficRoadSegment
@@ -25,10 +26,12 @@ fun TrafficOverlayCanvas(
     centerLng: Double,
     zoom: Int,
     isTrafficLayerEnabled: Boolean,
+    screenWidth: Float,
+    screenHeight: Float,
     isPowerSaver: Boolean = false,
     modifier: Modifier = Modifier
 ) {
-    if (!isTrafficLayerEnabled) return
+    if (!isTrafficLayerEnabled || screenWidth <= 0f || screenHeight <= 0f) return
 
     val flowPhase: Float = if (isPowerSaver) {
         0f
@@ -46,37 +49,47 @@ fun TrafficOverlayCanvas(
         phase
     }
 
-    Canvas(modifier = modifier.fillMaxSize()) {
-        val w = size.width
-        val h = size.height
-        if (w <= 0 || h <= 0) return@Canvas
-
-        val dashEffect = PathEffect.dashPathEffect(floatArrayOf(14f, 10f), flowPhase)
-
-        for (road in roadSegments) {
-            if (road.points.size < 2) continue
+    // Precompute projected road segment paths to bypass heavy math calculations on every single draw frame
+    val projectedRoads = remember(roadSegments, centerLat, centerLng, zoom, screenWidth, screenHeight) {
+        roadSegments.mapNotNull { road ->
+            if (road.points.size < 2) return@mapNotNull null
             val path = Path()
             val first = road.points.first()
-            val p0 = MapProjection.latLngToScreen(first.first, first.second, centerLat, centerLng, zoom, w, h)
+            val p0 = MapProjection.latLngToScreen(first.first, first.second, centerLat, centerLng, zoom, screenWidth, screenHeight)
             path.moveTo(p0.x, p0.y)
 
             for (i in 1 until road.points.size) {
                 val pt = road.points[i]
-                val pScreen = MapProjection.latLngToScreen(pt.first, pt.second, centerLat, centerLng, zoom, w, h)
+                val pScreen = MapProjection.latLngToScreen(pt.first, pt.second, centerLat, centerLng, zoom, screenWidth, screenHeight)
                 path.lineTo(pScreen.x, pScreen.y)
             }
+            Pair(path, road.status.color)
+        }
+    }
 
+    // Precompute incident screen coordinates to avoid redundant projections
+    val projectedIncidents = remember(incidents, centerLat, centerLng, zoom, screenWidth, screenHeight) {
+        incidents.map { inc ->
+            val pt = MapProjection.latLngToScreen(inc.lat, inc.lng, centerLat, centerLng, zoom, screenWidth, screenHeight)
+            Pair(pt, inc.status.color)
+        }
+    }
+
+    Canvas(modifier = modifier.fillMaxSize()) {
+        val dashEffect = PathEffect.dashPathEffect(floatArrayOf(14f, 10f), flowPhase)
+
+        for ((path, color) in projectedRoads) {
             // Glow casing underlay
             drawPath(
                 path = path,
-                color = road.status.color.copy(alpha = 0.28f),
+                color = color.copy(alpha = 0.28f),
                 style = Stroke(width = 16f, cap = StrokeCap.Round, join = StrokeJoin.Round)
             )
 
             // Solid base traffic line
             drawPath(
                 path = path,
-                color = road.status.color,
+                color = color,
                 style = Stroke(width = 8f, cap = StrokeCap.Round, join = StrokeJoin.Round)
             )
 
@@ -88,17 +101,16 @@ fun TrafficOverlayCanvas(
             )
         }
 
-        // Render traffic incident and congestion hotspots
-        for (inc in incidents) {
-            val pt = MapProjection.latLngToScreen(inc.lat, inc.lng, centerLat, centerLng, zoom, w, h)
+        // Render precomputed traffic incident and congestion hotspots
+        for ((pt, color) in projectedIncidents) {
             // Outer pulse circle
             drawCircle(
-                color = inc.status.color.copy(alpha = 0.35f),
+                color = color.copy(alpha = 0.35f),
                 radius = 18f,
                 center = pt
             )
             drawCircle(
-                color = inc.status.color,
+                color = color,
                 radius = 8f,
                 center = pt
             )

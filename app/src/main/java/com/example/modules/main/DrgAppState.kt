@@ -2,7 +2,7 @@ package com.example.modules.main
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.cache.LocationSyncPowerProfile
 import com.example.core.cache.MapCachePolicy
 import com.example.core.sync.SyncStatus
@@ -45,33 +45,33 @@ class DrgAppState(
 @Composable
 fun rememberDrgAppState(viewModel: DRGViewModel, cashViewModel: CashManagementViewModel): DrgAppState {
     return DrgAppState(
-        isLoggedIn = viewModel.isLoggedIn.collectAsState(),
-        currentTab = viewModel.currentTab.collectAsState(),
-        currentMember = viewModel.currentMember.collectAsState(),
-        members = viewModel.allMembers.collectAsState(),
-        activeAlerts = viewModel.activeAlerts.collectAsState(),
-        cashTransactions = cashViewModel.transactions.collectAsState(),
-        totalIncome = cashViewModel.totalIncome.collectAsState(),
-        totalExpense = cashViewModel.totalExpense.collectAsState(),
-        netBalance = cashViewModel.netBalance.collectAsState(),
-        posts = viewModel.posts.collectAsState(),
-        workshops = viewModel.workshops.collectAsState(),
-        poskoList = viewModel.poskoList.collectAsState(),
-        notifications = viewModel.notifications.collectAsState(),
-        badges = viewModel.badges.collectAsState(),
-        tasks = viewModel.tasks.collectAsState(),
-        rewards = viewModel.rewards.collectAsState(),
-        hazards = viewModel.hazards.collectAsState(),
-        pointTransactions = viewModel.pointTransactions.collectAsState(),
-        adminLogs = viewModel.adminLogs.collectAsState(),
-        isSosAlarmEnabled = viewModel.isSosAlarmEnabled.collectAsState(),
-        isCrashGuardEnabled = viewModel.isCrashGuardEnabled.collectAsState(),
-        crashSensitivity = viewModel.crashSensitivity.collectAsState(),
-        crashDetectedEvent = viewModel.crashDetectedEvent.collectAsState(),
-        isPowerSaverMode = viewModel.isPowerSaverMode.collectAsState(),
-        isDataSaverMode = viewModel.isDataSaverMode.collectAsState(),
-        mapCachePolicy = viewModel.mapCachePolicy.collectAsState(),
-        locationSyncProfile = viewModel.locationSyncProfile.collectAsState(),
-        syncStatus = viewModel.syncEngine.syncStatus.collectAsState()
+        isLoggedIn = viewModel.isLoggedIn.collectAsStateWithLifecycle(),
+        currentTab = viewModel.currentTab.collectAsStateWithLifecycle(),
+        currentMember = viewModel.currentMember.collectAsStateWithLifecycle(),
+        members = viewModel.allMembers.collectAsStateWithLifecycle(),
+        activeAlerts = viewModel.activeAlerts.collectAsStateWithLifecycle(),
+        cashTransactions = cashViewModel.transactions.collectAsStateWithLifecycle(),
+        totalIncome = cashViewModel.totalIncome.collectAsStateWithLifecycle(),
+        totalExpense = cashViewModel.totalExpense.collectAsStateWithLifecycle(),
+        netBalance = cashViewModel.netBalance.collectAsStateWithLifecycle(),
+        posts = viewModel.posts.collectAsStateWithLifecycle(),
+        workshops = viewModel.workshops.collectAsStateWithLifecycle(),
+        poskoList = viewModel.poskoList.collectAsStateWithLifecycle(),
+        notifications = viewModel.notifications.collectAsStateWithLifecycle(),
+        badges = viewModel.badges.collectAsStateWithLifecycle(),
+        tasks = viewModel.tasks.collectAsStateWithLifecycle(),
+        rewards = viewModel.rewards.collectAsStateWithLifecycle(),
+        hazards = viewModel.hazards.collectAsStateWithLifecycle(),
+        pointTransactions = viewModel.pointTransactions.collectAsStateWithLifecycle(),
+        adminLogs = viewModel.adminLogs.collectAsStateWithLifecycle(),
+        isSosAlarmEnabled = viewModel.isSosAlarmEnabled.collectAsStateWithLifecycle(),
+        isCrashGuardEnabled = viewModel.isCrashGuardEnabled.collectAsStateWithLifecycle(),
+        crashSensitivity = viewModel.crashSensitivity.collectAsStateWithLifecycle(),
+        crashDetectedEvent = viewModel.crashDetectedEvent.collectAsStateWithLifecycle(),
+        isPowerSaverMode = viewModel.isPowerSaverMode.collectAsStateWithLifecycle(),
+        isDataSaverMode = viewModel.isDataSaverMode.collectAsStateWithLifecycle(),
+        mapCachePolicy = viewModel.mapCachePolicy.collectAsStateWithLifecycle(),
+        locationSyncProfile = viewModel.locationSyncProfile.collectAsStateWithLifecycle(),
+        syncStatus = viewModel.syncEngine.syncStatus.collectAsStateWithLifecycle()
     )
 }

@@ -50,6 +50,16 @@ fun LiveMapScreen(
             onSelectRadius = { selectedRadiusKm = it }
         )
 
+        LiveSharingDriversRow(
+            drivers = nearbyDrivers.map { it.first },
+            selectedDriver = currentFocusedPair?.first,
+            onSelectDriver = { driver ->
+                focusedDriver = driver
+                centerLat = driver.currentLat
+                centerLng = driver.currentLng
+            }
+        )
+
         Box(
             modifier = Modifier.weight(1f).fillMaxWidth().clip(RoundedCornerShape(16.dp))
                 .onSizeChanged { containerSize = it }
@@ -77,7 +87,7 @@ fun LiveMapScreen(
 
             LiveMapCanvasView(
                 membersWithDistance = nearbyDrivers, centerLat = centerLat, centerLng = centerLng,
-                zoom = zoom, focusedDriverId = currentFocusedPair?.first?.id,
+                zoom = zoom, screenWidth = w, screenHeight = h, focusedDriverId = currentFocusedPair?.first?.id,
                 onSelectDriver = { focusedDriver = it }
             )
 

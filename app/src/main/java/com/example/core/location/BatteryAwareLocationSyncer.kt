@@ -8,9 +8,10 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.BatteryManager
+import android.os.Looper
 import androidx.core.content.ContextCompat
 import com.example.core.cache.LocationSyncPowerProfile
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,6 +46,10 @@ class BatteryAwareLocationSyncer(
     @Volatile private var isDeviceInMotion: Boolean = false
     @Volatile private var lastMotionTimestamp: Long = 0L
 
+    private var locationCallback: LocationCallback? = null
+    private var lastRegisteredInterval: Int = -1
+    private var lastRegisteredPriority: Int = -1
+
     init {
         accelerometer?.let { sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL) }
     }
@@ -60,6 +65,31 @@ class BatteryAwareLocationSyncer(
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
+    @SuppressLint("MissingPermission")
+    private fun registerPlayLocationUpdates(intervalSec: Int, priority: Int) {
+        val ctx = context ?: return
+        val hasFine = ContextCompat.checkSelfPermission(ctx, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val hasCoarse = ContextCompat.checkSelfPermission(ctx, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        if (!hasFine && !hasCoarse) return
+
+        fusedLocationClient?.let { client ->
+            locationCallback?.let { client.removeLocationUpdates(it) }
+            val callback = object : LocationCallback() {
+                override fun onLocationResult(result: LocationResult) {
+                    val loc = result.lastLocation ?: return
+                    lastLat = loc.latitude
+                    lastLng = loc.longitude
+                    scope.launch(coroutineDispatcher) { onSyncLocation(lastLat, lastLng) }
+                }
+            }
+            locationCallback = callback
+            val request = LocationRequest.Builder(priority, intervalSec * 1000L)
+                .setMinUpdateIntervalMillis((intervalSec / 2).coerceAtLeast(1) * 1000L)
+                .build()
+            runCatching { client.requestLocationUpdates(request, callback, Looper.getMainLooper()) }
+        }
+    }
 
     @SuppressLint("MissingPermission")
     private fun fetchRealLocationIfPermitted() {
@@ -85,6 +115,18 @@ class BatteryAwareLocationSyncer(
                 val isMoving = isDeviceInMotion && (System.currentTimeMillis() - lastMotionTimestamp < 15000L)
                 val intervalSec = if (isMoving) effectiveProfile.normalIntervalSec else effectiveProfile.stationaryIntervalSec
 
+                val currentPriority = when (effectiveProfile) {
+                    LocationSyncPowerProfile.HIGH_PRECISION -> Priority.PRIORITY_HIGH_ACCURACY
+                    LocationSyncPowerProfile.ADAPTIVE_ECO -> Priority.PRIORITY_BALANCED_POWER_ACCURACY
+                    LocationSyncPowerProfile.ULTRA_SAVER -> Priority.PRIORITY_LOW_POWER
+                }
+
+                if (currentPriority != lastRegisteredPriority || intervalSec != lastRegisteredInterval) {
+                    registerPlayLocationUpdates(intervalSec, currentPriority)
+                    lastRegisteredInterval = intervalSec
+                    lastRegisteredPriority = currentPriority
+                }
+
                 _metrics.value = LocationSyncMetrics(
                     currentIntervalSec = intervalSec, batteryPercent = battery.first,
                     isCharging = battery.second, isStationary = !isMoving, profile = effectiveProfile,
@@ -99,6 +141,12 @@ class BatteryAwareLocationSyncer(
     fun stopSync() {
         syncJob?.cancel()
         syncJob = null
+        locationCallback?.let {
+            fusedLocationClient?.removeLocationUpdates(it)
+            locationCallback = null
+        }
+        lastRegisteredInterval = -1
+        lastRegisteredPriority = -1
         try { sensorManager?.unregisterListener(this) } catch (_: Exception) {}
     }
 

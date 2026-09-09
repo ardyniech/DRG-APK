@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,6 +33,7 @@ fun EmergencyScreen(
     crashSensitivity: CrashSensitivity = CrashSensitivity.MEDIUM,
     onSimulateCrash: () -> Unit = {},
     onOpenSettings: () -> Unit = {},
+    onBack: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableStateOf(0) }
@@ -41,6 +44,18 @@ fun EmergencyScreen(
     Column(
         modifier = modifier.fillMaxSize().background(DrgBackground).padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
+        // Top Back Header Navigation
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            IconButton(onClick = onBack, modifier = Modifier.size(40.dp)) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali", tint = DrgTextPrimary)
+            }
+            Text("Emergency & SOS Center", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
+        }
+
         Row(
             modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(DrgSurface).padding(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp)

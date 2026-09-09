@@ -6,10 +6,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Navigation
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -17,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.example.modules.radar.logic.CoordinateUtils
 import com.example.shared.atoms.RoleBadge
 import com.example.shared.models.DriverMember
+import com.example.shared.utils.WhatsAppLauncher
 import com.example.ui.theme.*
 
 @Composable
@@ -27,6 +30,7 @@ fun LiveDriverCoordinatesCard(
     onFocusCoordinates: (Double, Double) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Surface(
         shape = RoundedCornerShape(16.dp),
         color = DrgSurface,
@@ -77,25 +81,39 @@ fun LiveDriverCoordinatesCard(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 OutlinedButton(
                     onClick = { onFocusCoordinates(driver.currentLat, driver.currentLng) },
-                    modifier = Modifier.weight(1f).height(44.dp).testTag("recenter_coordinates_button")
+                    contentPadding = PaddingValues(horizontal = 8.dp),
+                    modifier = Modifier.weight(1f).height(40.dp).testTag("recenter_coordinates_button")
                 ) {
-                    Icon(Icons.Default.Navigation, contentDescription = "Fokus Koordinat", modifier = Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Fokus GPS", fontSize = 11.sp)
+                    Icon(Icons.Default.Navigation, contentDescription = "Fokus Koordinat", modifier = Modifier.size(14.dp))
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Text("Fokus GPS", fontSize = 10.sp)
+                }
+
+                OutlinedButton(
+                    onClick = { 
+                        WhatsAppLauncher.shareLocation(context, driver.name, "${driver.motorcycleModel} (${driver.motorcyclePlate})", driver.currentLat, driver.currentLng)
+                    },
+                    contentPadding = PaddingValues(horizontal = 8.dp),
+                    modifier = Modifier.weight(1f).height(40.dp).testTag("share_coordinates_button")
+                ) {
+                    Icon(Icons.Default.Share, contentDescription = "Share Lokasi", modifier = Modifier.size(14.dp))
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Text("Share", fontSize = 10.sp)
                 }
 
                 Button(
                     onClick = { onCall(driver.phone) },
                     colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
-                    modifier = Modifier.weight(1f).height(44.dp).testTag("call_driver_button")
+                    contentPadding = PaddingValues(horizontal = 8.dp),
+                    modifier = Modifier.weight(1f).height(40.dp).testTag("call_driver_button")
                 ) {
-                    Icon(Icons.Default.Phone, contentDescription = "Hubungi Driver", modifier = Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Hubungi", fontSize = 11.sp)
+                    Icon(Icons.Default.Phone, contentDescription = "Hubungi Driver", modifier = Modifier.size(14.dp))
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Text("Hubungi", fontSize = 10.sp)
                 }
             }
         }

@@ -1,6 +1,7 @@
 package com.example
 
 import android.app.Application
+import android.os.StrictMode
 import com.example.core.database.AppDatabase
 import com.example.core.repository.DRGRepository
 import kotlinx.coroutines.CoroutineScope
@@ -22,7 +23,7 @@ class DRGApplication : Application() {
             val hasSeeded = prefs.getBoolean("drg_has_seeded_v5", false)
             if (!hasSeeded) {
                 repository.initializeSeedDataIfNeeded()
-                prefs.edit().putBoolean("drg_has_seeded_v5", true).apply()
+                prefs.edit().putBoolean("drg_has_seeded_v5", true).commit()
             }
         }
     }

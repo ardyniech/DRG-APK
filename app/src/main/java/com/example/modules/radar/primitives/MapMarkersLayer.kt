@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
@@ -31,12 +32,16 @@ fun MapMarkersLayer(
     centerLat: Double,
     centerLng: Double,
     zoom: Int,
+    screenWidth: Float,
+    screenHeight: Float,
     isConsentGranted: Boolean,
     showRadarSweep: Boolean,
     onSelectDriver: (DriverMember) -> Unit,
     focusedDriver: DriverMember?,
     modifier: Modifier = Modifier
 ) {
+    if (screenWidth <= 0f || screenHeight <= 0f) return
+
     val infiniteTransition = rememberInfiniteTransition(label = "markers")
     val pulseRadius by infiniteTransition.animateFloat(
         initialValue = 0.1f, targetValue = 1f,
@@ -44,16 +49,45 @@ fun MapMarkersLayer(
         label = "radarPulse"
     )
 
+    // Precompute posko locations on screen
+    val projectedPoskos = remember(poskoList, centerLat, centerLng, zoom, screenWidth, screenHeight) {
+        poskoList.map { posko ->
+            MapProjection.latLngToScreen(posko.lat, posko.lng, centerLat, centerLng, zoom, screenWidth, screenHeight)
+        }
+    }
+
+    // Precompute hazard locations on screen
+    val projectedHazards = remember(hazards, centerLat, centerLng, zoom, screenWidth, screenHeight) {
+        hazards.map { hazard ->
+            Pair(
+                MapProjection.latLngToScreen(hazard.lat, hazard.lng, centerLat, centerLng, zoom, screenWidth, screenHeight),
+                hazard
+            )
+        }
+    }
+
+    // Precompute driver locations on screen
+    val projectedDrivers = remember(members, centerLat, centerLng, zoom, screenWidth, screenHeight) {
+        members.map { driver ->
+            Pair(
+                MapProjection.latLngToScreen(driver.currentLat, driver.currentLng, centerLat, centerLng, zoom, screenWidth, screenHeight),
+                driver
+            )
+        }
+    }
+
+    // Precompute my location on screen
+    val myPt = remember(centerLat, centerLng, zoom, screenWidth, screenHeight) {
+        MapProjection.latLngToScreen(centerLat, centerLng, centerLat, centerLng, zoom, screenWidth, screenHeight)
+    }
+
     Canvas(
-        modifier = modifier.fillMaxSize().pointerInput(members, selectedFilter, centerLat, centerLng, zoom) {
+        modifier = modifier.fillMaxSize().pointerInput(projectedDrivers, selectedFilter) {
             detectTapGestures { offset ->
-                val w = size.width.toFloat()
-                val h = size.height.toFloat()
                 var bestMatch: DriverMember? = null
                 var bestDist = Float.MAX_VALUE
 
-                members.filter { it.isOnline }.forEach { driver ->
-                    val pt = MapProjection.latLngToScreen(driver.currentLat, driver.currentLng, centerLat, centerLng, zoom, w, h)
+                projectedDrivers.filter { it.second.isOnline }.forEach { (pt, driver) ->
                     val dx = offset.x - pt.x
                     val dy = offset.y - pt.y
                     val dist = sqrt(dx * dx + dy * dy)
@@ -66,33 +100,25 @@ fun MapMarkersLayer(
             }
         }
     ) {
-        val w = size.width
-        val h = size.height
-        if (w <= 0 || h <= 0) return@Canvas
-
         if (showRadarSweep) {
-            val maxR = minOf(w, h) * 0.45f
-            drawRadarSweepEffect(maxR, Offset(w / 2f, h / 2f), pulseRadius)
+            val maxR = minOf(screenWidth, screenHeight) * 0.45f
+            drawRadarSweepEffect(maxR, Offset(screenWidth / 2f, screenHeight / 2f), pulseRadius)
         }
 
         if (selectedFilter == "Semua" || selectedFilter == "Posko") {
-            poskoList.forEach { posko ->
-                val pt = MapProjection.latLngToScreen(posko.lat, posko.lng, centerLat, centerLng, zoom, w, h)
+            projectedPoskos.forEach { pt ->
                 drawPoskoMarker(pt)
             }
         }
 
         if (selectedFilter == "Semua" || selectedFilter == "Area Rawan") {
-            hazards.forEach { hazard ->
-                val pt = MapProjection.latLngToScreen(hazard.lat, hazard.lng, centerLat, centerLng, zoom, w, h)
+            projectedHazards.forEach { (pt, hazard) ->
                 drawHazardMarker(pt, hazard)
             }
         }
 
-        val myPt = MapProjection.latLngToScreen(centerLat, centerLng, centerLat, centerLng, zoom, w, h)
         if (selectedFilter != "Posko" && selectedFilter != "Area Rawan") {
-            members.filter { it.isLocationSharingConsent }.forEach { driver ->
-                val pt = MapProjection.latLngToScreen(driver.currentLat, driver.currentLng, centerLat, centerLng, zoom, w, h)
+            projectedDrivers.filter { it.second.isLocationSharingConsent }.forEach { (pt, driver) ->
                 val isTargeted = focusedDriver?.id == driver.id
                 drawDriverMarker(pt, driver, isTargeted, myPt, pulseRadius)
             }

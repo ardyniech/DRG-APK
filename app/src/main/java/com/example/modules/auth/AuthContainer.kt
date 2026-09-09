@@ -15,6 +15,8 @@ import com.example.core.viewmodel.DRGViewModel
 import com.example.ui.theme.DrgBackgroundGradient
 import com.example.ui.theme.DrgGrabGreenPrimary
 import com.example.ui.theme.DrgTextDark
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 enum class AuthStage {
     LANDING,
@@ -30,6 +32,17 @@ fun AuthContainerScreen(
     var currentStage by remember { mutableStateOf(AuthStage.LANDING) }
     var showRegisterSuccessDialog by remember { mutableStateOf(false) }
     val members by viewModel.allMembers.collectAsState()
+    val context = androidx.compose.ui.platform.LocalContext.current
+
+    LaunchedEffect(Unit) {
+        val savedId = withContext(Dispatchers.IO) {
+            val prefs = context.getSharedPreferences("drg_prefs", android.content.Context.MODE_PRIVATE)
+            prefs.getString("logged_in_member_id", null)
+        }
+        if (savedId != null) {
+            onLoginSuccess(savedId)
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -49,8 +62,8 @@ fun AuthContainerScreen(
                 )
                 AuthStage.REGISTER -> RegisterScreen(
                     onBack = { currentStage = AuthStage.LANDING },
-                    onSubmit = { name, phone, plate, model, area ->
-                        viewModel.registerNewDriver(name, phone, plate, model, area)
+                    onSubmit = { name, phone, plate, model, area, pin ->
+                        viewModel.registerNewDriver(name, phone, plate, model, area, pin)
                         showRegisterSuccessDialog = true
                     }
                 )

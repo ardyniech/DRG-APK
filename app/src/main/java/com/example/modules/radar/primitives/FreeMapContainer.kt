@@ -69,8 +69,8 @@ fun FreeMapContainer(
         val h = containerSize.height.toFloat()
 
         FreeMapTileLayer(mapMode = mapMode, centerLat = centerLat, centerLng = centerLng, zoom = zoom, screenWidth = w, screenHeight = h)
-        TrafficOverlayCanvas(roadSegments = roadSegments, incidents = trafficIncidents, centerLat = centerLat, centerLng = centerLng, zoom = zoom, isTrafficLayerEnabled = isTrafficEnabled, isPowerSaver = isPowerSaverEnabled)
-        MapMarkersLayer(members = members, alerts = alerts, poskoList = poskoList, hazards = hazards, selectedFilter = selectedFilter, centerLat = centerLat, centerLng = centerLng, zoom = zoom, isConsentGranted = isConsentGranted, showRadarSweep = isRadarSweepEnabled && !isPowerSaverEnabled, onSelectDriver = onSelectDriver, focusedDriver = focusedDriver)
+        TrafficOverlayCanvas(roadSegments = roadSegments, incidents = trafficIncidents, centerLat = centerLat, centerLng = centerLng, zoom = zoom, isTrafficLayerEnabled = isTrafficEnabled, screenWidth = w, screenHeight = h, isPowerSaver = isPowerSaverEnabled)
+        MapMarkersLayer(members = members, alerts = alerts, poskoList = poskoList, hazards = hazards, selectedFilter = selectedFilter, centerLat = centerLat, centerLng = centerLng, zoom = zoom, screenWidth = w, screenHeight = h, isConsentGranted = isConsentGranted, showRadarSweep = isRadarSweepEnabled && !isPowerSaverEnabled, onSelectDriver = onSelectDriver, focusedDriver = focusedDriver)
 
         MapTopControlBar(mapMode = mapMode, onToggleMapMode = { mapMode = it }, isTrafficEnabled = isTrafficEnabled, onToggleTraffic = { isTrafficEnabled = it }, modifier = Modifier.align(Alignment.TopEnd).padding(8.dp))
 

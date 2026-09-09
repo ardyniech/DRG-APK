@@ -3,10 +3,12 @@ package com.example.modules.main.primitives
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import com.example.core.viewmodel.DRGViewModel
 import com.example.core.viewmodel.MainNavTab
 import com.example.modules.community.CommunityHubScreen
 import com.example.shared.models.*
+import com.example.shared.utils.WhatsAppLauncher
 import kotlinx.coroutines.launch
 
 @Composable
@@ -32,6 +34,7 @@ fun CommunityTabDelegate(
     onShowAwardPointDialog: (DriverMember) -> Unit
 ) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     val subTabIndex = when (tab) {
         MainNavTab.FORUM -> 1
         MainNavTab.GAMIFICATION -> 2
@@ -62,7 +65,7 @@ fun CommunityTabDelegate(
         onToggleLike = { id, liked -> viewModel.toggleLikePost(id, liked) },
         onDeletePost = { id -> viewModel.deletePost(id) },
         onCallWorkshop = { phone ->
-            scope.launch { snackbarHostState.showSnackbar("Menghubungi Bengkel $phone...") }
+            WhatsAppLauncher.openChat(context, phone, "Halo Bengkel Rekanan DRG, saya anggota DRG ingin menanyakan perihal servis/booking.")
         },
         onAwardPointsClick = {
             val other = members.find { it.id != currentMember?.id } ?: members.firstOrNull()

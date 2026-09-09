@@ -50,7 +50,7 @@ class ProfileSessionCoordinator(
         showToast("Beralih profil: $memberId")
     }
 
-    fun registerNewDriver(name: String, phone: String, plate: String, model: String, area: String) {
+    fun registerNewDriver(name: String, phone: String, plate: String, model: String, area: String, pin: String) {
         val timestampHex = System.currentTimeMillis().toString(36).uppercase()
         val randomEntropy = UUID.randomUUID().toString().replace("-", "").take(6).uppercase()
         val newDriver = DriverMember(
@@ -75,6 +75,7 @@ class ProfileSessionCoordinator(
             runCatching {
                 repository.registerMember(newDriver)
             }.onSuccess {
+                sharedPrefs?.edit()?.putString("pin_hash_${newDriver.id}", com.example.shared.utils.SecurityUtils.hashPin(pin))?.apply()
                 showToast("Pendaftaran diajukan! Menunggu screening pengurus DRG.")
             }.onFailure { error ->
                 showToast("Gagal mendaftar: ${error.localizedMessage}")
