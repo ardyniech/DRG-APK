@@ -43,8 +43,6 @@ fun DashboardScreen(
         }
 
         item { ShiftStatusBanner(member = currentMember) }
-        item { RecommendedTasksCard(member = currentMember) }
-        item { CommunityHeroBanner() }
 
         val activeSos = activeAlerts.firstOrNull { it.isActive }
         if (activeSos != null) {

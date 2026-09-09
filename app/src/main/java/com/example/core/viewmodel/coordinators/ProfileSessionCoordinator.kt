@@ -72,8 +72,13 @@ class ProfileSessionCoordinator(
             baseArea = area
         )
         scope.launch {
-            repository.registerMember(newDriver)
-            showToast("Pendaftaran diajukan! Menunggu screening pengurus DRG.")
+            runCatching {
+                repository.registerMember(newDriver)
+            }.onSuccess {
+                showToast("Pendaftaran diajukan! Menunggu screening pengurus DRG.")
+            }.onFailure { error ->
+                showToast("Gagal mendaftar: ${error.localizedMessage}")
+            }
         }
     }
 
@@ -81,8 +86,13 @@ class ProfileSessionCoordinator(
         if (cur == null) return
         val updated = cur.copy(motorcyclePlate = plate, motorcycleModel = model, phone = phone, baseArea = area, profilePhotoUrl = photoUrl)
         scope.launch {
-            repository.updateMember(updated)
-            showToast("Data profil & foto anggota berhasil diperbarui.")
+            runCatching {
+                repository.updateMember(updated)
+            }.onSuccess {
+                showToast("Data profil & foto anggota berhasil diperbarui.")
+            }.onFailure { error ->
+                showToast("Gagal memperbarui profil: ${error.localizedMessage}")
+            }
         }
     }
 }

@@ -60,25 +60,40 @@ class EmergencyCoordinator(
             lat = cur.currentLat, lng = cur.currentLng, locationName = loc, isActive = true
         )
         scope.launch {
-            repository.addEmergencyAlert(alert)
-            syncEngine.enqueueOptimisticAction("EMERGENCY", alert.id, alert.type.name)
-            if (_isSosAlarmSoundEnabled.value) SosAlarmSoundManager.playHighDecibelAlarm(6000L)
-            showToast("Sinyal SOS Darurat berhasil dipancarkan ke seluruh Satgas & Anggota!")
+            runCatching {
+                repository.addEmergencyAlert(alert)
+                syncEngine.enqueueOptimisticAction("EMERGENCY", alert.id, alert.type.name)
+            }.onSuccess {
+                if (_isSosAlarmSoundEnabled.value) SosAlarmSoundManager.playHighDecibelAlarm(6000L)
+                showToast("Sinyal SOS Darurat berhasil dipancarkan ke seluruh Satgas & Anggota!")
+            }.onFailure { error ->
+                showToast("Gagal memancarkan SOS: ${error.localizedMessage}")
+            }
         }
     }
 
     fun resolveEmergency(alertId: String, cur: DriverMember?) {
         SosAlarmSoundManager.stopAlarm()
         scope.launch {
-            repository.resolveEmergencyAlert(alertId, cur?.name ?: "Satgas")
-            showToast("Laporan darurat ditandai Selesai.")
+            runCatching {
+                repository.resolveEmergencyAlert(alertId, cur?.name ?: "Satgas")
+            }.onSuccess {
+                showToast("Laporan darurat ditandai Selesai.")
+            }.onFailure { error ->
+                showToast("Gagal menyelesaikan darurat: ${error.localizedMessage}")
+            }
         }
     }
 
     fun respondEmergency(alertId: String) {
         scope.launch {
-            repository.respondToEmergency(alertId)
-            showToast("Anda merespons bantuan! Lokasi dan navigasi dibuka.")
+            runCatching {
+                repository.respondToEmergency(alertId)
+            }.onSuccess {
+                showToast("Anda merespons bantuan! Lokasi dan navigasi dibuka.")
+            }.onFailure { error ->
+                showToast("Gagal merespons darurat: ${error.localizedMessage}")
+            }
         }
     }
 

@@ -22,25 +22,33 @@ class CommunityCoordinator(
             timeAgo = "Baru saja", timestamp = System.currentTimeMillis()
         )
         scope.launch {
-            repository.addForumPost(post)
-            syncEngine.enqueueOptimisticAction("FORUM", post.id, post.title)
-            showToast(if (postType == PostType.QUESTION) "Pertanyaan berhasil diposting." else "Update berhasil dibagikan.")
+            runCatching {
+                repository.addForumPost(post)
+                syncEngine.enqueueOptimisticAction("FORUM", post.id, post.title)
+            }.onSuccess {
+                showToast(if (postType == PostType.QUESTION) "Pertanyaan berhasil diposting." else "Update berhasil dibagikan.")
+            }.onFailure { showToast("Gagal memposting: ${it.localizedMessage}") }
         }
     }
 
     fun deletePost(postId: String) {
-        scope.launch { repository.deleteForumPost(postId); showToast("Postingan berhasil dihapus.") }
+        scope.launch {
+            runCatching { repository.deleteForumPost(postId) }
+                .onSuccess { showToast("Postingan berhasil dihapus.") }
+                .onFailure { showToast("Gagal menghapus: ${it.localizedMessage}") }
+        }
     }
 
     fun toggleLike(postId: String, isLiked: Boolean) {
-        scope.launch { repository.toggleLikePost(postId, isLiked) }
+        scope.launch { runCatching { repository.toggleLikePost(postId, isLiked) } }
     }
 
     fun checkInEvent(cur: DriverMember?, eventId: String) {
         if (cur == null) return
         scope.launch {
-            repository.checkInKopdar(eventId, cur.id, 50)
-            showToast("Absensi berhasil! +50 Poin Loyalitas ditambahkan ke akun Anda.")
+            runCatching { repository.checkInKopdar(eventId, cur.id, 50) }
+                .onSuccess { showToast("Absensi berhasil! +50 Poin Loyalitas ditambahkan ke akun Anda.") }
+                .onFailure { showToast("Gagal absensi: ${it.localizedMessage}") }
         }
     }
 
@@ -51,7 +59,11 @@ class CommunityCoordinator(
             targetDriverId = targetId, reviewerName = cur.name, reviewerRole = cur.role,
             rating = rating, tag = tag, comment = comment, dateText = "Hari ini"
         )
-        scope.launch { repository.addReview(review); showToast("Ulasan etika berhasil dikirim.") }
+        scope.launch {
+            runCatching { repository.addReview(review) }
+                .onSuccess { showToast("Ulasan etika berhasil dikirim.") }
+                .onFailure { showToast("Gagal mengirim ulasan: ${it.localizedMessage}") }
+        }
     }
 
     fun sendNotification(cur: DriverMember?, title: String, message: String, severity: NotificationSeverity) {
@@ -61,29 +73,46 @@ class CommunityCoordinator(
             title = title, message = message, severity = severity,
             senderName = cur.name, senderRole = cur.role, timeAgo = "Baru saja"
         )
-        scope.launch { repository.addNotification(notif); showToast("Pengumuman berhasil disiarkan!") }
+        scope.launch {
+            runCatching { repository.addNotification(notif) }
+                .onSuccess { showToast("Pengumuman berhasil disiarkan!") }
+                .onFailure { showToast("Gagal menyiarkan: ${it.localizedMessage}") }
+        }
     }
 
     fun awardPeerPoints(giver: DriverMember?, targetId: String, targetName: String, isBeneficiary: Boolean, reason: String) {
         if (giver == null) return
         scope.launch {
-            repository.awardPeerPoints(targetId, targetName, giver, isBeneficiary, reason)
-            showToast("Apresiasi poin berhasil diberikan ke $targetName!")
+            runCatching { repository.awardPeerPoints(targetId, targetName, giver, isBeneficiary, reason) }
+                .onSuccess { showToast("Apresiasi poin berhasil diberikan ke $targetName!") }
+                .onFailure { showToast("Gagal memberi poin: ${it.localizedMessage}") }
         }
     }
 
     fun claimTask(cur: DriverMember?, taskId: String) {
         if (cur == null) return
-        scope.launch { repository.claimTask(taskId, cur); showToast("Tugas komunitas berhasil diambil!") }
+        scope.launch {
+            runCatching { repository.claimTask(taskId, cur) }
+                .onSuccess { showToast("Tugas komunitas berhasil diambil!") }
+                .onFailure { showToast("Gagal mengambil tugas: ${it.localizedMessage}") }
+        }
     }
 
     fun completeTask(cur: DriverMember?, taskId: String) {
         if (cur == null) return
-        scope.launch { repository.completeTask(taskId, cur.id); showToast("Tugas selesai & poin ditambahkan!") }
+        scope.launch {
+            runCatching { repository.completeTask(taskId, cur.id) }
+                .onSuccess { showToast("Tugas selesai & poin ditambahkan!") }
+                .onFailure { showToast("Gagal menyelesaikan tugas: ${it.localizedMessage}") }
+        }
     }
 
     fun redeemReward(cur: DriverMember?, rewardId: String) {
         if (cur == null) return
-        scope.launch { repository.redeemReward(rewardId, cur); showToast("Keuntungan komunitas berhasil ditukar!") }
+        scope.launch {
+            runCatching { repository.redeemReward(rewardId, cur) }
+                .onSuccess { showToast("Keuntungan komunitas berhasil ditukar!") }
+                .onFailure { showToast("Gagal menukar voucher: ${it.localizedMessage}") }
+        }
     }
 }

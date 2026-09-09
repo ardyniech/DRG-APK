@@ -94,7 +94,7 @@ class ViewModelRefactorAuditTest {
     @Test
     fun testViewModelStateFlows() {
         val sharedPrefs = context.getSharedPreferences("test_drg_prefs", Context.MODE_PRIVATE)
-        val vm = DRGViewModel(repo, sharedPrefs, context)
+        val vm = DRGViewModel(repo, sharedPrefs, context as android.app.Application)
 
         assertEquals(MainNavTab.DASHBOARD, vm.selectedTab.value)
         vm.selectTab(MainNavTab.RADAR)

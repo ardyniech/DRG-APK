@@ -23,39 +23,59 @@ class GovernanceCoordinator(
 
     fun approveMemberScreening(memberId: String, notes: String) {
         scope.launch {
-            repository.updateScreening(memberId, VerificationStatus.VERIFIED, notes)
-            showToast("Anggota berhasil diverifikasi dan aktif di komunitas DRG.")
+            runCatching {
+                repository.updateScreening(memberId, VerificationStatus.VERIFIED, notes)
+            }.onSuccess {
+                showToast("Anggota berhasil diverifikasi dan aktif di komunitas DRG.")
+            }.onFailure { error ->
+                showToast("Gagal verifikasi: ${error.localizedMessage}")
+            }
         }
     }
 
     fun rejectMemberScreening(memberId: String, reason: String) {
         scope.launch {
-            repository.updateScreening(memberId, VerificationStatus.REJECTED, reason)
-            showToast("Pendaftaran anggota ditolak.")
+            runCatching {
+                repository.updateScreening(memberId, VerificationStatus.REJECTED, reason)
+            }.onSuccess {
+                showToast("Pendaftaran anggota ditolak.")
+            }.onFailure { error ->
+                showToast("Gagal menolak screening: ${error.localizedMessage}")
+            }
         }
     }
 
     fun updateMemberRole(memberId: String, newRole: MemberRole, actor: DriverMember?) {
         scope.launch {
-            val found = membersFlow.value.find { it.id == memberId } ?: return@launch
-            val updated = found.copy(role = newRole)
-            repository.updateMember(updated)
-            showToast("Peran ${found.name} berhasil diubah menjadi ${newRole.shortName}")
-
-            val log = AdminLogUtils.createLog(actor, "mengubah peran menjadi ${newRole.title}", found.name)
-            _adminLogs.value = listOf(log) + _adminLogs.value
+            runCatching {
+                val found = membersFlow.value.find { it.id == memberId } ?: return@launch
+                val updated = found.copy(role = newRole)
+                repository.updateMember(updated)
+                val log = AdminLogUtils.createLog(actor, "mengubah peran menjadi ${newRole.title}", found.name)
+                _adminLogs.value = listOf(log) + _adminLogs.value
+                found.name
+            }.onSuccess { name ->
+                showToast("Peran $name berhasil diubah menjadi ${newRole.shortName}")
+            }.onFailure { error ->
+                showToast("Gagal update peran: ${error.localizedMessage}")
+            }
         }
     }
 
     fun updateMemberVerification(memberId: String, newStatus: VerificationStatus, actor: DriverMember?) {
         scope.launch {
-            val found = membersFlow.value.find { it.id == memberId } ?: return@launch
-            val updated = found.copy(verificationStatus = newStatus)
-            repository.updateMember(updated)
-            showToast("Status verifikasi ${found.name} diubah menjadi ${newStatus.name}")
-
-            val log = AdminLogUtils.createLog(actor, "mengubah status verifikasi menjadi ${newStatus.name}", found.name)
-            _adminLogs.value = listOf(log) + _adminLogs.value
+            runCatching {
+                val found = membersFlow.value.find { it.id == memberId } ?: return@launch
+                val updated = found.copy(verificationStatus = newStatus)
+                repository.updateMember(updated)
+                val log = AdminLogUtils.createLog(actor, "mengubah status verifikasi menjadi ${newStatus.name}", found.name)
+                _adminLogs.value = listOf(log) + _adminLogs.value
+                found.name
+            }.onSuccess { name ->
+                showToast("Status verifikasi $name diubah menjadi ${newStatus.name}")
+            }.onFailure { error ->
+                showToast("Gagal update status: ${error.localizedMessage}")
+            }
         }
     }
 }

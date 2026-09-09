@@ -12,17 +12,18 @@ import com.example.core.repository.DRGRepository
 import com.example.core.sync.BackgroundSyncEngine
 import com.example.core.viewmodel.coordinators.*
 import com.example.shared.models.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class DRGViewModel(val repository: DRGRepository, val sharedPrefs: SharedPreferences?, application: Application) : AndroidViewModel(application) {
-    constructor(repo: DRGRepository, prefs: SharedPreferences?, ctx: Context? = null) :
-        this(repo, prefs, (ctx?.applicationContext as? Application) ?: throw IllegalArgumentException("App context required"))
+class DRGViewModel(
+    val repository: DRGRepository,
+    val sharedPrefs: SharedPreferences?,
+    application: Application
+) : AndroidViewModel(application) {
 
     private val _snackBarMessage = MutableStateFlow<String?>(null)
     val snackBarMessage: StateFlow<String?> = _snackBarMessage.asStateFlow()
-    fun showToast(msg: String) { _snackBarMessage.value = msg }
+    fun showToast(message: String) { _snackBarMessage.value = message }
     fun clearSnackBar() { _snackBarMessage.value = null }
 
     val batteryManager = BatteryOptimizationManager(sharedPrefs)
@@ -49,7 +50,7 @@ class DRGViewModel(val repository: DRGRepository, val sharedPrefs: SharedPrefere
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
-    fun setSearchQuery(q: String) { _searchQuery.value = q }
+    fun setSearchQuery(query: String) { _searchQuery.value = query }
 
     private val whileSubscribed = SharingStarted.WhileSubscribed(5000L)
     val activeAlerts = repository.activeAlerts.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
@@ -88,61 +89,72 @@ class DRGViewModel(val repository: DRGRepository, val sharedPrefs: SharedPrefere
     }
 
     // Auth & Profile
-    fun login(id: String) = profileCoord.login(id)
+    fun login(memberId: String) = profileCoord.login(memberId)
     fun logout() = profileCoord.logout()
-    fun switchActiveMember(id: String) = profileCoord.switchActiveMember(id)
-    fun switchRole(id: String) = switchActiveMember(id)
-    fun registerNewDriver(n: String, p: String, pl: String, m: String, a: String) = profileCoord.registerNewDriver(n, p, pl, m, a)
-    fun updateProfile(p: String, a: String, m: String, pl: String, u: String = "") = profileCoord.updateProfile(currentMember.value, p, a, m, pl, u)
+    fun switchActiveMember(memberId: String) = profileCoord.switchActiveMember(memberId)
+    fun switchRole(memberId: String) = switchActiveMember(memberId)
+    fun registerNewDriver(name: String, phone: String, plate: String, motorcycle: String, area: String) =
+        profileCoord.registerNewDriver(name, phone, plate, motorcycle, area)
+    fun updateProfile(phone: String, area: String, motorcycle: String, plate: String, photoUrl: String = "") =
+        profileCoord.updateProfile(currentMember.value, phone, area, motorcycle, plate, photoUrl)
 
     // Emergency & Crash
-    fun triggerEmergency(t: EmergencyType, m: String, l: String) = emergencyCoord.triggerEmergency(currentMember.value, t, m, l)
-    fun resolveEmergency(id: String) = emergencyCoord.resolveEmergency(id, currentMember.value)
-    fun respondEmergency(id: String) = emergencyCoord.respondEmergency(id)
-    fun respondToEmergency(id: String) = respondEmergency(id)
-    fun toggleSosAlarmSound(e: Boolean) = emergencyCoord.toggleSosAlarmSound(e)
-    fun testSosAlarmSound(f: (() -> Unit)? = null) = emergencyCoord.testSosAlarmSound(f)
+    fun triggerEmergency(type: EmergencyType, message: String, location: String) =
+        emergencyCoord.triggerEmergency(currentMember.value, type, message, location)
+    fun resolveEmergency(alertId: String) = emergencyCoord.resolveEmergency(alertId, currentMember.value)
+    fun respondEmergency(alertId: String) = emergencyCoord.respondEmergency(alertId)
+    fun respondToEmergency(alertId: String) = respondEmergency(alertId)
+    fun toggleSosAlarmSound(enabled: Boolean) = emergencyCoord.toggleSosAlarmSound(enabled)
+    fun testSosAlarmSound(onFinish: (() -> Unit)? = null) = emergencyCoord.testSosAlarmSound(onFinish)
     fun stopSosAlarmSound() = emergencyCoord.stopSosAlarmSound()
-    fun toggleCrashGuard(e: Boolean) = emergencyCoord.toggleCrashGuard(e)
-    fun setCrashSensitivity(s: CrashSensitivity) = emergencyCoord.setCrashSensitivity(s)
-    fun simulateCrashImpact(g: Float = 3.2f) = emergencyCoord.simulateCrashImpact(g)
+    fun toggleCrashGuard(enabled: Boolean) = emergencyCoord.toggleCrashGuard(enabled)
+    fun setCrashSensitivity(sensitivity: CrashSensitivity) = emergencyCoord.setCrashSensitivity(sensitivity)
+    fun simulateCrashImpact(gForce: Float = 3.2f) = emergencyCoord.simulateCrashImpact(gForce)
     fun dismissCrashCountdown() = emergencyCoord.dismissCrashCountdown()
-    fun confirmCrashAutoSos(g: Float) {
+    fun confirmCrashAutoSos(gForce: Float) {
         dismissCrashCountdown()
-        triggerEmergency(EmergencyType.KECELAKAAN, "Auto-SOS: Crash Guard %.1fG".format(g), "Posisi: ${currentMember.value?.baseArea ?: "Malang"}")
+        triggerEmergency(EmergencyType.KECELAKAAN, "Auto-SOS: Crash Guard %.1fG".format(gForce), "Posisi: ${currentMember.value?.baseArea ?: "Malang"}")
     }
 
-    // Governance, Community, Tasks & Radar
-    fun approveMemberScreening(id: String, n: String = "Diverifikasi") = governanceCoord.approveMemberScreening(id, n)
-    fun rejectMemberScreening(id: String, r: String) = governanceCoord.rejectMemberScreening(id, r)
-    fun updateMemberRole(id: String, r: MemberRole) = governanceCoord.updateMemberRole(id, r, currentMember.value)
-    fun updateMemberVerification(id: String, v: VerificationStatus) = governanceCoord.updateMemberVerification(id, v, currentMember.value)
-    fun createPost(t: String, c: String, cat: ForumCategory, p: PostType = PostType.UPDATE) = communityCoord.createPost(currentMember.value, t, c, cat, p)
-    fun addPost(t: String, c: String, cat: ForumCategory, p: PostType = PostType.UPDATE) = createPost(t, c, cat, p)
-    fun deletePost(id: String) = communityCoord.deletePost(id)
-    fun toggleLike(id: String, l: Boolean) = communityCoord.toggleLike(id, l)
-    fun toggleLikePost(id: String, l: Boolean) = toggleLike(id, l)
-    fun checkInEvent(id: String) = communityCoord.checkInEvent(currentMember.value, id)
+    // Governance & Community
+    fun approveMemberScreening(memberId: String, note: String = "Diverifikasi") = governanceCoord.approveMemberScreening(memberId, note)
+    fun rejectMemberScreening(memberId: String, reason: String) = governanceCoord.rejectMemberScreening(memberId, reason)
+    fun updateMemberRole(memberId: String, role: MemberRole) = governanceCoord.updateMemberRole(memberId, role, currentMember.value)
+    fun updateMemberVerification(memberId: String, status: VerificationStatus) = governanceCoord.updateMemberVerification(memberId, status, currentMember.value)
+    fun createPost(title: String, content: String, category: ForumCategory, postType: PostType = PostType.UPDATE) =
+        communityCoord.createPost(currentMember.value, title, content, category, postType)
+    fun addPost(title: String, content: String, category: ForumCategory, postType: PostType = PostType.UPDATE) =
+        createPost(title, content, category, postType)
+    fun deletePost(postId: String) = communityCoord.deletePost(postId)
+    fun toggleLike(postId: String, isLiked: Boolean) = communityCoord.toggleLike(postId, isLiked)
+    fun toggleLikePost(postId: String, isLiked: Boolean) = toggleLike(postId, isLiked)
+    fun checkInEvent(eventId: String) = communityCoord.checkInEvent(currentMember.value, eventId)
     fun recordKopdarAttendance() = checkInEvent("EVT-KOPDAR-01")
-    fun submitDriverReview(t: String, r: Float, tag: String, c: String) = communityCoord.submitDriverReview(currentMember.value, t, r, tag, c)
-    fun addDriverReview(t: String, r: Int, c: String) = submitDriverReview(t, r.toFloat(), "Solidaritas", c)
-    fun sendNotification(t: String, m: String, s: NotificationSeverity) = communityCoord.sendNotification(currentMember.value, t, m, s)
-    fun awardPeerPoints(tId: String, tN: String, b: Boolean, r: String) = communityCoord.awardPeerPoints(currentMember.value, tId, tN, b, r)
-    fun claimTask(id: String) = communityCoord.claimTask(currentMember.value, id)
-    fun completeTask(id: String) = communityCoord.completeTask(currentMember.value, id)
-    fun redeemReward(id: String) = communityCoord.redeemReward(currentMember.value, id)
-    fun reportHazard(t: String, type: HazardType, l: String, d: String, lat: Double, lng: Double) = radarCoord.reportHazard(currentMember.value, t, type, l, d, lat, lng)
-    fun confirmHazard(id: String) = radarCoord.confirmHazard(id)
-    fun toggleLocationSharingConsent(c: Boolean) = radarCoord.toggleLocationSharingConsent(currentMember.value, c)
-    fun saveNotificationPref(p: NotificationPreference) = radarCoord.saveNotificationPref(p)
+    fun submitDriverReview(targetDriverId: String, rating: Float, tag: String, comment: String) =
+        communityCoord.submitDriverReview(currentMember.value, targetDriverId, rating, tag, comment)
+    fun addDriverReview(targetDriverId: String, rating: Int, comment: String) = submitDriverReview(targetDriverId, rating.toFloat(), "Solidaritas", comment)
+    fun sendNotification(title: String, message: String, severity: NotificationSeverity) =
+        communityCoord.sendNotification(currentMember.value, title, message, severity)
+    fun awardPeerPoints(targetId: String, targetName: String, isBeneficiary: Boolean, reason: String) =
+        communityCoord.awardPeerPoints(currentMember.value, targetId, targetName, isBeneficiary, reason)
+    fun claimTask(taskId: String) = communityCoord.claimTask(currentMember.value, taskId)
+    fun completeTask(taskId: String) = communityCoord.completeTask(currentMember.value, taskId)
+    fun redeemReward(rewardId: String) = communityCoord.redeemReward(currentMember.value, rewardId)
+
+    // Radar & Battery
+    fun reportHazard(title: String, type: HazardType, location: String, description: String, lat: Double, lng: Double) =
+        radarCoord.reportHazard(currentMember.value, title, type, location, description, lat, lng)
+    fun confirmHazard(hazardId: String) = radarCoord.confirmHazard(hazardId)
+    fun toggleLocationSharingConsent(consent: Boolean) = radarCoord.toggleLocationSharingConsent(currentMember.value, consent)
+    fun saveNotificationPref(preference: NotificationPreference) = radarCoord.saveNotificationPref(preference)
     fun applyCommunityGpsPolicy() = radarCoord.applyCommunityGpsPolicy(currentMember.value)
-    fun setMapCachePolicy(p: MapCachePolicy) = radarCoord.setMapCachePolicy(p)
-    fun setLocationSyncProfile(p: LocationSyncPowerProfile) = radarCoord.setLocationSyncProfile(p)
-    fun setPowerSaverMode(e: Boolean) = radarCoord.setPowerSaverMode(e)
-    fun setDataSaverMode(e: Boolean) = radarCoord.setDataSaverMode(e)
-    fun precacheMap(ctx: Context) = radarCoord.precacheMap(ctx, isPowerSaverMode.value)
-    fun clearMapCache(ctx: Context) = radarCoord.clearMapCache(ctx)
-    fun getCacheSizeDesc(ctx: Context) = radarCoord.getCacheSizeDesc(ctx)
+    fun setMapCachePolicy(policy: MapCachePolicy) = radarCoord.setMapCachePolicy(policy)
+    fun setLocationSyncProfile(profile: LocationSyncPowerProfile) = radarCoord.setLocationSyncProfile(profile)
+    fun setPowerSaverMode(enabled: Boolean) = radarCoord.setPowerSaverMode(enabled)
+    fun setDataSaverMode(enabled: Boolean) = radarCoord.setDataSaverMode(enabled)
+    fun precacheMap(context: Context) = radarCoord.precacheMap(context, isPowerSaverMode.value)
+    fun clearMapCache(context: Context) = radarCoord.clearMapCache(context)
+    fun getCacheSizeDesc(context: Context) = radarCoord.getCacheSizeDesc(context)
 
     override fun onCleared() {
         super.onCleared()

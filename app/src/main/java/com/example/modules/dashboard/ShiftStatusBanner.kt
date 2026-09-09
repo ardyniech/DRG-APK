@@ -6,8 +6,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.DirectionsBike
 import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shared.models.DriverMember
+import com.example.shared.models.VerificationStatus
 import com.example.ui.theme.*
 
 @Composable
@@ -26,13 +28,18 @@ fun ShiftStatusBanner(
     member: DriverMember?,
     modifier: Modifier = Modifier
 ) {
+    val isPending = member?.verificationStatus == VerificationStatus.PENDING_SCREENING
+    val statusText = if (isPending) "Verifikasi Pending" else (member?.currentStatus ?: "Aktif Narik")
+    val statusBg = if (isPending) DrgAmberContainer else DrgGreenContainer
+    val statusColor = if (isPending) DrgAmberDark else DrgGreenPrimary
+
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(20.dp))
             .background(DrgSurface)
-            .border(1.dp, DrgGreenPrimary.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
-            .padding(12.dp)
+            .border(1.5.dp, DrgGreenPrimary.copy(alpha = 0.25f), RoundedCornerShape(20.dp))
+            .padding(14.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -41,61 +48,96 @@ fun ShiftStatusBanner(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    val isPending = member?.verificationStatus == com.example.shared.models.VerificationStatus.PENDING_SCREENING
-                    val indicatorColor = if (isPending) DrgAmberSecondary else DrgGreenLight
-                    val statusText = if (isPending) "Menunggu Verifikasi" else (member?.currentStatus ?: "Aktif Narik")
-                    val statusColor = if (isPending) DrgAmberDark else DrgGreenPrimary
-
-                    Box(
-                        modifier = Modifier
-                            .size(10.dp)
-                            .clip(CircleShape)
-                            .background(indicatorColor)
+                    Text(
+                        text = "Halo, ${member?.name?.split(" ")?.firstOrNull() ?: "Rekan Driver"}",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 17.sp,
+                        color = DrgTextPrimary
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = "Status: $statusText",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp,
-                        color = statusColor
-                    )
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(statusBg)
+                            .padding(horizontal = 8.dp, vertical = 3.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(7.dp)
+                                    .clip(CircleShape)
+                                    .background(statusColor)
+                            )
+                            Spacer(modifier = Modifier.width(5.dp))
+                            Text(
+                                text = statusText,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 11.sp,
+                                color = statusColor
+                            )
+                        }
+                    }
                 }
-                Spacer(modifier = Modifier.height(2.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.LocationOn,
-                        contentDescription = "Lokasi",
-                        tint = DrgTextSecondary,
-                        modifier = Modifier.size(15.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "Malang Raya • ${member?.motorcyclePlate ?: "N 1234 ABC"}",
-                        fontSize = 13.sp,
-                        color = DrgTextSecondary
-                    )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.DirectionsBike,
+                            contentDescription = "Plat Motor",
+                            tint = DrgTextSecondary,
+                            modifier = Modifier.size(14.dp)
+                        )
+                        Spacer(modifier = Modifier.width(3.dp))
+                        Text(
+                            text = member?.motorcyclePlate ?: "N 1234 ABC",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = DrgTextSecondary
+                        )
+                    }
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = "Rating",
+                            tint = DrgAmberSecondary,
+                            modifier = Modifier.size(14.dp)
+                        )
+                        Spacer(modifier = Modifier.width(3.dp))
+                        Text(
+                            text = "${member?.rating ?: 4.9} (${member?.loyaltyPoints ?: 150} Poin)",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = DrgTextPrimary
+                        )
+                    }
                 }
             }
 
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(DrgGreenContainer)
-                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(DrgGreenPrimary)
+                    .padding(horizontal = 10.dp, vertical = 8.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.Shield,
-                        contentDescription = "Pantauan Satgas Aktif",
-                        tint = DrgGreenPrimary,
-                        modifier = Modifier.size(16.dp)
+                        contentDescription = "Satgas Siaga",
+                        tint = Color.White,
+                        modifier = Modifier.size(15.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "Satgas Siaga",
-                        fontSize = 12.sp,
+                        text = "Satgas 24/7",
+                        fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
-                        color = DrgGreenPrimary
+                        color = Color.White
                     )
                 }
             }

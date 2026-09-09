@@ -3,7 +3,7 @@ package com.example.modules.members
 import com.example.shared.models.DriverMember
 import com.example.shared.models.MemberRole
 import com.example.shared.models.VerificationStatus
-import java.text.SimpleDateFormat
+import com.example.shared.utils.DateTimeUtils
 import java.util.*
 
 object ReportGenerator {
@@ -13,7 +13,7 @@ object ReportGenerator {
         filterStatusSelected: VerificationStatus?,
         searchQuery: String
     ): String {
-        val timestamp = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault()).format(Date())
+        val timestamp = DateTimeUtils.formatCurrentDateTimeReadable()
         return buildString {
             appendLine("# LAPORAN ANGGOTA DRG MALANG RAYA")
             appendLine("Dibuat pada: $timestamp")

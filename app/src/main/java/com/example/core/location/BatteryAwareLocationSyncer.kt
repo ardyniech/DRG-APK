@@ -1,12 +1,16 @@
 package com.example.core.location
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.BatteryManager
+import androidx.core.content.ContextCompat
 import com.example.core.cache.LocationSyncPowerProfile
+import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,6 +39,7 @@ class BatteryAwareLocationSyncer(
     private var lastLat: Double = -7.9822
     private var lastLng: Double = 112.6303
 
+    private val fusedLocationClient = context?.let { LocationServices.getFusedLocationProviderClient(it) }
     private val sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as? SensorManager
     private val accelerometer = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
     @Volatile private var isDeviceInMotion: Boolean = false
@@ -61,10 +66,28 @@ class BatteryAwareLocationSyncer(
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
+    @SuppressLint("MissingPermission")
+    private fun fetchRealLocationIfPermitted() {
+        val ctx = context ?: return
+        val hasFine = ContextCompat.checkSelfPermission(ctx, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val hasCoarse = ContextCompat.checkSelfPermission(ctx, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        if (hasFine || hasCoarse) {
+            runCatching {
+                fusedLocationClient?.lastLocation?.addOnSuccessListener { location ->
+                    if (location != null) {
+                        lastLat = location.latitude
+                        lastLng = location.longitude
+                    }
+                }
+            }
+        }
+    }
+
     fun startSync(profile: LocationSyncPowerProfile = LocationSyncPowerProfile.ADAPTIVE_ECO) {
         syncJob?.cancel()
         syncJob = scope.launch(coroutineDispatcher) {
             while (isActive) {
+                fetchRealLocationIfPermitted()
                 val battery = readBatteryStats()
                 val effectiveProfile = if (battery.first < 20 && !battery.second) {
                     LocationSyncPowerProfile.ULTRA_SAVER
