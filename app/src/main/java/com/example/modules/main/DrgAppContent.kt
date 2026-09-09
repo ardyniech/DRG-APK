@@ -1,5 +1,6 @@
 package com.example.modules.main
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.LinearProgressIndicator
@@ -37,6 +38,21 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
     var selectedTargetForAward by remember { mutableStateOf<DriverMember?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
+    // Android Back Button Handler
+    BackHandler {
+        when {
+            showRoleSwitcher -> showRoleSwitcher = false
+            showEmergencyTrigger -> showEmergencyTrigger = false
+            showAddKasDialog -> showAddKasDialog = false
+            showAwardPointDialog -> showAwardPointDialog = false
+            showAddHazardDialog -> showAddHazardDialog = false
+            showNotifPrefDialog -> showNotifPrefDialog = false
+            showSettingsDialog -> showSettingsDialog = false
+            state.currentTab.value != MainNavTab.DASHBOARD -> viewModel.selectTab(MainNavTab.DASHBOARD)
+            else -> (context as? android.app.Activity)?.finish()
+        }
+    }
 
     if (!state.isLoggedIn.value) {
         AuthContainerScreen(viewModel = viewModel, onLoginSuccess = { viewModel.login(it) })
