@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import com.example.modules.radar.logic.MapProjection
+import com.example.modules.radar.logic.TrafficCorridorPainter.drawTrafficCorridors
 import com.example.modules.radar.primitives.MapMarkerPainterUtils.drawDriverMarker
 import com.example.modules.radar.primitives.MapMarkerPainterUtils.drawHazardMarker
 import com.example.modules.radar.primitives.MapMarkerPainterUtils.drawMyGpsPosition
@@ -37,6 +38,7 @@ fun MapMarkersLayer(
     showRadarSweep: Boolean,
     onSelectDriver: (DriverMember) -> Unit,
     focusedDriver: DriverMember?,
+    isTrafficEnabled: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     if (screenWidth <= 0f || screenHeight <= 0f) return
@@ -88,11 +90,15 @@ fun MapMarkersLayer(
             drawRadarSweepEffect(maxR, Offset(screenWidth / 2f, screenHeight / 2f), pulseRadius)
         }
 
+        if (isTrafficEnabled || selectedFilter == "Lalu Lintas" || selectedFilter == "Area Rawan") {
+            drawTrafficCorridors(hazards, centerLat, centerLng, zoom, screenWidth, screenHeight, pulseRadius)
+        }
+
         if (selectedFilter == "Semua" || selectedFilter == "Posko") {
             projectedPoskos.forEach { pt -> drawPoskoMarker(pt) }
         }
 
-        if (selectedFilter == "Semua" || selectedFilter == "Area Rawan") {
+        if (selectedFilter == "Semua" || selectedFilter == "Area Rawan" || selectedFilter == "Lalu Lintas") {
             projectedHazards.forEach { (pt, hazard) -> drawHazardMarker(pt, hazard) }
         }
 

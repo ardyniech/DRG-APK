@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.modules.members.role_management.RolePermissionManagementScreen
 import com.example.shared.models.*
 import com.example.ui.theme.*
 
@@ -27,6 +29,7 @@ fun MembersAndPoskoScreen(
     onAddReview: (String, Int, String) -> Unit,
     onUpdateMemberRole: (String, MemberRole) -> Unit,
     onUpdateMemberVerification: (String, VerificationStatus) -> Unit,
+    onUpdateMemberPermissions: (String, MemberRole, Boolean, Boolean, Boolean, Boolean, VerificationStatus) -> Unit = { _, _, _, _, _, _, _ -> },
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
@@ -35,30 +38,41 @@ fun MembersAndPoskoScreen(
     var filterStatusSelected by remember { mutableStateOf<VerificationStatus?>(null) }
     var selectedMemberForReview by remember { mutableStateOf<DriverMember?>(null) }
     var showExportDialog by remember { mutableStateOf(false) }
+    val isLeadership = currentMember?.role?.isLeadership == true
 
     Column(modifier = modifier.fillMaxSize().background(DrgBackground).padding(horizontal = 16.dp)) {
         TabRow(selectedTabIndex = selectedTab, containerColor = DrgSurface, contentColor = DrgGreenPrimary, modifier = Modifier.padding(top = 10.dp)) {
-            Tab(selected = selectedTab == 0, onClick = { selectedTab = 0 }, text = { Text("Anggota (${members.size})", fontWeight = FontWeight.Bold, fontSize = 11.sp) })
-            Tab(selected = selectedTab == 1, onClick = { selectedTab = 1 }, text = { Text("Posko (${poskoList.size})", fontWeight = FontWeight.Bold, fontSize = 11.sp) })
-            Tab(selected = selectedTab == 2, onClick = { selectedTab = 2 }, text = { Text("Log Otoritas (${adminLogs.size})", fontWeight = FontWeight.Bold, fontSize = 11.sp) })
+            Tab(selected = selectedTab == 0, onClick = { selectedTab = 0 }, text = { Text("Anggota (${members.size})", fontWeight = FontWeight.Bold, fontSize = 10.sp) })
+            Tab(selected = selectedTab == 1, onClick = { selectedTab = 1 }, text = { Text("Posko (${poskoList.size})", fontWeight = FontWeight.Bold, fontSize = 10.sp) })
+            Tab(selected = selectedTab == 2, onClick = { selectedTab = 2 }, text = { Text("Atur Role & Izin", fontWeight = FontWeight.Bold, fontSize = 10.sp) })
+            Tab(selected = selectedTab == 3, onClick = { selectedTab = 3 }, text = { Text("Riwayat (${adminLogs.size})", fontWeight = FontWeight.Bold, fontSize = 10.sp) })
         }
 
         Spacer(modifier = Modifier.height(10.dp))
 
         if (selectedTab == 0) {
-            Button(onClick = onRecordKopdarAttendance, colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary), shape = RoundedCornerShape(10.dp), modifier = Modifier.fillMaxWidth().height(40.dp)) {
-                Icon(imageVector = Icons.Default.CheckCircle, contentDescription = "Absen", tint = Color.White)
-                Spacer(modifier = Modifier.width(6.dp))
-                Text("Tap Absen Kehadiran Kopdar (+50 Poin)", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = onRecordKopdarAttendance, colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary), shape = RoundedCornerShape(10.dp), modifier = Modifier.weight(1f).height(38.dp), contentPadding = PaddingValues(horizontal = 6.dp)) {
+                    Icon(imageVector = Icons.Default.CheckCircle, contentDescription = "Absen", tint = Color.White, modifier = Modifier.size(16.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Absen Kopdar (+50 XP)", fontWeight = FontWeight.Bold, fontSize = 11.sp)
+                }
+                if (isLeadership) {
+                    Button(onClick = { selectedTab = 2 }, colors = ButtonDefaults.buttonColors(containerColor = DrgAmberSecondary), shape = RoundedCornerShape(10.dp), modifier = Modifier.height(38.dp), contentPadding = PaddingValues(horizontal = 8.dp)) {
+                        Icon(imageVector = Icons.Default.Security, contentDescription = "Role", tint = Color.White, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Atur Otoritas", fontWeight = FontWeight.Bold, fontSize = 11.sp)
+                    }
+                }
             }
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
 
         if (selectedTab == 0 || selectedTab == 1) {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
                     value = searchQuery, onValueChange = { searchQuery = it },
-                    placeholder = { Text(if (selectedTab == 0) "Cari nama atau plat..." else "Cari posko rehat...", fontSize = 11.sp) },
+                    placeholder = { Text(if (selectedTab == 0) "Cari nama atau plat..." else "Cari posko...", fontSize = 11.sp) },
                     singleLine = true, modifier = Modifier.weight(1f), shape = RoundedCornerShape(10.dp)
                 )
                 if (selectedTab == 0) {
@@ -75,7 +89,8 @@ fun MembersAndPoskoScreen(
         when (selectedTab) {
             0 -> MembersTabSection(members = members, searchQuery = searchQuery, filterRoleByPengurusOnly = filterRoleByPengurusOnly, onTogglePengurusOnly = { filterRoleByPengurusOnly = it }, filterStatusSelected = filterStatusSelected, onSelectStatus = { filterStatusSelected = it }, onSelectMember = { selectedMemberForReview = it })
             1 -> PoskoTabSection(currentMember = currentMember, poskoList = poskoList, searchQuery = searchQuery)
-            2 -> AdminLogsTabSection(adminLogs = adminLogs)
+            2 -> RolePermissionManagementScreen(members = members, onBack = { selectedTab = 0 }, onSavePermissions = onUpdateMemberPermissions)
+            3 -> AdminLogsTabSection(adminLogs = adminLogs)
         }
     }
 

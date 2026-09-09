@@ -2,6 +2,9 @@ package com.example.modules.main
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Surface
@@ -24,6 +27,7 @@ fun DrgBottomNavBar(
         tonalElevation = 8.dp,
         modifier = modifier
             .fillMaxWidth()
+            .windowInsetsPadding(WindowInsets.navigationBars)
             .border(1.dp, DrgOutline.copy(alpha = 0.5f))
     ) {
         Row(

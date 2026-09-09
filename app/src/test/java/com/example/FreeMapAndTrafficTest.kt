@@ -1,9 +1,9 @@
 package com.example
 
+import com.example.modules.radar.logic.CongestionLevel
 import com.example.modules.radar.logic.MapProjection
-import com.example.modules.radar.logic.TrafficDataRepository
+import com.example.modules.radar.logic.TrafficCorridorPainter
 import com.example.modules.radar.models.FreeMapMode
-import com.example.modules.radar.models.TrafficStatus
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -35,16 +35,16 @@ class FreeMapAndTrafficTest {
     }
 
     @Test
-    fun testTrafficDataSegments() {
-        val segments = TrafficDataRepository.getRoadSegments()
-        assertTrue("Segments should exist", segments.isNotEmpty())
+    fun testTrafficCorridors() {
+        val corridors = TrafficCorridorPainter.mainCorridors
+        assertTrue("Traffic corridors should not be empty", corridors.isNotEmpty())
 
-        val smoothRoad = segments.find { it.status == TrafficStatus.SMOOTH }
-        assertNotNull(smoothRoad)
-        assertTrue(smoothRoad!!.avgSpeedKmh > 35)
+        val heavyCorridor = corridors.find { it.baseCongestion == CongestionLevel.HEAVY }
+        assertNotNull(heavyCorridor)
+        assertEquals(8, CongestionLevel.HEAVY.averageSpeedKmH)
 
-        val jammedRoad = segments.find { it.status == TrafficStatus.JAMMED }
-        assertNotNull(jammedRoad)
-        assertTrue(jammedRoad!!.avgSpeedKmh < 15)
+        val clearCorridor = corridors.find { it.baseCongestion == CongestionLevel.CLEAR }
+        assertNotNull(clearCorridor)
+        assertEquals(42, CongestionLevel.CLEAR.averageSpeedKmH)
     }
 }

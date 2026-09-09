@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.*
+import com.example.shared.utils.bouncyClick
 
 @Composable
 fun DrgBottomNavItem(
@@ -29,16 +30,18 @@ fun DrgBottomNavItem(
     val tint = if (isSelected) DrgGrabGreenPrimary else DrgTextMuted
     val bg = if (isSelected) DrgGreenContainer else Color.Transparent
 
-    Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(16.dp),
-        color = bg,
-        modifier = Modifier.height(52.dp).padding(horizontal = 2.dp)
+    Box(
+        modifier = Modifier
+            .height(52.dp)
+            .padding(horizontal = 2.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(bg)
+            .bouncyClick { onClick() }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp).align(Alignment.Center)
         ) {
             Box {
                 Icon(

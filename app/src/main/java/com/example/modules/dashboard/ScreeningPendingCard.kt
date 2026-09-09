@@ -92,7 +92,7 @@ fun ScreeningPendingCard(
                         modifier = Modifier.weight(2f).height(38.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp)
                     ) {
-                        Text("Verifikasi Instan (Demo)", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                        Text("Verifikasi Mandiri Pengurus", fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }

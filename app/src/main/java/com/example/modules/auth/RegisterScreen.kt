@@ -56,7 +56,7 @@ fun RegisterScreen(
         IconButton(onClick = onBack, modifier = Modifier.padding(top = 16.dp).testTag("register_back_button")) {
             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
         }
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text("Daftar Anggota DRG", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = DrgTextDark)
         Text("Bergabung dengan solidaritas driver Arema Malang Raya.", fontSize = 13.sp, color = DrgTextMuted)
         Spacer(modifier = Modifier.height(14.dp))
@@ -66,37 +66,29 @@ fun RegisterScreen(
             isError = isNameError, supportingText = { if (isNameError) Text("Nama tidak boleh kosong", color = Color.Red) },
             modifier = Modifier.fillMaxWidth().testTag("reg_name"), shape = RoundedCornerShape(12.dp)
         )
-        Spacer(modifier = Modifier.height(6.dp))
-
         OutlinedTextField(
             value = phone, onValueChange = { phone = it; phoneTouched = true }, label = { Text("Nomor HP Aktif") },
             isError = isPhoneError, supportingText = { if (isPhoneError) Text("Nomor HP minimal 10 digit", color = Color.Red) },
             modifier = Modifier.fillMaxWidth().testTag("reg_phone"), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone), shape = RoundedCornerShape(12.dp)
         )
-        Spacer(modifier = Modifier.height(6.dp))
-
         OutlinedTextField(
             value = plate, onValueChange = { var clean = it.uppercase(); if (!clean.startsWith("N")) { clean = "N " + clean.trim() }; plate = clean; plateTouched = true },
             label = { Text("Nomor Pelat Motor (Jatim Malang)") }, isError = isPlateError,
             supportingText = { if (isPlateError) Text("Pelat motor wajib valid", color = Color.Red) },
             modifier = Modifier.fillMaxWidth().testTag("reg_plate"), keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters), shape = RoundedCornerShape(12.dp)
         )
-        Spacer(modifier = Modifier.height(6.dp))
-
         OutlinedTextField(
             value = model, onValueChange = { model = it; modelTouched = true }, label = { Text("Model Motor") },
             isError = isModelError, supportingText = { if (isModelError) Text("Model motor wajib diisi", color = Color.Red) },
             placeholder = { Text("Contoh: Honda Vario 160") }, modifier = Modifier.fillMaxWidth().testTag("reg_motor"), shape = RoundedCornerShape(12.dp)
         )
-        Spacer(modifier = Modifier.height(6.dp))
-
         OutlinedTextField(
             value = pin, onValueChange = { if (it.length <= 4) { pin = it; pinTouched = true } }, label = { Text("Setel 4-Digit PIN Baru") },
             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) }, isError = isPinError,
             supportingText = { if (isPinError) Text("PIN wajib 4 digit angka", color = Color.Red) else Text("PIN ini akan digunakan untuk login anggota.") },
             modifier = Modifier.fillMaxWidth().testTag("reg_pin"), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), shape = RoundedCornerShape(12.dp)
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(6.dp))
         ExposedDropdownMenuBox(expanded = expandedAreaMenu, onExpandedChange = { expandedAreaMenu = !expandedAreaMenu }, modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
                 value = selectedArea, onValueChange = {}, readOnly = true, label = { Text("Wilayah Operasional / Basukom") },
@@ -107,7 +99,7 @@ fun RegisterScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
                 if (isValid) {

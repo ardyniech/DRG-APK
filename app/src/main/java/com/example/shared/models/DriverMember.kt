@@ -27,5 +27,9 @@ data class DriverMember(
     val kasPaidStatus: Boolean = true,
     val kopdarAttendanceCount: Int = 8,
     val isLocationSharingConsent: Boolean = true,
-    val profilePhotoUrl: String = ""
+    val profilePhotoUrl: String = "",
+    val canManageKas: Boolean = false,
+    val canVerifyDrivers: Boolean = false,
+    val canBroadcastSos: Boolean = false,
+    val canManagePosko: Boolean = false
 )

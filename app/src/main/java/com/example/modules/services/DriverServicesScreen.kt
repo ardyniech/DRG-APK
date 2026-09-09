@@ -27,14 +27,14 @@ fun DriverServicesScreen(
     var selectedCategory by remember { mutableStateOf(0) }
     val categories = listOf("Pasar Koperasi", "Dana Talangan", "AI Driver Assistant", "Escort Satgas")
 
-    val mockMarketItems = listOf(
+    val koperasiItems = listOf(
         ServiceMarketItem("M1", "Helm SNI Official DRG Gold", "Atribut", 150000, 20, "Posko Utama Klojen", true, 25),
         ServiceMarketItem("M2", "Oli Motul 10W-40 1L (Subsidi)", "Sparepart", 45000, 10, "Posko 2 Suhat", true, 30),
         ServiceMarketItem("M3", "Jas Hujan Double Press Satgas", "Atribut", 85000, 15, "Posko 3 Batu", true, 15),
         ServiceMarketItem("M4", "Holder HP Alumunium Anti-Getar", "Peralatan", 65000, 10, "Posko Utama Klojen", true, 20)
     )
 
-    val mockClaims = listOf(
+    val protectionClaims = listOf(
         InsuranceClaimItem("C1", "Dana Talangan Mogok / Ban Pecah", 500000, "Siaga 24 Jam", "Kecemasan Jalan", "Build"),
         InsuranceClaimItem("C2", "Restitusi Servis Layar HP Pecah", 300000, "Proses 1x24 Jam", "Alat Kerja", "PhoneAndroid"),
         InsuranceClaimItem("C3", "Santunan Kecelakaan Satgas Jalur", 2000000, "Diverifikasi Pengurus", "Jiwa & Medis", "MedicalServices")
@@ -81,14 +81,14 @@ fun DriverServicesScreen(
                 0 -> {
                     item { MarketHeaderCard() }
                     item { KoperasiWholesaleBanner() }
-                    items(mockMarketItems.size) { idx ->
-                        MarketItemCard(item = mockMarketItems[idx], onOrder = onOrderMarketItem)
+                    items(koperasiItems.size) { idx ->
+                        MarketItemCard(item = koperasiItems[idx], onOrder = onOrderMarketItem)
                     }
                 }
                 1 -> {
                     item { ProtectionHeaderCard() }
-                    items(mockClaims.size) { idx ->
-                        ClaimItemCard(claim = mockClaims[idx], onClaim = onClaimInsurance)
+                    items(protectionClaims.size) { idx ->
+                        ClaimItemCard(claim = protectionClaims[idx], onClaim = onClaimInsurance)
                     }
                 }
                 2 -> {

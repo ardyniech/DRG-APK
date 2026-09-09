@@ -13,6 +13,8 @@ fun DRGViewModel.registerNewDriver(name: String, phone: String, plate: String, m
     profileCoord.registerNewDriver(name, phone, plate, motorcycle, area, pin)
 fun DRGViewModel.updateProfile(phone: String, area: String, motorcycle: String, plate: String, photoUrl: String = "") =
     profileCoord.updateProfile(currentMember.value, phone, area, motorcycle, plate, photoUrl)
+fun DRGViewModel.updateDutyStatus(status: String, isOnline: Boolean) =
+    profileCoord.updateDutyStatus(currentMember.value, status, isOnline)
 
 fun DRGViewModel.triggerEmergency(type: EmergencyType, message: String, location: String) =
     emergencyCoord.triggerEmergency(currentMember.value, type, message, location)
@@ -35,6 +37,17 @@ fun DRGViewModel.approveMemberScreening(memberId: String, note: String = "Diveri
 fun DRGViewModel.rejectMemberScreening(memberId: String, reason: String) = governanceCoord.rejectMemberScreening(memberId, reason)
 fun DRGViewModel.updateMemberRole(memberId: String, role: MemberRole) = governanceCoord.updateMemberRole(memberId, role, currentMember.value)
 fun DRGViewModel.updateMemberVerification(memberId: String, status: VerificationStatus) = governanceCoord.updateMemberVerification(memberId, status, currentMember.value)
+fun DRGViewModel.updateMemberPermissions(
+    memberId: String,
+    role: MemberRole,
+    canKas: Boolean,
+    canVerify: Boolean,
+    canSos: Boolean,
+    canPosko: Boolean,
+    status: VerificationStatus
+) = governanceCoord.updateMemberPermissions(
+    memberId, role, canKas, canVerify, canSos, canPosko, status, currentMember.value
+)
 fun DRGViewModel.createPost(title: String, content: String, category: ForumCategory, postType: PostType = PostType.UPDATE) =
     communityCoord.createPost(currentMember.value, title, content, category, postType)
 fun DRGViewModel.addPost(title: String, content: String, category: ForumCategory, postType: PostType = PostType.UPDATE) =

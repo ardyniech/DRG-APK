@@ -79,9 +79,10 @@ fun KasTransparanComponent(
         }
 
         if (filteredList.isEmpty()) {
-            Box(modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp), contentAlignment = Alignment.Center) {
-                Text(text = "Belum ada transaksi kas untuk kategori ini.", fontSize = 12.sp, color = DrgTextMuted)
-            }
+            com.example.shared.atoms.EmptyStateOrganicGraphic(
+                title = "Belum Ada Transaksi Kas",
+                message = "Transaksi untuk filter/kategori yang Anda pilih saat ini masih kosong."
+            )
         } else {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),

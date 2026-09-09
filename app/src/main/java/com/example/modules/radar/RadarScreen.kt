@@ -32,7 +32,7 @@ fun RadarScreen(
 ) {
     var selectedFilter by remember { mutableStateOf("Semua") }
     var focusedDriver by remember { mutableStateOf<DriverMember?>(null) }
-    val filters = listOf("Semua", "Live Map (GPS)", "Satgas", "Posko", "Area Rawan", "Sedang Narik")
+    val filters = listOf("Semua", "Lalu Lintas", "Live Map (GPS)", "Satgas", "Posko", "Area Rawan", "Sedang Narik")
 
     val displayMembers = remember(members, selectedFilter) {
         when (selectedFilter) {
@@ -70,7 +70,7 @@ fun RadarScreen(
                 FreeMapContainer(
                     members = displayMembers, alerts = alerts, poskoList = poskoList, hazards = hazards,
                     selectedFilter = selectedFilter, isConsentGranted = isConsentOn, onSelectDriver = { focusedDriver = it },
-                    focusedDriver = focusedDriver, onTriggerEmergency = onTriggerEmergency, isPowerSaverEnabled = isPowerSaverEnabled
+                    focusedDriver = focusedDriver, isPowerSaverEnabled = isPowerSaverEnabled
                 )
             }
 

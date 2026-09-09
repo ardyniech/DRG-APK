@@ -11,10 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.core.viewmodel.MainNavTab
-import com.example.shared.models.CommunityNotification
-import com.example.shared.models.DriverMember
-import com.example.shared.models.EmergencyAlert
-import com.example.shared.models.HazardArea
+import com.example.shared.models.*
 import com.example.ui.theme.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -27,10 +24,12 @@ fun DashboardScreen(
     activeAlerts: List<EmergencyAlert>,
     hazards: List<HazardArea>,
     announcements: List<CommunityNotification>,
+    cashTransactions: List<KasTransaction> = emptyList(),
     poskoCount: Int,
     totalKasFormatted: String,
     onNavigateTab: (MainNavTab) -> Unit,
     onTriggerEmergency: () -> Unit,
+    onUpdateDutyStatus: (String, Boolean) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier
 ) {
     val activeMemberCount = members.count { it.isOnline }
@@ -42,7 +41,7 @@ fun DashboardScreen(
         onRefresh = {
             scope.launch {
                 isRefreshing = true
-                delay(1200) // Simulate data fetch reconciliation
+                delay(800)
                 isRefreshing = false
             }
         },
@@ -54,8 +53,15 @@ fun DashboardScreen(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            item { ShiftStatusBanner(member = currentMember) }
+            // 1. Driver Profile Details
+            item {
+                DriverProfileOverviewCard(
+                    member = currentMember,
+                    onStatusChange = onUpdateDutyStatus
+                )
+            }
 
+            // Active SOS Emergency Alert if any
             val activeSos = activeAlerts.firstOrNull { it.isActive }
             if (activeSos != null) {
                 item {
@@ -63,41 +69,49 @@ fun DashboardScreen(
                 }
             }
 
+            // 2. Community Live Status
             item {
                 Text(
-                    text = "Pintas Tindakan Cepat (Quick Actions)",
+                    text = "Status Ekosistem Komunitas",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
+                    fontSize = 13.sp,
                     color = DrgTextPrimary
                 )
             }
-
             item {
-                QuickActionGrid(onNavigate = onNavigateTab, onQuickEmergency = onTriggerEmergency)
-            }
-
-            item {
-                RecentAnnouncementsSection(announcements = announcements)
-            }
-
-            item {
-                Text(
-                    text = "Ringkasan Ekosistem Komunitas DRG",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    color = DrgTextPrimary
-                )
-            }
-
-            item {
-                SummaryStatsGrid(
+                CommunityLiveStatusCard(
                     activeMemberCount = activeMemberCount,
                     activeHazardCount = hazards.size,
                     kasFormatted = totalKasFormatted,
                     poskoCount = poskoCount,
-                    onNavigateToTab = { onNavigateTab(it) }
+                    onNavigateTab = onNavigateTab
                 )
             }
+
+            // Quick Actions
+            item {
+                Text(
+                    text = "Akses Cepat (Quick Actions)",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp,
+                    color = DrgTextPrimary
+                )
+            }
+            item {
+                QuickActionGrid(onNavigate = onNavigateTab, onQuickEmergency = onTriggerEmergency)
+            }
+
+            // 3. Summary of Recent Community Activities
+            item {
+                RecentCommunityActivitiesSection(
+                    announcements = announcements,
+                    cashTransactions = cashTransactions,
+                    hazards = hazards,
+                    onNavigateTab = onNavigateTab
+                )
+            }
+
+            item { Spacer(modifier = Modifier.height(16.dp)) }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.core.repository
 
+import androidx.room.withTransaction
 import com.example.core.database.AppDatabase
 import com.example.shared.models.*
 import kotlinx.coroutines.Dispatchers
@@ -30,8 +31,6 @@ class GamificationRepository(private val db: AppDatabase) {
         reason: String
     ) = withContext(Dispatchers.IO) {
         val weight = calculatePointWeight(giverMember.role, isBeneficiary)
-        db.memberDao().addLoyaltyPoints(targetMemberId, weight)
-
         val tx = PointTransaction(
             id = "PTX-${java.util.UUID.randomUUID().toString().replace("-", "").take(8)}",
             targetMemberId = targetMemberId,
@@ -43,8 +42,6 @@ class GamificationRepository(private val db: AppDatabase) {
             isBeneficiaryDirect = isBeneficiary,
             reason = reason
         )
-        db.gamificationDao().insertPointTransaction(tx)
-
         val notif = CommunityNotification(
             id = "NTF-${java.util.UUID.randomUUID().toString().replace("-", "").take(8)}",
             title = "Apresiasi Poin Diterima! (+${weight} XP)",
@@ -54,7 +51,12 @@ class GamificationRepository(private val db: AppDatabase) {
             senderRole = giverMember.role,
             timeAgo = "Baru saja"
         )
-        db.notificationDao().insertNotification(notif)
+        
+        db.withTransaction {
+            db.memberDao().addLoyaltyPoints(targetMemberId, weight)
+            db.gamificationDao().insertPointTransaction(tx)
+            db.notificationDao().insertNotification(notif)
+        }
     }
 
     suspend fun claimTask(taskId: String, member: DriverMember) = withContext(Dispatchers.IO) {
@@ -70,9 +72,6 @@ class GamificationRepository(private val db: AppDatabase) {
     suspend fun completeTask(taskId: String, memberId: String) = withContext(Dispatchers.IO) {
         val task = db.gamificationDao().getTaskById(taskId) ?: return@withContext
         val updated = task.copy(status = TaskStatus.VERIFIED)
-        db.gamificationDao().updateTask(updated)
-        db.memberDao().addLoyaltyPoints(memberId, task.rewardPoints)
-
         val notif = CommunityNotification(
             id = "NTF-${java.util.UUID.randomUUID().toString().replace("-", "").take(8)}",
             title = "Tugas Komunitas Selesai (+${task.rewardPoints} XP)",
@@ -82,14 +81,21 @@ class GamificationRepository(private val db: AppDatabase) {
             senderRole = MemberRole.KETUA,
             timeAgo = "Baru saja"
         )
-        db.notificationDao().insertNotification(notif)
+        
+        db.withTransaction {
+            db.gamificationDao().updateTask(updated)
+            db.memberDao().addLoyaltyPoints(memberId, task.rewardPoints)
+            db.notificationDao().insertNotification(notif)
+        }
     }
 
     suspend fun redeemReward(rewardId: String, member: DriverMember) = withContext(Dispatchers.IO) {
         val reward = db.gamificationDao().getRewardById(rewardId) ?: return@withContext
         if (member.loyaltyPoints >= reward.requiredPoints && reward.stockAvailable > 0) {
-            db.memberDao().addLoyaltyPoints(member.id, -reward.requiredPoints)
-            db.gamificationDao().updateReward(reward.copy(stockAvailable = reward.stockAvailable - 1, isRedeemed = true))
+            db.withTransaction {
+                db.memberDao().addLoyaltyPoints(member.id, -reward.requiredPoints)
+                db.gamificationDao().updateReward(reward.copy(stockAvailable = reward.stockAvailable - 1, isRedeemed = true))
+            }
         }
     }
 }

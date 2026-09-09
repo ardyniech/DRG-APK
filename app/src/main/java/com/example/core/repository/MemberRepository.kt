@@ -1,5 +1,6 @@
 package com.example.core.repository
 
+import androidx.room.withTransaction
 import com.example.core.database.AppDatabase
 import com.example.shared.models.*
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +12,10 @@ class MemberRepository(private val db: AppDatabase) {
 
     fun getReviewsForDriver(driverId: String): Flow<List<DriverReview>> =
         db.reviewDao().getReviewsForDriver(driverId)
+
+    suspend fun getMemberCount(): Int = withContext(Dispatchers.IO) {
+        db.memberDao().getCount()
+    }
 
     suspend fun updateScreening(memberId: String, status: VerificationStatus, notes: String) = withContext(Dispatchers.IO) {
         db.memberDao().updateScreeningStatus(memberId, status, notes)
@@ -29,8 +34,10 @@ class MemberRepository(private val db: AppDatabase) {
     }
 
     suspend fun checkInKopdar(eventId: String, memberId: String, points: Int) = withContext(Dispatchers.IO) {
-        db.attendanceDao().checkIn(eventId)
-        db.memberDao().addLoyaltyPoints(memberId, points)
+        db.withTransaction {
+            db.attendanceDao().checkIn(eventId)
+            db.memberDao().addLoyaltyPoints(memberId, points)
+        }
     }
 
     suspend fun addReview(review: DriverReview) = withContext(Dispatchers.IO) {

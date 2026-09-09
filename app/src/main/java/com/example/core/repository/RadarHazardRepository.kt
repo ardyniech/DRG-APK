@@ -1,5 +1,6 @@
 package com.example.core.repository
 
+import androidx.room.withTransaction
 import com.example.core.database.AppDatabase
 import com.example.shared.models.*
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,6 @@ class RadarHazardRepository(private val db: AppDatabase) {
     val allAppSettings: Flow<List<AppStateSetting>> = db.appStateDao().getAllStateSettings()
 
     suspend fun addHazard(hazard: HazardArea) = withContext(Dispatchers.IO) {
-        db.hazardDao().insertHazard(hazard)
         val notif = CommunityNotification(
             id = "NTF-${java.util.UUID.randomUUID().toString().replace("-", "").take(8)}",
             title = "Peringatan Jalur Rawan Baru: ${hazard.hazardType.label}",
@@ -24,7 +24,11 @@ class RadarHazardRepository(private val db: AppDatabase) {
             senderRole = hazard.reporterRole,
             timeAgo = "Baru saja"
         )
-        db.notificationDao().insertNotification(notif)
+        
+        db.withTransaction {
+            db.hazardDao().insertHazard(hazard)
+            db.notificationDao().insertNotification(notif)
+        }
     }
 
     suspend fun confirmHazard(hazardId: String) = withContext(Dispatchers.IO) {

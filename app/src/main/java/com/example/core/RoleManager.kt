@@ -1,6 +1,7 @@
 package com.example.core
 
 import com.example.shared.models.AccessLevel
+import com.example.shared.models.DriverMember
 import com.example.shared.models.MemberRole
 import com.example.shared.models.UserRole
 
@@ -29,20 +30,32 @@ object RoleManager {
         }
     }
 
-    fun hasPermission(memberRole: MemberRole, permission: String): Boolean {
-        val userRole = getUserRoleForMemberRole(memberRole)
-        return userRole.permissions.contains(permission)
+    fun canManageKas(member: DriverMember?): Boolean {
+        if (member == null) return false
+        if (member.role == MemberRole.KETUA) return true
+        return member.canManageKas || member.role == MemberRole.BENDAHARA
     }
 
-    fun canManageMembers(memberRole: MemberRole): Boolean {
-        return hasPermission(memberRole, "manage_members")
+    fun canVerifyDrivers(member: DriverMember?): Boolean {
+        if (member == null) return false
+        if (member.role == MemberRole.KETUA) return true
+        return member.canVerifyDrivers || member.role in listOf(MemberRole.SEKRETARIS, MemberRole.DEWAN_ETIKA)
     }
 
-    fun canManageRoles(memberRole: MemberRole): Boolean {
-        return hasPermission(memberRole, "manage_roles")
+    fun canBroadcastSos(member: DriverMember?): Boolean {
+        if (member == null) return false
+        if (member.role == MemberRole.KETUA) return true
+        return member.canBroadcastSos || member.role in listOf(MemberRole.WAKIL_KETUA, MemberRole.SATGAS)
     }
 
-    fun canApproveScreening(memberRole: MemberRole): Boolean {
-        return hasPermission(memberRole, "approve_screening")
+    fun canManagePosko(member: DriverMember?): Boolean {
+        if (member == null) return false
+        if (member.role == MemberRole.KETUA) return true
+        return member.canManagePosko || member.role in listOf(MemberRole.WAKIL_KETUA, MemberRole.SATGAS)
+    }
+
+    fun canManageRoles(member: DriverMember?): Boolean {
+        if (member == null) return false
+        return member.role in listOf(MemberRole.KETUA, MemberRole.SEKRETARIS)
     }
 }

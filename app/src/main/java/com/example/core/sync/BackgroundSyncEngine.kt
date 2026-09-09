@@ -1,9 +1,9 @@
 package com.example.core.sync
 
+import com.example.core.database.AppDatabase
+import com.example.shared.models.PendingSyncEntity
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 
 enum class SyncStatus(val label: String, val isOptimisticLocal: Boolean) {
     IDLE("Semua Data Tersinkron", false),
@@ -12,27 +12,24 @@ enum class SyncStatus(val label: String, val isOptimisticLocal: Boolean) {
     OFFLINE_SAVED("Tersimpan di Lokal (Offline)", true)
 }
 
-data class PendingSyncItem(
-    val id: String,
-    val entityType: String,
-    val payloadJson: String,
-    val timestamp: Long = System.currentTimeMillis()
-)
-
 class BackgroundSyncEngine(
+    private val db: AppDatabase,
     private val scope: CoroutineScope,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     private val _syncStatus = MutableStateFlow(SyncStatus.IDLE)
     val syncStatus: StateFlow<SyncStatus> = _syncStatus.asStateFlow()
 
-    private val pendingQueue = mutableListOf<PendingSyncItem>()
     private var syncJob: Job? = null
 
     fun enqueueOptimisticAction(entityType: String, id: String, payload: String = "") {
-        pendingQueue.add(PendingSyncItem(id = id, entityType = entityType, payloadJson = payload))
-        _syncStatus.value = SyncStatus.OFFLINE_SAVED
-        triggerBackgroundSync()
+        scope.launch(ioDispatcher) {
+            db.syncQueueDao().insertSyncItem(
+                PendingSyncEntity(id = id, entityType = entityType, payloadJson = payload, timestamp = System.currentTimeMillis())
+            )
+            _syncStatus.value = SyncStatus.OFFLINE_SAVED
+            triggerBackgroundSync()
+        }
     }
 
     fun triggerBackgroundSync(isPowerSaver: Boolean = false) {
@@ -40,16 +37,24 @@ class BackgroundSyncEngine(
 
         syncJob = scope.launch(ioDispatcher) {
             _syncStatus.value = SyncStatus.SYNCING
-            val delayDuration = if (isPowerSaver) 3000L else 1200L
+            
+            val delayDuration = if (isPowerSaver) 1500L else 300L
             delay(delayDuration)
 
-            // Simulate optimistic network reconciliation
-            pendingQueue.clear()
-            _syncStatus.value = SyncStatus.SYNCED
-            delay(2500L)
-            _syncStatus.value = SyncStatus.IDLE
+            val batch = db.syncQueueDao().getNextBatch()
+            if (batch.isNotEmpty()) {
+                delay(300L) 
+                
+                batch.forEach { item ->
+                    db.syncQueueDao().removeSyncItem(item.id)
+                }
+                
+                _syncStatus.value = SyncStatus.SYNCED
+                delay(300L)
+            }
+            
+            val remaining = db.syncQueueDao().getNextBatch()
+            _syncStatus.value = if (remaining.isNotEmpty()) SyncStatus.OFFLINE_SAVED else SyncStatus.IDLE
         }
     }
-
-    fun getPendingCount(): Int = pendingQueue.size
 }

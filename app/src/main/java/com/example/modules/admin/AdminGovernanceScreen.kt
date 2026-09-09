@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Campaign
+import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.modules.members.role_management.RolePermissionManagementScreen
 import com.example.shared.models.*
 import com.example.ui.theme.*
 
@@ -25,10 +27,21 @@ fun AdminGovernanceScreen(
     members: List<DriverMember>,
     onApproveScreening: (String) -> Unit,
     onSendNotification: (String, String, NotificationSeverity) -> Unit,
+    onUpdateMemberPermissions: (String, MemberRole, Boolean, Boolean, Boolean, Boolean, VerificationStatus) -> Unit = { _, _, _, _, _, _, _ -> },
     modifier: Modifier = Modifier
 ) {
     var showNotifDialog by remember { mutableStateOf(false) }
+    var showRoleManagementPage by remember { mutableStateOf(false) }
     val isLeadershipOrAdmin = currentMember?.role?.isLeadership == true || currentMember?.role?.name in listOf("SEKRETARIS", "ADMIN")
+
+    if (showRoleManagementPage) {
+        RolePermissionManagementScreen(
+            members = members,
+            onBack = { showRoleManagementPage = false },
+            onSavePermissions = onUpdateMemberPermissions
+        )
+        return
+    }
 
     LazyColumn(
         modifier = modifier.fillMaxSize().background(DrgBackground).padding(horizontal = 16.dp),
@@ -40,15 +53,29 @@ fun AdminGovernanceScreen(
 
         if (isLeadershipOrAdmin) {
             item {
-                Button(
-                    onClick = { showNotifDialog = true },
-                    colors = ButtonDefaults.buttonColors(containerColor = DrgAmberSecondary),
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.fillMaxWidth().height(48.dp)
-                ) {
-                    Icon(Icons.Default.Campaign, contentDescription = "Broadcast", tint = Color.White)
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text("Kirim Pengumuman / Peringatan Bahaya (Pengurus)", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color.White)
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(
+                        onClick = { showRoleManagementPage = true },
+                        colors = ButtonDefaults.buttonColors(containerColor = DrgGrabGreenPrimary),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.weight(1f).height(48.dp),
+                        contentPadding = PaddingValues(horizontal = 8.dp)
+                    ) {
+                        Icon(Icons.Default.ManageAccounts, contentDescription = "Role", tint = Color.White, modifier = Modifier.size(18.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Atur Jabatan & Izin", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = Color.White)
+                    }
+                    Button(
+                        onClick = { showNotifDialog = true },
+                        colors = ButtonDefaults.buttonColors(containerColor = DrgAmberSecondary),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.weight(1f).height(48.dp),
+                        contentPadding = PaddingValues(horizontal = 8.dp)
+                    ) {
+                        Icon(Icons.Default.Campaign, contentDescription = "Broadcast", tint = Color.White, modifier = Modifier.size(18.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Kirim Siaran", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = Color.White)
+                    }
                 }
             }
         }

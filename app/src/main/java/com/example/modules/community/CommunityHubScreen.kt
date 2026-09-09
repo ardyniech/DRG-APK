@@ -42,6 +42,7 @@ fun CommunityHubScreen(
     onAddReview: (String, Int, String) -> Unit = { _, _, _ -> },
     onUpdateMemberRole: (String, MemberRole) -> Unit = { _, _ -> },
     onUpdateMemberVerification: (String, VerificationStatus) -> Unit = { _, _ -> },
+    onUpdateMemberPermissions: (String, MemberRole, Boolean, Boolean, Boolean, Boolean, VerificationStatus) -> Unit = { _, _, _, _, _, _, _ -> },
     onOrderMarketItem: (ServiceMarketItem) -> Unit = {},
     onClaimInsurance: (InsuranceClaimItem) -> Unit = {},
     modifier: Modifier = Modifier
@@ -61,7 +62,7 @@ fun CommunityHubScreen(
                 }
                 1 -> ForumAndWorkshopScreen(posts = posts, workshops = workshops, currentMemberId = currentMember?.id ?: "DRG-001", onCreatePost = onCreatePost, onToggleLike = onToggleLike, onDeletePost = onDeletePost, onCallWorkshop = onCallWorkshop)
                 2 -> GamificationLeaderboardScreen(currentMember = currentMember, members = members, badges = badges, tasks = tasks, rewards = rewards, pointTransactions = pointTransactions, onAwardPointsClick = onAwardPointsClick, onClaimTask = onClaimTask, onCompleteTask = onCompleteTask, onRedeemReward = onRedeemReward)
-                3 -> MembersAndPoskoScreen(currentMember = currentMember, members = members, poskoList = poskoList, adminLogs = adminLogs, onRecordKopdarAttendance = onRecordKopdarAttendance, onAddReview = onAddReview, onUpdateMemberRole = onUpdateMemberRole, onUpdateMemberVerification = onUpdateMemberVerification)
+                3 -> MembersAndPoskoScreen(currentMember = currentMember, members = members, poskoList = poskoList, adminLogs = adminLogs, onRecordKopdarAttendance = onRecordKopdarAttendance, onAddReview = onAddReview, onUpdateMemberRole = onUpdateMemberRole, onUpdateMemberVerification = onUpdateMemberVerification, onUpdateMemberPermissions = onUpdateMemberPermissions)
                 4 -> DriverServicesScreen(onOrderMarketItem = onOrderMarketItem, onClaimInsurance = onClaimInsurance)
             }
         }

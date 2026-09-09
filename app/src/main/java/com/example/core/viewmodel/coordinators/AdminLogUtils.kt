@@ -11,8 +11,8 @@ object AdminLogUtils {
         action: String,
         targetName: String
     ): AdminLog {
-        val actorName = actor?.name ?: "Slamet Rahardjo"
-        val actorRole = actor?.role?.shortName ?: "Ketua"
+        val actorName = actor?.name ?: "Pengurus DRG"
+        val actorRole = actor?.role?.shortName ?: "Admin"
         return AdminLog(
             id = UUID.randomUUID().toString(),
             actorName = actorName,

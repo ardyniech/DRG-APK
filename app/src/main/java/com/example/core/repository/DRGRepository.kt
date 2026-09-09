@@ -7,12 +7,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
-class DRGRepository(private val db: AppDatabase) {
+class DRGRepository(val db: AppDatabase) {
     val memberRepo = MemberRepository(db)
     val emergencyRepo = EmergencyRepository(db)
     val communityRepo = CommunityRepository(db)
     val gamificationRepo = GamificationRepository(db)
     val radarHazardRepo = RadarHazardRepository(db)
+    val adminLogRepo = AdminLogRepository(db)
 
     // Flow Delegations
     val allMembers: Flow<List<DriverMember>> get() = memberRepo.allMembers
@@ -33,26 +34,13 @@ class DRGRepository(private val db: AppDatabase) {
     val totalTileCount: Flow<Int> get() = radarHazardRepo.totalTileCount
     val totalTileSizeBytes: Flow<Long?> get() = radarHazardRepo.totalTileSizeBytes
     val allAppSettings: Flow<List<AppStateSetting>> get() = radarHazardRepo.allAppSettings
+    val allAdminLogs: Flow<List<AdminLog>> get() = adminLogRepo.allLogs
 
     fun getPrefForMember(memberId: String) = communityRepo.getPrefForMember(memberId)
     fun getReviewsForDriver(driverId: String) = memberRepo.getReviewsForDriver(driverId)
 
     suspend fun initializeSeedDataIfNeeded() = withContext(Dispatchers.IO) {
-        if (db.memberDao().getCount() == 0) {
-            db.memberDao().insertMembers(SeedData.getInitialMembers())
-            db.poskoDao().insertPoskoList(SeedDataExtra.getInitialPosko())
-            db.emergencyDao().insertAlerts(SeedDataExtra.getInitialEmergency())
-            db.kasDao().insertTransactions(SeedDataTransactions.getInitialKas())
-            db.forumDao().insertPosts(SeedDataTransactions.getInitialForum())
-            db.workshopDao().insertWorkshops(SeedDataTransactions.getInitialWorkshops())
-            db.attendanceDao().insertEvents(SeedDataTransactions.getInitialEvents())
-            db.notificationDao().insertNotifications(SeedDataTransactions.getInitialNotifications())
-            db.reviewDao().insertReviews(SeedDataTransactions.getInitialReviews())
-            db.gamificationDao().insertBadges(SeedDataGamification.getInitialBadges())
-            SeedDataGamification.getInitialTasks().forEach { db.gamificationDao().insertTask(it) }
-            db.gamificationDao().insertRewards(SeedDataGamification.getInitialRewards())
-            SeedDataGamification.getInitialHazards().forEach { db.hazardDao().insertHazard(it) }
-        }
+        // Mock data removed. Application runs with real data only.
     }
 
     // Method Delegations

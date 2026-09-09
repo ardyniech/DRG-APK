@@ -14,9 +14,9 @@ import androidx.compose.ui.unit.dp
 import com.example.core.sync.SyncStatus
 import com.example.core.viewmodel.CashManagementViewModel
 import com.example.core.viewmodel.DRGViewModel
+import com.example.core.viewmodel.*
 import com.example.core.viewmodel.MainNavTab
 import com.example.modules.auth.AuthContainerScreen
-import com.example.modules.emergency.SosFloatingActionButton
 import com.example.modules.main.primitives.DrgAppDialogs
 import com.example.modules.main.primitives.DrgTabContentSwitcher
 import com.example.shared.atoms.DrgHeader
@@ -58,6 +58,8 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
         AuthContainerScreen(viewModel = viewModel, onLoginSuccess = { viewModel.login(it) })
     } else {
         Scaffold(
+            modifier = Modifier.fillMaxSize().imePadding(),
+            contentWindowInsets = WindowInsets.systemBars,
             topBar = {
                 Column {
                     DrgHeader(
@@ -77,11 +79,6 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
             },
             bottomBar = {
                 DrgBottomNavBar(selectedTab = state.currentTab.value, onSelectTab = { viewModel.selectTab(it) }, activeEmergencyCount = state.activeAlerts.value.size)
-            },
-            floatingActionButton = {
-                if (state.currentTab.value != MainNavTab.EMERGENCY) {
-                    SosFloatingActionButton(onClick = { showEmergencyTrigger = true })
-                }
             },
             snackbarHost = { SnackbarHost(snackbarHostState) }
         ) { paddingValues ->

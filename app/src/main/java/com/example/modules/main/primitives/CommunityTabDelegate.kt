@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import com.example.core.viewmodel.DRGViewModel
+import com.example.core.viewmodel.*
 import com.example.core.viewmodel.MainNavTab
 import com.example.modules.community.CommunityHubScreen
 import com.example.shared.models.*
@@ -84,6 +85,9 @@ fun CommunityTabDelegate(
         },
         onUpdateMemberRole = { id, role -> viewModel.updateMemberRole(id, role) },
         onUpdateMemberVerification = { id, status -> viewModel.updateMemberVerification(id, status) },
+        onUpdateMemberPermissions = { id, role, canKas, canVerify, canSos, canPosko, status ->
+            viewModel.updateMemberPermissions(id, role, canKas, canVerify, canSos, canPosko, status)
+        },
         onOrderMarketItem = { item ->
             scope.launch { snackbarHostState.showSnackbar("Pesanan ${item.title} berhasil diajukan! Silakan ambil di ${item.poskoLocation}") }
         },

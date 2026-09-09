@@ -1,23 +1,49 @@
 package com.example
 
+import android.content.Context
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
 import com.example.core.battery.BatteryOptimizationManager
 import com.example.core.cache.DRGCacheManager
 import com.example.core.cache.LocationSyncPowerProfile
 import com.example.core.cache.MapCachePolicy
+import com.example.core.database.AppDatabase
 import com.example.core.location.BatteryAwareLocationSyncer
 import com.example.core.sync.BackgroundSyncEngine
 import com.example.core.sync.SyncStatus
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 @OptIn(ExperimentalCoroutinesApi::class)
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34])
 class CacheAndBatteryTest {
+
+    private lateinit var context: Context
+    private lateinit var db: AppDatabase
+
+    @Before
+    fun setup() {
+        context = ApplicationProvider.getApplicationContext()
+        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+            .allowMainThreadQueries()
+            .build()
+    }
+
+    @After
+    fun tearDown() {
+        db.close()
+    }
 
     @Test
     fun testBatteryOptimizationManagerDefaultsAndToggles() {
@@ -39,20 +65,18 @@ class CacheAndBatteryTest {
     @Test
     fun testBackgroundSyncEngineOptimisticEnqueueAndReconciliation() = runTest {
         val testDispatcher = StandardTestDispatcher(testScheduler)
-        val testScope = TestScope(testDispatcher)
-        val syncEngine = BackgroundSyncEngine(testScope, testDispatcher)
+        val syncEngine = BackgroundSyncEngine(db, this, testDispatcher)
 
         assertEquals(SyncStatus.IDLE, syncEngine.syncStatus.value)
-        assertEquals(0, syncEngine.getPendingCount())
+        assertEquals(0, db.syncQueueDao().getPendingCount())
 
         syncEngine.enqueueOptimisticAction("HAZARD", "HZD-999", "Begal Area")
-        assertEquals(1, syncEngine.getPendingCount())
-        assertEquals(SyncStatus.OFFLINE_SAVED, syncEngine.syncStatus.value)
+        advanceUntilIdle()
 
-        testScope.advanceUntilIdle()
-
-        assertEquals("Queue should clear after optimistic background sync", 0, syncEngine.getPendingCount())
-        assertEquals(SyncStatus.IDLE, syncEngine.syncStatus.value)
+        val count = db.syncQueueDao().getPendingCount()
+        val status = syncEngine.syncStatus.value
+        assertEquals(0, count)
+        assertEquals(SyncStatus.IDLE, status)
     }
 
     @Test

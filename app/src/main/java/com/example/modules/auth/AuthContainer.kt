@@ -2,6 +2,10 @@ package com.example.modules.auth
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
@@ -12,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.core.viewmodel.DRGViewModel
+import com.example.core.viewmodel.*
 import com.example.ui.theme.DrgBackgroundGradient
 import com.example.ui.theme.DrgGrabGreenPrimary
 import com.example.ui.theme.DrgTextDark
@@ -48,6 +53,8 @@ fun AuthContainerScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(DrgBackgroundGradient)
+            .windowInsetsPadding(WindowInsets.systemBars)
+            .imePadding()
     ) {
         Crossfade(targetState = currentStage, label = "authTransition") { stage ->
             when (stage) {

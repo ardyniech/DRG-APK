@@ -6,9 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.Campaign
-import androidx.compose.material.icons.filled.HelpOutline
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,12 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shared.models.ForumPost
 import com.example.shared.models.PostType
-import com.example.ui.theme.DrgAmberWarning
-import com.example.ui.theme.DrgBlueInfo
-import com.example.ui.theme.DrgOutline
-import com.example.ui.theme.DrgSurface
-import com.example.ui.theme.DrgTextMuted
-import com.example.ui.theme.DrgTextPrimary
+import com.example.ui.theme.*
 
 @Composable
 fun ForumListRowItem(
@@ -38,11 +31,12 @@ fun ForumListRowItem(
     var isExpanded by remember { mutableStateOf(false) }
 
     Surface(
-        shape = RoundedCornerShape(12.dp),
-        color = DrgSurface,
+        shape = RoundedCornerShape(14.dp),
+        color = Color.White,
+        shadowElevation = 1.dp,
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+            .border(1.dp, DrgOutline.copy(alpha = 0.45f), RoundedCornerShape(14.dp))
             .clickable { isExpanded = !isExpanded }
             .testTag("forum_list_item_${post.id}")
     ) {
@@ -55,10 +49,7 @@ fun ForumListRowItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     val isQuestion = post.postType == PostType.QUESTION
                     Icon(
                         imageVector = if (isQuestion) Icons.Default.HelpOutline else Icons.Default.Campaign,
@@ -73,24 +64,11 @@ fun ForumListRowItem(
                         color = Color(post.category.badgeColorHex)
                     )
                 }
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.AccessTime,
-                        contentDescription = "Waktu",
-                        tint = DrgTextMuted,
-                        modifier = Modifier.size(12.dp)
-                    )
-                    Text(
-                        text = post.timeAgo,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = DrgTextMuted
-                    )
-                }
+                Text(
+                    text = post.timeAgo,
+                    fontSize = 10.sp,
+                    color = DrgTextMuted
+                )
             }
 
             Text(
@@ -98,9 +76,40 @@ fun ForumListRowItem(
                 fontWeight = FontWeight.Bold,
                 fontSize = 13.sp,
                 color = DrgTextPrimary,
-                maxLines = if (isExpanded) 3 else 1,
+                maxLines = if (isExpanded) 4 else 2,
                 overflow = TextOverflow.Ellipsis
             )
+
+            if (!isExpanded) {
+                Text(
+                    text = post.content,
+                    fontSize = 11.sp,
+                    color = DrgTextSecondary,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    lineHeight = 15.sp
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Oleh: ${post.authorName} (${post.authorRole.shortName})",
+                        fontSize = 10.sp,
+                        color = DrgTextMuted
+                    )
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Icon(
+                            imageVector = if (post.isLikedByMe) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = "Suka",
+                            tint = if (post.isLikedByMe) DrgRedDanger else DrgTextMuted,
+                            modifier = Modifier.size(13.dp)
+                        )
+                        Text(text = "${post.likesCount}", fontSize = 10.sp, color = DrgTextMuted)
+                    }
+                }
+            }
 
             AnimatedVisibility(visible = isExpanded) {
                 ForumExpandedContent(

@@ -22,8 +22,8 @@ import com.example.ui.theme.*
 fun MapTopControlBar(
     mapMode: FreeMapMode,
     onToggleMapMode: (FreeMapMode) -> Unit,
-    isTrafficEnabled: Boolean,
-    onToggleTraffic: (Boolean) -> Unit,
+    isTrafficEnabled: Boolean = false,
+    onToggleTraffic: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -44,7 +44,7 @@ fun MapTopControlBar(
                 modifier = Modifier.height(34.dp)
             ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 10.dp),
+                    modifier = Modifier.padding(horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
@@ -52,10 +52,10 @@ fun MapTopControlBar(
                         imageVector = if (isRoad) Icons.Default.Map else Icons.Default.Satellite,
                         contentDescription = "Mode Peta",
                         tint = Color.White,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(15.dp)
                     )
                     Text(
-                        text = if (isRoad) "Peta Jalan" else "Satelit",
+                        text = if (isRoad) "Jalan" else "Satelit",
                         color = Color.White,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold
@@ -66,25 +66,25 @@ fun MapTopControlBar(
             Surface(
                 onClick = { onToggleTraffic(!isTrafficEnabled) },
                 shape = RoundedCornerShape(10.dp),
-                color = if (isTrafficEnabled) DrgTrafficGreen.copy(alpha = 0.28f) else Color.White.copy(alpha = 0.08f),
+                color = if (isTrafficEnabled) DrgTrafficRed else Color.White.copy(alpha = 0.18f),
                 modifier = Modifier.height(34.dp)
             ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 10.dp),
+                    modifier = Modifier.padding(horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Traffic,
-                        contentDescription = "Lalu Lintas",
-                        tint = if (isTrafficEnabled) DrgTrafficGreen else Color.Gray,
-                        modifier = Modifier.size(16.dp)
+                        contentDescription = "Layer Lalu Lintas",
+                        tint = Color.White,
+                        modifier = Modifier.size(15.dp)
                     )
                     Text(
-                        text = "Traffic",
-                        color = if (isTrafficEnabled) DrgTrafficGreen else Color.White.copy(alpha = 0.7f),
+                        text = if (isTrafficEnabled) "Lalin: ON" else "Lalin: OFF",
+                        color = Color.White,
                         fontSize = 11.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }

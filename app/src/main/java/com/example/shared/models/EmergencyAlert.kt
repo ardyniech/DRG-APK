@@ -10,7 +10,13 @@ enum class EmergencyType(val label: String, val severity: String) {
     BEGAL("Ancaman Bahaya / Begal", "Kritis")
 }
 
-@Entity(tableName = "emergency_alerts")
+@Entity(
+    tableName = "emergency_alerts",
+    indices = [
+        androidx.room.Index(value = ["isActive"]),
+        androidx.room.Index(value = ["timestamp"])
+    ]
+)
 data class EmergencyAlert(
     @PrimaryKey val id: String,
     val driverId: String,

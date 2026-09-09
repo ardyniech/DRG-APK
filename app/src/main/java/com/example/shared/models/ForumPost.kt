@@ -16,7 +16,13 @@ enum class PostType(val label: String, val iconName: String) {
     QUESTION("Tanya Rekan", "HelpOutline")
 }
 
-@Entity(tableName = "forum_posts")
+@Entity(
+    tableName = "forum_posts",
+    indices = [
+        androidx.room.Index(value = ["timestamp"]),
+        androidx.room.Index(value = ["category"])
+    ]
+)
 data class ForumPost(
     @PrimaryKey val id: String,
     val authorId: String,

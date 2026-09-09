@@ -18,7 +18,13 @@ enum class KasCategory(val label: String) {
     LAINNYA("Lain-lain")
 }
 
-@Entity(tableName = "kas_transactions")
+@Entity(
+    tableName = "kas_transactions",
+    indices = [
+        androidx.room.Index(value = ["timestamp"]),
+        androidx.room.Index(value = ["type"])
+    ]
+)
 data class KasTransaction(
     @PrimaryKey val id: String,
     val title: String,

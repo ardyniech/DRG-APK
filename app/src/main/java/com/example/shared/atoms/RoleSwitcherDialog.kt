@@ -42,13 +42,13 @@ fun RoleSwitcherDialog(
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 Text(
-                    text = "Ganti Akun Demo / Role Driver",
+                    text = "Beralih Profil Anggota / Pengurus",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = DrgTextPrimary
                 )
                 Text(
-                    text = "Pilih akun untuk menguji fitur & hak akses spesifik (Ketua, Bendahara, Satgas, Admin, Dewan Etika, Driver):",
+                    text = "Pilih akun anggota resmi untuk berganti peran operasional:",
                     fontSize = 12.sp,
                     color = DrgTextSecondary
                 )

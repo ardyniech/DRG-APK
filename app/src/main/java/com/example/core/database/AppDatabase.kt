@@ -28,9 +28,11 @@ import com.example.shared.models.*
         PointTransaction::class,
         NotificationPreference::class,
         MapTileMetadata::class,
-        AppStateSetting::class
+        AppStateSetting::class,
+        PendingSyncEntity::class,
+        AdminLog::class
     ],
-    version = 5,
+    version = 9,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -49,6 +51,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun notificationPrefDao(): NotificationPrefDao
     abstract fun mapTileDao(): MapTileDao
     abstract fun appStateDao(): AppStateDao
+    abstract fun syncQueueDao(): SyncQueueDao
+    abstract fun adminLogDao(): AdminLogDao
 
     companion object {
         @Volatile
@@ -78,6 +82,12 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE IF NOT EXISTS `pending_sync_queue` (`id` TEXT NOT NULL, `entityType` TEXT NOT NULL, `payloadJson` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))")
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -85,7 +95,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "drg_community.db"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance

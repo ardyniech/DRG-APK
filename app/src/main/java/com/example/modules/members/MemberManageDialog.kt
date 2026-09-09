@@ -24,8 +24,7 @@ fun MemberManageDialog(
     onUpdateMemberRole: (String, MemberRole) -> Unit,
     onUpdateMemberVerification: (String, VerificationStatus) -> Unit
 ) {
-    val currentUserRole = currentMember?.role ?: MemberRole.ANGGOTA
-    val isAdmin = RoleManager.canManageRoles(currentUserRole) || RoleManager.canManageMembers(currentUserRole)
+    val isAdmin = RoleManager.canManageRoles(currentMember)
 
     AlertDialog(
         onDismissRequest = onDismiss,

@@ -12,7 +12,6 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.example.modules.radar.logic.MapProjection
-import com.example.modules.radar.logic.TrafficDataRepository
 import com.example.modules.radar.models.FreeMapMode
 import com.example.shared.models.*
 
@@ -26,23 +25,19 @@ fun FreeMapContainer(
     isConsentGranted: Boolean,
     onSelectDriver: (DriverMember) -> Unit,
     focusedDriver: DriverMember?,
-    onTriggerEmergency: () -> Unit,
     isPowerSaverEnabled: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     var mapMode by remember { mutableStateOf(FreeMapMode.ROAD) }
-    var isTrafficEnabled by remember { mutableStateOf(true) }
     var isRadarSweepEnabled by remember { mutableStateOf(false) }
+    var isTrafficEnabled by remember { mutableStateOf(false) }
 
     val defaultLat = -7.9822
     val defaultLng = 112.6303
     var centerLat by remember { mutableDoubleStateOf(defaultLat) }
     var centerLng by remember { mutableDoubleStateOf(defaultLng) }
     var zoom by remember { mutableIntStateOf(14) }
-
     var containerSize by remember { mutableStateOf(IntSize.Zero) }
-    val roadSegments = remember { TrafficDataRepository.getRoadSegments() }
-    val trafficIncidents = remember { TrafficDataRepository.getIncidents() }
 
     Box(
         modifier = modifier
@@ -69,14 +64,22 @@ fun FreeMapContainer(
         val h = containerSize.height.toFloat()
 
         FreeMapTileLayer(mapMode = mapMode, centerLat = centerLat, centerLng = centerLng, zoom = zoom, screenWidth = w, screenHeight = h)
-        TrafficOverlayCanvas(roadSegments = roadSegments, incidents = trafficIncidents, centerLat = centerLat, centerLng = centerLng, zoom = zoom, isTrafficLayerEnabled = isTrafficEnabled, screenWidth = w, screenHeight = h, isPowerSaver = isPowerSaverEnabled)
-        MapMarkersLayer(members = members, alerts = alerts, poskoList = poskoList, hazards = hazards, selectedFilter = selectedFilter, centerLat = centerLat, centerLng = centerLng, zoom = zoom, screenWidth = w, screenHeight = h, isConsentGranted = isConsentGranted, showRadarSweep = isRadarSweepEnabled && !isPowerSaverEnabled, onSelectDriver = onSelectDriver, focusedDriver = focusedDriver)
 
-        MapTopControlBar(mapMode = mapMode, onToggleMapMode = { mapMode = it }, isTrafficEnabled = isTrafficEnabled, onToggleTraffic = { isTrafficEnabled = it }, modifier = Modifier.align(Alignment.TopEnd).padding(8.dp))
+        MapMarkersLayer(
+            members = members, alerts = alerts, poskoList = poskoList, hazards = hazards,
+            selectedFilter = selectedFilter, centerLat = centerLat, centerLng = centerLng, zoom = zoom,
+            screenWidth = w, screenHeight = h, isConsentGranted = isConsentGranted,
+            showRadarSweep = isRadarSweepEnabled && !isPowerSaverEnabled, onSelectDriver = onSelectDriver,
+            focusedDriver = focusedDriver, isTrafficEnabled = isTrafficEnabled
+        )
 
-        if (isTrafficEnabled) {
-            TrafficLegendCard(avgSpeedKmh = 27, modifier = Modifier.align(Alignment.TopStart).padding(8.dp))
-        }
+        MapTopControlBar(
+            mapMode = mapMode,
+            onToggleMapMode = { mapMode = it },
+            isTrafficEnabled = isTrafficEnabled,
+            onToggleTraffic = { isTrafficEnabled = it },
+            modifier = Modifier.align(Alignment.TopEnd).padding(8.dp)
+        )
 
         MapSideControlColumn(
             isRadarSweepEnabled = isRadarSweepEnabled,

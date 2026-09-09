@@ -6,9 +6,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import com.example.core.viewmodel.CashManagementViewModel
-import com.example.core.viewmodel.DRGViewModel
-import com.example.core.viewmodel.MainNavTab
+import com.example.core.viewmodel.*
 import com.example.modules.admin.AdminGovernanceScreen
 import com.example.modules.dashboard.DashboardScreen
 import com.example.modules.emergency.EmergencyScreen
@@ -54,40 +52,28 @@ fun DrgTabContentSwitcher(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    Crossfade(
-        targetState = currentTab,
-        animationSpec = tween(durationMillis = 200),
-        label = "tabTransition"
-    ) { tab ->
+    Crossfade(targetState = currentTab, animationSpec = tween(durationMillis = 200), label = "tabTransition") { tab ->
         when (tab) {
             MainNavTab.DASHBOARD -> DashboardScreen(
-                currentMember = currentMember,
-                members = members,
-                activeAlerts = activeAlerts,
-                hazards = hazards,
-                announcements = notifications,
-                poskoCount = poskoList.size,
-                totalKasFormatted = String.format("%,d", netBalance),
-                onNavigateTab = { viewModel.selectTab(it) },
-                onTriggerEmergency = onShowEmergencyTrigger
+                currentMember = currentMember, members = members, activeAlerts = activeAlerts,
+                hazards = hazards, announcements = notifications, cashTransactions = cashTransactions,
+                poskoCount = poskoList.size, totalKasFormatted = String.format("%,d", netBalance),
+                onNavigateTab = { viewModel.selectTab(it) }, onTriggerEmergency = onShowEmergencyTrigger,
+                onUpdateDutyStatus = { status, online -> viewModel.updateDutyStatus(status, online) }
             )
             MainNavTab.RADAR -> RadarScreen(
                 members = members, alerts = activeAlerts, poskoList = poskoList, hazards = hazards,
                 currentMember = currentMember, onToggleConsent = { viewModel.toggleLocationSharingConsent(it) },
                 onAddHazardClick = onShowAddHazardDialog, onConfirmHazard = { viewModel.confirmHazard(it) },
                 onTriggerEmergency = onShowEmergencyTrigger,
-                onCallDriver = { phone -> WhatsAppLauncher.openChat(context, phone, "Halo rekan DRG, koordinasi tim satgas segera.") },
+                onCallDriver = { WhatsAppLauncher.openChat(context, it, "Halo rekan DRG, koordinasi tim satgas segera.") },
                 isPowerSaverEnabled = isPowerSaverMode
             )
             MainNavTab.EMERGENCY -> EmergencyScreen(
                 currentMember = currentMember, alerts = activeAlerts,
-                onTriggerEmergency = { type, msg, loc ->
-                    viewModel.triggerEmergency(type, msg, loc)
-                    scope.launch { snackbarHostState.showSnackbar("Sinyal SOS Dipancarkan ke Seluruh Satgas!") }
-                },
-                onResolveEmergency = { viewModel.resolveEmergency(it) },
-                onRespondEmergency = { viewModel.respondToEmergency(it) },
-                onCallDriver = { phone -> WhatsAppLauncher.openChat(context, phone, "Halo rekan DRG, kami memantau sinyal darurat SOS Anda. Bagaimana kondisi terkini?") },
+                onTriggerEmergency = { t, m, l -> viewModel.triggerEmergency(t, m, l); scope.launch { snackbarHostState.showSnackbar("Sinyal SOS Dipancarkan!") } },
+                onResolveEmergency = { viewModel.resolveEmergency(it) }, onRespondEmergency = { viewModel.respondToEmergency(it) },
+                onCallDriver = { WhatsAppLauncher.openChat(context, it, "Halo rekan DRG, kami pantau sinyal darurat SOS Anda.") },
                 isSosAlarmEnabled = isSosAlarmEnabled, onToggleSosAlarm = { viewModel.toggleSosAlarmSound(it) },
                 isCrashGuardEnabled = isCrashGuardEnabled, crashSensitivity = crashSensitivity,
                 onSimulateCrash = { viewModel.simulateCrashImpact(3.2f) }, onOpenSettings = onShowSettingsDialog,
@@ -110,7 +96,7 @@ fun DrgTabContentSwitcher(
                     scope.launch { snackbarHostState.showSnackbar("Data profil berhasil diperbarui!") }
                 },
                 isSosAlarmEnabled = isSosAlarmEnabled, onToggleSosAlarm = { viewModel.toggleSosAlarmSound(it) },
-                onOpenSettings = onShowSettingsDialog
+                onOpenSettings = onShowSettingsDialog, onLogout = { viewModel.logout() }
             )
             MainNavTab.ADMIN -> AdminGovernanceScreen(
                 currentMember = currentMember, members = members,
@@ -118,6 +104,9 @@ fun DrgTabContentSwitcher(
                 onSendNotification = { title, msg, sev ->
                     viewModel.sendNotification(title, msg, sev)
                     scope.launch { snackbarHostState.showSnackbar("Pengumuman berhasil dipancarkan!") }
+                },
+                onUpdateMemberPermissions = { id, role, kas, verify, sos, posko, st ->
+                    viewModel.updateMemberPermissions(id, role, kas, verify, sos, posko, st)
                 }
             )
         }
