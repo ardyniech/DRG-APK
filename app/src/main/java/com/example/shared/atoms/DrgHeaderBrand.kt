@@ -2,6 +2,7 @@ package com.example.shared.atoms
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.TwoWheeler
@@ -15,10 +16,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.models.DriverMember
 import com.example.ui.theme.*
 
 @Composable
-fun DrgHeaderBrand(modifier: Modifier = Modifier) {
+fun DrgHeaderBrand(
+    member: DriverMember? = null,
+    modifier: Modifier = Modifier
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -43,23 +48,32 @@ fun DrgHeaderBrand(modifier: Modifier = Modifier) {
                 Text(
                     text = "DRG",
                     fontWeight = FontWeight.Black,
-                    fontSize = 17.sp,
+                    fontSize = 16.sp,
                     color = DrgGreenPrimary
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "DRIVER ONLINE",
+                    text = "MALANG",
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp,
                     color = DrgTextPrimary
                 )
             }
-            Text(
-                text = "Driver Riang Gembira • Lokal 🟢",
-                fontSize = 11.sp,
-                color = DrgTextSecondary,
-                fontWeight = FontWeight.Medium
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(6.dp)
+                        .clip(CircleShape)
+                        .background(if (member?.isOnline != false) DrgGreenPrimary else DrgTextMuted)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = member?.name?.split(" ")?.firstOrNull() ?: "Satgas Radar Siaga",
+                    fontSize = 11.sp,
+                    color = DrgTextSecondary,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
         }
     }
 }

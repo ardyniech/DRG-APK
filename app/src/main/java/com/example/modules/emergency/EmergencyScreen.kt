@@ -10,13 +10,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.shared.models.CrashSensitivity
-import com.example.shared.models.DriverMember
-import com.example.shared.models.EmergencyAlert
-import com.example.shared.models.EmergencyType
+import com.example.shared.models.*
 import com.example.ui.theme.*
 
 @Composable
@@ -41,73 +39,35 @@ fun EmergencyScreen(
     val activeAlertsCount = alerts.count { it.isActive }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(DrgBackground)
-            .padding(horizontal = 16.dp, vertical = 12.dp)
+        modifier = modifier.fillMaxSize().background(DrgBackground).padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
-        // High-Speed Tab Selector
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
-                .background(DrgSurface)
-                .padding(4.dp),
+            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(DrgSurface).padding(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            val tab1Bg = if (selectedTab == 0) DrgRedDanger else DrgSurface
-            val tab1Content = if (selectedTab == 0) androidx.compose.ui.graphics.Color.White else DrgTextSecondary
             Button(
                 onClick = { selectedTab = 0 },
-                colors = ButtonDefaults.buttonColors(containerColor = tab1Bg, contentColor = tab1Content),
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.weight(1f).height(42.dp),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Text("🚨 Kirim SOS", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-            }
+                colors = ButtonDefaults.buttonColors(containerColor = if (selectedTab == 0) DrgRedDanger else DrgSurface, contentColor = if (selectedTab == 0) Color.White else DrgTextSecondary),
+                shape = RoundedCornerShape(10.dp), modifier = Modifier.weight(1f).height(42.dp), contentPadding = PaddingValues(0.dp)
+            ) { Text("🚨 Kirim SOS", fontWeight = FontWeight.Bold, fontSize = 13.sp) }
 
-            val tab2Bg = if (selectedTab == 1) DrgGreenPrimary else DrgSurface
-            val tab2Content = if (selectedTab == 1) androidx.compose.ui.graphics.Color.White else DrgTextSecondary
             Button(
                 onClick = { selectedTab = 1 },
-                colors = ButtonDefaults.buttonColors(containerColor = tab2Bg, contentColor = tab2Content),
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.weight(1f).height(42.dp),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Text("📢 Respon SOS ($activeAlertsCount)", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-            }
+                colors = ButtonDefaults.buttonColors(containerColor = if (selectedTab == 1) DrgGreenPrimary else DrgSurface, contentColor = if (selectedTab == 1) Color.White else DrgTextSecondary),
+                shape = RoundedCornerShape(10.dp), modifier = Modifier.weight(1f).height(42.dp), contentPadding = PaddingValues(0.dp)
+            ) { Text("📢 Respon SOS ($activeAlertsCount)", fontWeight = FontWeight.Bold, fontSize = 13.sp) }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
         if (selectedTab == 0) {
-            // Dedicated Single-Purpose Fast SOS Trigger Page
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 24.dp)
-            ) {
-                item {
-                    SosHeroActionCard(
-                        selectedType = selectedType,
-                        onSelectType = { selectedType = it },
-                        onTriggerSos = { isCountdownActive = true }
-                    )
-                }
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+                item { SosHeroActionCard(selectedType = selectedType, onSelectType = { selectedType = it }, onTriggerSos = { isCountdownActive = true }) }
             }
         } else {
-            // Dedicated SOS Response & Active Emergency List
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 24.dp)
-            ) {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
                 item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
+                    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Pantauan Sinyal Darurat Aktif", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
                         Text("$activeAlertsCount Sinyal Aktif", fontSize = 12.sp, color = DrgRedDanger, fontWeight = FontWeight.Bold)
                     }
@@ -117,11 +77,8 @@ fun EmergencyScreen(
                 } else {
                     items(alerts) { alert ->
                         EmergencyAlertCard(
-                            alert = alert,
-                            currentMember = currentMember,
-                            onResolve = { onResolveEmergency(alert.id) },
-                            onRespond = { onRespondEmergency(alert.id) },
-                            onCall = { onCallDriver(alert.driverPhone) }
+                            alert = alert, currentMember = currentMember,
+                            onResolve = { onResolveEmergency(alert.id) }, onRespond = { onRespondEmergency(alert.id) }, onCall = { onCallDriver(alert.driverPhone) }
                         )
                     }
                 }
@@ -131,17 +88,11 @@ fun EmergencyScreen(
 
     if (isCountdownActive) {
         SosCountdownOverlay(
-            emergencyType = selectedType,
-            initialSeconds = 5,
-            isAlarmSoundEnabled = isSosAlarmEnabled,
+            emergencyType = selectedType, initialSeconds = 5, isAlarmSoundEnabled = isSosAlarmEnabled,
             onCancel = { isCountdownActive = false },
             onTriggerNow = {
                 isCountdownActive = false
-                onTriggerEmergency(
-                    selectedType,
-                    "Memerlukan bantuan darurat segera (${selectedType.label})",
-                    "Lokasi Terkini GPS Driver"
-                )
+                onTriggerEmergency(selectedType, "Memerlukan bantuan darurat segera (${selectedType.label})", "Lokasi Terkini GPS Driver")
             }
         )
     }

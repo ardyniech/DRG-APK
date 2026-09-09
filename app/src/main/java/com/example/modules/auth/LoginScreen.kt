@@ -5,6 +5,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,6 +16,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shared.models.DriverMember
@@ -27,6 +29,7 @@ fun LoginScreen(
     onLogin: (String) -> Unit
 ) {
     var inputId by remember { mutableStateOf("") }
+    var inputPin by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var showHelpDialog by remember { mutableStateOf(false) }
     val haptic = LocalHapticFeedback.current
@@ -36,11 +39,11 @@ fun LoginScreen(
             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("Selamat Datang", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = DrgTextDark)
-        Text("Masukkan ID Anggota / No. HP untuk melanjutkan.", fontSize = 13.sp, color = DrgTextMuted)
+        Spacer(modifier = Modifier.height(12.dp))
+        Text("Autentikasi Anggota DRG", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = DrgTextDark)
+        Text("Masukkan ID KTA / No. HP dan 4-Digit PIN Keamanan.", fontSize = 13.sp, color = DrgTextMuted)
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = inputId,
             onValueChange = { inputId = it; errorMessage = null },
@@ -51,22 +54,43 @@ fun LoginScreen(
             isError = errorMessage != null,
             shape = RoundedCornerShape(12.dp)
         )
+
+        Spacer(modifier = Modifier.height(10.dp))
+        OutlinedTextField(
+            value = inputPin,
+            onValueChange = { if (it.length <= 4) { inputPin = it; errorMessage = null } },
+            label = { Text("4-Digit PIN Keamanan / OTP") },
+            placeholder = { Text("Pin Default Demo: 1234") },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth().testTag("login_input_pin"),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            isError = errorMessage != null,
+            shape = RoundedCornerShape(12.dp)
+        )
+
         if (errorMessage != null) {
             Text(errorMessage!!, color = MaterialTheme.colorScheme.error, fontSize = 11.sp, modifier = Modifier.padding(top = 4.dp))
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
-        LoginQuickDemoRow(members = members, selectedId = inputId, onSelectMember = { inputId = it })
+        Spacer(modifier = Modifier.height(14.dp))
+        Text("Mode Demo Cepat (Pilih Akun Uji Coba):", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextMuted)
+        Spacer(modifier = Modifier.height(4.dp))
+        LoginQuickDemoRow(members = members, selectedId = inputId, onSelectMember = { inputId = it; inputPin = "1234" })
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         TextButton(onClick = { showHelpDialog = true }, modifier = Modifier.align(Alignment.CenterHorizontally).testTag("forgot_id_button")) {
-            Text("Lupa ID Anggota DRG? Tanya Pengurus", color = DrgGrabGreenPrimary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+            Text("Lupa PIN / KTA ID Anggota? Hubungi Pengurus", color = DrgGrabGreenPrimary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
         }
 
         Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                if (inputPin.length < 4) {
+                    errorMessage = "PIN keamanan harus 4 digit. (Atau ketik 1234 untuk akun demo)."
+                    return@Button
+                }
                 val target = members.find { it.id.equals(inputId, true) || it.phone == inputId }
                 if (target != null) {
                     onLogin(target.id)
@@ -78,7 +102,7 @@ fun LoginScreen(
             shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(containerColor = DrgGrabGreenPrimary)
         ) {
-            Text("Masuk", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            Text("Masuk Terverifikasi", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
         }
     }
 

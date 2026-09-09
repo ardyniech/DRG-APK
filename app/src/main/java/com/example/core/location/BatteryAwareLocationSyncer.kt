@@ -46,19 +46,14 @@ class BatteryAwareLocationSyncer(
     @Volatile private var lastMotionTimestamp: Long = 0L
 
     init {
-        accelerometer?.let { sensor ->
-            sensorManager?.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
-        }
+        accelerometer?.let { sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL) }
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event == null || event.sensor.type != Sensor.TYPE_ACCELEROMETER) return
-        val x = event.values[0]
-        val y = event.values[1]
-        val z = event.values[2]
+        val (x, y, z) = Triple(event.values[0], event.values[1], event.values[2])
         val magnitude = sqrt((x * x + y * y + z * z).toDouble())
-        val deltaFromGravity = Math.abs(magnitude - SensorManager.GRAVITY_EARTH)
-        if (deltaFromGravity > 1.2) {
+        if (Math.abs(magnitude - SensorManager.GRAVITY_EARTH) > 1.2) {
             isDeviceInMotion = true
             lastMotionTimestamp = System.currentTimeMillis()
         }
@@ -73,11 +68,8 @@ class BatteryAwareLocationSyncer(
         val hasCoarse = ContextCompat.checkSelfPermission(ctx, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
         if (hasFine || hasCoarse) {
             runCatching {
-                fusedLocationClient?.lastLocation?.addOnSuccessListener { location ->
-                    if (location != null) {
-                        lastLat = location.latitude
-                        lastLng = location.longitude
-                    }
+                fusedLocationClient?.lastLocation?.addOnSuccessListener { loc ->
+                    if (loc != null) { lastLat = loc.latitude; lastLng = loc.longitude }
                 }
             }
         }
@@ -89,25 +81,15 @@ class BatteryAwareLocationSyncer(
             while (isActive) {
                 fetchRealLocationIfPermitted()
                 val battery = readBatteryStats()
-                val effectiveProfile = if (battery.first < 20 && !battery.second) {
-                    LocationSyncPowerProfile.ULTRA_SAVER
-                } else {
-                    profile
-                }
-
-                val now = System.currentTimeMillis()
-                val isCurrentlyMoving = isDeviceInMotion && (now - lastMotionTimestamp < 15000L)
-                val intervalSec = if (isCurrentlyMoving) effectiveProfile.normalIntervalSec else effectiveProfile.stationaryIntervalSec
+                val effectiveProfile = if (battery.first < 20 && !battery.second) LocationSyncPowerProfile.ULTRA_SAVER else profile
+                val isMoving = isDeviceInMotion && (System.currentTimeMillis() - lastMotionTimestamp < 15000L)
+                val intervalSec = if (isMoving) effectiveProfile.normalIntervalSec else effectiveProfile.stationaryIntervalSec
 
                 _metrics.value = LocationSyncMetrics(
-                    currentIntervalSec = intervalSec,
-                    batteryPercent = battery.first,
-                    isCharging = battery.second,
-                    isStationary = !isCurrentlyMoving,
-                    profile = effectiveProfile,
+                    currentIntervalSec = intervalSec, batteryPercent = battery.first,
+                    isCharging = battery.second, isStationary = !isMoving, profile = effectiveProfile,
                     estimatedBatterySavedPercent = if (effectiveProfile == LocationSyncPowerProfile.ULTRA_SAVER) 60 else 40
                 )
-
                 onSyncLocation(lastLat, lastLng)
                 delay(intervalSec * 1000L)
             }
@@ -125,7 +107,7 @@ class BatteryAwareLocationSyncer(
     private fun readBatteryStats(): Pair<Int, Boolean> {
         val bm = context?.getSystemService(Context.BATTERY_SERVICE) as? BatteryManager
         val level = bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY) ?: 82
-        val isCharging = (bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS) == BatteryManager.BATTERY_STATUS_CHARGING)
+        val isCharging = (bm?.getIntProperty(BatteryManager.BATTERY_STATUS_CHARGING) == BatteryManager.BATTERY_STATUS_CHARGING)
         return Pair(level.coerceIn(5, 100), isCharging)
     }
 }

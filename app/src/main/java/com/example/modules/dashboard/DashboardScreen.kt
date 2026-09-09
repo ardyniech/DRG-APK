@@ -10,38 +10,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.core.viewmodel.MainNavTab
-import com.example.shared.models.*
+import com.example.shared.models.DriverMember
+import com.example.shared.models.EmergencyAlert
+import com.example.shared.models.HazardArea
 import com.example.ui.theme.*
-import java.text.NumberFormat
 
 @Composable
 fun DashboardScreen(
     currentMember: DriverMember?,
     members: List<DriverMember>,
     activeAlerts: List<EmergencyAlert>,
-    transactions: List<KasTransaction>,
-    notifications: List<CommunityNotification>,
+    hazards: List<HazardArea>,
+    poskoCount: Int,
+    totalKasFormatted: String,
     onNavigateTab: (MainNavTab) -> Unit,
     onTriggerEmergency: () -> Unit,
-    onApproveSelf: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val activeMemberCount = members.count { it.isOnline }
-    val totalBalance = transactions.sumOf { if (it.type == TransactionType.INCOME) it.amount else -it.amount }
-    val totalKasFormatted = NumberFormat.getInstance().format(totalBalance)
-    val poskoCount = 4
 
     LazyColumn(
-        modifier = modifier.fillMaxSize().background(DrgBackground).padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(top = 10.dp, bottom = 24.dp)
+        modifier = modifier
+            .fillMaxSize()
+            .background(DrgBackground)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        if (currentMember?.verificationStatus == VerificationStatus.PENDING_SCREENING) {
-            item {
-                ScreeningPendingCard(member = currentMember, onApproveSelf = onApproveSelf)
-            }
-        }
-
         item { ShiftStatusBanner(member = currentMember) }
 
         val activeSos = activeAlerts.firstOrNull { it.isActive }
@@ -63,17 +57,10 @@ fun DashboardScreen(
         item {
             SummaryStatsGrid(
                 activeMemberCount = activeMemberCount,
-                activeHazardCount = 0,
+                activeHazardCount = hazards.size,
                 kasFormatted = totalKasFormatted,
                 poskoCount = poskoCount,
-                onNavigateToTab = { index ->
-                    when (index) {
-                        1 -> onNavigateTab(MainNavTab.RADAR)
-                        2 -> onNavigateTab(MainNavTab.MEMBERS)
-                        4 -> onNavigateTab(MainNavTab.KAS)
-                        else -> onNavigateTab(MainNavTab.DASHBOARD)
-                    }
-                }
+                onNavigateToTab = { onNavigateTab(it) }
             )
         }
 

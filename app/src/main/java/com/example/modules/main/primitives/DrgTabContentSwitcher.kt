@@ -53,12 +53,14 @@ fun DrgTabContentSwitcher(
     Crossfade(targetState = currentTab, label = "tabTransition") { tab ->
         when (tab) {
             MainNavTab.DASHBOARD -> DashboardScreen(
-                currentMember = currentMember, members = members, activeAlerts = activeAlerts,
-                transactions = cashTransactions, notifications = notifications,
-                onNavigateTab = { viewModel.selectTab(it) }, onTriggerEmergency = onShowEmergencyTrigger,
-                onApproveSelf = {
-                    currentMember?.id?.let { id -> viewModel.approveMemberScreening(id, "Verifikasi mandiri via panel asisten penguji.") }
-                }
+                currentMember = currentMember,
+                members = members,
+                activeAlerts = activeAlerts,
+                hazards = hazards,
+                poskoCount = poskoList.size,
+                totalKasFormatted = String.format("%,d", netBalance),
+                onNavigateTab = { viewModel.selectTab(it) },
+                onTriggerEmergency = onShowEmergencyTrigger
             )
             MainNavTab.RADAR -> RadarScreen(
                 members = members, alerts = activeAlerts, poskoList = poskoList, hazards = hazards,

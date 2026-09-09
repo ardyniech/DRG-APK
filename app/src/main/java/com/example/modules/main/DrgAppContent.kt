@@ -2,12 +2,15 @@ package com.example.modules.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import com.example.core.sync.SyncStatus
 import com.example.core.viewmodel.CashManagementViewModel
 import com.example.core.viewmodel.DRGViewModel
 import com.example.core.viewmodel.MainNavTab
@@ -18,6 +21,7 @@ import com.example.modules.main.primitives.DrgTabContentSwitcher
 import com.example.shared.atoms.DrgHeader
 import com.example.shared.models.DriverMember
 import com.example.ui.theme.DrgBackgroundGradient
+import com.example.ui.theme.DrgGrabGreenPrimary
 
 @Composable
 fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewModel) {
@@ -39,13 +43,21 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
     } else {
         Scaffold(
             topBar = {
-                DrgHeader(
-                    currentMember = state.currentMember.value,
-                    activeEmergencyCount = state.activeAlerts.value.size,
-                    onRoleSwitchClick = { showRoleSwitcher = true },
-                    onEmergencyBadgeClick = { viewModel.selectTab(MainNavTab.EMERGENCY) },
-                    onSettingsClick = { showSettingsDialog = true }
-                )
+                Column {
+                    DrgHeader(
+                        currentMember = state.currentMember.value,
+                        activeEmergencyCount = state.activeAlerts.value.size,
+                        onRoleSwitchClick = { showRoleSwitcher = true },
+                        onEmergencyBadgeClick = { viewModel.selectTab(MainNavTab.EMERGENCY) },
+                        onSettingsClick = { showSettingsDialog = true }
+                    )
+                    if (state.syncStatus.value == SyncStatus.SYNCING) {
+                        LinearProgressIndicator(
+                            modifier = Modifier.fillMaxWidth().height(3.dp),
+                            color = DrgGrabGreenPrimary
+                        )
+                    }
+                }
             },
             bottomBar = {
                 DrgBottomNavBar(selectedTab = state.currentTab.value, onSelectTab = { viewModel.selectTab(it) }, activeEmergencyCount = state.activeAlerts.value.size)

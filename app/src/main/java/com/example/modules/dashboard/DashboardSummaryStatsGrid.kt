@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.core.viewmodel.MainNavTab
 import com.example.shared.atoms.StatCard
 import com.example.ui.theme.*
 
@@ -18,7 +19,7 @@ fun SummaryStatsGrid(
     activeHazardCount: Int,
     kasFormatted: String,
     poskoCount: Int,
-    onNavigateToTab: (Int) -> Unit
+    onNavigateToTab: (MainNavTab) -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Row(
@@ -28,10 +29,10 @@ fun SummaryStatsGrid(
             StatCard(
                 title = "Driver Aktif",
                 value = "$activeMemberCount Anggota",
-                subtitle = "Pantau langsung",
+                subtitle = "Pantau direktori",
                 icon = Icons.Default.People,
                 iconColor = DrgGreenPrimary,
-                onClick = { onNavigateToTab(2) },
+                onClick = { onNavigateToTab(MainNavTab.MEMBERS) },
                 modifier = Modifier.weight(1f)
             )
             StatCard(
@@ -40,7 +41,7 @@ fun SummaryStatsGrid(
                 subtitle = "Selalu waspada",
                 icon = Icons.Default.Warning,
                 iconColor = DrgAmberSecondary,
-                onClick = { onNavigateToTab(1) },
+                onClick = { onNavigateToTab(MainNavTab.RADAR) },
                 modifier = Modifier.weight(1f)
             )
         }
@@ -54,16 +55,16 @@ fun SummaryStatsGrid(
                 subtitle = "Transparansi penuh",
                 icon = Icons.Default.AccountBalanceWallet,
                 iconColor = DrgGreenPrimary,
-                onClick = { onNavigateToTab(4) },
+                onClick = { onNavigateToTab(MainNavTab.KAS) },
                 modifier = Modifier.weight(1f)
             )
             StatCard(
                 title = "Posko Rehat",
                 value = "$poskoCount Titik",
-                subtitle = "Pemberhentian aman",
+                subtitle = "Lokasi rehat & GPS",
                 icon = Icons.Default.Place,
                 iconColor = DrgGreenDark,
-                onClick = { onNavigateToTab(2) },
+                onClick = { onNavigateToTab(MainNavTab.RADAR) },
                 modifier = Modifier.weight(1f)
             )
         }

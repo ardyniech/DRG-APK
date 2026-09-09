@@ -42,7 +42,7 @@ fun DrgBottomNavBar(
             DrgBottomNavItem(
                 label = "Radar Live",
                 icon = Icons.Default.GpsFixed,
-                isSelected = selectedTab == MainNavTab.RADAR || selectedTab == MainNavTab.EMERGENCY,
+                isSelected = selectedTab == MainNavTab.RADAR,
                 badgeCount = activeEmergencyCount,
                 badgeColor = DrgRedDanger,
                 onClick = { onSelectTab(MainNavTab.RADAR) }

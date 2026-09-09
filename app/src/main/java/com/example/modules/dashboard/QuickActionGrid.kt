@@ -22,13 +22,41 @@ fun QuickActionGrid(
         RoadEmergencySosBar(onQuickEmergency = onQuickEmergency)
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            QuickTile(title = "Live Radar", desc = "Posisi Driver & Posko", icon = Icons.Default.GpsFixed, color = DrgGreenPrimary, modifier = Modifier.weight(1f), onClick = { onNavigate(MainNavTab.RADAR) })
-            QuickTile(title = "Kas Transparan", desc = "Laporan Keuangan", icon = Icons.Default.AccountBalanceWallet, color = DrgAmberSecondary, modifier = Modifier.weight(1f), onClick = { onNavigate(MainNavTab.KAS) })
+            QuickTile(
+                title = "Live Radar",
+                desc = "Posisi Driver & Posko",
+                icon = Icons.Default.GpsFixed,
+                color = DrgGreenPrimary,
+                modifier = Modifier.weight(1f),
+                onClick = { onNavigate(MainNavTab.RADAR) }
+            )
+            QuickTile(
+                title = "Kas Transparan",
+                desc = "Laporan Keuangan",
+                icon = Icons.Default.AccountBalanceWallet,
+                color = DrgAmberSecondary,
+                modifier = Modifier.weight(1f),
+                onClick = { onNavigate(MainNavTab.KAS) }
+            )
         }
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            QuickTile(title = "Bengkel Mitra", desc = "Diskon Khusus DRG", icon = Icons.Default.Build, color = DrgGrabGreenPrimary, modifier = Modifier.weight(1f), onClick = { onNavigate(MainNavTab.COMMUNITY) })
-            QuickTile(title = "Anggota & Posko", desc = "Screening & Absensi", icon = Icons.Default.People, color = DrgGrabGreenDark, modifier = Modifier.weight(1f), onClick = { onNavigate(MainNavTab.COMMUNITY) })
+            QuickTile(
+                title = "Bengkel Mitra",
+                desc = "Diskon Khusus DRG",
+                icon = Icons.Default.Build,
+                color = DrgGrabGreenPrimary,
+                modifier = Modifier.weight(1f),
+                onClick = { onNavigate(MainNavTab.FORUM) }
+            )
+            QuickTile(
+                title = "Anggota & Posko",
+                desc = "Screening & Absensi",
+                icon = Icons.Default.People,
+                color = DrgGrabGreenDark,
+                modifier = Modifier.weight(1f),
+                onClick = { onNavigate(MainNavTab.MEMBERS) }
+            )
         }
     }
 }

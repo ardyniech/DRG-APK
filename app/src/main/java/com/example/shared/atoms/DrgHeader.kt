@@ -33,7 +33,7 @@ fun DrgHeader(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            DrgHeaderBrand()
+            DrgHeaderBrand(member = currentMember)
             DrgHeaderActions(
                 currentMember = currentMember,
                 activeEmergencyCount = activeEmergencyCount,

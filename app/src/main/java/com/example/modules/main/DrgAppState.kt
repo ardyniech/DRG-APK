@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import com.example.core.cache.LocationSyncPowerProfile
 import com.example.core.cache.MapCachePolicy
+import com.example.core.sync.SyncStatus
 import com.example.core.viewmodel.CashManagementViewModel
 import com.example.core.viewmodel.DRGViewModel
 import com.example.core.viewmodel.MainNavTab
@@ -37,7 +38,8 @@ class DrgAppState(
     val isPowerSaverMode: State<Boolean>,
     val isDataSaverMode: State<Boolean>,
     val mapCachePolicy: State<MapCachePolicy>,
-    val locationSyncProfile: State<LocationSyncPowerProfile>
+    val locationSyncProfile: State<LocationSyncPowerProfile>,
+    val syncStatus: State<SyncStatus>
 )
 
 @Composable
@@ -62,13 +64,14 @@ fun rememberDrgAppState(viewModel: DRGViewModel, cashViewModel: CashManagementVi
         hazards = viewModel.hazards.collectAsState(),
         pointTransactions = viewModel.pointTransactions.collectAsState(),
         adminLogs = viewModel.adminLogs.collectAsState(),
-        isSosAlarmEnabled = viewModel.isSosAlarmSoundEnabled.collectAsState(),
+        isSosAlarmEnabled = viewModel.isSosAlarmEnabled.collectAsState(),
         isCrashGuardEnabled = viewModel.isCrashGuardEnabled.collectAsState(),
         crashSensitivity = viewModel.crashSensitivity.collectAsState(),
         crashDetectedEvent = viewModel.crashDetectedEvent.collectAsState(),
         isPowerSaverMode = viewModel.isPowerSaverMode.collectAsState(),
         isDataSaverMode = viewModel.isDataSaverMode.collectAsState(),
         mapCachePolicy = viewModel.mapCachePolicy.collectAsState(),
-        locationSyncProfile = viewModel.locationSyncProfile.collectAsState()
+        locationSyncProfile = viewModel.locationSyncProfile.collectAsState(),
+        syncStatus = viewModel.syncEngine.syncStatus.collectAsState()
     )
 }

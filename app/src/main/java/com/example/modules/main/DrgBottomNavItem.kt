@@ -26,8 +26,8 @@ fun DrgBottomNavItem(
     badgeColor: Color = DrgAmberSecondary,
     onClick: () -> Unit
 ) {
-    val tint = if (isSelected) DrgAmberDark else DrgTextMuted
-    val bg = if (isSelected) DrgAmberContainer else Color.Transparent
+    val tint = if (isSelected) DrgGrabGreenPrimary else DrgTextMuted
+    val bg = if (isSelected) DrgGreenContainer else Color.Transparent
 
     Surface(
         onClick = onClick,
@@ -58,19 +58,19 @@ fun DrgBottomNavItem(
                     ) {
                         Text(
                             text = "$badgeCount",
-                            color = Color.White,
-                            fontSize = 8.sp,
-                            fontWeight = FontWeight.Bold
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
                         )
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = label,
                 fontSize = 10.sp,
-                color = tint,
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                maxLines = 1
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                color = tint
             )
         }
     }

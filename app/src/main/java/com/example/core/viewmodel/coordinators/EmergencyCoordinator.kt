@@ -20,14 +20,10 @@ class EmergencyCoordinator(
     private val syncEngine: BackgroundSyncEngine,
     private val showToast: (String) -> Unit
 ) {
-    private val _isSosAlarmSoundEnabled = MutableStateFlow(
-        sharedPrefs?.getBoolean("pref_high_decibel_sos_alarm", true) ?: true
-    )
+    private val _isSosAlarmSoundEnabled = MutableStateFlow(sharedPrefs?.getBoolean("pref_high_decibel_sos_alarm", true) ?: true)
     val isSosAlarmSoundEnabled: StateFlow<Boolean> = _isSosAlarmSoundEnabled.asStateFlow()
 
-    private val _isCrashGuardEnabled = MutableStateFlow(
-        sharedPrefs?.getBoolean("pref_crash_guard_enabled", true) ?: true
-    )
+    private val _isCrashGuardEnabled = MutableStateFlow(sharedPrefs?.getBoolean("pref_crash_guard_enabled", true) ?: true)
     val isCrashGuardEnabled: StateFlow<Boolean> = _isCrashGuardEnabled.asStateFlow()
 
     private val _crashSensitivity = MutableStateFlow(
@@ -41,7 +37,7 @@ class EmergencyCoordinator(
     private var crashDetectionManager: CrashDetectionManager? = null
 
     init {
-        context?.let { ctx ->
+        context.let { ctx ->
             crashDetectionManager = CrashDetectionManager(ctx) { gForce ->
                 scope.launch { if (_isCrashGuardEnabled.value) _crashDetectedEvent.value = gForce }
             }.apply {
@@ -66,34 +62,24 @@ class EmergencyCoordinator(
             }.onSuccess {
                 if (_isSosAlarmSoundEnabled.value) SosAlarmSoundManager.playHighDecibelAlarm(6000L)
                 showToast("Sinyal SOS Darurat berhasil dipancarkan ke seluruh Satgas & Anggota!")
-            }.onFailure { error ->
-                showToast("Gagal memancarkan SOS: ${error.localizedMessage}")
-            }
+            }.onFailure { error -> showToast("Gagal memancarkan SOS: ${error.localizedMessage}") }
         }
     }
 
     fun resolveEmergency(alertId: String, cur: DriverMember?) {
         SosAlarmSoundManager.stopAlarm()
         scope.launch {
-            runCatching {
-                repository.resolveEmergencyAlert(alertId, cur?.name ?: "Satgas")
-            }.onSuccess {
-                showToast("Laporan darurat ditandai Selesai.")
-            }.onFailure { error ->
-                showToast("Gagal menyelesaikan darurat: ${error.localizedMessage}")
-            }
+            runCatching { repository.resolveEmergencyAlert(alertId, cur?.name ?: "Satgas") }
+                .onSuccess { showToast("Laporan darurat ditandai Selesai.") }
+                .onFailure { error -> showToast("Gagal menyelesaikan darurat: ${error.localizedMessage}") }
         }
     }
 
     fun respondEmergency(alertId: String) {
         scope.launch {
-            runCatching {
-                repository.respondToEmergency(alertId)
-            }.onSuccess {
-                showToast("Anda merespons bantuan! Lokasi dan navigasi dibuka.")
-            }.onFailure { error ->
-                showToast("Gagal merespons darurat: ${error.localizedMessage}")
-            }
+            runCatching { repository.respondToEmergency(alertId) }
+                .onSuccess { showToast("Anda merespons bantuan! Lokasi dan navigasi dibuka.") }
+                .onFailure { error -> showToast("Gagal merespons darurat: ${error.localizedMessage}") }
         }
     }
 
