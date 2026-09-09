@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-  namespace = "com.aistudio.drgojol.pkrvw"
+  namespace = "com.example"
   compileSdk { version = release(36) { minorApiLevel = 1 } }
 
   defaultConfig {
@@ -32,10 +32,10 @@ android {
       keyPassword = System.getenv("KEY_PASSWORD")
     }
     create("debugConfig") {
-      storeFile = file("${rootDir}/debug.keystore")
-      storePassword = "android"
-      keyAlias = "androiddebugkey"
-      keyPassword = "android"
+      storeFile = file(System.getenv("DEBUG_KEYSTORE_PATH") ?: "${rootDir}/debug.keystore")
+      storePassword = System.getenv("DEBUG_STORE_PASSWORD") ?: "android"
+      keyAlias = System.getenv("DEBUG_KEY_ALIAS") ?: "androiddebugkey"
+      keyPassword = System.getenv("DEBUG_KEY_PASSWORD") ?: "android"
     }
   }
 
@@ -106,6 +106,7 @@ dependencies {
   implementation(libs.coil.compose)
   implementation(libs.converter.moshi)
   implementation(libs.firebase.ai)
+  implementation(libs.firebase.messaging)
   // Uncomment to use Firestore:
   // implementation(libs.firebase.firestore)
 

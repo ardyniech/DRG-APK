@@ -20,7 +20,6 @@ import com.example.shared.models.DriverMember
 import com.example.shared.models.EmergencyAlert
 import com.example.shared.models.HazardArea
 import com.example.shared.models.PoskoLocation
-import kotlin.math.sqrt
 
 @Composable
 fun MapMarkersLayer(
@@ -49,14 +48,12 @@ fun MapMarkersLayer(
         label = "radarPulse"
     )
 
-    // Precompute posko locations on screen
     val projectedPoskos = remember(poskoList, centerLat, centerLng, zoom, screenWidth, screenHeight) {
         poskoList.map { posko ->
             MapProjection.latLngToScreen(posko.lat, posko.lng, centerLat, centerLng, zoom, screenWidth, screenHeight)
         }
     }
 
-    // Precompute hazard locations on screen
     val projectedHazards = remember(hazards, centerLat, centerLng, zoom, screenWidth, screenHeight) {
         hazards.map { hazard ->
             Pair(
@@ -66,7 +63,6 @@ fun MapMarkersLayer(
         }
     }
 
-    // Precompute driver locations on screen
     val projectedDrivers = remember(members, centerLat, centerLng, zoom, screenWidth, screenHeight) {
         members.map { driver ->
             Pair(
@@ -76,7 +72,6 @@ fun MapMarkersLayer(
         }
     }
 
-    // Precompute my location on screen
     val myPt = remember(centerLat, centerLng, zoom, screenWidth, screenHeight) {
         MapProjection.latLngToScreen(centerLat, centerLng, centerLat, centerLng, zoom, screenWidth, screenHeight)
     }
@@ -84,19 +79,7 @@ fun MapMarkersLayer(
     Canvas(
         modifier = modifier.fillMaxSize().pointerInput(projectedDrivers, selectedFilter) {
             detectTapGestures { offset ->
-                var bestMatch: DriverMember? = null
-                var bestDist = Float.MAX_VALUE
-
-                projectedDrivers.filter { it.second.isOnline }.forEach { (pt, driver) ->
-                    val dx = offset.x - pt.x
-                    val dy = offset.y - pt.y
-                    val dist = sqrt(dx * dx + dy * dy)
-                    if (dist < 48f && dist < bestDist) {
-                        bestDist = dist
-                        bestMatch = driver
-                    }
-                }
-                bestMatch?.let { onSelectDriver(it) }
+                MapTapHandler.findDriverAtTap(offset, projectedDrivers)?.let { onSelectDriver(it) }
             }
         }
     ) {
@@ -106,21 +89,16 @@ fun MapMarkersLayer(
         }
 
         if (selectedFilter == "Semua" || selectedFilter == "Posko") {
-            projectedPoskos.forEach { pt ->
-                drawPoskoMarker(pt)
-            }
+            projectedPoskos.forEach { pt -> drawPoskoMarker(pt) }
         }
 
         if (selectedFilter == "Semua" || selectedFilter == "Area Rawan") {
-            projectedHazards.forEach { (pt, hazard) ->
-                drawHazardMarker(pt, hazard)
-            }
+            projectedHazards.forEach { (pt, hazard) -> drawHazardMarker(pt, hazard) }
         }
 
         if (selectedFilter != "Posko" && selectedFilter != "Area Rawan") {
             projectedDrivers.filter { it.second.isLocationSharingConsent }.forEach { (pt, driver) ->
-                val isTargeted = focusedDriver?.id == driver.id
-                drawDriverMarker(pt, driver, isTargeted, myPt, pulseRadius)
+                drawDriverMarker(pt, driver, focusedDriver?.id == driver.id, myPt, pulseRadius)
             }
         }
 

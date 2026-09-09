@@ -9,10 +9,12 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 
 object NotificationService {
+    const val EMERGENCY_CHANNEL_ID = "drg_emergency_channel"
+    const val COMMUNITY_CHANNEL_ID = "drg_community_channel"
 
     fun sendSystemNotification(context: Context, title: String, message: String) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager ?: return
-        val channelId = "drg_emergency_channel"
+        val channelId = EMERGENCY_CHANNEL_ID
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(

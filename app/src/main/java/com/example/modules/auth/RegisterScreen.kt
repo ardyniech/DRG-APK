@@ -97,7 +97,6 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth().testTag("reg_pin"), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), shape = RoundedCornerShape(12.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
-
         ExposedDropdownMenuBox(expanded = expandedAreaMenu, onExpandedChange = { expandedAreaMenu = !expandedAreaMenu }, modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
                 value = selectedArea, onValueChange = {}, readOnly = true, label = { Text("Wilayah Operasional / Basukom") },

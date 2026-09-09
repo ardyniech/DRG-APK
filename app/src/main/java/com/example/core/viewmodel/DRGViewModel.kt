@@ -1,7 +1,6 @@
 package com.example.core.viewmodel
 
 import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,14 +28,14 @@ class DRGViewModel(
     val batteryManager = BatteryOptimizationManager(sharedPrefs)
     val syncEngine = BackgroundSyncEngine(viewModelScope)
 
-    private val profileCoord = ProfileSessionCoordinator(repository, sharedPrefs, viewModelScope) { showToast(it) }
-    private val emergencyCoord = EmergencyCoordinator(repository, sharedPrefs, application, viewModelScope, syncEngine) { showToast(it) }
-    private val communityCoord = CommunityCoordinator(repository, viewModelScope, syncEngine) { showToast(it) }
+    internal val profileCoord = ProfileSessionCoordinator(repository, sharedPrefs, viewModelScope) { showToast(it) }
+    internal val emergencyCoord = EmergencyCoordinator(repository, sharedPrefs, application, viewModelScope, syncEngine) { showToast(it) }
+    internal val communityCoord = CommunityCoordinator(repository, viewModelScope, syncEngine) { showToast(it) }
 
     val members = repository.allMembers.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
     val allMembers: StateFlow<List<DriverMember>> get() = members
-    private val governanceCoord = GovernanceCoordinator(repository, viewModelScope, members) { showToast(it) }
-    private val radarCoord = RadarSafetyCoordinator(repository, sharedPrefs, viewModelScope, batteryManager, syncEngine) { showToast(it) }
+    internal val governanceCoord = GovernanceCoordinator(repository, viewModelScope, members) { showToast(it) }
+    internal val radarCoord = RadarSafetyCoordinator(repository, sharedPrefs, viewModelScope, batteryManager, syncEngine) { showToast(it) }
 
     val currentMemberId = profileCoord.currentMemberId
     val isLoggedIn = profileCoord.isLoggedIn
@@ -89,7 +88,6 @@ class DRGViewModel(
             }
         }
 
-        // Real-Time System Notification Observer for Emergency SOS Alerts
         viewModelScope.launch {
             var knownAlertIds = emptySet<String>()
             activeAlerts.collect { alerts ->
@@ -107,74 +105,6 @@ class DRGViewModel(
             }
         }
     }
-
-    // Auth & Profile
-    fun login(memberId: String) = profileCoord.login(memberId)
-    fun logout() = profileCoord.logout()
-    fun switchActiveMember(memberId: String) = profileCoord.switchActiveMember(memberId)
-    fun switchRole(memberId: String) = switchActiveMember(memberId)
-    fun registerNewDriver(name: String, phone: String, plate: String, motorcycle: String, area: String, pin: String) =
-        profileCoord.registerNewDriver(name, phone, plate, motorcycle, area, pin)
-    fun updateProfile(phone: String, area: String, motorcycle: String, plate: String, photoUrl: String = "") =
-        profileCoord.updateProfile(currentMember.value, phone, area, motorcycle, plate, photoUrl)
-
-    // Emergency & Crash
-    fun triggerEmergency(type: EmergencyType, message: String, location: String) =
-        emergencyCoord.triggerEmergency(currentMember.value, type, message, location)
-    fun resolveEmergency(alertId: String) = emergencyCoord.resolveEmergency(alertId, currentMember.value)
-    fun respondEmergency(alertId: String) = emergencyCoord.respondEmergency(alertId)
-    fun respondToEmergency(alertId: String) = respondEmergency(alertId)
-    fun toggleSosAlarmSound(enabled: Boolean) = emergencyCoord.toggleSosAlarmSound(enabled)
-    fun testSosAlarmSound(onFinish: (() -> Unit)? = null) = emergencyCoord.testSosAlarmSound(onFinish)
-    fun stopSosAlarmSound() = emergencyCoord.stopSosAlarmSound()
-    fun toggleCrashGuard(enabled: Boolean) = emergencyCoord.toggleCrashGuard(enabled)
-    fun setCrashSensitivity(sensitivity: CrashSensitivity) = emergencyCoord.setCrashSensitivity(sensitivity)
-    fun simulateCrashImpact(gForce: Float = 3.2f) = emergencyCoord.simulateCrashImpact(gForce)
-    fun dismissCrashCountdown() = emergencyCoord.dismissCrashCountdown()
-    fun confirmCrashAutoSos(gForce: Float) {
-        dismissCrashCountdown()
-        triggerEmergency(EmergencyType.KECELAKAAN, "Auto-SOS: Crash Guard %.1fG".format(gForce), "Posisi: ${currentMember.value?.baseArea ?: "Malang"}")
-    }
-
-    // Governance & Community
-    fun approveMemberScreening(memberId: String, note: String = "Diverifikasi") = governanceCoord.approveMemberScreening(memberId, note)
-    fun rejectMemberScreening(memberId: String, reason: String) = governanceCoord.rejectMemberScreening(memberId, reason)
-    fun updateMemberRole(memberId: String, role: MemberRole) = governanceCoord.updateMemberRole(memberId, role, currentMember.value)
-    fun updateMemberVerification(memberId: String, status: VerificationStatus) = governanceCoord.updateMemberVerification(memberId, status, currentMember.value)
-    fun createPost(title: String, content: String, category: ForumCategory, postType: PostType = PostType.UPDATE) =
-        communityCoord.createPost(currentMember.value, title, content, category, postType)
-    fun addPost(title: String, content: String, category: ForumCategory, postType: PostType = PostType.UPDATE) =
-        createPost(title, content, category, postType)
-    fun deletePost(postId: String) = communityCoord.deletePost(postId)
-    fun toggleLike(postId: String, isLiked: Boolean) = communityCoord.toggleLike(postId, isLiked)
-    fun toggleLikePost(postId: String, isLiked: Boolean) = toggleLike(postId, isLiked)
-    fun checkInEvent(eventId: String) = communityCoord.checkInEvent(currentMember.value, eventId)
-    fun recordKopdarAttendance() = checkInEvent("EVT-KOPDAR-01")
-    fun submitDriverReview(targetDriverId: String, rating: Float, tag: String, comment: String) =
-        communityCoord.submitDriverReview(currentMember.value, targetDriverId, rating, tag, comment)
-    fun addDriverReview(targetDriverId: String, rating: Int, comment: String) = submitDriverReview(targetDriverId, rating.toFloat(), "Solidaritas", comment)
-    fun sendNotification(title: String, message: String, severity: NotificationSeverity) =
-        communityCoord.sendNotification(currentMember.value, title, message, severity)
-    fun awardPeerPoints(targetId: String, targetName: String, isBeneficiary: Boolean, reason: String) =
-        communityCoord.awardPeerPoints(currentMember.value, targetId, targetName, isBeneficiary, reason)
-    fun claimTask(taskId: String) = communityCoord.claimTask(currentMember.value, taskId)
-    fun completeTask(taskId: String) = communityCoord.completeTask(currentMember.value, taskId)
-    fun redeemReward(rewardId: String) = communityCoord.redeemReward(currentMember.value, rewardId)
-
-    // Radar & Battery
-    fun reportHazard(title: String, type: HazardType, location: String, description: String, lat: Double, lng: Double) =
-        radarCoord.reportHazard(currentMember.value, title, type, location, description, lat, lng)
-    fun confirmHazard(hazardId: String) = radarCoord.confirmHazard(hazardId)
-    fun toggleLocationSharingConsent(consent: Boolean) = radarCoord.toggleLocationSharingConsent(currentMember.value, consent)
-    fun saveNotificationPref(preference: NotificationPreference) = radarCoord.saveNotificationPref(preference)
-    fun applyCommunityGpsPolicy() = radarCoord.applyCommunityGpsPolicy(currentMember.value)
-    fun setMapCachePolicy(policy: MapCachePolicy) = radarCoord.setMapCachePolicy(policy)
-    fun setLocationSyncProfile(profile: LocationSyncPowerProfile) = radarCoord.setLocationSyncProfile(profile)
-    fun setPowerSaverMode(enabled: Boolean) = radarCoord.setPowerSaverMode(enabled)
-    fun setDataSaverMode(enabled: Boolean) = radarCoord.setDataSaverMode(enabled)
-    fun precacheMap(context: Context) = radarCoord.precacheMap(context, isPowerSaverMode.value)
-    fun clearMapCache(context: Context) = radarCoord.clearMapCache(context)
-    fun getCacheSizeDesc(context: Context) = radarCoord.getCacheSizeDesc(context)
 
     override fun onCleared() {
         super.onCleared()
