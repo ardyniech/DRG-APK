@@ -27,7 +27,12 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Grant Execute Permission for Gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Grant Execute Permission for Gradle Wrapper
         run: chmod +x gradlew || true
 
       - name: Prepare Local Environment Secrets
@@ -36,11 +41,14 @@ jobs:
           echo "GEMINI_API_KEY=dummy_ci_key" >> .env
           echo "MAPS_API_KEY=dummy_ci_key" >> .env
 
+      - name: Enforce Architecture Rules (Max 125 Lines & Code Quality)
+        run: python3 .github/scripts/check_file_length.py
+
       - name: Run Robolectric & JVM Unit Tests
-        run: gradle :app:testDebugUnitTest --no-daemon --stacktrace
+        run: ./gradlew :app:testDebugUnitTest --no-daemon --stacktrace
 
       - name: Assemble Debug APK
-        run: gradle assembleDebug --no-daemon
+        run: ./gradlew assembleDebug --no-daemon
 
       - name: Upload Test Reports
         if: always()

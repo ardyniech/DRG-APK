@@ -28,14 +28,11 @@ fun EmptyStateOrganicGraphic(
     message: String,
     modifier: Modifier = Modifier
 ) {
-    val infiniteTransition = rememberInfiniteTransition(label = "organic_float")
-    val floatAnim by infiniteTransition.animateFloat(
+    val transition = rememberInfiniteTransition(label = "organic_float")
+    val floatAnim by transition.animateFloat(
         initialValue = 0f,
         targetValue = (2 * Math.PI).toFloat(),
-        animationSpec = infiniteRepeatable(
-            animation = tween(4000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
+        animationSpec = infiniteRepeatable(animation = tween(4000, easing = LinearEasing), repeatMode = RepeatMode.Restart),
         label = "float"
     )
 
@@ -44,89 +41,47 @@ fun EmptyStateOrganicGraphic(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Box(
-            modifier = Modifier.size(140.dp),
-            contentAlignment = Alignment.Center
-        ) {
+        Box(modifier = Modifier.size(140.dp), contentAlignment = Alignment.Center) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val waveOffset1 = sin(floatAnim) * 8.dp.toPx()
                 val waveOffset2 = sin(floatAnim + 1.5f) * 6.dp.toPx()
 
-                // Background Blob 1
                 drawRoundRect(
-                    brush = Brush.radialGradient(
-                        colors = listOf(
-                            DrgGrabGreenPrimary.copy(alpha = 0.15f),
-                            Color.Transparent
-                        ),
-                        center = Offset(size.width * 0.4f, size.height * 0.4f + waveOffset1),
-                        radius = size.width * 0.6f
-                    ),
+                    brush = Brush.radialGradient(listOf(DrgGrabGreenPrimary.copy(alpha = 0.15f), Color.Transparent), center = Offset(size.width * 0.4f, size.height * 0.4f + waveOffset1), radius = size.width * 0.6f),
+                    size = size
+                )
+                drawRoundRect(
+                    brush = Brush.radialGradient(listOf(Color(0xFF0288D1).copy(alpha = 0.1f), Color.Transparent), center = Offset(size.width * 0.6f, size.height * 0.6f - waveOffset2), radius = size.width * 0.5f),
                     size = size
                 )
 
-                // Background Blob 2
-                drawRoundRect(
-                    brush = Brush.radialGradient(
-                        colors = listOf(
-                            Color(0xFF0288D1).copy(alpha = 0.1f),
-                            Color.Transparent
-                        ),
-                        center = Offset(size.width * 0.6f, size.height * 0.6f - waveOffset2),
-                        radius = size.width * 0.5f
-                    ),
-                    size = size
-                )
-
-                // Center floating glass card placeholder
-                val cardWidth = size.width * 0.5f
-                val cardHeight = size.height * 0.3f
+                val cardW = size.width * 0.5f
+                val cardH = size.height * 0.3f
+                val cardTopY = (size.height - cardH) / 2 + (sin(floatAnim * 2) * 4.dp.toPx())
+                val cardLeftX = (size.width - cardW) / 2
                 drawRoundRect(
                     color = Color.White.copy(alpha = 0.6f),
-                    topLeft = Offset(
-                        x = (size.width - cardWidth) / 2,
-                        y = (size.height - cardHeight) / 2 + (sin(floatAnim * 2) * 4.dp.toPx())
-                    ),
-                    size = Size(cardWidth, cardHeight),
+                    topLeft = Offset(cardLeftX, cardTopY),
+                    size = Size(cardW, cardH),
                     cornerRadius = CornerRadius(12.dp.toPx(), 12.dp.toPx())
                 )
-                
-                // Card details (lines)
-                val lineX = (size.width - cardWidth) / 2 + 12.dp.toPx()
-                val lineY = (size.height - cardHeight) / 2 + (sin(floatAnim * 2) * 4.dp.toPx()) + 12.dp.toPx()
                 drawRoundRect(
                     color = Color.LightGray.copy(alpha = 0.5f),
-                    topLeft = Offset(lineX, lineY),
-                    size = Size(cardWidth * 0.6f, 4.dp.toPx()),
+                    topLeft = Offset(cardLeftX + 12.dp.toPx(), cardTopY + 12.dp.toPx()),
+                    size = Size(cardW * 0.6f, 4.dp.toPx()),
                     cornerRadius = CornerRadius(2.dp.toPx())
                 )
                 drawRoundRect(
                     color = Color.LightGray.copy(alpha = 0.5f),
-                    topLeft = Offset(lineX, lineY + 8.dp.toPx()),
-                    size = Size(cardWidth * 0.4f, 4.dp.toPx()),
+                    topLeft = Offset(cardLeftX + 12.dp.toPx(), cardTopY + 20.dp.toPx()),
+                    size = Size(cardW * 0.4f, 4.dp.toPx()),
                     cornerRadius = CornerRadius(2.dp.toPx())
                 )
             }
         }
-        
         Spacer(modifier = Modifier.height(16.dp))
-        
-        Text(
-            text = title,
-            fontSize = 15.sp,
-            fontWeight = FontWeight.Bold,
-            color = DrgTextPrimary,
-            textAlign = TextAlign.Center
-        )
-        
+        Text(text = title, fontSize = 15.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(4.dp))
-        
-        Text(
-            text = message,
-            fontSize = 12.sp,
-            color = DrgTextMuted,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 20.dp)
-        )
+        Text(text = message, fontSize = 12.sp, color = DrgTextMuted, textAlign = TextAlign.Center, modifier = Modifier.padding(horizontal = 20.dp))
     }
 }

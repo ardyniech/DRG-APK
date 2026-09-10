@@ -6,7 +6,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -98,33 +97,6 @@ fun ForumCommentSection(
                     tint = Color.White,
                     modifier = Modifier.size(16.dp)
                 )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ForumCommentItemRow(
-    comment: ForumComment,
-    canDelete: Boolean,
-    onDelete: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Top
-    ) {
-        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(text = comment.authorName, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
-                Text(text = "• ${comment.authorRole.shortName}", fontSize = 9.sp, color = DrgGreenPrimary)
-                Text(text = "• ${comment.timeAgo}", fontSize = 9.sp, color = DrgTextMuted)
-            }
-            Text(text = comment.content, fontSize = 11.sp, color = DrgTextSecondary)
-        }
-        if (canDelete) {
-            IconButton(onClick = onDelete, modifier = Modifier.size(24.dp)) {
-                Icon(Icons.Default.DeleteOutline, contentDescription = "Hapus", tint = DrgRedDanger, modifier = Modifier.size(14.dp))
             }
         }
     }
