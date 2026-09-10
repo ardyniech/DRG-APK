@@ -1,0 +1,46 @@
+name: "🐛 Laporan Bug (Bug Report)"
+description: Laporkan kendala teknis atau perilaku tidak sesuai di DRG Driver
+title: "[BUG]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Terima kasih telah melaporkan bug untuk membantu meningkatkan keselamatan dan kenyamanan rekan pengemudi DRG!
+  - type: textarea
+    id: description
+    attributes:
+      label: Deskripsi Bug
+      description: Jelaskan kendala yang Anda alami secara singkat dan jelas.
+      placeholder: Contoh: Saat menekan tombol SOS, animasi sirine tidak berputar dan getaran berhenti...
+    validations:
+      required: true
+  - type: dropdown
+    id: module
+    attributes:
+      label: Modul yang Terdampak
+      options:
+        - "🚨 Emergency & SOS (Deteksi Jatuh / Panic Button)"
+        - "🗺️ Radar & Peta (OSM / Radius Armada)"
+        - "💰 Treasury & Kas (Laporan Transparansi)"
+        - "💬 Forum & Bengkel (Q&A / Update Jalur)"
+        - "🏆 Gamifikasi (Misi Harian / Leaderboard)"
+        - "👤 Profil & KTA Digital"
+        - "Lainnya"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Langkah Mereproduksi (Steps to Reproduce)
+      placeholder: |
+        1. Buka Tab Komunitas
+        2. Pilih Sub-tab Forum
+        3. Klik Tambah Komentar
+    validations:
+      required: true
+  - type: input
+    id: device_info
+    attributes:
+      label: Perangkat & Versi Android
+      placeholder: Contoh: Xiaomi Redmi Note 12, Android 13

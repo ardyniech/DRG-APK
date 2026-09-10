@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- DRG Brand Color Tokens (Night/Dark Mode Fallback) -->
+    <color name="drg_green_primary">#00C853</color>
+    <color name="drg_green_dark">#009624</color>
+    <color name="drg_green_light">#1B382B</color>
+    <color name="drg_background">#121814</color>
+    <color name="drg_surface">#1C241E</color>
+    <color name="drg_red_panic">#EF4444</color>
+    <color name="drg_gold_reward">#FBBF24</color>
+    <color name="drg_blue_info">#3B82F6</color>
+    <color name="drg_text_primary">#F3F4F6</color>
+    <color name="drg_text_secondary">#D1D5DB</color>
+    <color name="drg_text_muted">#9CA3AF</color>
+    <color name="drg_outline">#374151</color>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

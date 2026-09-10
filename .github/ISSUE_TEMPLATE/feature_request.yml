@@ -1,0 +1,23 @@
+name: "💡 Usulan Fitur (Feature Request)"
+description: Usulkan ide atau peningkatan fungsional baru untuk komunitas pengemudi DRG
+title: "[FEAT]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Usulan fitur harus selaras dengan prinsip: **Hemat Baterai & Kuota**, **Zero Cognitive Overload**, dan **Manfaat Nyata di Jalan Raya**.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Masalah yang Ingin Diselesaikan
+      placeholder: Masalah apa yang dihadapi rekan driver di lapangan?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solusi / Fitur yang Diusulkan
+      placeholder: Deskripsikan bagaimana fitur ini sebaiknya bekerja di dalam aplikasi DRG Driver.
+    validations:
+      required: true
