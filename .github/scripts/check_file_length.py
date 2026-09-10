@@ -4,7 +4,7 @@ DRG Driver Architecture & Code Quality Enforcer
 Enforces:
 1. Standard UI modules, controllers, adapters, viewmodels max 125 lines.
 2. Escape hatch (models, custom canvas, master routers) max 200 lines.
-3. No forbidden debug artifacts or hardcoded localhost IP in production modules.
+3. Scans app/src/main/java as well as core/, modules/, shared/ across the repo.
 """
 
 import os
@@ -35,29 +35,36 @@ def check_file(file_path):
 
 def main():
     repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-    src_dir = os.path.join(repo_root, "app", "src", "main", "java")
 
-    if not os.path.exists(src_dir):
-        print(f"[Architecture Audit] Source directory not found: {src_dir}")
-        sys.exit(0)
+    # Scan target directories: main source and any standalone module roots
+    scan_dirs = [
+        os.path.join(repo_root, "app", "src", "main", "java"),
+        os.path.join(repo_root, "core"),
+        os.path.join(repo_root, "modules"),
+        os.path.join(repo_root, "shared"),
+    ]
 
     violations = []
     checked_count = 0
 
-    for root, _, files in os.walk(src_dir):
-        for file in files:
-            if file.endswith(".kt"):
-                full_path = os.path.join(root, file)
-                rel_path = os.path.relpath(full_path, repo_root)
-                checked_count += 1
-                result = check_file(rel_path)
-                if result:
-                    violations.append(result)
+    for sdir in scan_dirs:
+        if not os.path.exists(sdir):
+            continue
+        for root, _, files in os.walk(sdir):
+            for file in files:
+                if file.endswith(".kt") or file.endswith(".java"):
+                    full_path = os.path.join(root, file)
+                    rel_path = os.path.relpath(full_path, repo_root)
+                    checked_count += 1
+                    result = check_file(rel_path)
+                    if result:
+                        violations.append(result)
 
-    print(f"==================================================")
-    print(f"DRG Driver Architecture Quality Audit")
-    print(f"Total Kotlin files checked: {checked_count}")
-    print(f"==================================================")
+    print("==================================================")
+    print("DRG Driver Architecture Quality Audit")
+    print(f"Total source files audited: {checked_count}")
+    print("Audited paths: app/src/main/java, core/, modules/, shared/")
+    print("==================================================")
 
     if violations:
         print(f"❌ Found {len(violations)} file(s) exceeding architectural line cap:")
@@ -66,7 +73,7 @@ def main():
         print("\nPlease modularize violating files into micro-primitives before merging.")
         sys.exit(1)
     else:
-        print("✅ All Kotlin source files strictly comply with architectural line caps!")
+        print("✅ All source files strictly comply with architectural line caps (< 125 lines)!")
         sys.exit(0)
 
 if __name__ == "__main__":

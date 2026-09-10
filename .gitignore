@@ -15,3 +15,12 @@
 local.properties
 *.env
 secrets.properties
+
+# Ensure Gradle wrapper executable and JAR are strictly tracked in Git
+!gradlew
+!gradlew.bat
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# Ensure CI mock Google Services is tracked
+!app/google-services.json

@@ -12,7 +12,7 @@ Panduan ini berisi instruksi langkah demi langkah untuk menyiapkan, mengonfigura
   - `compileSdk`: 36 (Android 15+)
   - `minSdk`: 24 (Android 7.0+)
   - `targetSdk`: 36
-- **Gradle Version**: 8.7+ dengan Kotlin Gradle Plugin 2.0+.
+- **Gradle Version**: Gradle 8.11+ / 9.x dengan Gradle Wrapper (`./gradlew`).
 
 ---
 
@@ -27,38 +27,33 @@ Aplikasi ini menggunakan **Secrets Gradle Plugin** untuk menginjeksi API Keys se
 
 2. Isi variabel yang diperlukan di dalam `.env`:
    ```properties
-   # API Keys & Token Konfigurasi
    GEMINI_API_KEY=your_gemini_api_key_here
    MAPS_API_KEY=your_maps_key_if_used
    FIREBASE_APPCHECK_DEBUG_TOKEN=your_debug_token
    ```
 
-3. Nilai ini akan diinjeksi secara otomatis ke `BuildConfig` saat proses kompilasi Gradle.
+3. Nilai ini diinjeksi ke `BuildConfig` saat proses kompilasi Gradle.
 
 ---
 
 ## 🔥 3. Konfigurasi Firebase (`google-services.json`)
 
-Proyek ini telah dikonfigurasi dengan plugin `com.google.gms.google-services` dan strategi `missingGoogleServicesStrategy = MissingGoogleServicesStrategy.WARN` agar proyek tetap dapat di-build secara lokal tanpa Firebase.
+Repositori ini telah dilengkapi dengan mock konfigurasi `app/google-services.json` sehingga proyek dapat langsung dikompilasi di CI/CD tanpa kegagalan:
 
-Untuk mengaktifkan fitur notifikasi push FCM atau Firebase Cloud secara penuh:
+Untuk menghubungkan ke Firebase Console proyek produksi Anda:
 1. Buka [Firebase Console](https://console.firebase.google.com/).
-2. Buat proyek Firebase baru atau gunakan proyek yang ada.
-3. Daftarkan aplikasi Android dengan package name yang sesuai (`applicationId`).
-4. Unduh file `google-services.json`.
-5. Letakkan file tersebut di folder:
-   ```
-   app/google-services.json
-   ```
+2. Buat proyek Firebase baru dan daftarkan package name Android (`com.drg.driver` atau `com.aistudio.drgojol.pkrvw`).
+3. Unduh file `google-services.json` resmi dari Firebase Console.
+4. Gantikan file di `app/google-services.json` (referensi template tersedia di `app/google-services.json.example`).
 
 ---
 
 ## 🔐 4. Konfigurasi Signing & Keystore Rilis
 
-Untuk keamanan, file `keystore` produksi tidak di-commit ke Git. `app/build.gradle.kts` menggunakan konfigurasi fleksibel berbasis *Environment Variables*:
+Untuk keamanan, file `keystore` produksi tidak di-commit ke Git publik. `app/build.gradle.kts` menggunakan konfigurasi fleksibel berbasis *Environment Variables*:
 
 ### Mode Debug:
-Secara default, build debug menggunakan keystore debug lokal Android (`debug.keystore`).
+Build debug menggunakan keystore debug otomatis Android (`debug.keystore`).
 
 ### Mode Release:
 Untuk menandatangani APK rilis di CI/CD (GitHub Actions) atau mesin lokal, atur environment variables berikut:
@@ -70,34 +65,37 @@ export KEY_ALIAS="upload"
 export KEY_PASSWORD="password_alias_anda"
 ```
 
-Jika variabel ini tidak diatur, build release akan mencari file `my-upload-key.jks` di root proyek.
-
 ---
 
 ## 📦 5. Namespace vs Application ID
 
-- **`namespace` (`com.example`)**: Digunakan secara internal oleh build system untuk paket kelas `R` dan integrasi AI Studio Cloud Container.
-- **`applicationId` (`com.aistudio.drgojol.pkrvw`)**: Merupakan ID unik aplikasi yang terdaftar di sistem operasi Android, Google Play Store, dan Firebase.
+- **`namespace` (`com.example`)**: Digunakan secara internal oleh build system untuk paket kelas `R` dan keutuhan struktur file internal.
+- **`applicationId` (`com.aistudio.drgojol.pkrvw` / `com.drg.driver`)**: Merupakan ID unik aplikasi yang terdaftar di Android OS, Google Play Store, dan Firebase. Untuk build independen di Play Store, Anda dapat mengarahkan `applicationId` ke `com.drg.driver`.
 
 ---
 
 ## 🧪 6. Menjalankan Pengujian Unit & Verifikasi
 
-Proyek ini memiliki pengujian otomatis berbasis **Robolectric** (JVM lokal) dan **Roborazzi** (verifikasi tampilan visual):
+Proyek ini memiliki 18 suite pengujian otomatis berbasis **Robolectric** dan **Roborazzi**:
 
 1. **Jalankan Semua Unit Test**:
    ```bash
-   gradle :app:testDebugUnitTest
+   ./gradlew :app:testDebugUnitTest
    ```
 
-2. **Verifikasi Screenshot Roborazzi**:
+2. **Jalankan Verifikasi Batas Baris Arsitektur (< 125 Baris)**:
    ```bash
-   gradle :app:verifyRoborazziDebug
+   python3 .github/scripts/check_file_length.py
    ```
 
-3. **Kompilasi APK Debug**:
+3. **Jalankan Android Lint**:
    ```bash
-   gradle assembleDebug
+   ./gradlew :app:lintDebug
+   ```
+
+4. **Kompilasi APK Debug**:
+   ```bash
+   ./gradlew assembleDebug
    ```
 
 ---
@@ -105,4 +103,4 @@ Proyek ini memiliki pengujian otomatis berbasis **Robolectric** (JVM lokal) dan 
 ## 🛡️ 7. Keamanan Jaringan & Privasi Data
 
 - **Network Security Config**: `app/src/main/res/xml/network_security_config.xml` secara ketat memblokir cleartext (HTTP) dan hanya mengizinkan lalu lintas TLS 1.3 / HTTPS.
-- **Local Data Protection**: Semua data sensitif (kas, kontak darurat, postingan) disimpan dalam SQLite terenkripsi lokal via Room Database.
+- **Local Data Protection**: Semua data sensitif (kas, kontak darurat, postingan) disimpan dalam SQLite terenkripsi lokal via Room Database v10 (`docs/DATABASE_MIGRATIONS.md`).

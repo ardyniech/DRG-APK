@@ -41,8 +41,12 @@ jobs:
           echo "GEMINI_API_KEY=dummy_ci_key" >> .env
           echo "MAPS_API_KEY=dummy_ci_key" >> .env
 
-      - name: Enforce Architecture Rules (Max 125 Lines & Code Quality)
+      - name: Enforce Architecture Rules (Max 125 Lines & Modular Isolation)
         run: python3 .github/scripts/check_file_length.py
+
+      - name: Run Android Lint
+        run: ./gradlew :app:lintDebug --no-daemon
+        continue-on-error: true
 
       - name: Run Robolectric & JVM Unit Tests
         run: ./gradlew :app:testDebugUnitTest --no-daemon --stacktrace
@@ -56,6 +60,14 @@ jobs:
         with:
           name: test-results
           path: app/build/reports/tests/testDebugUnitTest/
+          retention-days: 7
+
+      - name: Upload Lint Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-results
+          path: app/build/reports/lint-results*.html
           retention-days: 7
 
       - name: Upload Debug APK Artifact
