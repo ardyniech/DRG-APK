@@ -29,10 +29,13 @@ fun CommunityHubScreen(
     pointTransactions: List<PointTransaction> = emptyList(),
     adminLogs: List<AdminLog> = emptyList(),
     initialSubTab: Int = 0,
+    commentsMap: Map<String, List<ForumComment>> = emptyMap(),
     onAddTransactionClick: () -> Unit = {},
     onCreatePost: (String, String, ForumCategory, PostType) -> Unit = { _, _, _, _ -> },
     onToggleLike: (String, Boolean) -> Unit = { _, _ -> },
     onDeletePost: (String) -> Unit = {},
+    onAddComment: (String, String) -> Unit = { _, _ -> },
+    onDeleteComment: (String) -> Unit = {},
     onCallWorkshop: (String) -> Unit = {},
     onAwardPointsClick: () -> Unit = {},
     onClaimTask: (String) -> Unit = {},
@@ -60,7 +63,12 @@ fun CommunityHubScreen(
                     )
                     TransparencyReportScreen(transactions = transactions, totalIncome = totalIncome, totalExpense = totalExpense, netBalance = netBalance, canAddTransaction = isTreasurerOrAdmin, onAddTransactionClick = onAddTransactionClick)
                 }
-                1 -> ForumAndWorkshopScreen(posts = posts, workshops = workshops, currentMemberId = currentMember?.id ?: "DRG-001", onCreatePost = onCreatePost, onToggleLike = onToggleLike, onDeletePost = onDeletePost, onCallWorkshop = onCallWorkshop)
+                1 -> ForumAndWorkshopScreen(
+                    posts = posts, workshops = workshops, currentMemberId = currentMember?.id ?: "DRG-001",
+                    onCreatePost = onCreatePost, onToggleLike = onToggleLike, onDeletePost = onDeletePost,
+                    commentsMap = commentsMap, onAddComment = onAddComment, onDeleteComment = onDeleteComment,
+                    onCallWorkshop = onCallWorkshop
+                )
                 2 -> GamificationLeaderboardScreen(currentMember = currentMember, members = members, badges = badges, tasks = tasks, rewards = rewards, pointTransactions = pointTransactions, onAwardPointsClick = onAwardPointsClick, onClaimTask = onClaimTask, onCompleteTask = onCompleteTask, onRedeemReward = onRedeemReward)
                 3 -> MembersAndPoskoScreen(currentMember = currentMember, members = members, poskoList = poskoList, adminLogs = adminLogs, onRecordKopdarAttendance = onRecordKopdarAttendance, onAddReview = onAddReview, onUpdateMemberRole = onUpdateMemberRole, onUpdateMemberVerification = onUpdateMemberVerification, onUpdateMemberPermissions = onUpdateMemberPermissions)
                 4 -> DriverServicesScreen(onOrderMarketItem = onOrderMarketItem, onClaimInsurance = onClaimInsurance)

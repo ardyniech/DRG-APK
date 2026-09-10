@@ -55,6 +55,9 @@ fun DRGViewModel.addPost(title: String, content: String, category: ForumCategory
 fun DRGViewModel.deletePost(postId: String) = communityCoord.deletePost(postId)
 fun DRGViewModel.toggleLike(postId: String, isLiked: Boolean) = communityCoord.toggleLike(postId, isLiked)
 fun DRGViewModel.toggleLikePost(postId: String, isLiked: Boolean) = toggleLike(postId, isLiked)
+fun DRGViewModel.addForumComment(postId: String, content: String) = communityCoord.addComment(currentMember.value, postId, content)
+fun DRGViewModel.deleteForumComment(commentId: String) = communityCoord.deleteComment(commentId)
+fun DRGViewModel.getCommentsForPost(postId: String) = repository.getCommentsForPost(postId)
 fun DRGViewModel.checkInEvent(eventId: String) = communityCoord.checkInEvent(currentMember.value, eventId)
 fun DRGViewModel.recordKopdarAttendance() = checkInEvent("EVT-KOPDAR-01")
 fun DRGViewModel.submitDriverReview(targetDriverId: String, rating: Float, tag: String, comment: String) =

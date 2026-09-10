@@ -30,9 +30,10 @@ import com.example.shared.models.*
         MapTileMetadata::class,
         AppStateSetting::class,
         PendingSyncEntity::class,
-        AdminLog::class
+        AdminLog::class,
+        ForumComment::class
     ],
-    version = 9,
+    version = 10,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

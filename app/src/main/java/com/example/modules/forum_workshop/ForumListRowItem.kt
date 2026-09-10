@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.models.ForumComment
 import com.example.shared.models.ForumPost
 import com.example.shared.models.PostType
 import com.example.ui.theme.*
@@ -26,7 +27,11 @@ fun ForumListRowItem(
     post: ForumPost,
     canDelete: Boolean,
     onToggleLike: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    currentMemberId: String = "",
+    comments: List<ForumComment> = emptyList(),
+    onAddComment: (String) -> Unit = {},
+    onDeleteComment: (String) -> Unit = {}
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -44,11 +49,7 @@ fun ForumListRowItem(
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     val isQuestion = post.postType == PostType.QUESTION
                     Icon(
@@ -57,18 +58,9 @@ fun ForumListRowItem(
                         tint = if (isQuestion) DrgAmberWarning else DrgBlueInfo,
                         modifier = Modifier.size(16.dp)
                     )
-                    Text(
-                        text = post.category.label,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(post.category.badgeColorHex)
-                    )
+                    Text(text = post.category.label, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(post.category.badgeColorHex))
                 }
-                Text(
-                    text = post.timeAgo,
-                    fontSize = 10.sp,
-                    color = DrgTextMuted
-                )
+                Text(text = post.timeAgo, fontSize = 10.sp, color = DrgTextMuted)
             }
 
             Text(
@@ -89,24 +81,22 @@ fun ForumListRowItem(
                     overflow = TextOverflow.Ellipsis,
                     lineHeight = 15.sp
                 )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Oleh: ${post.authorName} (${post.authorRole.shortName})",
-                        fontSize = 10.sp,
-                        color = DrgTextMuted
-                    )
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Icon(
-                            imageVector = if (post.isLikedByMe) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = "Suka",
-                            tint = if (post.isLikedByMe) DrgRedDanger else DrgTextMuted,
-                            modifier = Modifier.size(13.dp)
-                        )
-                        Text(text = "${post.likesCount}", fontSize = 10.sp, color = DrgTextMuted)
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(text = "Oleh: ${post.authorName} (${post.authorRole.shortName})", fontSize = 10.sp, color = DrgTextMuted)
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                            Icon(Icons.Default.ChatBubbleOutline, contentDescription = "Balasan", tint = DrgTextMuted, modifier = Modifier.size(12.dp))
+                            Text(text = "${post.commentsCount}", fontSize = 10.sp, color = DrgTextMuted)
+                        }
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                            Icon(
+                                imageVector = if (post.isLikedByMe) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                contentDescription = "Suka",
+                                tint = if (post.isLikedByMe) DrgRedDanger else DrgTextMuted,
+                                modifier = Modifier.size(13.dp)
+                            )
+                            Text(text = "${post.likesCount}", fontSize = 10.sp, color = DrgTextMuted)
+                        }
                     }
                 }
             }
@@ -116,7 +106,11 @@ fun ForumListRowItem(
                     post = post,
                     canDelete = canDelete,
                     onToggleLike = onToggleLike,
-                    onDelete = onDelete
+                    onDelete = onDelete,
+                    currentMemberId = currentMemberId,
+                    comments = comments,
+                    onAddComment = onAddComment,
+                    onDeleteComment = onDeleteComment
                 )
             }
         }

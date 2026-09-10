@@ -10,10 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.shared.models.ForumCategory
-import com.example.shared.models.ForumPost
-import com.example.shared.models.PostType
-import com.example.shared.models.WorkshopPartner
+import com.example.shared.models.*
 import com.example.ui.theme.DrgBackground
 import com.example.ui.theme.DrgGreenPrimary
 
@@ -25,6 +22,9 @@ fun ForumAndWorkshopScreen(
     onCreatePost: (String, String, ForumCategory, PostType) -> Unit,
     onToggleLike: (String, Boolean) -> Unit,
     onDeletePost: (String) -> Unit = {},
+    commentsMap: Map<String, List<ForumComment>> = emptyMap(),
+    onAddComment: (String, String) -> Unit = { _, _ -> },
+    onDeleteComment: (String) -> Unit = {},
     onCallWorkshop: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -69,7 +69,10 @@ fun ForumAndWorkshopScreen(
                     showCreateDialog = true
                 },
                 onToggleLike = onToggleLike,
-                onDeletePost = onDeletePost
+                onDeletePost = onDeletePost,
+                commentsMap = commentsMap,
+                onAddComment = onAddComment,
+                onDeleteComment = onDeleteComment
             )
         } else {
             WorkshopSection(

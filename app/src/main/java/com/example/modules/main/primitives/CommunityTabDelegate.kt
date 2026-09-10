@@ -65,6 +65,8 @@ fun CommunityTabDelegate(
         },
         onToggleLike = { id, liked -> viewModel.toggleLikePost(id, liked) },
         onDeletePost = { id -> viewModel.deletePost(id) },
+        onAddComment = { postId, text -> viewModel.addForumComment(postId, text) },
+        onDeleteComment = { commentId -> viewModel.deleteForumComment(commentId) },
         onCallWorkshop = { phone ->
             WhatsAppLauncher.openChat(context, phone, "Halo Bengkel Rekanan DRG, saya anggota DRG ingin menanyakan perihal servis/booking.")
         },

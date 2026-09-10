@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shared.models.ForumCategory
+import com.example.shared.models.ForumComment
 import com.example.shared.models.ForumPost
 import com.example.shared.models.PostType
 import com.example.ui.theme.DrgTextSecondary
@@ -22,6 +23,9 @@ fun ForumSection(
     onCreatePostClick: (PostType) -> Unit,
     onToggleLike: (String, Boolean) -> Unit,
     onDeletePost: (String) -> Unit,
+    commentsMap: Map<String, List<ForumComment>> = emptyMap(),
+    onAddComment: (String, String) -> Unit = { _, _ -> },
+    onDeleteComment: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var searchQuery by remember { mutableStateOf("") }
@@ -41,10 +45,7 @@ fun ForumSection(
         }
     }
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    Column(modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         ForumActionBanner(
             onCreateUpdateClick = { onCreatePostClick(PostType.UPDATE) },
             onAskQuestionClick = { onCreatePostClick(PostType.QUESTION) }
@@ -64,23 +65,10 @@ fun ForumSection(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = if (isListView) "Daftar Update & Waktu" else "Kartu Diskusi Lengkap",
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                color = DrgTextSecondary
-            )
+            Text(text = if (isListView) "Daftar Update & Waktu" else "Kartu Diskusi Lengkap", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextSecondary)
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                FilterChip(
-                    selected = isListView,
-                    onClick = { isListView = true },
-                    label = { Text("Daftar Update", fontSize = 10.sp, fontWeight = FontWeight.Bold) }
-                )
-                FilterChip(
-                    selected = !isListView,
-                    onClick = { isListView = false },
-                    label = { Text("Kartu Lengkap", fontSize = 10.sp, fontWeight = FontWeight.Bold) }
-                )
+                FilterChip(selected = isListView, onClick = { isListView = true }, label = { Text("Daftar Update", fontSize = 10.sp, fontWeight = FontWeight.Bold) })
+                FilterChip(selected = !isListView, onClick = { isListView = false }, label = { Text("Kartu Lengkap", fontSize = 10.sp, fontWeight = FontWeight.Bold) })
             }
         }
 
@@ -95,12 +83,12 @@ fun ForumSection(
                 posts = filteredPosts,
                 currentMemberId = currentMemberId,
                 onToggleLike = { postId ->
-                    val post = posts.firstOrNull { it.id == postId }
-                    if (post != null) {
-                        onToggleLike(postId, post.isLikedByMe)
-                    }
+                    posts.firstOrNull { it.id == postId }?.let { onToggleLike(postId, it.isLikedByMe) }
                 },
                 onDeletePost = onDeletePost,
+                commentsMap = commentsMap,
+                onAddComment = onAddComment,
+                onDeleteComment = onDeleteComment,
                 modifier = Modifier.weight(1f)
             )
         } else {
@@ -110,11 +98,10 @@ fun ForumSection(
                 contentPadding = PaddingValues(bottom = 24.dp)
             ) {
                 items(filteredPosts, key = { it.id }) { post ->
-                    val canDelete = post.authorId == currentMemberId
                     ForumPostCard(
                         post = post,
                         onToggleLike = { onToggleLike(post.id, post.isLikedByMe) },
-                        onDeletePost = if (canDelete) { { onDeletePost(post.id) } } else null
+                        onDeletePost = if (post.authorId == currentMemberId) { { onDeletePost(post.id) } } else null
                     )
                 }
             }

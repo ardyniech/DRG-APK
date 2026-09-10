@@ -3,11 +3,11 @@ package com.example.modules.forum_workshop
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.example.shared.models.ForumComment
 import com.example.shared.models.ForumPost
 
 @Composable
@@ -16,6 +16,9 @@ fun ForumListView(
     currentMemberId: String,
     onToggleLike: (String) -> Unit,
     onDeletePost: (String) -> Unit,
+    commentsMap: Map<String, List<ForumComment>> = emptyMap(),
+    onAddComment: (String, String) -> Unit = { _, _ -> },
+    onDeleteComment: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -28,7 +31,11 @@ fun ForumListView(
                 post = post,
                 canDelete = post.authorId == currentMemberId,
                 onToggleLike = { onToggleLike(post.id) },
-                onDelete = { onDeletePost(post.id) }
+                onDelete = { onDeletePost(post.id) },
+                currentMemberId = currentMemberId,
+                comments = commentsMap[post.id] ?: emptyList(),
+                onAddComment = { text -> onAddComment(post.id, text) },
+                onDeleteComment = onDeleteComment
             )
         }
     }

@@ -17,6 +17,9 @@ class CommunityRepository(private val db: AppDatabase) {
     fun getPrefForMember(memberId: String): Flow<NotificationPreference?> =
         db.notificationPrefDao().getPrefForMember(memberId)
 
+    fun getCommentsForPost(postId: String): Flow<List<ForumComment>> =
+        db.forumDao().getCommentsForPost(postId)
+
     suspend fun addKasTransaction(transaction: KasTransaction) = withContext(Dispatchers.IO) {
         db.kasDao().insertTransaction(transaction)
     }
@@ -32,6 +35,15 @@ class CommunityRepository(private val db: AppDatabase) {
     suspend fun toggleLikePost(postId: String, currentLiked: Boolean) = withContext(Dispatchers.IO) {
         val delta = if (currentLiked) -1 else 1
         db.forumDao().toggleLike(postId, delta, !currentLiked)
+    }
+
+    suspend fun addForumComment(comment: ForumComment) = withContext(Dispatchers.IO) {
+        db.forumDao().insertComment(comment)
+        db.forumDao().incrementCommentsCount(comment.postId)
+    }
+
+    suspend fun deleteForumComment(commentId: String) = withContext(Dispatchers.IO) {
+        db.forumDao().deleteComment(commentId)
     }
 
     suspend fun addNotification(notification: CommunityNotification) = withContext(Dispatchers.IO) {
