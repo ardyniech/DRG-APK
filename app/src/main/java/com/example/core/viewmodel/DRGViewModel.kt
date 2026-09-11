@@ -39,8 +39,9 @@ class DRGViewModel(
 
     val currentMemberId = profileCoord.currentMemberId
     val isLoggedIn = profileCoord.isLoggedIn
-    val currentMember = combine(members, currentMemberId) { list, id -> list.find { it.id == id } ?: list.firstOrNull() }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val currentMember = combine(members, currentMemberId) { list, id -> 
+        if (id.isBlank()) null else list.find { it.id == id } 
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private val _selectedTab = MutableStateFlow(MainNavTab.DASHBOARD)
     val selectedTab: StateFlow<MainNavTab> = _selectedTab.asStateFlow()

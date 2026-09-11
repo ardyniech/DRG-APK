@@ -89,7 +89,7 @@ fun MembersAndPoskoScreen(
         when (selectedTab) {
             0 -> MembersTabSection(members = members, searchQuery = searchQuery, filterRoleByPengurusOnly = filterRoleByPengurusOnly, onTogglePengurusOnly = { filterRoleByPengurusOnly = it }, filterStatusSelected = filterStatusSelected, onSelectStatus = { filterStatusSelected = it }, onSelectMember = { selectedMemberForReview = it })
             1 -> PoskoTabSection(currentMember = currentMember, poskoList = poskoList, searchQuery = searchQuery)
-            2 -> RolePermissionManagementScreen(members = members, onBack = { selectedTab = 0 }, onSavePermissions = onUpdateMemberPermissions)
+            2 -> RolePermissionManagementScreen(members = members, currentMember = currentMember, onBack = { selectedTab = 0 }, onSavePermissions = onUpdateMemberPermissions)
             3 -> AdminLogsTabSection(adminLogs = adminLogs)
         }
     }

@@ -82,6 +82,32 @@ fun CommunityEmergencyModal(
                         Text("Pancarkan SOS", color = Color.White, fontWeight = FontWeight.Bold)
                     }
                 }
+
+                val context = androidx.compose.ui.platform.LocalContext.current
+                OutlinedButton(
+                    onClick = {
+                        val loc = if (locationNote.isBlank()) "Lokasi Terkini GPS" else locationNote.trim()
+                        val smsText = com.example.core.sync.EmergencySmsFallbackHelper.formatEmergencySms(
+                            driverName = "Driver DRG",
+                            plateNumber = "Motor",
+                            type = selectedType,
+                            locationNote = loc,
+                            lat = 0.0,
+                            lng = 0.0
+                        )
+                        com.example.core.sync.EmergencySmsFallbackHelper.dispatchSmsFallback(
+                            context = context,
+                            phoneNumber = com.example.core.sync.EmergencySmsFallbackHelper.DEFAULT_HOTLINE_TRC,
+                            message = smsText
+                        )
+                        onDismiss()
+                    },
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = DrgAmberSecondary),
+                    modifier = Modifier.fillMaxWidth().height(42.dp)
+                ) {
+                    Text("Kirim via SMS Darurat (Offline / Tanpa Kuota)", fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                }
             }
         }
     }

@@ -40,7 +40,31 @@ class DRGRepository(val db: AppDatabase) {
     fun getReviewsForDriver(driverId: String) = memberRepo.getReviewsForDriver(driverId)
 
     suspend fun initializeSeedDataIfNeeded() = withContext(Dispatchers.IO) {
-        // Mock data removed. Application runs with real data only.
+        if (memberRepo.getMemberCount() == 0) {
+            val foundingKetua = DriverMember(
+                id = "DRG-001",
+                name = "Budi Santoso",
+                driverId = "DRG-001",
+                phone = "081234567890",
+                role = MemberRole.KETUA,
+                motorcyclePlate = "N 1234 KTA",
+                motorcycleModel = "Honda PCX 160",
+                rating = 5.0f,
+                reviewCount = 12,
+                loyaltyPoints = 300,
+                loyaltyTier = "Leader",
+                verificationStatus = VerificationStatus.VERIFIED,
+                screeningNotes = "Ketua & Dewan Pembina Utama Komunitas DRG Malang Raya",
+                isOnline = true,
+                currentStatus = "Siaga Komando DRG",
+                baseArea = "Klojen, Malang",
+                canManageKas = true,
+                canVerifyDrivers = true,
+                canBroadcastSos = true,
+                canManagePosko = true
+            )
+            memberRepo.registerMember(foundingKetua)
+        }
     }
 
     // Method Delegations

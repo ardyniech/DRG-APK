@@ -27,21 +27,12 @@ fun AdminGovernanceScreen(
     members: List<DriverMember>,
     onApproveScreening: (String) -> Unit,
     onSendNotification: (String, String, NotificationSeverity) -> Unit,
+    onOpenRoleManagement: () -> Unit = {},
     onUpdateMemberPermissions: (String, MemberRole, Boolean, Boolean, Boolean, Boolean, VerificationStatus) -> Unit = { _, _, _, _, _, _, _ -> },
     modifier: Modifier = Modifier
 ) {
     var showNotifDialog by remember { mutableStateOf(false) }
-    var showRoleManagementPage by remember { mutableStateOf(false) }
     val isLeadershipOrAdmin = currentMember?.role?.isLeadership == true || currentMember?.role?.name in listOf("SEKRETARIS", "ADMIN")
-
-    if (showRoleManagementPage) {
-        RolePermissionManagementScreen(
-            members = members,
-            onBack = { showRoleManagementPage = false },
-            onSavePermissions = onUpdateMemberPermissions
-        )
-        return
-    }
 
     LazyColumn(
         modifier = modifier.fillMaxSize().background(DrgBackground).padding(horizontal = 16.dp),
@@ -55,10 +46,10 @@ fun AdminGovernanceScreen(
             item {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(
-                        onClick = { showRoleManagementPage = true },
+                        onClick = onOpenRoleManagement,
                         colors = ButtonDefaults.buttonColors(containerColor = DrgGrabGreenPrimary),
                         shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.weight(1f).height(48.dp),
+                        modifier = Modifier.weight(1f).height(46.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp)
                     ) {
                         Icon(Icons.Default.ManageAccounts, contentDescription = "Role", tint = Color.White, modifier = Modifier.size(18.dp))
@@ -69,7 +60,7 @@ fun AdminGovernanceScreen(
                         onClick = { showNotifDialog = true },
                         colors = ButtonDefaults.buttonColors(containerColor = DrgAmberSecondary),
                         shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.weight(1f).height(48.dp),
+                        modifier = Modifier.weight(1f).height(46.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp)
                     ) {
                         Icon(Icons.Default.Campaign, contentDescription = "Broadcast", tint = Color.White, modifier = Modifier.size(18.dp))
@@ -98,15 +89,14 @@ fun AdminGovernanceScreen(
             }
         }
 
-        item { Text("Evaluasi Kode Etik & Disiplin (Dewan Etika)", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = DrgTextPrimary) }
         item {
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = DrgSurface,
                 modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
             ) {
-                Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("📋 Status Etika Komunitas: KONDUSIF", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgGreenPrimary)
+                Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text("📋 Evaluasi Kode Etik: KONDUSIF", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgGreenPrimary)
                     Text("Dewan Etika memantau rating & ulasan dari sesama driver.", fontSize = 11.sp, color = DrgTextSecondary)
                 }
             }

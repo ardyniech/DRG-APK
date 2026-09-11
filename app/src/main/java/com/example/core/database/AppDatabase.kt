@@ -31,9 +31,11 @@ import com.example.shared.models.*
         AppStateSetting::class,
         PendingSyncEntity::class,
         AdminLog::class,
-        ForumComment::class
+        ForumComment::class,
+        MemberRolePermissionEntity::class,
+        RoleAuditLogEntity::class
     ],
-    version = 10,
+    version = 11,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -54,6 +56,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun appStateDao(): AppStateDao
     abstract fun syncQueueDao(): SyncQueueDao
     abstract fun adminLogDao(): AdminLogDao
+    abstract fun memberRolePermissionDao(): MemberRolePermissionDao
+    abstract fun roleAuditLogDao(): RoleAuditLogDao
 
     companion object {
         @Volatile

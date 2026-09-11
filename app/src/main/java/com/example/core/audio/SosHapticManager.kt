@@ -40,6 +40,54 @@ object SosHapticManager {
         }
     }
 
+    fun playCountdownTick(secondsRemaining: Int) {
+        try {
+            val v = vibrator ?: return
+            if (!v.hasVibrator()) return
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val duration = if (secondsRemaining <= 1) 90L else 50L
+                val amplitude = (255 - secondsRemaining * 25).coerceIn(120, 255)
+                v.vibrate(VibrationEffect.createOneShot(duration, amplitude))
+            } else {
+                @Suppress("DEPRECATION")
+                v.vibrate(50L)
+            }
+        } catch (_: Exception) {
+        }
+    }
+
+    fun playSuccessHaptic() {
+        try {
+            val v = vibrator ?: return
+            if (!v.hasVibrator()) return
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val timings = longArrayOf(0, 40, 50, 40)
+                val amplitudes = intArrayOf(0, 100, 0, 140)
+                v.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1))
+            } else {
+                @Suppress("DEPRECATION")
+                v.vibrate(40L)
+            }
+        } catch (_: Exception) {
+        }
+    }
+
+    fun playEmergencyDispatchedHaptic() {
+        try {
+            val v = vibrator ?: return
+            if (!v.hasVibrator()) return
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val timings = longArrayOf(0, 120, 70, 120, 70, 250)
+                val amplitudes = intArrayOf(0, 255, 0, 255, 0, 255)
+                v.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1))
+            } else {
+                @Suppress("DEPRECATION")
+                v.vibrate(longArrayOf(0, 120, 70, 120, 70, 250), -1)
+            }
+        } catch (_: Exception) {
+        }
+    }
+
     fun stopVibration() {
         try {
             vibrator?.cancel()

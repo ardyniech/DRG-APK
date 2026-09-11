@@ -3,7 +3,8 @@ package com.example.modules.dashboard
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -32,7 +33,6 @@ fun DashboardScreen(
     onUpdateDutyStatus: (String, Boolean) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier
 ) {
-    val activeMemberCount = members.count { it.isOnline }
     var isRefreshing by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
@@ -48,39 +48,33 @@ fun DashboardScreen(
         modifier = modifier.fillMaxSize().background(DrgBackground)
     ) {
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            // 1. Driver Profile Details
+            item { DriverProfileOverviewCard(member = currentMember, onStatusChange = onUpdateDutyStatus) }
+            item { RiderHardwareRouteCard() }
+
+            if (currentMember?.verificationStatus == VerificationStatus.PENDING_SCREENING) {
+                item { ScreeningPendingCard(member = currentMember) }
+            }
+
             item {
-                DriverProfileOverviewCard(
+                DriverProgressiveOnboardingCard(
                     member = currentMember,
-                    onStatusChange = onUpdateDutyStatus
+                    onStartShift = { currentMember?.id?.let { onUpdateDutyStatus(it, true) } },
+                    onOpenEmergency = { onNavigateTab(MainNavTab.EMERGENCY) },
+                    onOpenForum = { onNavigateTab(MainNavTab.FORUM) }
                 )
             }
 
-            // Active SOS Emergency Alert if any
             val activeSos = activeAlerts.firstOrNull { it.isActive }
             if (activeSos != null) {
-                item {
-                    ActiveAlertBanner(alert = activeSos, onViewDetail = { onNavigateTab(MainNavTab.EMERGENCY) })
-                }
+                item { ActiveAlertBanner(alert = activeSos, onViewDetail = { onNavigateTab(MainNavTab.EMERGENCY) }) }
             }
 
-            // 2. Community Live Status
             item {
-                Text(
-                    text = "Status Ekosistem Komunitas",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp,
-                    color = DrgTextPrimary
-                )
-            }
-            item {
-                CommunityLiveStatusCard(
-                    activeMemberCount = activeMemberCount,
+                CommunityStatusSection(
+                    activeMemberCount = members.count { it.isOnline },
                     activeHazardCount = hazards.size,
                     kasFormatted = totalKasFormatted,
                     poskoCount = poskoCount,
@@ -88,20 +82,11 @@ fun DashboardScreen(
                 )
             }
 
-            // Quick Actions
             item {
-                Text(
-                    text = "Akses Cepat (Quick Actions)",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp,
-                    color = DrgTextPrimary
-                )
+                Text(text = "Akses Cepat (Quick Actions)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
             }
-            item {
-                QuickActionGrid(onNavigate = onNavigateTab, onQuickEmergency = onTriggerEmergency)
-            }
+            item { QuickActionGrid(onNavigate = onNavigateTab, onQuickEmergency = onTriggerEmergency) }
 
-            // 3. Summary of Recent Community Activities
             item {
                 RecentCommunityActivitiesSection(
                     announcements = announcements,
@@ -110,7 +95,6 @@ fun DashboardScreen(
                     onNavigateTab = onNavigateTab
                 )
             }
-
             item { Spacer(modifier = Modifier.height(16.dp)) }
         }
     }

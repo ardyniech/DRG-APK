@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.EmptyStateOrganicGraphic
 import com.example.shared.models.*
 import com.example.ui.theme.*
 
@@ -22,6 +23,14 @@ fun TasksTabContent(
     onClaim: (String) -> Unit,
     onComplete: (String) -> Unit
 ) {
+    if (tasks.isEmpty()) {
+        EmptyStateOrganicGraphic(
+            title = "Belum Ada Misi Komunitas",
+            message = "Pengurus belum menerbitkan tugas gotong-royong baru. Cek berkala untuk kumpulkan poin loyalitas!"
+        )
+        return
+    }
+
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         contentPadding = PaddingValues(bottom = 24.dp)

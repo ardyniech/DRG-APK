@@ -58,4 +58,25 @@ object RoleManager {
         if (member == null) return false
         return member.role in listOf(MemberRole.KETUA, MemberRole.SEKRETARIS)
     }
+
+    fun validateRoleChange(
+        actor: DriverMember?,
+        target: DriverMember,
+        newRole: MemberRole,
+        allMembers: List<DriverMember>
+    ): Pair<Boolean, String> {
+        if (actor == null || !canManageRoles(actor)) {
+            return false to "Hanya Ketua dan Sekretaris yang berwenang mengatur jabatan."
+        }
+        if (newRole == MemberRole.KETUA && actor.role != MemberRole.KETUA) {
+            return false to "Hanya Ketua yang berwenang mengangkat atau mengalihkan jabatan Ketua."
+        }
+        if (target.role == MemberRole.KETUA && newRole != MemberRole.KETUA) {
+            val otherKetuaCount = allMembers.count { it.id != target.id && it.role == MemberRole.KETUA }
+            if (otherKetuaCount == 0) {
+                return false to "Tidak dapat menurunkan Ketua: Komunitas wajib memiliki minimal 1 Ketua aktif."
+            }
+        }
+        return true to "Validasi peran berhasil."
+    }
 }

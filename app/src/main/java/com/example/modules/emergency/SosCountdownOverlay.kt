@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.core.audio.SosAlarmSoundManager
+import com.example.core.audio.SosHapticManager
 import com.example.shared.models.EmergencyType
 import com.example.ui.theme.*
 import kotlinx.coroutines.delay
@@ -30,20 +31,27 @@ fun SosCountdownOverlay(
     onTriggerNow: () -> Unit
 ) {
     var secondsLeft by remember { mutableIntStateOf(initialSeconds) }
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val vol = remember(context) { com.example.core.audio.AudioRouteManager.getRecommendedAlarmVolume(context) }
 
     LaunchedEffect(Unit) {
         if (isAlarmSoundEnabled) {
-            SosAlarmSoundManager.playHighDecibelAlarm(initialSeconds * 1000L)
+            SosAlarmSoundManager.playHighDecibelAlarm(initialSeconds * 1000L, vol)
         }
         while (secondsLeft > 0) {
+            SosHapticManager.playCountdownTick(secondsLeft)
             delay(1000L)
             secondsLeft--
         }
+        SosHapticManager.playEmergencyDispatchedHaptic()
         onTriggerNow()
     }
 
     DisposableEffect(Unit) {
-        onDispose { SosAlarmSoundManager.stopAlarm() }
+        onDispose {
+            SosAlarmSoundManager.stopAlarm()
+            SosHapticManager.stopVibration()
+        }
     }
 
     Dialog(
@@ -78,7 +86,12 @@ fun SosCountdownOverlay(
                 )
 
                 Button(
-                    onClick = onCancel,
+                    onClick = {
+                        SosAlarmSoundManager.stopAlarm()
+                        SosHapticManager.stopVibration()
+                        SosHapticManager.playSuccessHaptic()
+                        onCancel()
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth().height(50.dp)
@@ -89,7 +102,11 @@ fun SosCountdownOverlay(
                 }
 
                 OutlinedButton(
-                    onClick = onTriggerNow,
+                    onClick = {
+                        SosAlarmSoundManager.stopAlarm()
+                        SosHapticManager.playEmergencyDispatchedHaptic()
+                        onTriggerNow()
+                    },
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = DrgRedDanger),
                     modifier = Modifier.fillMaxWidth().height(46.dp)

@@ -22,7 +22,8 @@ import com.example.ui.theme.*
 fun RoleMemberCard(
     member: DriverMember,
     onManageClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    canEdit: Boolean = true
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
@@ -69,16 +70,18 @@ fun RoleMemberCard(
                 }
             }
 
-            Button(
-                onClick = onManageClick,
-                colors = ButtonDefaults.buttonColors(containerColor = DrgGrabGreenPrimary),
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier.fillMaxWidth().height(36.dp),
-                contentPadding = PaddingValues(horizontal = 8.dp)
-            ) {
-                Icon(Icons.Default.ManageAccounts, contentDescription = null, modifier = Modifier.size(16.dp), tint = Color.White)
-                Spacer(modifier = Modifier.width(6.dp))
-                Text("Atur Jabatan & Izin Akses", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+            if (canEdit) {
+                Button(
+                    onClick = onManageClick,
+                    colors = ButtonDefaults.buttonColors(containerColor = DrgGrabGreenPrimary),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.fillMaxWidth().height(36.dp),
+                    contentPadding = PaddingValues(horizontal = 8.dp)
+                ) {
+                    Icon(Icons.Default.ManageAccounts, contentDescription = null, modifier = Modifier.size(16.dp), tint = Color.White)
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text("Atur Jabatan & Izin Akses", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                }
             }
         }
     }

@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.example.modules.profile.primitives.KtaDriverAvatarAndDetails
 import com.example.modules.profile.primitives.KtaFooterRow
 import com.example.modules.profile.primitives.KtaHeaderRow
+import com.example.modules.profile.primitives.KtaHolographicWatermark
 import com.example.shared.models.DriverMember
 import com.example.ui.theme.*
 
@@ -30,6 +31,7 @@ fun KtaDigitalCard(member: DriverMember?) {
             KtaHeaderRow()
             Divider(color = DrgOutline.copy(alpha = 0.5f))
             KtaDriverAvatarAndDetails(member = member)
+            KtaHolographicWatermark(member = member)
             KtaFooterRow(member = member)
         }
     }

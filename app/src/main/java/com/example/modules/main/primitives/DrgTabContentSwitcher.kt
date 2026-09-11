@@ -10,6 +10,7 @@ import com.example.core.viewmodel.*
 import com.example.modules.admin.AdminGovernanceScreen
 import com.example.modules.dashboard.DashboardScreen
 import com.example.modules.emergency.EmergencyScreen
+import com.example.modules.members.role_management.RolePermissionManagementScreen
 import com.example.modules.profile.ProfileScreen
 import com.example.modules.radar.RadarScreen
 import com.example.shared.models.*
@@ -105,7 +106,15 @@ fun DrgTabContentSwitcher(
                     viewModel.sendNotification(title, msg, sev)
                     scope.launch { snackbarHostState.showSnackbar("Pengumuman berhasil dipancarkan!") }
                 },
+                onOpenRoleManagement = { viewModel.selectTab(MainNavTab.ROLES) },
                 onUpdateMemberPermissions = { id, role, kas, verify, sos, posko, st ->
+                    viewModel.updateMemberPermissions(id, role, kas, verify, sos, posko, st)
+                }
+            )
+            MainNavTab.ROLES -> RolePermissionManagementScreen(
+                members = members, currentMember = currentMember,
+                onBack = { viewModel.selectTab(MainNavTab.ADMIN) },
+                onSavePermissions = { id, role, kas, verify, sos, posko, st ->
                     viewModel.updateMemberPermissions(id, role, kas, verify, sos, posko, st)
                 }
             )

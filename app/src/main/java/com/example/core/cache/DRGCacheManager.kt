@@ -54,11 +54,16 @@ object DRGCacheManager {
             .readTimeout(15, TimeUnit.SECONDS)
             .build()
 
+        val actManager = appContext.getSystemService(Context.ACTIVITY_SERVICE) as? android.app.ActivityManager
+        val isLowRam = actManager?.isLowRamDevice == true
+        val memoryPercent = if (isLowRam) 0.10 else 0.15
+
         return ImageLoader.Builder(appContext)
             .okHttpClient(okHttpClient)
+            .allowRgb565(isLowRam)
             .memoryCache {
                 MemoryCache.Builder(appContext)
-                    .maxSizePercent(0.25)
+                    .maxSizePercent(memoryPercent)
                     .strongReferencesEnabled(true)
                     .build()
             }

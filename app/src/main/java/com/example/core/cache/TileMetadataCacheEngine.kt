@@ -50,6 +50,11 @@ class TileMetadataCacheEngine(
         mapTileDao.evictOldestTiles(100)
     }
 
+    suspend fun pruneExpiredTiles(expiryDays: Int = 30) = withContext(Dispatchers.IO) {
+        val threshold = System.currentTimeMillis() - (expiryDays * 24L * 60L * 60L * 1000L)
+        mapTileDao.deleteExpiredTiles(threshold)
+    }
+
     suspend fun saveStateString(key: String, value: String) = withContext(Dispatchers.IO) {
         appStateDao.saveSetting(AppStateSetting(key = key, stringValue = value))
     }

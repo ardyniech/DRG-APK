@@ -23,6 +23,16 @@ object WhatsAppLauncher {
         }
     }
 
+    fun openDialer(context: Context, phoneNumber: String) {
+        try {
+            val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:${phoneNumber.trim()}"))
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            context.startActivity(intent)
+        } catch (_: Exception) {
+            Toast.makeText(context, "Tidak dapat membuka dialer telepon", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     fun shareLocation(context: Context, driverName: String, motorcycle: String, lat: Double, lng: Double) {
         try {
             val mapsUrl = "https://maps.google.com/?q=$lat,$lng"
