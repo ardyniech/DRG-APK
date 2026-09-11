@@ -46,7 +46,21 @@ Aplikasi menggunakan **Room Database** dengan `exportSchema = true` (disimpan di
 - Menambahkan indeks sekunder pada `forum_comments(postId)` untuk query relasi yang cepat.
 - Penyelarasan relasi cascade dan pengujian integritas via Robolectric.
 
-### **v11 — Skema Terkini (Current Release: Role-Based Access Control & Security)**
-- Menambahkan entitas `member_role_permissions` untuk mengelola hak akses granular (kelola kas, verifikasi driver, siaran SOS, kelola posko) dan status verifikasi akun.
-- Menambahkan entitas `role_audit_logs` untuk audit trail kepengurusan (pencatatan promosi/demosi jabatan, alasan, dan pembuat aksi).
-- Indeks sekunder pada `member_role_permissions(role, verificationStatus)` dan `role_audit_logs(targetMemberId, timestamp)` untuk query berkinerja tinggi.
+### **v11: Role-Based Access Control & Security**
+- **Entitas `member_role_permissions`**:
+  - Kolom: `memberId` (Primary Key, String), `role` (Enum MemberRole), `assignedByMemberId` (String), `assignedByMemberName` (String), `assignedTimestamp` (Long), `canManageKas` (Boolean), `canVerifyDrivers` (Boolean), `canBroadcastSos` (Boolean), `canManagePosko` (Boolean), `verificationStatus` (Enum VerificationStatus), `notes` (String).
+  - Indeks Sekunder: `Index(value = ["role"])`, `Index(value = ["verificationStatus"])`.
+  - Fungsi: Mengisolasi hak akses per-driver secara granular, memisahkan hak administratif spesifik dari peran dasar tanpa perlu mutasi entitas profil.
+- **Entitas `role_audit_logs`**:
+  - Kolom: `id` (Primary Key, String), `targetMemberId` (String), `targetMemberName` (String), `previousRole` (String), `newRole` (String), `actionByMemberId` (String), `actionByMemberName` (String), `reason` (String), `timestamp` (Long).
+  - Indeks Sekunder: `Index(value = ["targetMemberId"])`, `Index(value = ["timestamp"])`.
+  - Fungsi: Audit trail tak terhapus (*immutable audit log*) untuk merekam setiap promosi, demosi, dan perubahan izin kepengurusan komunitas.
+
+### **v12 — Skema Terkini (Current Release: Posko Check-In Event Logger)**
+- **Entitas `posko_check_ins`**:
+  - Kolom: `id` (Primary Key, String), `poskoId` (String), `poskoName` (String), `memberId` (String), `memberName` (String), `driverPlate` (String), `checkInTimestamp` (Long), `pointsAwarded` (Int), `checkInMethod` (String).
+  - Indeks Sekunder: `Index(value = ["poskoId"])`, `Index(value = ["memberId"])`, `Index(value = ["checkInTimestamp"])`.
+  - Fungsi: Pencatatan riwayat singgah/check-in driver di Posko Komunitas untuk integrasi poin loyalitas dan kehadiran kopdar.
+- **Strategi Migrasi DDL (v11 -> v12)**:
+  - `CREATE TABLE IF NOT EXISTS posko_check_ins (...)` dengan indeks `index_posko_check_ins_poskoId`, `index_posko_check_ins_memberId`, dan `index_posko_check_ins_checkInTimestamp`.
+  - Pengujian tervalidasi 100% via suite Robolectric `PoskoCheckInRepositoryTest`.

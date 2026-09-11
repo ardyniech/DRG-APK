@@ -12,30 +12,16 @@ import com.example.shared.models.*
 
 @Database(
     entities = [
-        DriverMember::class,
-        EmergencyAlert::class,
-        PoskoLocation::class,
-        KasTransaction::class,
-        ForumPost::class,
-        WorkshopPartner::class,
-        AttendanceEvent::class,
-        DriverReview::class,
-        CommunityNotification::class,
-        BadgeItem::class,
-        CommunityTask::class,
-        RewardItem::class,
-        HazardArea::class,
-        PointTransaction::class,
-        NotificationPreference::class,
-        MapTileMetadata::class,
-        AppStateSetting::class,
-        PendingSyncEntity::class,
-        AdminLog::class,
-        ForumComment::class,
-        MemberRolePermissionEntity::class,
-        RoleAuditLogEntity::class
+        DriverMember::class, EmergencyAlert::class, PoskoLocation::class,
+        KasTransaction::class, ForumPost::class, WorkshopPartner::class,
+        AttendanceEvent::class, DriverReview::class, CommunityNotification::class,
+        BadgeItem::class, CommunityTask::class, RewardItem::class,
+        HazardArea::class, PointTransaction::class, NotificationPreference::class,
+        MapTileMetadata::class, AppStateSetting::class, PendingSyncEntity::class,
+        AdminLog::class, ForumComment::class, MemberRolePermissionEntity::class,
+        RoleAuditLogEntity::class, PoskoCheckInEntity::class
     ],
-    version = 11,
+    version = 12,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -58,6 +44,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun adminLogDao(): AdminLogDao
     abstract fun memberRolePermissionDao(): MemberRolePermissionDao
     abstract fun roleAuditLogDao(): RoleAuditLogDao
+    abstract fun poskoCheckInDao(): PoskoCheckInDao
 
     companion object {
         @Volatile

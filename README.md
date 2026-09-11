@@ -4,9 +4,9 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android_15-green.svg)](https://developer.android.com)
 [![Compose](https://img.shields.io/badge/Jetpack_Compose-Material_3-emerald.svg)](https://developer.android.com/jetpack/compose)
-[![Database](https://img.shields.io/badge/Room_Database-v10_Local_First-teal.svg)](docs/DATABASE_MIGRATIONS.md)
+[![Database](https://img.shields.io/badge/Room_Database-v12_Posko_RBAC_Local_First-teal.svg)](docs/DATABASE_MIGRATIONS.md)
 [![Architecture Gating](https://img.shields.io/badge/Architecture-125_Lines_Cap_Enforced-success.svg)](.github/scripts/check_file_length.py)
-[![Tests](https://img.shields.io/badge/Unit_Tests-18_Suites_Passed-brightgreen.svg)](#-strategi-pengujian-testing-suite)
+[![Tests](https://img.shields.io/badge/Unit_Tests-27_Suites_Passed-brightgreen.svg)](#-strategi-pengujian-testing-suite)
 
 ---
 
@@ -74,29 +74,36 @@ app/src/main/java/com/example/
 
 ---
 
-## 🗄️ Skema Database Lokal (Room v10)
+## 🗄️ Skema Database Lokal (Room v12)
 
 Detail skema dan panduan migrasi dapat dibaca di **[Dokumentasi Migrasi Database (docs/DATABASE_MIGRATIONS.md)](docs/DATABASE_MIGRATIONS.md)**.
 
 1. **`members`**: Data anggota pengemudi, peran (*Ketua, Wakil, Satgas, Dewan Etika, Anggota*), status verifikasi, dan rating solidaritas.
-2. **`emergency_alerts`**: Log sinyal darurat SOS, koordinat GPS, status penanganan tim reaksi cepat.
-3. **`kas_transactions`**: Riwayat iuran kas masuk dan pengeluaran transparan kas komunitas.
-4. **`forum_posts`**: Postingan diskusi internal (*`QUESTION`* vs *`UPDATE`*), filter kategori, dan pencacah suka.
-5. **`forum_comments`**: Balasan/komentar interaktif pengemudi pada setiap postingan forum diskusi.
-6. **`workshop_partners`**: Daftar bengkel rekanan resmi DRG beserta diskon khusus anggota.
-7. **`community_tasks` & `reward_items`**: Misi gotong-royong, kupon servis, dan saldo poin.
-8. **`notification_preferences`**: Pengaturan notifikasi getar, suara sirine darurat, dan update kas.
-9. **`map_tile_cache`**: Metadata tile peta lokal untuk disk cache LRU hemat kuota/baterai.
-10. **`app_state_settings`**: Persistensi konfigurasi aplikasi dan profil hemat daya.
-11. **`pending_sync_queue`**: Antrean mutasi offline untuk sinkronisasi sinkron latar belakang.
-12. **`admin_logs`**: Rekam jejak audit otorisasi pengurus.
+2. **`member_role_permissions`**: Hak akses izin granular per-anggota (kelola kas, verifikasi driver, siaran SOS, kelola posko).
+3. **`role_audit_logs`**: Rekam jejak audit otorisasi & promosi/demosi jabatan pengurus.
+4. **`posko_check_ins`**: Riwayat check-in singgah driver di Posko Komunitas untuk akumulasi loyalitas.
+5. **`emergency_alerts`**: Log sinyal darurat SOS, koordinat GPS, status penanganan tim reaksi cepat.
+6. **`kas_transactions`**: Riwayat iuran kas masuk dan pengeluaran transparan kas komunitas.
+7. **`forum_posts`**: Postingan diskusi internal (*`QUESTION`* vs *`UPDATE`*), filter kategori, dan pencacah suka.
+8. **`forum_comments`**: Balasan/komentar interaktif pengemudi pada setiap postingan forum diskusi.
+9. **`workshop_partners`**: Daftar bengkel rekanan resmi DRG beserta diskon khusus anggota.
+10. **`community_tasks` & `reward_items`**: Misi gotong-royong, kupon servis, dan saldo poin.
+11. **`notification_preferences`**: Pengaturan notifikasi getar, suara sirine darurat, dan update kas.
+12. **`map_tile_cache`**: Metadata tile peta lokal untuk disk cache LRU hemat kuota/baterai.
+13. **`app_state_settings`**: Persistensi konfigurasi aplikasi dan profil hemat daya.
+14. **`pending_sync_queue`**: Antrean mutasi offline untuk sinkronisasi sinkron latar belakang.
+15. **`admin_logs`**: Rekam jejak audit screening pengurus.
 
 ---
 
 ## 🧪 Strategi Pengujian (Testing Suite)
 
-Proyek ini dilengkapi dengan 18 suite pengujian unit & integrasi otomatis berbasis **Robolectric** dan **Roborazzi**:
+Proyek ini dilengkapi dengan 27 suite pengujian unit & integrasi otomatis (1.850+ baris kode tes) berbasis **Robolectric** dan **Roborazzi**:
 
+- `PoskoCheckInRepositoryTest.kt`: Pengujian pencatatan check-in posko dan pemberian poin loyalitas.
+- `RolePermissionRepositoryTest.kt`: Pengujian granular access control (kas, SOS, dashboard, promosi role).
+- `MemberRolePermissionDatabaseTest.kt`: Pengujian persistensi Room v11 RBAC & audit logging.
+- `PoskoProximityAndWatermarkTest.kt`: Validasi geofencing Haversine posko dan anti-forgery KTA.
 - `AuthAndProfileSecurityTest.kt`: Validasi PIN 6-digit, normalisasi nopol, enkripsi payload KTA QR, dan RBAC pengurus.
 - `TreasuryAuditComputationTest.kt`: Verifikasi matematika kas masuk/keluar, saldo bersih, dan kalkulasi kategori.
 - `GamificationAndLoyaltyTest.kt`: Validasi ambang batas lencana XP, verifikasi kupon servis, dan siklus tugas komunitas.

@@ -76,7 +76,7 @@ export KEY_PASSWORD="password_alias_anda"
 
 ## 🧪 6. Menjalankan Pengujian Unit & Verifikasi
 
-Proyek ini memiliki 18 suite pengujian otomatis berbasis **Robolectric** dan **Roborazzi**:
+Proyek ini memiliki 27 suite pengujian otomatis (1.850+ baris test) berbasis **Robolectric** dan **Roborazzi**:
 
 1. **Jalankan Semua Unit Test**:
    ```bash
@@ -103,4 +103,4 @@ Proyek ini memiliki 18 suite pengujian otomatis berbasis **Robolectric** dan **R
 ## 🛡️ 7. Keamanan Jaringan & Privasi Data
 
 - **Network Security Config**: `app/src/main/res/xml/network_security_config.xml` secara ketat memblokir cleartext (HTTP) dan hanya mengizinkan lalu lintas TLS 1.3 / HTTPS.
-- **Local Data Protection**: Semua data sensitif (kas, kontak darurat, postingan) disimpan dalam SQLite terenkripsi lokal via Room Database v10 (`docs/DATABASE_MIGRATIONS.md`).
+- **Local Data Protection & RBAC**: Semua data sensitif (kas, kontak darurat, postingan, izin jabatan, riwayat check-in posko) disimpan dalam SQLite terenkripsi lokal via Room Database v12 (`docs/DATABASE_MIGRATIONS.md`).
