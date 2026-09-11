@@ -1,10 +1,17 @@
 # Panduan Kontribusi — DRG Driver (Driver Riang Gembira) 🤝
 
+> **⚠️ MANDATORY**: Sebelum berkontribusi, **WAJIB** membaca dan memahami [`AGENTS.md`](AGENTS.md) — arsitektur dan SOP resmi untuk AI coding agents dan developer.
+
 Terima kasih atas minat Anda untuk berkontribusi pada proyek **DRG Driver**! Dokumen ini memberikan pedoman lengkap bagi kontributor untuk memastikan kualitas kode, arsitektur, dan keamanan sistem tetap berada pada standar produksi tertinggi.
 
 ---
 
-## 🏛️ Prinsip Arsitektur Utama
+## 📖 Mulai dari Sini
+
+1. **Baca** [`AGENTS.md`](AGENTS.md) — Arsitektur, aturan, pola, dan workflow lengkap.
+2. **Pahami** `docs/DATABASE_MIGRATIONS.md` — Riwayat migrasi database v1-v12.
+3. **Jalankan** `python3 .github/scripts/check_file_length.py` — Cek pelanggaran arsitektur.
+4. **Jalankan** `./gradlew :app:testDebugUnitTest` — Pastikan baseline tests lolos.
 
 1. **Simplicity is King & Batas Baris Kode**:
    - Maksimal **125 baris per file** untuk seluruh file UI (`modules/`), ViewModel, dan adapter.
