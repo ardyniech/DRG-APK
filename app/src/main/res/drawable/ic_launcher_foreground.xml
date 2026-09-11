@@ -6,4 +6,3 @@
         android:drawable="@drawable/drg_app_icon"
         android:gravity="center" />
 </layer-list>
-
