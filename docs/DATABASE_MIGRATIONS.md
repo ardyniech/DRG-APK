@@ -41,7 +41,12 @@ Aplikasi menggunakan **Room Database** dengan `exportSchema = true` (disimpan di
 - **v7**: Menambahkan tabel `admin_logs` untuk audit trail tindakan pengurus (screening anggota, perubahan hak akses).
 - **v8 & v9**: Optimasi indeks pencarian pada `emergency_alerts(isActive, timestamp)` dan `kas_transactions(type, timestamp)`.
 
-### **v10 — Skema Terkini (Current Release)**
+### **v10: Diskusi Berantai & Optimasi Komentar**
 - Menambahkan entitas `forum_comments` untuk mendukung komentar berantai (*threaded discussions*) pada postingan forum.
 - Menambahkan indeks sekunder pada `forum_comments(postId)` untuk query relasi yang cepat.
 - Penyelarasan relasi cascade dan pengujian integritas via Robolectric.
+
+### **v11 — Skema Terkini (Current Release: Role-Based Access Control & Security)**
+- Menambahkan entitas `member_role_permissions` untuk mengelola hak akses granular (kelola kas, verifikasi driver, siaran SOS, kelola posko) dan status verifikasi akun.
+- Menambahkan entitas `role_audit_logs` untuk audit trail kepengurusan (pencatatan promosi/demosi jabatan, alasan, dan pembuat aksi).
+- Indeks sekunder pada `member_role_permissions(role, verificationStatus)` dan `role_audit_logs(targetMemberId, timestamp)` untuk query berkinerja tinggi.

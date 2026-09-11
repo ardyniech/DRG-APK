@@ -22,5 +22,6 @@ secrets.properties
 !gradle/wrapper/gradle-wrapper.jar
 !gradle/wrapper/gradle-wrapper.properties
 
-# Ensure CI mock Google Services is tracked
-!app/google-services.json
+# Exclude actual private credentials while tracking templates
+app/google-services.json
+!app/google-services.json.example

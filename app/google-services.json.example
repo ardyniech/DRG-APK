@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:YOUR_PROJECT_NUMBER:android:YOUR_APP_ID",
         "android_client_info": {
-          "package_name": "com.drg.driver"
+          "package_name": "com.aistudio.drgojol.pkrvw"
         }
       },
       "oauth_client": [],
