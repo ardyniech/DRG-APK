@@ -76,7 +76,7 @@ export KEY_PASSWORD="password_alias_anda"
 
 ## 🧪 6. Menjalankan Pengujian Unit & Verifikasi
 
-Proyek ini memiliki 27 suite pengujian otomatis (1.850+ baris test) berbasis **Robolectric** dan **Roborazzi**:
+Proyek ini memiliki 32 suite pengujian otomatis (2.100+ baris test) berbasis **Robolectric** dan **Roborazzi**:
 
 1. **Jalankan Semua Unit Test**:
    ```bash

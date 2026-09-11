@@ -6,7 +6,7 @@
 [![Compose](https://img.shields.io/badge/Jetpack_Compose-Material_3-emerald.svg)](https://developer.android.com/jetpack/compose)
 [![Database](https://img.shields.io/badge/Room_Database-v12_Posko_RBAC_Local_First-teal.svg)](docs/DATABASE_MIGRATIONS.md)
 [![Architecture Gating](https://img.shields.io/badge/Architecture-125_Lines_Cap_Enforced-success.svg)](.github/scripts/check_file_length.py)
-[![Tests](https://img.shields.io/badge/Unit_Tests-27_Suites_Passed-brightgreen.svg)](#-strategi-pengujian-testing-suite)
+[![Tests](https://img.shields.io/badge/Unit_Tests-32_Suites_Passed-brightgreen.svg)](#-strategi-pengujian-testing-suite)
 
 ---
 
@@ -98,8 +98,13 @@ Detail skema dan panduan migrasi dapat dibaca di **[Dokumentasi Migrasi Database
 
 ## 🧪 Strategi Pengujian (Testing Suite)
 
-Proyek ini dilengkapi dengan 27 suite pengujian unit & integrasi otomatis (1.850+ baris kode tes) berbasis **Robolectric** dan **Roborazzi**:
+Proyek ini dilengkapi dengan 32 suite pengujian unit & integrasi otomatis (2.100+ baris kode tes) berbasis **Robolectric** dan **Roborazzi**:
 
+- `LandingFeatureAutoScrollTest.kt`: Pengujian kelengkapan data & properti thumbnail fitur unggulan aplikasi pada landing screen.
+- `EmergencySmsFallbackHelperTest.kt`: Pengujian fallback SMS darurat saat jaringan data offline.
+- `HelmetIntercomMonitorTest.kt`: Pengujian listener koneksi audio headset/intercom helm bluetooth.
+- `AppDatabaseMigrationTest.kt`: Verifikasi menyeluruh migrasi Room berantai dari v1 hingga v12 tanpa data loss.
+- `AiAssistantKnowledgeTest.kt`: Validasi basis pengetahuan AI Assistant rekomendasi rute dan posko.
 - `PoskoCheckInRepositoryTest.kt`: Pengujian pencatatan check-in posko dan pemberian poin loyalitas.
 - `RolePermissionRepositoryTest.kt`: Pengujian granular access control (kas, SOS, dashboard, promosi role).
 - `MemberRolePermissionDatabaseTest.kt`: Pengujian persistensi Room v11 RBAC & audit logging.

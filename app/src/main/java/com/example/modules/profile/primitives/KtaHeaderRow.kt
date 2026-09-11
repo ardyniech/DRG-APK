@@ -1,20 +1,23 @@
 package com.example.modules.profile.primitives
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.TwoWheeler
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.R
 import com.example.ui.theme.*
 
 @Composable
@@ -25,20 +28,15 @@ fun KtaHeaderRow() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
+            Image(
+                painter = painterResource(id = R.drawable.drg_app_icon),
+                contentDescription = "Logo DRG",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(28.dp)
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(DrgGreenPrimary),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.TwoWheeler,
-                    contentDescription = "DRG",
-                    tint = Color.White,
-                    modifier = Modifier.size(18.dp)
-                )
-            }
+                    .size(34.dp)
+                    .clip(CircleShape)
+                    .border(1.dp, DrgGreenPrimary, CircleShape)
+            )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
                 Text(

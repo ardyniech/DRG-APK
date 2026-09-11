@@ -16,33 +16,46 @@ object AiAssistantKnowledge {
     )
 
     fun getAnswerFor(question: String): String {
-        return when (question) {
-            "Di mana spot paling gacor sore ini?" -> {
+        val q = question.lowercase().trim()
+        return when {
+            q.contains("posko") || q.contains("rehat") || q.contains("istirahat") -> {
+                "☕ Rekomendasi Posko Rehat DRG:\n" +
+                "• Posko Utama Klojen: Wifi 100Mbps, kopi free, tempat charger & istirahat.\n" +
+                "• Dapatkan bonus +15 Poin Loyalitas otomatis setiap check-in di posko!"
+            }
+            q.contains("gacor") || q.contains("spot") || q.contains("orderan") -> {
                 "🔥 Info Gacor Sore-Malam Malang Raya:\n" +
-                "• Stasiun Malang (Kota Baru) & Alun-Alun: Banyak orderan wisatawan & warga lokal pulang kerja (lonjakan +45%).\n" +
-                "• Kampus UB/UM (Suhat): Potensi tinggi pesanan makanan (GrabFood) di sore/malam hari.\n" +
-                "• Silakan melipir pelan-pelan ke area penjemputan terdekat, rek!"
+                "• Stasiun Malang (Kota Baru) & Alun-Alun: Lonjakan penumpang +45%.\n" +
+                "• Kawasan Suhat / Kampus UB: Ramai pesanan resto & makanan.\n" +
+                "• Siapkan saldo & fisik prima, salam satu aspal, rek!"
             }
-            "Navigasi Rute Aman Karanglo Bebas Ranjau?" -> {
+            q.contains("ranjau") || q.contains("karanglo") || q.contains("rute aman") -> {
                 "📌 Asisten Rute Aman Karanglo - Singosari:\n" +
-                "• Perhatian rek! Area pertigaan Karanglo mengarah ke underpass rawan ranjau paku serbuk besi.\n" +
-                "• Rute Aman: Ambil lajur kanan (mendekati pembatas median jalan) atau lewat jalur alternatif Perumahan Karanglo Indah.\n" +
-                "• Satgas DRG rutin melakukan penyisiran ranjau paku magnetik setiap jam 08:00 & 16:00 WIB."
+                "• Waspada pertigaan Karanglo mengarah underpass rawan serbuk ranjau paku.\n" +
+                "• Ambil lajur kanan dekat median atau jalur alternatif Karanglo Indah.\n" +
+                "• Satgas DRG rutin patroli magnetik pagi & sore."
             }
-            "Kuliner & tempat nongkrong legendaris Malang?" -> {
-                "🍲 Spot Kuliner & Cangkrukan Malang Legendaris:\n" +
-                "• Bakso President (Dekat rel kereta): Rasanya mantap, cocok buat rehat siang.\n" +
-                "• Cwie Mie Pojok (Pojok Alun-Alun): Klasik dan halal, porsi mengenyangkan.\n" +
-                "• Pos Ketan Legenda (Batu / Alun-alun): Buat ngangetin badan malam-malam.\n" +
-                "• STMJ Glintung (Jl. Letjend S. Parman): STMJ kuat penambah energi tarikan malem, rek!\n" +
-                "• Seluruh Posko DRG selalu sedia kopi tubruk gratis buat dulur kabeh!"
+            q.contains("kuliner") || q.contains("nongkrong") || q.contains("makan") -> {
+                "🍲 Spot Kuliner & Rehat Malang:\n" +
+                "• Bakso President, Cwie Mie Pojok Alun-Alun, Pos Ketan Legenda, STMJ Glintung.\n" +
+                "• Di setiap Posko DRG selalu tersedia kopi tubruk & air mineral gratis!"
             }
-            "Posko rehat terdekat ada kopi & wifi?" -> {
-                "☕ Rekomendasi Posko Rehat DRG Malang:\n" +
-                "• Posko Utama Klojen: Fasilitas lengkap (Kopi free, Wifi kenceng, charger hp & tempat selonjoran nyaman).\n" +
-                "• Penanggung Jawab: Bang Rian Pratama (Kordinator Lapangan)."
+            q.contains("kas") || q.contains("iuran") || q.contains("saldo") -> {
+                "💰 Informasi Kas Komunitas DRG:\n" +
+                "• Iuran rutin bulanan Rp 20.000 dikelola transparan di menu Kas & Treasury.\n" +
+                "• Dana dialokasikan untuk santunan kecelakaan, alat tambal ban, dan operasional posko."
             }
-            else -> "Ada lagi yang bisa saya bantu pantau, rek?"
+            q.contains("sos") || q.contains("darurat") || q.contains("begal") || q.contains("kecelakaan") -> {
+                "🚨 Protokol Darurat SOS DRG:\n" +
+                "• Tahan tombol merah SOS selama 3 detik untuk menyiarkan sinyal ke Satgas terdekat.\n" +
+                "• Jika offline, sistem otomatis mengalihkan ke SMS Darurat berformat koordinat GPS."
+            }
+            q.contains("poin") || q.contains("badge") || q.contains("hadiah") || q.contains("kupon") -> {
+                "🏆 Program Poin & Gamifikasi DRG:\n" +
+                "• Raih poin dari Check-in Posko (+15), Bayar Kas (+25), dan Bantuan Darurat (+50).\n" +
+                "• Tukarkan poin dengan voucher servis bengkel rekanan atau oli gratis di menu Poin!"
+            }
+            else -> "Ada lagi yang bisa saya bantu pantau dari rute, info posko, atau keamanan, rek?"
         }
     }
 }

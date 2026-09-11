@@ -1,6 +1,9 @@
 package com.example.modules.auth
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -10,16 +13,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.R
 import com.example.shared.models.DriverMember
 import com.example.shared.utils.SecurityUtils
 import com.example.ui.theme.*
@@ -38,8 +45,20 @@ fun LoginScreen(
     val context = LocalContext.current
 
     Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
-        IconButton(onClick = onBack, modifier = Modifier.padding(top = 16.dp).testTag("login_back_button")) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onBack, modifier = Modifier.testTag("login_back_button")) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
+            }
+            Image(
+                painter = painterResource(id = R.drawable.drg_app_icon),
+                contentDescription = "Logo DRG",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(44.dp).clip(CircleShape).border(1.5.dp, DrgGrabGreenPrimary, CircleShape)
+            )
         }
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -80,29 +99,11 @@ fun LoginScreen(
                     errorMessage = "PIN keamanan harus 4 digit angka."
                     return@Button
                 }
-                val clean = inputId.trim()
-                val target = members.find {
-                    it.driverId.equals(clean, ignoreCase = true) ||
-                    it.id.equals(clean, ignoreCase = true) ||
-                    it.phone.replace("+62", "0").trim() == clean.replace("+62", "0").trim() ||
-                    it.motorcyclePlate.replace(" ", "").equals(clean.replace(" ", ""), ignoreCase = true)
-                }
-                if (target != null) {
-                    val hashedInput = SecurityUtils.hashPin(inputPin)
-                    val storedHash = SecurityUtils.getStoredPinHash(context, target.id)
-                        ?: SecurityUtils.getStoredPinHash(context, target.phone)
-                        ?: SecurityUtils.getStoredPinHash(context, target.driverId)
-                    if (storedHash == null) {
-                        SecurityUtils.storePinHash(context, target.id, inputPin)
-                        SecurityUtils.storePinHash(context, target.driverId, inputPin)
-                        onLogin(target.id)
-                    } else if (hashedInput == storedHash) {
-                        onLogin(target.id)
-                    } else {
-                        errorMessage = "PIN keamanan salah. Silakan coba lagi."
-                    }
+                val (success, result) = LoginAuthValidator.authenticate(context, members, inputId, inputPin)
+                if (success && result != null) {
+                    onLogin(result)
                 } else {
-                    errorMessage = "ID, Plat, atau No. HP tidak terdaftar di database DRG Malang."
+                    errorMessage = result
                 }
             },
             modifier = Modifier.fillMaxWidth().height(52.dp).testTag("login_submit_button"),
