@@ -1,6 +1,7 @@
 package com.example.modules.auth
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -53,12 +54,12 @@ fun LoginScreen(
             IconButton(onClick = onBack, modifier = Modifier.testTag("login_back_button")) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
             }
-            Image(
-                painter = painterResource(id = R.drawable.drg_app_icon),
-                contentDescription = "Logo DRG",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.size(44.dp).clip(CircleShape).border(1.5.dp, DrgGrabGreenPrimary, CircleShape)
-            )
+            Box(
+                modifier = Modifier.size(44.dp).clip(RoundedCornerShape(10.dp)).background(Color.Black).border(1.5.dp, DrgGrabGreenPrimary, RoundedCornerShape(10.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(painter = painterResource(id = R.drawable.drg_app_icon), contentDescription = "Logo DRG", contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize().padding(2.dp))
+            }
         }
 
         Spacer(modifier = Modifier.height(12.dp))

@@ -1,5 +1,8 @@
 package com.example.modules.auth
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,16 +13,21 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.R
 import com.example.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +43,6 @@ fun RegisterScreen(
     var pin by remember { mutableStateOf("") }
     val areaOptions = listOf("Klojen, Malang", "Lowokwaru, Malang", "Blimbing, Malang", "Sukun, Malang", "Kedungkandang, Malang", "Singosari, Malang", "Kota Batu")
     var selectedArea by remember { mutableStateOf(areaOptions[0]) }
-    var expandedAreaMenu by remember { mutableStateOf(false) }
 
     var nameTouched by remember { mutableStateOf(false) }
     var phoneTouched by remember { mutableStateOf(false) }
@@ -53,8 +60,11 @@ fun RegisterScreen(
     val isValid = name.isNotBlank() && phone.length >= 10 && plate.trim().length > 2 && model.isNotBlank() && pin.length == 4
 
     Column(modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState())) {
-        IconButton(onClick = onBack, modifier = Modifier.padding(top = 16.dp).testTag("register_back_button")) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
+        Row(modifier = Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = onBack, modifier = Modifier.testTag("register_back_button")) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Kembali") }
+            Box(modifier = Modifier.size(44.dp).clip(RoundedCornerShape(10.dp)).background(Color.Black).border(1.5.dp, DrgGrabGreenPrimary, RoundedCornerShape(10.dp)), contentAlignment = Alignment.Center) {
+                Image(painter = painterResource(id = R.drawable.drg_app_icon), "Logo DRG", contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize().padding(2.dp))
+            }
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text("Daftar Anggota DRG", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = DrgTextDark)
@@ -89,15 +99,11 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth().testTag("reg_pin"), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), shape = RoundedCornerShape(12.dp)
         )
         Spacer(modifier = Modifier.height(6.dp))
-        ExposedDropdownMenuBox(expanded = expandedAreaMenu, onExpandedChange = { expandedAreaMenu = !expandedAreaMenu }, modifier = Modifier.fillMaxWidth()) {
-            OutlinedTextField(
-                value = selectedArea, onValueChange = {}, readOnly = true, label = { Text("Wilayah Operasional / Basukom") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedAreaMenu) }, modifier = Modifier.menuAnchor().fillMaxWidth(), shape = RoundedCornerShape(12.dp)
-            )
-            ExposedDropdownMenu(expanded = expandedAreaMenu, onDismissRequest = { expandedAreaMenu = false }) {
-                areaOptions.forEach { area -> DropdownMenuItem(text = { Text(area) }, onClick = { selectedArea = area; expandedAreaMenu = false }) }
-            }
-        }
+        RegisterAreaDropdown(
+            selectedArea = selectedArea,
+            onAreaSelected = { selectedArea = it },
+            areaOptions = areaOptions
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
         Button(

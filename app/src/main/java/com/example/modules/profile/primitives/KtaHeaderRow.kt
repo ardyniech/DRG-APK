@@ -28,15 +28,23 @@ fun KtaHeaderRow() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                painter = painterResource(id = R.drawable.drg_app_icon),
-                contentDescription = "Logo DRG",
-                contentScale = ContentScale.Crop,
+            Box(
                 modifier = Modifier
                     .size(34.dp)
-                    .clip(CircleShape)
-                    .border(1.dp, DrgGreenPrimary, CircleShape)
-            )
+                    .clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
+                    .background(androidx.compose.ui.graphics.Color.Black)
+                    .border(1.dp, DrgGreenPrimary, androidx.compose.foundation.shape.RoundedCornerShape(8.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.drg_app_icon),
+                    contentDescription = "Logo DRG",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(2.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(8.dp))
             Column {
                 Text(

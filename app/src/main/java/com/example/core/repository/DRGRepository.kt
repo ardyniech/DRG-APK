@@ -42,19 +42,19 @@ class DRGRepository(val db: AppDatabase) {
     suspend fun initializeSeedDataIfNeeded() = withContext(Dispatchers.IO) {
         if (memberRepo.getMemberCount() == 0) {
             val foundingKetua = DriverMember(
-                id = "DRG-001",
-                name = "Budi Santoso",
-                driverId = "DRG-001",
-                phone = "081234567890",
+                id = com.example.BuildConfig.SEED_SUPER_ADMIN_ID,
+                name = com.example.BuildConfig.SEED_SUPER_ADMIN_NAME,
+                driverId = com.example.BuildConfig.SEED_SUPER_ADMIN_ID,
+                phone = com.example.BuildConfig.SEED_SUPER_ADMIN_PHONE,
                 role = MemberRole.KETUA,
-                motorcyclePlate = "N 1234 KTA",
+                motorcyclePlate = com.example.BuildConfig.SEED_SUPER_ADMIN_PLATE,
                 motorcycleModel = "Honda PCX 160",
                 rating = 5.0f,
                 reviewCount = 12,
                 loyaltyPoints = 300,
                 loyaltyTier = "Leader",
                 verificationStatus = VerificationStatus.VERIFIED,
-                screeningNotes = "Ketua & Dewan Pembina Utama Komunitas DRG Malang Raya",
+                screeningNotes = "Super Admin Komunitas DRG Malang Raya",
                 isOnline = true,
                 currentStatus = "Siaga Komando DRG",
                 baseArea = "Klojen, Malang",
@@ -64,6 +64,16 @@ class DRGRepository(val db: AppDatabase) {
                 canManagePosko = true
             )
             memberRepo.registerMember(foundingKetua)
+
+            // Auto-store PIN hash so they can log in seamlessly with the configured seed PIN
+            try {
+                val context = com.example.DRGApplication.instance
+                com.example.shared.utils.SecurityUtils.storePinHash(context, foundingKetua.id, com.example.BuildConfig.SEED_SUPER_ADMIN_PIN)
+                com.example.shared.utils.SecurityUtils.storePinHash(context, foundingKetua.driverId, com.example.BuildConfig.SEED_SUPER_ADMIN_PIN)
+                com.example.shared.utils.SecurityUtils.storePinHash(context, foundingKetua.phone, com.example.BuildConfig.SEED_SUPER_ADMIN_PIN)
+            } catch (e: Exception) {
+                // Fail-safe to avoid crash during offline JVM tests
+            }
         }
     }
 

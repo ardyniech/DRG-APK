@@ -29,15 +29,23 @@ fun DrgHeaderBrand(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.drg_app_icon),
-            contentDescription = "DRG Logo",
-            contentScale = ContentScale.Crop,
+        Box(
             modifier = Modifier
                 .size(38.dp)
-                .clip(CircleShape)
-                .border(1.5.dp, DrgGreenPrimary, CircleShape)
-        )
+                .clip(androidx.compose.foundation.shape.RoundedCornerShape(10.dp))
+                .background(androidx.compose.ui.graphics.Color.Black)
+                .border(1.5.dp, DrgGreenPrimary, androidx.compose.foundation.shape.RoundedCornerShape(10.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.drg_app_icon),
+                contentDescription = "DRG Logo",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(2.dp)
+            )
+        }
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
