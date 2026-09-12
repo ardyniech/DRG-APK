@@ -50,6 +50,10 @@ class CommunityRepository(private val db: AppDatabase) {
         db.notificationDao().insertNotification(notification)
     }
 
+    suspend fun addPosko(posko: PoskoLocation) = withContext(Dispatchers.IO) {
+        db.poskoDao().insertPosko(posko)
+    }
+
     suspend fun saveNotificationPreference(pref: NotificationPreference) = withContext(Dispatchers.IO) {
         db.notificationPrefDao().savePref(pref)
     }

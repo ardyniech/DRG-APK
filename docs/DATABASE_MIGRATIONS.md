@@ -64,3 +64,18 @@ Aplikasi menggunakan **Room Database** dengan `exportSchema = true` (disimpan di
 - **Strategi Migrasi DDL (v11 -> v12)**:
   - `CREATE TABLE IF NOT EXISTS posko_check_ins (...)` dengan indeks `index_posko_check_ins_poskoId`, `index_posko_check_ins_memberId`, dan `index_posko_check_ins_checkInTimestamp`.
   - Pengujian tervalidasi 100% via suite Robolectric `PoskoCheckInRepositoryTest`.
+
+---
+
+### Migrasi Database Room Versi 12 ke Versi 13 (v12 -> v13)
+- **Tujuan**: Full Profiling Biodata Lengkap Driver (Alamat Domisili, Golongan Darah, Kontak Darurat, No SIM, NIK KTP).
+- **Entitas `members`**:
+  - Kolom Baru: `address` (TEXT NOT NULL DEFAULT 'Jl. Raya Malang No. 12'), `bloodType` (TEXT NOT NULL DEFAULT 'O'), `emergencyContact` (TEXT NOT NULL DEFAULT 'Keluarga (Siti)'), `emergencyPhone` (TEXT NOT NULL DEFAULT '081234567890'), `simNumber` (TEXT NOT NULL DEFAULT '1234-5678-9012'), `nik` (TEXT NOT NULL DEFAULT '3507123456780001').
+- **Strategi Migrasi DDL (v12 -> v13)**:
+  - `ALTER TABLE members ADD COLUMN address TEXT NOT NULL DEFAULT '...'`
+  - `ALTER TABLE members ADD COLUMN bloodType TEXT NOT NULL DEFAULT '...'`
+  - `ALTER TABLE members ADD COLUMN emergencyContact TEXT NOT NULL DEFAULT '...'`
+  - `ALTER TABLE members ADD COLUMN emergencyPhone TEXT NOT NULL DEFAULT '...'`
+  - `ALTER TABLE members ADD COLUMN simNumber TEXT NOT NULL DEFAULT '...'`
+  - `ALTER TABLE members ADD COLUMN nik TEXT NOT NULL DEFAULT '...'`
+  - Pengujian tervalidasi via unit test & migrasi skema Room.

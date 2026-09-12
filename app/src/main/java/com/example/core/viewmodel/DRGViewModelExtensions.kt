@@ -1,18 +1,42 @@
 package com.example.core.viewmodel
 
 import android.content.Context
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import com.example.core.cache.LocationSyncPowerProfile
 import com.example.core.cache.MapCachePolicy
 import com.example.shared.models.*
 
 fun DRGViewModel.login(memberId: String) = profileCoord.login(memberId)
 fun DRGViewModel.logout() = profileCoord.logout()
-fun DRGViewModel.switchActiveMember(memberId: String) = profileCoord.switchActiveMember(memberId)
-fun DRGViewModel.switchRole(memberId: String) = switchActiveMember(memberId)
 fun DRGViewModel.registerNewDriver(name: String, phone: String, plate: String, motorcycle: String, area: String, pin: String) =
     profileCoord.registerNewDriver(name, phone, plate, motorcycle, area, pin)
-fun DRGViewModel.updateProfile(phone: String, area: String, motorcycle: String, plate: String, photoUrl: String = "") =
-    profileCoord.updateProfile(currentMember.value, phone, area, motorcycle, plate, photoUrl)
+fun DRGViewModel.updateProfile(
+    phone: String,
+    area: String,
+    motorcycle: String,
+    plate: String,
+    photoUrl: String = "",
+    address: String = "",
+    bloodType: String = "",
+    emergencyContact: String = "",
+    emergencyPhone: String = "",
+    simNumber: String = "",
+    nik: String = ""
+) = profileCoord.updateProfile(
+    currentMember.value,
+    phone,
+    area,
+    motorcycle,
+    plate,
+    photoUrl,
+    address,
+    bloodType,
+    emergencyContact,
+    emergencyPhone,
+    simNumber,
+    nik
+)
 fun DRGViewModel.updateDutyStatus(status: String, isOnline: Boolean) =
     profileCoord.updateDutyStatus(currentMember.value, status, isOnline)
 
@@ -84,3 +108,8 @@ fun DRGViewModel.setDataSaverMode(enabled: Boolean) = radarCoord.setDataSaverMod
 fun DRGViewModel.precacheMap(context: Context) = radarCoord.precacheMap(context, isPowerSaverMode.value)
 fun DRGViewModel.clearMapCache(context: Context) = radarCoord.clearMapCache(context)
 fun DRGViewModel.getCacheSizeDesc(context: Context) = radarCoord.getCacheSizeDesc(context)
+
+fun DRGViewModel.addPosko(name: String, area: String, phone: String, lat: Double, lng: Double) = viewModelScope.launch {
+    repository.addPosko(PoskoLocation("PSKO-${System.currentTimeMillis()}", name, area, area, lat, lng, "Pengurus DRG", phone, "Rest Area, Charger, Kopi", 0, false))
+    showToast("Berhasil mendaftarkan Posko baru: $name")
+}

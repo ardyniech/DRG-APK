@@ -18,11 +18,11 @@ class AppDatabaseMigrationTest {
     @Test
     fun testAllMigrationsListContainsAllVersions() {
         val migrations = AppDatabaseMigrations.ALL_MIGRATIONS
-        assertEquals(11, migrations.size)
+        assertEquals(12, migrations.size)
         assertEquals(1, migrations[0].startVersion)
         assertEquals(2, migrations[0].endVersion)
-        assertEquals(11, migrations.last().startVersion)
-        assertEquals(12, migrations.last().endVersion)
+        assertEquals(12, migrations.last().startVersion)
+        assertEquals(13, migrations.last().endVersion)
     }
 
     @Test

@@ -50,4 +50,32 @@ object CoordinateUtils {
             .filter { it.second <= maxRadiusKm }
             .sortedBy { it.second }
     }
+
+    fun filterVisibleDrivers(
+        members: List<DriverMember>,
+        centerLat: Double,
+        centerLng: Double,
+        zoom: Int,
+        screenWidth: Float,
+        screenHeight: Float
+    ): List<Pair<DriverMember, Double>> {
+        return members
+            .filter { it.isOnline && it.isLocationSharingConsent }
+            .map { driver ->
+                val dist = calculateDistanceKm(centerLat, centerLng, driver.currentLat, driver.currentLng)
+                Pair(driver, dist)
+            }
+            .filter { pair ->
+                if (screenWidth <= 0f || screenHeight <= 0f) {
+                    pair.second <= 10.0
+                } else {
+                    val offset = MapProjection.latLngToScreen(
+                        pair.first.currentLat, pair.first.currentLng,
+                        centerLat, centerLng, zoom, screenWidth, screenHeight
+                    )
+                    offset.x in 0f..screenWidth && offset.y in 0f..screenHeight
+                }
+            }
+            .sortedBy { it.second }
+    }
 }

@@ -11,8 +11,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 import com.example.modules.radar.primitives.*
 import com.example.shared.models.*
+import com.example.shared.utils.WhatsAppLauncher
 import com.example.ui.theme.*
 
 @Composable
@@ -30,8 +32,11 @@ fun RadarScreen(
     isPowerSaverEnabled: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     var selectedFilter by remember { mutableStateOf("Semua") }
     var focusedDriver by remember { mutableStateOf<DriverMember?>(null) }
+    var selectedHazard by remember { mutableStateOf<HazardArea?>(null) }
+    var selectedPosko by remember { mutableStateOf<PoskoLocation?>(null) }
     val filters = listOf("Semua", "Lalu Lintas", "Live Map (GPS)", "Satgas", "Posko", "Area Rawan", "Sedang Narik")
 
     val displayMembers = remember(members, selectedFilter) {
@@ -59,7 +64,7 @@ fun RadarScreen(
                 filters.forEach { filter ->
                     FilterChip(
                         selected = selectedFilter == filter,
-                        onClick = { selectedFilter = filter },
+                        onClick = { selectedFilter = filter; selectedHazard = null; selectedPosko = null },
                         label = { Text(filter, fontSize = 11.sp, fontWeight = FontWeight.SemiBold) },
                         colors = FilterChipDefaults.filterChipColors(selectedContainerColor = DrgGreenPrimary, selectedLabelColor = Color.White)
                     )
@@ -69,18 +74,42 @@ fun RadarScreen(
             Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
                 FreeMapContainer(
                     members = displayMembers, alerts = alerts, poskoList = poskoList, hazards = hazards,
-                    selectedFilter = selectedFilter, isConsentGranted = isConsentOn, onSelectDriver = { focusedDriver = it },
-                    focusedDriver = focusedDriver, isPowerSaverEnabled = isPowerSaverEnabled
+                    selectedFilter = selectedFilter, isConsentGranted = isConsentOn,
+                    onSelectDriver = { focusedDriver = it; selectedHazard = null; selectedPosko = null },
+                    focusedDriver = focusedDriver,
+                    onSelectHazard = { selectedHazard = it; focusedDriver = null; selectedPosko = null },
+                    onSelectPosko = { selectedPosko = it; focusedDriver = null; selectedHazard = null },
+                    isPowerSaverEnabled = isPowerSaverEnabled
                 )
             }
 
-            val posko = poskoList.firstOrNull()
-            if (selectedFilter == "Posko" && posko != null) {
-                ShelterRadarCard(name = posko.name, distanceKm = 1.2, availableSlots = posko.activeDriversCount, hasCoffee = true, hasPowerOutlet = true, onNavigateClick = { onCallDriver(posko.phone) })
+            if (selectedHazard != null) {
+                HazardRadarCard(
+                    hazard = selectedHazard!!,
+                    onConfirmHazard = { onConfirmHazard(it); selectedHazard = null }
+                )
+            } else if (selectedFilter == "Lalu Lintas") {
+                RealTrafficLiveCard(
+                    onOpenRealTraffic = { WhatsAppLauncher.openLiveTrafficMap(context) },
+                    onReportJam = onAddHazardClick,
+                    trafficHazardsCount = hazards.count { it.hazardType == HazardType.TRAFFIC_JAM }
+                )
             } else {
-                val target = focusedDriver ?: displayMembers.firstOrNull { it.isOnline && it.id != currentMember?.id }
-                if (target != null) {
-                    DriverRadarCard(driver = target, onCall = { onCallDriver(target.phone) })
+                val posko = selectedPosko ?: if (selectedFilter == "Posko") poskoList.firstOrNull() else null
+                if (posko != null) {
+                    ShelterRadarCard(
+                        name = posko.name,
+                        distanceKm = 1.2,
+                        availableSlots = posko.activeDriversCount,
+                        hasCoffee = true,
+                        hasPowerOutlet = true,
+                        onNavigateClick = { WhatsAppLauncher.openGoogleMapsAddress(context, "${posko.name} ${posko.address}") }
+                    )
+                } else {
+                    val target = focusedDriver ?: displayMembers.firstOrNull { it.isOnline && it.id != currentMember?.id }
+                    if (target != null) {
+                        DriverRadarCard(driver = target, onCall = { onCallDriver(target.phone) })
+                    }
                 }
             }
         }

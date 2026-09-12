@@ -6,6 +6,7 @@ enum class MemberRole(
     val description: String,
     val badgeColorHex: Long
 ) {
+    SUPER_ADMIN("Super Admin (Sistem)", "Super Admin", "Pengembang, maintenance, & pengendali penuh sistem DRG", 0xFF0F172A),
     KETUA("Ketua Komunitas", "Ketua", "Pimpinan tertinggi komunitas DRG", 0xFF00875A),
     WAKIL_KETUA("Wakil Ketua", "Waket", "Membantu kepemimpinan operasional", 0xFF00A86B),
     SEKRETARIS("Sekretaris / Admin", "Sekretaris", "Manajemen data anggota & administrasi", 0xFF0288D1),

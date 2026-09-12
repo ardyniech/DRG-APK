@@ -69,6 +69,10 @@ class CommunityCoordinator(
 
     fun submitDriverReview(cur: DriverMember?, targetId: String, rating: Float, tag: String, comment: String) {
         if (cur == null) return
+        if (cur.id == targetId) {
+            showToast("Gagal: Anda tidak boleh memberikan rating pada diri sendiri!")
+            return
+        }
         val review = DriverReview(
             id = "REV-${UUID.randomUUID().toString().take(8)}",
             targetDriverId = targetId, reviewerName = cur.name, reviewerRole = cur.role,

@@ -14,7 +14,6 @@ import com.example.modules.gamification.AwardPointDialog
 import com.example.modules.notifications.NotificationPreferencesDialog
 import com.example.modules.radar.AddHazardDialog
 import com.example.modules.treasury.AddTransactionDialog
-import com.example.shared.atoms.RoleSwitcherDialog
 import com.example.shared.models.CrashSensitivity
 import com.example.shared.models.DriverMember
 import com.example.shared.models.NotificationPreference
@@ -28,8 +27,6 @@ fun DrgAppDialogs(
     context: Context,
     members: List<DriverMember>,
     currentMember: DriverMember?,
-    showRoleSwitcher: Boolean,
-    onDismissRoleSwitcher: () -> Unit,
     showEmergencyTrigger: Boolean,
     onDismissEmergencyTrigger: () -> Unit,
     showAddKasDialog: Boolean,
@@ -54,10 +51,6 @@ fun DrgAppDialogs(
     snackbarHostState: SnackbarHostState,
     scope: CoroutineScope
 ) {
-    if (showRoleSwitcher) {
-        RoleSwitcherDialog(members = members, currentMemberId = currentMember?.id ?: "", onSelectMember = { viewModel.switchRole(it) }, onDismiss = onDismissRoleSwitcher)
-    }
-
     if (showEmergencyTrigger) {
         EmergencyTriggerDialog(onDismiss = onDismissEmergencyTrigger, onConfirm = { type, msg, loc ->
             viewModel.triggerEmergency(type, msg, loc)

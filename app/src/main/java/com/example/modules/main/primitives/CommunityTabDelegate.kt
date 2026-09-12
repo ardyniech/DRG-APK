@@ -95,6 +95,9 @@ fun CommunityTabDelegate(
         },
         onClaimInsurance = { claim ->
             scope.launch { snackbarHostState.showSnackbar("Pengajuan ${claim.title} diterima & diproses tim pengurus!") }
+        },
+        onAddPosko = { name, area, phone, lat, lng ->
+            viewModel.addPosko(name, area, phone, lat, lng)
         }
     )
 }

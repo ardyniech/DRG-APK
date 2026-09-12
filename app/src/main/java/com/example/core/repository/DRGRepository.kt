@@ -46,7 +46,7 @@ class DRGRepository(val db: AppDatabase) {
                 name = com.example.BuildConfig.SEED_SUPER_ADMIN_NAME,
                 driverId = com.example.BuildConfig.SEED_SUPER_ADMIN_ID,
                 phone = com.example.BuildConfig.SEED_SUPER_ADMIN_PHONE,
-                role = MemberRole.KETUA,
+                role = MemberRole.SUPER_ADMIN,
                 motorcyclePlate = com.example.BuildConfig.SEED_SUPER_ADMIN_PLATE,
                 motorcycleModel = "Honda PCX 160",
                 rating = 5.0f,
@@ -103,6 +103,7 @@ class DRGRepository(val db: AppDatabase) {
         memberRepo.updateMemberLocation(id, lat, lng, status)
     suspend fun registerMember(member: DriverMember) = memberRepo.registerMember(member)
     suspend fun addNotification(notification: CommunityNotification) = communityRepo.addNotification(notification)
+    suspend fun addPosko(posko: PoskoLocation) = communityRepo.addPosko(posko)
     suspend fun saveNotificationPreference(pref: NotificationPreference) = communityRepo.saveNotificationPreference(pref)
     suspend fun recordTileMetadata(tile: MapTileMetadata) = radarHazardRepo.recordTileMetadata(tile)
     suspend fun clearMapTileCache() = radarHazardRepo.clearMapTileCache()

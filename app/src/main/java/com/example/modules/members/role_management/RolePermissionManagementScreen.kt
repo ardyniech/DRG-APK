@@ -33,6 +33,7 @@ fun RolePermissionManagementScreen(
     var selectedCategory by remember { mutableStateOf(RoleFilterCategory.SEMUA) }
     var selectedMemberForEdit by remember { mutableStateOf<DriverMember?>(null) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    var activeSubTab by remember { mutableStateOf(0) }
     val canEdit = remember(currentMember) { RoleManager.canManageRoles(currentMember) }
 
     val filteredMembers = remember(members, searchQuery, selectedCategory) {
@@ -40,7 +41,7 @@ fun RolePermissionManagementScreen(
             val matchSearch = m.name.contains(searchQuery, true) || m.motorcyclePlate.contains(searchQuery, true) || m.driverId.contains(searchQuery, true)
             val matchCat = when (selectedCategory) {
                 RoleFilterCategory.SEMUA -> true
-                RoleFilterCategory.PENGURUS -> m.role in listOf(MemberRole.KETUA, MemberRole.WAKIL_KETUA, MemberRole.SEKRETARIS, MemberRole.BENDAHARA, MemberRole.DEWAN_ETIKA)
+                RoleFilterCategory.PENGURUS -> m.role in listOf(MemberRole.KETUA, MemberRole.WAKIL_KETUA, MemberRole.SEKRETARIS, MemberRole.BENDAHARA, MemberRole.DEWAN_ETIKA, MemberRole.SUPER_ADMIN)
                 RoleFilterCategory.SATGAS -> m.role == MemberRole.SATGAS
                 RoleFilterCategory.ANGGOTA -> m.role == MemberRole.ANGGOTA
             }
@@ -49,38 +50,56 @@ fun RolePermissionManagementScreen(
     }
 
     Column(modifier = modifier.fillMaxSize().background(DrgBackground).padding(horizontal = 16.dp)) {
-        Row(modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 4.dp), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali") }
             Spacer(modifier = Modifier.width(4.dp))
             Column {
                 Text("Tata Kelola Jabatan & Otoritas", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = DrgTextDark)
-                Text(if (canEdit) "Wewenang Khusus Ketua & Pengurus DRG" else "Transparansi Struktur Organisasi DRG", fontSize = 11.sp, color = DrgTextMuted)
+                Text(if (canEdit) "Wewenang Khusus Super Admin & Pengurus" else "Transparansi Struktur Organisasi DRG", fontSize = 11.sp, color = DrgTextMuted)
             }
         }
 
-        RoleSummaryStatsRow(members = members, modifier = Modifier.padding(bottom = 8.dp))
-
-        OutlinedTextField(
-            value = searchQuery,
-            onValueChange = { searchQuery = it },
-            placeholder = { Text("Cari nama, KTA, atau plat nomor...", fontSize = 12.sp) },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = DrgTextMuted) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth().padding(bottom = 6.dp),
-            shape = RoundedCornerShape(10.dp)
-        )
-
-        RoleFilterBar(selectedCategory = selectedCategory, onSelectCategory = { selectedCategory = it }, modifier = Modifier.padding(bottom = 8.dp))
-
-        errorMessage?.let { msg ->
-            Surface(shape = RoundedCornerShape(8.dp), color = DrgRedDanger.copy(alpha = 0.1f), modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
-                Text(msg, color = DrgRedDanger, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(8.dp))
+        TabRow(
+            selectedTabIndex = activeSubTab,
+            containerColor = Color.Transparent,
+            contentColor = DrgGreenPrimary,
+            modifier = Modifier.padding(bottom = 10.dp)
+        ) {
+            Tab(selected = activeSubTab == 0, onClick = { activeSubTab = 0 }) {
+                Text("Daftar Anggota", fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(vertical = 10.dp))
+            }
+            Tab(selected = activeSubTab == 1, onClick = { activeSubTab = 1 }) {
+                Text("Matriks Otoritas", fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(vertical = 10.dp))
             }
         }
 
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
-            items(filteredMembers) { member ->
-                RoleMemberCard(member = member, onManageClick = { selectedMemberForEdit = member }, canEdit = canEdit)
+        if (activeSubTab == 1) {
+            RoleMatrixSection(modifier = Modifier.padding(bottom = 10.dp))
+        } else {
+            RoleSummaryStatsRow(members = members, modifier = Modifier.padding(bottom = 8.dp))
+
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                placeholder = { Text("Cari nama, KTA, atau plat nomor...", fontSize = 12.sp) },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = DrgTextMuted) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth().padding(bottom = 6.dp),
+                shape = RoundedCornerShape(10.dp)
+            )
+
+            RoleFilterBar(selectedCategory = selectedCategory, onSelectCategory = { selectedCategory = it }, modifier = Modifier.padding(bottom = 8.dp))
+
+            errorMessage?.let { msg ->
+                Surface(shape = RoundedCornerShape(8.dp), color = DrgRedDanger.copy(alpha = 0.1f), modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
+                    Text(msg, color = DrgRedDanger, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(8.dp))
+                }
+            }
+
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+                items(filteredMembers) { member ->
+                    RoleMemberCard(member = member, onManageClick = { selectedMemberForEdit = member }, canEdit = canEdit)
+                }
             }
         }
     }

@@ -2,9 +2,7 @@ package com.example.core.viewmodel.coordinators
 
 import android.content.SharedPreferences
 import com.example.core.repository.DRGRepository
-import com.example.shared.models.DriverMember
-import com.example.shared.models.MemberRole
-import com.example.shared.models.VerificationStatus
+import com.example.shared.models.*
 import com.example.shared.utils.SecurityUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,30 +24,30 @@ class ProfileSessionCoordinator(
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
 
     init {
-        val savedId = sharedPrefs?.getString("logged_in_member_id", null)
-        if (savedId != null) {
-            _currentMemberId.value = savedId
-            _isLoggedIn.value = true
+        sharedPrefs?.getString("logged_in_member_id", null)?.let { memberId ->
+            if (SecurityUtils.validateSession(sharedPrefs, memberId)) {
+                _currentMemberId.value = memberId
+                _isLoggedIn.value = true
+            } else {
+                SecurityUtils.clearSession(sharedPrefs)
+                _isLoggedIn.value = false
+                _currentMemberId.value = ""
+            }
         }
     }
 
     fun login(memberId: String) {
         _currentMemberId.value = memberId
         _isLoggedIn.value = true
-        sharedPrefs?.edit()?.putString("logged_in_member_id", memberId)?.apply()
+        sharedPrefs?.let { SecurityUtils.generateAndStoreSession(it, memberId) }
         showToast("Selamat datang kembali di DRG Malang Raya!")
     }
 
     fun logout() {
         _isLoggedIn.value = false
         _currentMemberId.value = ""
-        sharedPrefs?.edit()?.remove("logged_in_member_id")?.apply()
+        sharedPrefs?.let { SecurityUtils.clearSession(it) }
         showToast("Sesi berhasil keluar. Salam Gacor!")
-    }
-
-    fun switchActiveMember(memberId: String) {
-        _currentMemberId.value = memberId
-        showToast("Beralih profil: $memberId")
     }
 
     fun registerNewDriver(name: String, phone: String, plate: String, model: String, area: String, pin: String) {
@@ -58,26 +56,12 @@ class ProfileSessionCoordinator(
         scope.launch {
             runCatching {
                 val newDriver = DriverMember(
-                    id = "DRG-$timestampHex-$randomEntropy",
-                    name = name,
-                    driverId = "DRG-REG-$timestampHex",
-                    phone = phone,
-                    role = MemberRole.ANGGOTA,
-                    motorcyclePlate = plate,
-                    motorcycleModel = model,
-                    rating = 5.0f,
-                    reviewCount = 0,
-                    loyaltyPoints = 10,
-                    loyaltyTier = "Junior Rider",
+                    id = "DRG-$timestampHex-$randomEntropy", name = name, driverId = "DRG-REG-$timestampHex",
+                    phone = phone, role = MemberRole.ANGGOTA, motorcyclePlate = plate, motorcycleModel = model,
+                    rating = 5.0f, reviewCount = 0, loyaltyPoints = 10, loyaltyTier = "Junior Rider",
                     verificationStatus = VerificationStatus.PENDING_SCREENING,
                     screeningNotes = "Pendaftar baru, menunggu proses screening Admin & Dewan Etika.",
-                    isOnline = false,
-                    currentStatus = "Pendaftaran Baru (Pending)",
-                    baseArea = area,
-                    canManageKas = false,
-                    canVerifyDrivers = false,
-                    canBroadcastSos = false,
-                    canManagePosko = false
+                    isOnline = false, currentStatus = "Pendaftaran Baru (Pending)", baseArea = area
                 )
                 repository.registerMember(newDriver)
                 sharedPrefs?.let { sp ->
@@ -96,10 +80,17 @@ class ProfileSessionCoordinator(
         }
     }
 
-    fun updateProfile(cur: DriverMember?, phone: String, area: String, model: String, plate: String, photoUrl: String) {
+    fun updateProfile(
+        cur: DriverMember?, phone: String, area: String, model: String, plate: String, photoUrl: String,
+        address: String, bloodType: String, emergencyContact: String, emergencyPhone: String, simNumber: String, nik: String
+    ) {
         if (cur == null) return
-        val updated = cur.copy(motorcyclePlate = plate, motorcycleModel = model, phone = phone, baseArea = area, profilePhotoUrl = photoUrl)
-        scope.launch { runCatching { repository.updateMember(updated) }.onSuccess { showToast("Profil diperbarui.") } }
+        val updated = cur.copy(
+            motorcyclePlate = plate, motorcycleModel = model, phone = phone, baseArea = area, profilePhotoUrl = photoUrl,
+            address = address, bloodType = bloodType, emergencyContact = emergencyContact, emergencyPhone = emergencyPhone,
+            simNumber = simNumber, nik = nik
+        )
+        scope.launch { runCatching { repository.updateMember(updated) }.onSuccess { showToast("Biodata lengkap berhasil disimpan.") } }
     }
 
     fun updateDutyStatus(cur: DriverMember?, status: String, isOnline: Boolean) {

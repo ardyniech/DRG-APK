@@ -31,5 +31,11 @@ data class DriverMember(
     val canManageKas: Boolean = false,
     val canVerifyDrivers: Boolean = false,
     val canBroadcastSos: Boolean = false,
-    val canManagePosko: Boolean = false
+    val canManagePosko: Boolean = false,
+    val address: String = "Jl. Raya Malang No. 12",
+    val bloodType: String = "O",
+    val emergencyContact: String = "Keluarga (Siti)",
+    val emergencyPhone: String = "081234567890",
+    val simNumber: String = "1234-5678-9012",
+    val nik: String = "3507123456780001"
 )

@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import com.example.modules.radar.logic.MapProjection
-import com.example.modules.radar.logic.TrafficCorridorPainter.drawTrafficCorridors
 import com.example.modules.radar.primitives.MapMarkerPainterUtils.drawDriverMarker
 import com.example.modules.radar.primitives.MapMarkerPainterUtils.drawHazardMarker
 import com.example.modules.radar.primitives.MapMarkerPainterUtils.drawMyGpsPosition
@@ -20,6 +19,7 @@ import com.example.modules.radar.primitives.MapMarkerPainterUtils.drawRadarSweep
 import com.example.shared.models.DriverMember
 import com.example.shared.models.EmergencyAlert
 import com.example.shared.models.HazardArea
+import com.example.shared.models.HazardType
 import com.example.shared.models.PoskoLocation
 
 @Composable
@@ -39,6 +39,8 @@ fun MapMarkersLayer(
     onSelectDriver: (DriverMember) -> Unit,
     focusedDriver: DriverMember?,
     isTrafficEnabled: Boolean = false,
+    onSelectHazard: (HazardArea) -> Unit = {},
+    onSelectPosko: (PoskoLocation) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     if (screenWidth <= 0f || screenHeight <= 0f) return
@@ -50,28 +52,24 @@ fun MapMarkersLayer(
         label = "radarPulse"
     )
 
-    val projectedPoskos = remember(poskoList, centerLat, centerLng, zoom, screenWidth, screenHeight) {
-        poskoList.map { posko ->
-            MapProjection.latLngToScreen(posko.lat, posko.lng, centerLat, centerLng, zoom, screenWidth, screenHeight)
+    val displayedHazards = remember(hazards, selectedFilter) {
+        if (selectedFilter == "Lalu Lintas") {
+            hazards.filter { it.hazardType == HazardType.TRAFFIC_JAM }
+        } else {
+            hazards
         }
     }
 
-    val projectedHazards = remember(hazards, centerLat, centerLng, zoom, screenWidth, screenHeight) {
-        hazards.map { hazard ->
-            Pair(
-                MapProjection.latLngToScreen(hazard.lat, hazard.lng, centerLat, centerLng, zoom, screenWidth, screenHeight),
-                hazard
-            )
-        }
+    val projectedPoskos = remember(poskoList, centerLat, centerLng, zoom, screenWidth, screenHeight) {
+        poskoList.map { Pair(MapProjection.latLngToScreen(it.lat, it.lng, centerLat, centerLng, zoom, screenWidth, screenHeight), it) }
+    }
+
+    val projectedHazards = remember(displayedHazards, centerLat, centerLng, zoom, screenWidth, screenHeight) {
+        displayedHazards.map { Pair(MapProjection.latLngToScreen(it.lat, it.lng, centerLat, centerLng, zoom, screenWidth, screenHeight), it) }
     }
 
     val projectedDrivers = remember(members, centerLat, centerLng, zoom, screenWidth, screenHeight) {
-        members.map { driver ->
-            Pair(
-                MapProjection.latLngToScreen(driver.currentLat, driver.currentLng, centerLat, centerLng, zoom, screenWidth, screenHeight),
-                driver
-            )
-        }
+        members.map { Pair(MapProjection.latLngToScreen(it.currentLat, it.currentLng, centerLat, centerLng, zoom, screenWidth, screenHeight), it) }
     }
 
     val myPt = remember(centerLat, centerLng, zoom, screenWidth, screenHeight) {
@@ -79,9 +77,11 @@ fun MapMarkersLayer(
     }
 
     Canvas(
-        modifier = modifier.fillMaxSize().pointerInput(projectedDrivers, selectedFilter) {
+        modifier = modifier.fillMaxSize().pointerInput(projectedDrivers, projectedHazards, projectedPoskos, selectedFilter) {
             detectTapGestures { offset ->
-                MapTapHandler.findDriverAtTap(offset, projectedDrivers)?.let { onSelectDriver(it) }
+                MapTapHandler.findDriverAtTap(offset, projectedDrivers)?.let { onSelectDriver(it); return@detectTapGestures }
+                MapTapHandler.findHazardAtTap(offset, projectedHazards)?.let { onSelectHazard(it); return@detectTapGestures }
+                MapTapHandler.findPoskoAtTap(offset, projectedPoskos)?.let { onSelectPosko(it); return@detectTapGestures }
             }
         }
     ) {
@@ -90,12 +90,8 @@ fun MapMarkersLayer(
             drawRadarSweepEffect(maxR, Offset(screenWidth / 2f, screenHeight / 2f), pulseRadius)
         }
 
-        if (isTrafficEnabled || selectedFilter == "Lalu Lintas" || selectedFilter == "Area Rawan") {
-            drawTrafficCorridors(hazards, centerLat, centerLng, zoom, screenWidth, screenHeight, pulseRadius)
-        }
-
         if (selectedFilter == "Semua" || selectedFilter == "Posko") {
-            projectedPoskos.forEach { pt -> drawPoskoMarker(pt) }
+            projectedPoskos.forEach { (pt, _) -> drawPoskoMarker(pt) }
         }
 
         if (selectedFilter == "Semua" || selectedFilter == "Area Rawan" || selectedFilter == "Lalu Lintas") {

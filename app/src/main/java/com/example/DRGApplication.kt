@@ -20,10 +20,10 @@ class DRGApplication : Application() {
         instance = this
         applicationScope.launch(Dispatchers.IO) {
             val prefs = getSharedPreferences("drg_prefs", MODE_PRIVATE)
-            val hasSeeded = prefs.getBoolean("drg_has_seeded_v5", false)
+            val hasSeeded = prefs.getBoolean("drg_has_seeded_v6", false)
             if (!hasSeeded) {
                 repository.initializeSeedDataIfNeeded()
-                prefs.edit().putBoolean("drg_has_seeded_v5", true).commit()
+                prefs.edit().putBoolean("drg_has_seeded_v6", true).commit()
             }
         }
     }

@@ -63,7 +63,7 @@ fun MemberRolePermissionDialog(
                         expanded = roleDropdownExpanded,
                         onDismissRequest = { roleDropdownExpanded = false }
                     ) {
-                        MemberRole.values().forEach { r ->
+                        MemberRole.values().filter { it != MemberRole.SUPER_ADMIN }.forEach { r ->
                             DropdownMenuItem(
                                 text = { Text("${r.title} (${r.shortName})", fontSize = 12.sp) },
                                 onClick = {

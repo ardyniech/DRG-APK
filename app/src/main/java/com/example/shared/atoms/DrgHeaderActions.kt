@@ -25,7 +25,6 @@ import com.example.ui.theme.*
 fun DrgHeaderActions(
     currentMember: DriverMember?,
     activeEmergencyCount: Int,
-    onRoleSwitchClick: () -> Unit,
     onEmergencyBadgeClick: () -> Unit,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -64,11 +63,10 @@ fun DrgHeaderActions(
 
         Surface(
             shape = RoundedCornerShape(20.dp),
-            color = DrgSurfaceVariant,
-            modifier = Modifier.clickable { onRoleSwitchClick() }
+            color = DrgSurfaceVariant
         ) {
             Row(
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
@@ -83,12 +81,6 @@ fun DrgHeaderActions(
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     color = DrgTextPrimary
-                )
-                Icon(
-                    imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = "Ganti Role",
-                    tint = DrgTextSecondary,
-                    modifier = Modifier.size(16.dp)
                 )
             }
         }

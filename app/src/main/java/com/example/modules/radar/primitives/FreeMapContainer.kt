@@ -1,6 +1,6 @@
 package com.example.modules.radar.primitives
 
-import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
@@ -25,6 +25,8 @@ fun FreeMapContainer(
     isConsentGranted: Boolean,
     onSelectDriver: (DriverMember) -> Unit,
     focusedDriver: DriverMember?,
+    onSelectHazard: (HazardArea) -> Unit = {},
+    onSelectPosko: (PoskoLocation) -> Unit = {},
     isPowerSaverEnabled: Boolean = false,
     modifier: Modifier = Modifier
 ) {
@@ -45,12 +47,15 @@ fun FreeMapContainer(
             .clip(RoundedCornerShape(18.dp))
             .onSizeChanged { containerSize = it }
             .pointerInput(centerLat, centerLng, zoom, containerSize) {
-                detectDragGestures { change, dragAmount ->
-                    change.consume()
-                    if (containerSize.width > 0 && containerSize.height > 0) {
+                detectTransformGestures { _, panAmount, zoomAmount, _ ->
+                    if (zoomAmount != 1.0f) {
+                        if (zoomAmount > 1.05f && zoom < mapMode.maxZoom) zoom++
+                        else if (zoomAmount < 0.95f && zoom > mapMode.minZoom) zoom--
+                    }
+                    if ((panAmount.x != 0f || panAmount.y != 0f) && containerSize.width > 0 && containerSize.height > 0) {
                         val currentPair = MapProjection.screenToLatLng(
-                            containerSize.width / 2f - dragAmount.x,
-                            containerSize.height / 2f - dragAmount.y,
+                            containerSize.width / 2f - panAmount.x,
+                            containerSize.height / 2f - panAmount.y,
                             centerLat, centerLng, zoom,
                             containerSize.width.toFloat(), containerSize.height.toFloat()
                         )
@@ -70,7 +75,14 @@ fun FreeMapContainer(
             selectedFilter = selectedFilter, centerLat = centerLat, centerLng = centerLng, zoom = zoom,
             screenWidth = w, screenHeight = h, isConsentGranted = isConsentGranted,
             showRadarSweep = isRadarSweepEnabled && !isPowerSaverEnabled, onSelectDriver = onSelectDriver,
-            focusedDriver = focusedDriver, isTrafficEnabled = isTrafficEnabled
+            focusedDriver = focusedDriver, isTrafficEnabled = isTrafficEnabled,
+            onSelectHazard = onSelectHazard, onSelectPosko = onSelectPosko
+        )
+
+        MapOverlayScaleIndicator(
+            zoom = zoom,
+            activeCount = members.count { it.isOnline },
+            modifier = Modifier.align(Alignment.BottomStart).padding(4.dp)
         )
 
         MapTopControlBar(

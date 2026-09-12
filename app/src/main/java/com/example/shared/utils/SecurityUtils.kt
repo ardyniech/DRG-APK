@@ -37,4 +37,35 @@ object SecurityUtils {
     fun storePinHash(prefs: SharedPreferences, key: String, pin: String) {
         prefs.edit().putString("pin_hash_$key", hashPin(pin)).apply()
     }
+
+    fun generateAndStoreSession(prefs: SharedPreferences, memberId: String): String {
+        val token = java.util.UUID.randomUUID().toString() + "_" + System.currentTimeMillis()
+        prefs.edit()
+            .putString("logged_in_member_id", memberId)
+            .putString("device_session_token", token)
+            .putString("device_session_member_id", memberId)
+            .putLong("device_session_timestamp", System.currentTimeMillis())
+            .apply()
+        return token
+    }
+
+    fun validateSession(prefs: SharedPreferences, memberId: String): Boolean {
+        val storedToken = prefs.getString("device_session_token", null) ?: return false
+        val storedMemberId = prefs.getString("device_session_member_id", null) ?: return false
+        return storedToken.isNotEmpty() && storedMemberId == memberId
+    }
+
+    fun clearSession(prefs: SharedPreferences) {
+        prefs.edit()
+            .remove("logged_in_member_id")
+            .remove("device_session_token")
+            .remove("device_session_member_id")
+            .remove("device_session_timestamp")
+            .apply()
+    }
+
+    fun isSeedSuperAdmin(memberId: String?): Boolean {
+        if (memberId == null) return false
+        return memberId == com.example.BuildConfig.SEED_SUPER_ADMIN_ID
+    }
 }

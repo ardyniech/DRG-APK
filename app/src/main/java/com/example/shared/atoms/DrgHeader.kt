@@ -14,7 +14,6 @@ import com.example.ui.theme.*
 fun DrgHeader(
     currentMember: DriverMember?,
     activeEmergencyCount: Int,
-    onRoleSwitchClick: () -> Unit,
     onEmergencyBadgeClick: () -> Unit,
     onSettingsClick: () -> Unit = {},
     modifier: Modifier = Modifier
@@ -37,7 +36,6 @@ fun DrgHeader(
             DrgHeaderActions(
                 currentMember = currentMember,
                 activeEmergencyCount = activeEmergencyCount,
-                onRoleSwitchClick = onRoleSwitchClick,
                 onEmergencyBadgeClick = onEmergencyBadgeClick,
                 onSettingsClick = onSettingsClick
             )

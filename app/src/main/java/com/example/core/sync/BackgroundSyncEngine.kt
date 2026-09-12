@@ -22,8 +22,8 @@ class BackgroundSyncEngine(
 
     private var syncJob: Job? = null
 
-    fun enqueueOptimisticAction(entityType: String, id: String, payload: String = "") {
-        scope.launch(ioDispatcher) {
+    fun enqueueOptimisticAction(entityType: String, id: String, payload: String = ""): Job {
+        return scope.launch(ioDispatcher) {
             db.syncQueueDao().insertSyncItem(
                 PendingSyncEntity(id = id, entityType = entityType, payloadJson = payload, timestamp = System.currentTimeMillis())
             )
@@ -32,10 +32,10 @@ class BackgroundSyncEngine(
         }
     }
 
-    fun triggerBackgroundSync(isPowerSaver: Boolean = false) {
-        if (syncJob?.isActive == true) return
+    fun triggerBackgroundSync(isPowerSaver: Boolean = false): Job {
+        if (syncJob?.isActive == true) return syncJob!!
 
-        syncJob = scope.launch(ioDispatcher) {
+        val job = scope.launch(ioDispatcher) {
             _syncStatus.value = SyncStatus.SYNCING
             
             val delayDuration = if (isPowerSaver) 1500L else 300L
@@ -56,5 +56,7 @@ class BackgroundSyncEngine(
             val remaining = db.syncQueueDao().getNextBatch()
             _syncStatus.value = if (remaining.isNotEmpty()) SyncStatus.OFFLINE_SAVED else SyncStatus.IDLE
         }
+        syncJob = job
+        return job
     }
 }

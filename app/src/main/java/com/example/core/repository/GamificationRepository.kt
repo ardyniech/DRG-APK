@@ -16,6 +16,7 @@ class GamificationRepository(private val db: AppDatabase) {
     fun calculatePointWeight(giverRole: MemberRole, isBeneficiary: Boolean): Int {
         if (isBeneficiary) return 2
         return when (giverRole) {
+            MemberRole.SUPER_ADMIN -> 5
             MemberRole.DEWAN_ETIKA -> 5
             MemberRole.KETUA, MemberRole.WAKIL_KETUA -> 4
             MemberRole.SEKRETARIS, MemberRole.BENDAHARA, MemberRole.SATGAS -> 3

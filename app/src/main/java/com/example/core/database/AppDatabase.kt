@@ -21,7 +21,7 @@ import com.example.shared.models.*
         AdminLog::class, ForumComment::class, MemberRolePermissionEntity::class,
         RoleAuditLogEntity::class, PoskoCheckInEntity::class
     ],
-    version = 12,
+    version = 13,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

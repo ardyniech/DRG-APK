@@ -1,6 +1,5 @@
 package com.example.modules.radar.primitives
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,8 +20,6 @@ fun LiveMapCoordinateHeader(
     centerLat: Double,
     centerLng: Double,
     nearbyCount: Int,
-    selectedRadiusKm: Double,
-    onSelectRadius: (Double) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -31,73 +28,50 @@ fun LiveMapCoordinateHeader(
         tonalElevation = 2.dp,
         modifier = modifier.fillMaxWidth()
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.MyLocation,
-                        contentDescription = "Pusat GPS",
-                        tint = DrgGreenPrimary,
-                        modifier = Modifier.size(18.dp)
+                Icon(
+                    imageVector = Icons.Default.MyLocation,
+                    contentDescription = "Pusat GPS",
+                    tint = DrgGreenPrimary,
+                    modifier = Modifier.size(18.dp)
+                )
+                Column {
+                    Text(
+                        text = "Area Pantau GPS",
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = DrgTextSecondary
                     )
                     Text(
                         text = CoordinateUtils.formatCoordinates(centerLat, centerLng),
-                        fontSize = 12.sp,
+                        fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         color = DrgTextPrimary
                     )
                 }
-
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = DrgGreenContainer
-                ) {
-                    Text(
-                        text = "$nearbyCount Driver Aktif",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = DrgGreenPrimary,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                    )
-                }
             }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = DrgGreenContainer
             ) {
                 Text(
-                    text = "Radius:",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = DrgTextSecondary
+                    text = "$nearbyCount Driver di Layar",
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = DrgGreenPrimary,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp)
                 )
-                listOf(1.0, 3.0, 5.0, 10.0).forEach { radius ->
-                    val isSelected = selectedRadiusKm == radius
-                    FilterChip(
-                        selected = isSelected,
-                        onClick = { onSelectRadius(radius) },
-                        label = { Text("${radius.toInt()} km", fontSize = 11.sp) },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = DrgGreenPrimary,
-                            selectedLabelColor = Color.White
-                        ),
-                        modifier = Modifier.height(32.dp)
-                    )
-                }
             }
         }
     }

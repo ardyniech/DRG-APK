@@ -1,7 +1,7 @@
 package com.example.modules.radar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
@@ -31,12 +31,14 @@ fun LiveMapScreen(
     var centerLat by remember { mutableDoubleStateOf(defaultLat) }
     var centerLng by remember { mutableDoubleStateOf(defaultLng) }
     var zoom by remember { mutableIntStateOf(14) }
-    var selectedRadiusKm by remember { mutableDoubleStateOf(5.0) }
     var focusedDriver by remember { mutableStateOf<DriverMember?>(null) }
     var containerSize by remember { mutableStateOf(IntSize.Zero) }
 
-    val nearbyDrivers = remember(members, centerLat, centerLng, selectedRadiusKm) {
-        CoordinateUtils.filterNearbyDrivers(members, centerLat, centerLng, selectedRadiusKm)
+    val w = containerSize.width.toFloat()
+    val h = containerSize.height.toFloat()
+
+    val nearbyDrivers = remember(members, centerLat, centerLng, zoom, w, h) {
+        CoordinateUtils.filterVisibleDrivers(members, centerLat, centerLng, zoom, w, h)
     }
     val currentFocusedPair = nearbyDrivers.firstOrNull { it.first.id == focusedDriver?.id } ?: nearbyDrivers.firstOrNull()
 
@@ -45,9 +47,9 @@ fun LiveMapScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         LiveMapCoordinateHeader(
-            centerLat = centerLat, centerLng = centerLng,
-            nearbyCount = nearbyDrivers.size, selectedRadiusKm = selectedRadiusKm,
-            onSelectRadius = { selectedRadiusKm = it }
+            centerLat = centerLat,
+            centerLng = centerLng,
+            nearbyCount = nearbyDrivers.size
         )
 
         LiveSharingDriversRow(
@@ -64,11 +66,14 @@ fun LiveMapScreen(
             modifier = Modifier.weight(1f).fillMaxWidth().clip(RoundedCornerShape(16.dp))
                 .onSizeChanged { containerSize = it }
                 .pointerInput(centerLat, centerLng, zoom, containerSize) {
-                    detectDragGestures { change, dragAmount ->
-                        change.consume()
-                        if (containerSize.width > 0 && containerSize.height > 0) {
+                    detectTransformGestures { _, panAmount, zoomAmount, _ ->
+                        if (zoomAmount != 1.0f) {
+                            if (zoomAmount > 1.05f && zoom < 18) zoom++
+                            else if (zoomAmount < 0.95f && zoom > 10) zoom--
+                        }
+                        if ((panAmount.x != 0f || panAmount.y != 0f) && containerSize.width > 0 && containerSize.height > 0) {
                             val nextPair = MapProjection.screenToLatLng(
-                                containerSize.width / 2f - dragAmount.x, containerSize.height / 2f - dragAmount.y,
+                                containerSize.width / 2f - panAmount.x, containerSize.height / 2f - panAmount.y,
                                 centerLat, centerLng, zoom, containerSize.width.toFloat(), containerSize.height.toFloat()
                             )
                             centerLat = nextPair.first.coerceIn(-8.5, -7.5)
@@ -77,9 +82,6 @@ fun LiveMapScreen(
                     }
                 }
         ) {
-            val w = containerSize.width.toFloat()
-            val h = containerSize.height.toFloat()
-
             FreeMapTileLayer(
                 mapMode = FreeMapMode.ROAD, centerLat = centerLat, centerLng = centerLng,
                 zoom = zoom, screenWidth = w, screenHeight = h
@@ -96,6 +98,12 @@ fun LiveMapScreen(
                 onZoomOut = { if (zoom > 10) zoom-- },
                 onRecenterGps = { centerLat = defaultLat; centerLng = defaultLng; zoom = 14 },
                 modifier = Modifier.align(Alignment.TopEnd).padding(8.dp)
+            )
+
+            MapOverlayScaleIndicator(
+                zoom = zoom,
+                activeCount = nearbyDrivers.size,
+                modifier = Modifier.align(Alignment.BottomStart).padding(4.dp)
             )
         }
 

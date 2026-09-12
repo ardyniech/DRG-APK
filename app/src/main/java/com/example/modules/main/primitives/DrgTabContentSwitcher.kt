@@ -92,12 +92,12 @@ fun DrgTabContentSwitcher(
             }
             MainNavTab.PROFILE -> ProfileScreen(
                 currentMember = currentMember,
-                onUpdateProfile = { phone, area, model, plate, photoUrl ->
-                    viewModel.updateProfile(phone, area, model, plate, photoUrl)
-                    scope.launch { snackbarHostState.showSnackbar("Data profil berhasil diperbarui!") }
+                onUpdateProfile = { phone, area, model, plate, photoUrl, addr, blood, emContact, emPhone, sim, ktpNik ->
+                    viewModel.updateProfile(phone, area, model, plate, photoUrl, addr, blood, emContact, emPhone, sim, ktpNik)
+                    scope.launch { snackbarHostState.showSnackbar("Biodata lengkap berhasil disimpan!") }
                 },
                 isSosAlarmEnabled = isSosAlarmEnabled, onToggleSosAlarm = { viewModel.toggleSosAlarmSound(it) },
-                onOpenSettings = onShowSettingsDialog, onLogout = { viewModel.logout() }
+                onOpenSettings = onShowSettingsDialog, onOpenAdmin = { viewModel.selectTab(MainNavTab.ADMIN) }, onLogout = { viewModel.logout() }
             )
             MainNavTab.ADMIN -> AdminGovernanceScreen(
                 currentMember = currentMember, members = members,

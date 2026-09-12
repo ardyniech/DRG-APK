@@ -28,7 +28,6 @@ import com.example.ui.theme.DrgGrabGreenPrimary
 fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewModel) {
     val state = rememberDrgAppState(viewModel = viewModel, cashViewModel = cashViewModel)
     val context = LocalContext.current
-    var showRoleSwitcher by remember { mutableStateOf(false) }
     var showEmergencyTrigger by remember { mutableStateOf(false) }
     var showAddKasDialog by remember { mutableStateOf(false) }
     var showAwardPointDialog by remember { mutableStateOf(false) }
@@ -42,7 +41,6 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
     // Android Back Button Handler
     BackHandler {
         when {
-            showRoleSwitcher -> showRoleSwitcher = false
             showEmergencyTrigger -> showEmergencyTrigger = false
             showAddKasDialog -> showAddKasDialog = false
             showAwardPointDialog -> showAwardPointDialog = false
@@ -65,7 +63,6 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
                     DrgHeader(
                         currentMember = state.currentMember.value,
                         activeEmergencyCount = state.activeAlerts.value.size,
-                        onRoleSwitchClick = { showRoleSwitcher = true },
                         onEmergencyBadgeClick = { viewModel.selectTab(MainNavTab.EMERGENCY) },
                         onSettingsClick = { showSettingsDialog = true }
                     )
@@ -103,7 +100,6 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
         DrgAppDialogs(
             viewModel = viewModel, cashViewModel = cashViewModel, context = context,
             members = state.members.value, currentMember = state.currentMember.value,
-            showRoleSwitcher = showRoleSwitcher, onDismissRoleSwitcher = { showRoleSwitcher = false },
             showEmergencyTrigger = showEmergencyTrigger, onDismissEmergencyTrigger = { showEmergencyTrigger = false },
             showAddKasDialog = showAddKasDialog, onDismissAddKasDialog = { showAddKasDialog = false },
             showAwardPointDialog = showAwardPointDialog, selectedTargetForAward = selectedTargetForAward,

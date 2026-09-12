@@ -70,7 +70,22 @@ fun RoleMemberCard(
                 }
             }
 
-            if (canEdit) {
+            val isTargetSuperAdmin = member.role == com.example.shared.models.MemberRole.SUPER_ADMIN
+            if (isTargetSuperAdmin) {
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = DrgBlueInfo.copy(alpha = 0.1f),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        "🛡️ Akun Sistem Root (Permanen)",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = DrgBlueInfo,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp)
+                    )
+                }
+            } else if (canEdit) {
                 Button(
                     onClick = onManageClick,
                     colors = ButtonDefaults.buttonColors(containerColor = DrgGrabGreenPrimary),

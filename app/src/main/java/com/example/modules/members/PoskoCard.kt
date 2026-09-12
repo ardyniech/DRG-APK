@@ -38,13 +38,18 @@ fun PoskoCard(posko: PoskoLocation, distanceKm: Double? = null) {
                 modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.Place,
-                    contentDescription = "Posko",
-                    tint = DrgGreenPrimary,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(
+                    onClick = { WhatsAppLauncher.openGoogleMapsAddress(context, "${posko.name}, ${posko.address}") },
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Place,
+                        contentDescription = "Buka Peta Posko",
+                        tint = DrgGreenPrimary,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(4.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = posko.name,
@@ -68,12 +73,12 @@ fun PoskoCard(posko: PoskoLocation, distanceKm: Double? = null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (posko.phone.isNotBlank()) {
                     IconButton(
-                        onClick = { WhatsAppLauncher.openDialer(context, posko.phone) },
+                        onClick = { WhatsAppLauncher.openChat(context, posko.phone, "Halo Pengurus Posko ${posko.name}, saya ingin koordinasi.") },
                         modifier = Modifier.size(36.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Phone,
-                            contentDescription = "Hubungi Posko",
+                            contentDescription = "Hubungi WA Posko",
                             tint = DrgGreenPrimary,
                             modifier = Modifier.size(20.dp)
                         )

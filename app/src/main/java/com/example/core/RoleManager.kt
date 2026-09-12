@@ -9,6 +9,12 @@ object RoleManager {
     
     fun getUserRoleForMemberRole(memberRole: MemberRole): UserRole {
         return when (memberRole) {
+            MemberRole.SUPER_ADMIN -> UserRole(
+                accessLevel = AccessLevel.ADMIN,
+                name = "Super Admin (Sistem)",
+                description = "Otoritas mutlak untuk maintenance, scale up, pengawasan, dan kendali penuh seluruh sistem komunitas.",
+                permissions = listOf("manage_members", "manage_roles", "approve_screening", "view_treasury_full", "post_emergency_announcement", "manage_posko")
+            )
             MemberRole.KETUA, MemberRole.SEKRETARIS, MemberRole.DEWAN_ETIKA -> UserRole(
                 accessLevel = AccessLevel.ADMIN,
                 name = "Admin Komunitas",
@@ -32,31 +38,36 @@ object RoleManager {
 
     fun canManageKas(member: DriverMember?): Boolean {
         if (member == null) return false
-        if (member.role == MemberRole.KETUA) return true
+        if (member.role == MemberRole.SUPER_ADMIN || member.role == MemberRole.KETUA) return true
         return member.canManageKas || member.role == MemberRole.BENDAHARA
     }
 
     fun canVerifyDrivers(member: DriverMember?): Boolean {
         if (member == null) return false
-        if (member.role == MemberRole.KETUA) return true
+        if (member.role == MemberRole.SUPER_ADMIN || member.role == MemberRole.KETUA) return true
         return member.canVerifyDrivers || member.role in listOf(MemberRole.SEKRETARIS, MemberRole.DEWAN_ETIKA)
     }
 
     fun canBroadcastSos(member: DriverMember?): Boolean {
         if (member == null) return false
-        if (member.role == MemberRole.KETUA) return true
+        if (member.role == MemberRole.SUPER_ADMIN || member.role == MemberRole.KETUA) return true
         return member.canBroadcastSos || member.role in listOf(MemberRole.WAKIL_KETUA, MemberRole.SATGAS)
     }
 
     fun canManagePosko(member: DriverMember?): Boolean {
         if (member == null) return false
-        if (member.role == MemberRole.KETUA) return true
+        if (member.role == MemberRole.SUPER_ADMIN || member.role == MemberRole.KETUA) return true
         return member.canManagePosko || member.role in listOf(MemberRole.WAKIL_KETUA, MemberRole.SATGAS)
     }
 
     fun canManageRoles(member: DriverMember?): Boolean {
         if (member == null) return false
-        return member.role in listOf(MemberRole.KETUA, MemberRole.SEKRETARIS)
+        return member.role in listOf(MemberRole.SUPER_ADMIN, MemberRole.KETUA, MemberRole.SEKRETARIS)
+    }
+
+    fun isSeedSuperAdmin(member: DriverMember?): Boolean {
+        if (member == null) return false
+        return member.id == com.example.BuildConfig.SEED_SUPER_ADMIN_ID && member.role == MemberRole.SUPER_ADMIN
     }
 
     fun validateRoleChange(
@@ -66,14 +77,20 @@ object RoleManager {
         allMembers: List<DriverMember>
     ): Pair<Boolean, String> {
         if (actor == null || !canManageRoles(actor)) {
-            return false to "Hanya Ketua dan Sekretaris yang berwenang mengatur jabatan."
+            return false to "Hanya Super Admin, Ketua, dan Sekretaris yang berwenang mengatur jabatan."
         }
-        if (newRole == MemberRole.KETUA && actor.role != MemberRole.KETUA) {
-            return false to "Hanya Ketua yang berwenang mengangkat atau mengalihkan jabatan Ketua."
+        if (target.id == com.example.BuildConfig.SEED_SUPER_ADMIN_ID) {
+            return false to "Akun Seed Super Admin Sistem bersifat permanen dan terlindungi dari modifikasi peran."
+        }
+        if (newRole == MemberRole.SUPER_ADMIN) {
+            return false to "Hak Super Admin terisolasi khusus untuk seed root sistem."
+        }
+        if (newRole == MemberRole.KETUA && actor.role != MemberRole.KETUA && actor.role != MemberRole.SUPER_ADMIN) {
+            return false to "Hanya Ketua atau Super Admin yang berwenang mengangkat jabatan Ketua."
         }
         if (target.role == MemberRole.KETUA && newRole != MemberRole.KETUA) {
             val otherKetuaCount = allMembers.count { it.id != target.id && it.role == MemberRole.KETUA }
-            if (otherKetuaCount == 0) {
+            if (otherKetuaCount == 0 && actor.role != MemberRole.SUPER_ADMIN) {
                 return false to "Tidak dapat menurunkan Ketua: Komunitas wajib memiliki minimal 1 Ketua aktif."
             }
         }

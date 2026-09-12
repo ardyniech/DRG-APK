@@ -48,6 +48,7 @@ fun CommunityHubScreen(
     onUpdateMemberPermissions: (String, MemberRole, Boolean, Boolean, Boolean, Boolean, VerificationStatus) -> Unit = { _, _, _, _, _, _, _ -> },
     onOrderMarketItem: (ServiceMarketItem) -> Unit = {},
     onClaimInsurance: (InsuranceClaimItem) -> Unit = {},
+    onAddPosko: (String, String, String, Double, Double) -> Unit = { _, _, _, _, _ -> },
     modifier: Modifier = Modifier
 ) {
     var selectedSubTab by remember { mutableIntStateOf(initialSubTab) }
@@ -70,7 +71,7 @@ fun CommunityHubScreen(
                     onCallWorkshop = onCallWorkshop
                 )
                 2 -> GamificationLeaderboardScreen(currentMember = currentMember, members = members, badges = badges, tasks = tasks, rewards = rewards, pointTransactions = pointTransactions, onAwardPointsClick = onAwardPointsClick, onClaimTask = onClaimTask, onCompleteTask = onCompleteTask, onRedeemReward = onRedeemReward)
-                3 -> MembersAndPoskoScreen(currentMember = currentMember, members = members, poskoList = poskoList, adminLogs = adminLogs, onRecordKopdarAttendance = onRecordKopdarAttendance, onAddReview = onAddReview, onUpdateMemberRole = onUpdateMemberRole, onUpdateMemberVerification = onUpdateMemberVerification, onUpdateMemberPermissions = onUpdateMemberPermissions)
+                3 -> MembersAndPoskoScreen(currentMember = currentMember, members = members, poskoList = poskoList, adminLogs = adminLogs, onRecordKopdarAttendance = onRecordKopdarAttendance, onAddReview = onAddReview, onUpdateMemberRole = onUpdateMemberRole, onUpdateMemberVerification = onUpdateMemberVerification, onUpdateMemberPermissions = onUpdateMemberPermissions, onAddPosko = onAddPosko)
                 4 -> DriverServicesScreen(onOrderMarketItem = onOrderMarketItem, onClaimInsurance = onClaimInsurance)
             }
         }

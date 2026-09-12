@@ -7,19 +7,56 @@ import android.widget.Toast
 
 object WhatsAppLauncher {
 
-    fun openChat(context: Context, phoneNumber: String, message: String) {
+    fun openChat(context: Context, phoneNumber: String, message: String = "") {
         try {
             var cleanPhone = phoneNumber.replace("+", "").replace(" ", "").replace("-", "")
             if (cleanPhone.startsWith("0")) {
                 cleanPhone = "62" + cleanPhone.substring(1)
             }
-            val uri = Uri.parse("https://api.whatsapp.com/send?phone=$cleanPhone&text=${Uri.encode(message)}")
+            val textParam = if (message.isNotEmpty()) "&text=${Uri.encode(message)}" else ""
+            val uri = Uri.parse("https://wa.me/$cleanPhone$textParam")
             val intent = Intent(Intent.ACTION_VIEW, uri).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
             context.startActivity(intent)
         } catch (e: Exception) {
             Toast.makeText(context, "WhatsApp tidak terinstal atau nomor tidak valid", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun openGoogleMapsAddress(context: Context, address: String) {
+        if (address.isBlank()) {
+            Toast.makeText(context, "Alamat belum diatur", Toast.LENGTH_SHORT).show()
+            return
+        }
+        try {
+            val uri = Uri.parse("geo:0,0?q=" + Uri.encode(address.trim()))
+            val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            context.startActivity(intent)
+        } catch (_: Exception) {
+            val webIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://www.google.com/maps/search/?api=1&query=" + Uri.encode(address.trim()))
+            ).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
+            context.startActivity(webIntent)
+        }
+    }
+
+    fun openLiveTrafficMap(context: Context, lat: Double = -7.9822, lng: Double = 112.6303, zoom: Int = 14) {
+        val trafficUrl = "https://www.google.com/maps/@$lat,$lng,${zoom}z/data=!5m1!1e1"
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(trafficUrl)).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                setPackage("com.google.android.apps.maps")
+            }
+            context.startActivity(intent)
+        } catch (_: Exception) {
+            val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(trafficUrl)).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            context.startActivity(webIntent)
         }
     }
 

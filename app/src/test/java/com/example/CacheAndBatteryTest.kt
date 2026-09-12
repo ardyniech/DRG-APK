@@ -71,7 +71,7 @@ class CacheAndBatteryTest {
         assertEquals(0, db.syncQueueDao().getPendingCount())
 
         syncEngine.enqueueOptimisticAction("HAZARD", "HZD-999", "Begal Area")
-        advanceUntilIdle()
+        testScheduler.advanceUntilIdle()
 
         val count = db.syncQueueDao().getPendingCount()
         val status = syncEngine.syncStatus.value

@@ -1,9 +1,10 @@
 package com.example
 
-import com.example.modules.radar.logic.CongestionLevel
 import com.example.modules.radar.logic.MapProjection
-import com.example.modules.radar.logic.TrafficCorridorPainter
+import com.example.modules.radar.logic.RealTrafficManager
 import com.example.modules.radar.models.FreeMapMode
+import com.example.shared.models.HazardArea
+import com.example.shared.models.HazardType
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -35,16 +36,23 @@ class FreeMapAndTrafficTest {
     }
 
     @Test
-    fun testTrafficCorridors() {
-        val corridors = TrafficCorridorPainter.mainCorridors
-        assertTrue("Traffic corridors should not be empty", corridors.isNotEmpty())
+    fun testRealTrafficManagerGoogleMapsUrlAndSummary() {
+        val trafficUrl = RealTrafficManager.getGoogleMapsTrafficUrl(-7.9822, 112.6303, 14)
+        assertTrue(trafficUrl.contains("data=!5m1!1e1"))
+        assertTrue(trafficUrl.contains("-7.9822"))
+        assertTrue(trafficUrl.contains("112.6303"))
 
-        val heavyCorridor = corridors.find { it.baseCongestion == CongestionLevel.HEAVY }
-        assertNotNull(heavyCorridor)
-        assertEquals(8, CongestionLevel.HEAVY.averageSpeedKmH)
+        val mockHazards = listOf(
+            HazardArea(id = "H1", lat = -7.97, lng = 112.62, hazardType = HazardType.TRAFFIC_JAM, description = "Macet Jl. Basuki Rahmat", reportedByName = "Driver 1"),
+            HazardArea(id = "H2", lat = -7.98, lng = 112.63, hazardType = HazardType.POTHOLE, description = "Lubang Besar", reportedByName = "Driver 2")
+        )
 
-        val clearCorridor = corridors.find { it.baseCongestion == CongestionLevel.CLEAR }
-        assertNotNull(clearCorridor)
-        assertEquals(42, CongestionLevel.CLEAR.averageSpeedKmH)
+        val activeJams = RealTrafficManager.getActiveTrafficJams(mockHazards)
+        assertEquals(1, activeJams.size)
+        assertEquals("Macet Jl. Basuki Rahmat", activeJams.first().description)
+
+        val summary = RealTrafficManager.generateTrafficSummary(mockHazards)
+        assertEquals(1, summary.totalJamReports)
+        assertEquals(1, summary.activeAreas.size)
     }
 }

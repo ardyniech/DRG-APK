@@ -26,6 +26,7 @@ fun AwardPointDialog(
     var reason by remember { mutableStateOf("") }
 
     val calculatedWeight = if (isBeneficiary) 2 else when (currentGiverRole) {
+        MemberRole.SUPER_ADMIN -> 5
         MemberRole.DEWAN_ETIKA -> 5
         MemberRole.KETUA, MemberRole.WAKIL_KETUA -> 4
         MemberRole.SEKRETARIS, MemberRole.BENDAHARA, MemberRole.SATGAS -> 3
