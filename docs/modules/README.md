@@ -26,3 +26,8 @@ Direktori ini berisi dokumentasi teknis mendalam untuk setiap modul arsitektural
 
 6. **[🗺️ Tile Caching & Efisiensi Peta (`RADAR_MAP_CACHE.md`)](RADAR_MAP_CACHE.md)**
    - Manajemen cache multi-level tile OpenStreetMap, LRU disk eviction, penghematan baterai dan kuota.
+
+7. **[🔗 P2P Serverless Architecture (`P2P_SERVERLESS_ARCHITECTURE.md`)](P2P_SERVERLESS_ARCHITECTURE.md)**
+   - Setiap Android device = server. Komunikasi P2P via internet, nol server tengah, nol cost.
+   - WebRTC DataChannel, STUN/TURN (Google free), FCM signaling, PendingSyncQueue fallback.
+   - Arsitektur self-hosted untuk ojol di jalan tanpa harus kumpul di satu tempat.
