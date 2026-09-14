@@ -58,7 +58,6 @@ abstract class AppDatabase : RoomDatabase() {
                     "drg_community.db"
                 )
                     .addMigrations(*AppDatabaseMigrations.ALL_MIGRATIONS)
-                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

@@ -28,7 +28,7 @@ class BackgroundSyncEngine(
                 PendingSyncEntity(id = id, entityType = entityType, payloadJson = payload, timestamp = System.currentTimeMillis())
             )
             _syncStatus.value = SyncStatus.OFFLINE_SAVED
-            triggerBackgroundSync()
+            triggerBackgroundSync().join()
         }
     }
 

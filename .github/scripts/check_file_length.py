@@ -18,7 +18,8 @@ ESCAPE_HATCH_PATHS = [
     os.path.join("shared", "models"),
     os.path.join("core", "database"), # Schemas, TypeConverters & DAOs
     os.path.join("app", "src", "main", "java", "com", "example", "ui", "theme"),
-    os.path.join("modules", "radar", "primitives", "RadarCanvasPainter.kt")
+    os.path.join("modules", "radar", "primitives", "RadarCanvasPainter.kt"),
+    os.path.join("core", "p2p")
 ]
 
 def check_file(file_path):

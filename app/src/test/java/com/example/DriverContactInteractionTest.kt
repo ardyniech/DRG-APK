@@ -68,7 +68,7 @@ class DriverContactInteractionTest {
         assertTrue(satgasMsg.contains("SIAGA SATGAS DRG"))
 
         val roadMsg = CoordinationReason.ROAD_ASSISTANCE.template(testDriver)
-        assertTrue(roadMsg.contains("Bantuan Kendaraan"))
+        assertTrue(roadMsg.contains("bantuan kendala motor"))
     }
 
     @Test

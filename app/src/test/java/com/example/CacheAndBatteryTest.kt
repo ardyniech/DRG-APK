@@ -64,13 +64,14 @@ class CacheAndBatteryTest {
 
     @Test
     fun testBackgroundSyncEngineOptimisticEnqueueAndReconciliation() = runTest {
-        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val testDispatcher = kotlinx.coroutines.test.UnconfinedTestDispatcher(testScheduler)
         val syncEngine = BackgroundSyncEngine(db, this, testDispatcher)
 
         assertEquals(SyncStatus.IDLE, syncEngine.syncStatus.value)
         assertEquals(0, db.syncQueueDao().getPendingCount())
 
-        syncEngine.enqueueOptimisticAction("HAZARD", "HZD-999", "Begal Area")
+        val job = syncEngine.enqueueOptimisticAction("HAZARD", "HZD-999", "Begal Area")
+        job.join()
         testScheduler.advanceUntilIdle()
 
         val count = db.syncQueueDao().getPendingCount()

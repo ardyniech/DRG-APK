@@ -190,7 +190,7 @@ Saat menerima tugas pengkodean, AI WAJIB mengeksekusi secara berurutan:
     2. *Cross-Module Failure* (event bus/dispatcher gagal).
     3. *UI Dead-End* (infinite loading / tombol mati saat offline).
 
-### Current Test Suite (27 suites, 1879 lines)
+### Current Test Suite (35 suites)
 ```
 AdversarialAuditScenariosTest, AudioRouteManagerTest, AuthAndProfileSecurityTest,
 CacheAndBatteryTest, CrashDetectionTest, EmergencySmsFallbackTest, EmergencyTrcDispatchTest,
@@ -392,7 +392,7 @@ class MyFeatureTest {
 - **Migrations must be explicit** — never `fallbackToDestructiveMigration()` di production.
 - Every entity **MUST** punya `@Index` untuk query columns.
 - Every DAO **MUST** return `Flow` untuk reactive updates.
-- **Tambahkan `MIGRATION_6_7` sampai `MIGRATION_11_12`** — ini critical, data user akan hilang tanpa explicit migration.
+- **MIGRATION_6_7 sampai MIGRATION_12_13 aktif** — ini critical, data user akan hilang tanpa explicit migration.
 
 ### Repository Module
 - Repositories **MUST** return `Flow` untuk reactive data.

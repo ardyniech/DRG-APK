@@ -5,6 +5,7 @@ import com.example.modules.radar.logic.RealTrafficManager
 import com.example.modules.radar.models.FreeMapMode
 import com.example.shared.models.HazardArea
 import com.example.shared.models.HazardType
+import com.example.shared.models.MemberRole
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -43,8 +44,8 @@ class FreeMapAndTrafficTest {
         assertTrue(trafficUrl.contains("112.6303"))
 
         val mockHazards = listOf(
-            HazardArea(id = "H1", lat = -7.97, lng = 112.62, hazardType = HazardType.TRAFFIC_JAM, description = "Macet Jl. Basuki Rahmat", reportedByName = "Driver 1"),
-            HazardArea(id = "H2", lat = -7.98, lng = 112.63, hazardType = HazardType.POTHOLE, description = "Lubang Besar", reportedByName = "Driver 2")
+            HazardArea(id = "H1", title = "Macet", hazardType = HazardType.TRAFFIC_JAM, locationName = "Jl. Basuki Rahmat", description = "Macet Jl. Basuki Rahmat", lat = -7.97, lng = 112.62, reportedBy = "Driver 1", reporterRole = MemberRole.ANGGOTA),
+            HazardArea(id = "H2", title = "Lubang", hazardType = HazardType.HEAVY_HOLE, locationName = "Jl. Soehat", description = "Lubang Besar", lat = -7.98, lng = 112.63, reportedBy = "Driver 2", reporterRole = MemberRole.ANGGOTA)
         )
 
         val activeJams = RealTrafficManager.getActiveTrafficJams(mockHazards)

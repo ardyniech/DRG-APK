@@ -6,8 +6,13 @@ import com.example.core.cache.TileMetadataCacheEngine
 import com.example.core.database.AppDatabase
 import com.example.shared.models.AppStateSetting
 import com.example.shared.models.MapTileMetadata
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -16,6 +21,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
 class MapTileCacheAndStateTest {
@@ -25,6 +31,7 @@ class MapTileCacheAndStateTest {
 
     @Before
     fun setup() {
+        Dispatchers.setMain(UnconfinedTestDispatcher())
         val context = ApplicationProvider.getApplicationContext<android.content.Context>()
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
             .allowMainThreadQueries()
@@ -35,6 +42,7 @@ class MapTileCacheAndStateTest {
     @After
     fun tearDown() {
         db.close()
+        Dispatchers.resetMain()
     }
 
     @Test
