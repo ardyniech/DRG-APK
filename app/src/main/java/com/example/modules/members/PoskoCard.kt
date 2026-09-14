@@ -7,7 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,85 +21,53 @@ import com.example.ui.theme.*
 @Composable
 fun PoskoCard(posko: PoskoLocation, distanceKm: Double? = null) {
     val context = LocalContext.current
+    var showContactModal by remember { mutableStateOf(false) }
 
     Surface(
-        shape = RoundedCornerShape(12.dp),
-        color = DrgSurface,
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, DrgGreenPrimary.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+        shape = RoundedCornerShape(12.dp), color = DrgSurface,
+        modifier = Modifier.fillMaxWidth().border(1.dp, DrgGreenPrimary.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
                 IconButton(
                     onClick = { WhatsAppLauncher.openGoogleMapsAddress(context, "${posko.name}, ${posko.address}") },
                     modifier = Modifier.size(36.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Place,
-                        contentDescription = "Buka Peta Posko",
-                        tint = DrgGreenPrimary,
-                        modifier = Modifier.size(22.dp)
-                    )
+                    Icon(Icons.Default.Place, contentDescription = "Peta", tint = DrgGreenPrimary, modifier = Modifier.size(22.dp))
                 }
                 Spacer(modifier = Modifier.width(4.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = posko.name,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp,
-                        color = DrgTextPrimary
-                    )
-                    Text(
-                        text = "📍 ${posko.address} (${posko.area})",
-                        fontSize = 11.sp,
-                        color = DrgTextSecondary
-                    )
-                    Text(
-                        text = "Fasilitas: ${posko.facilities} • Pj: ${posko.coordinatorName}",
-                        fontSize = 10.sp,
-                        color = DrgTextMuted
-                    )
+                    Text(text = posko.name, fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
+                    Text(text = "📍 ${posko.address} (${posko.area})", fontSize = 11.sp, color = DrgTextSecondary)
+                    Text(text = "Fasilitas: ${posko.facilities} • Pj: ${posko.coordinatorName}", fontSize = 10.sp, color = DrgTextMuted)
                 }
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (posko.phone.isNotBlank()) {
-                    IconButton(
-                        onClick = { WhatsAppLauncher.openChat(context, posko.phone, "Halo Pengurus Posko ${posko.name}, saya ingin koordinasi.") },
-                        modifier = Modifier.size(36.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Phone,
-                            contentDescription = "Hubungi WA Posko",
-                            tint = DrgGreenPrimary,
-                            modifier = Modifier.size(20.dp)
-                        )
+                    IconButton(onClick = { showContactModal = true }, modifier = Modifier.size(36.dp)) {
+                        Icon(Icons.Default.Phone, contentDescription = "Hubungi", tint = DrgGreenPrimary, modifier = Modifier.size(20.dp))
                     }
                 }
                 if (distanceKm != null) {
                     Spacer(modifier = Modifier.width(4.dp))
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = DrgGreenContainer
-                    ) {
+                    Surface(shape = RoundedCornerShape(8.dp), color = DrgGreenContainer) {
                         Text(
                             text = String.format("%.1f KM", distanceKm),
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = DrgGreenPrimary,
+                            fontSize = 10.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                         )
                     }
                 }
             }
         }
+    }
+
+    if (showContactModal) {
+        PoskoContactOptionsModal(posko = posko, onDismiss = { showContactModal = false })
     }
 }
