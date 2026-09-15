@@ -2,6 +2,5 @@
   "name": "DRG Driver",
   "description": "Aplikasi komunitas driver ojol Driver Riang Gembira (DRG) untuk manajemen anggota, live radar pantauan, tombol darurat SOS, forum & bengkel rekanan, kas transparan, dan loyalitas.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": ["MAJOR_CAPABILITY_LOCAL_FIRST", "MAJOR_CAPABILITY_P2P_COMMUNICATION", "MAJOR_CAPABILITY_OFFLINE_SYNC"]
 }
-

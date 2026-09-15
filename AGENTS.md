@@ -4,7 +4,7 @@
 > **Core Philosophy:** **"Simplicity is King"** & **"Build One and Forget"** — Isolasi total, performa kelas atas, zero future regressions, batas modul sangat ketat.
 > **Project:** DRG Driver (Driver Riang Gembira) — Enterprise Android Application
 > **Architecture:** Clean Architecture + MVI/UDF + Jetpack Compose Material 3
-> **Database:** Room v12 (23 entities, schema files in `app/schemas/`)
+> **Database:** Room v13 (23 entities, schema files in `app/schemas/`)
 > **Language:** Kotlin 2.2.10, Jetpack Compose, Coroutines, Flow
 
 ---
@@ -388,7 +388,7 @@ class MyFeatureTest {
 - Semua SOS tests **MUST** cover offline fallback (`EmergencySmsFallbackHelper`).
 
 ### Database Module
-- **AppDatabase v12** — 23 entities. Schema version tracked.
+- **AppDatabase v13** — 23 entities. Schema version tracked.
 - **Migrations must be explicit** — never `fallbackToDestructiveMigration()` di production.
 - Every entity **MUST** punya `@Index` untuk query columns.
 - Every DAO **MUST** return `Flow` untuk reactive updates.
@@ -470,7 +470,7 @@ python3 .github/scripts/check_file_length.py  # Architecture audit
 Prioritaskan **go deep** pada fitur yang sudah ada:
 
 ### 🔴 Critical (Data Loss Risk)
-- [ ] Tambahkan explicit migrations `MIGRATION_6_7` s/d `MIGRATION_11_12` di `AppDatabase.kt`
+- [ ] Explicit migrations `MIGRATION_6_7` s/d `MIGRATION_12_13` sudah ada di `AppDatabaseMigrations.kt`. Verifikasi `13.json` sudah di-generate dan di-commit.
 - [ ] Generate dan commit `app/schemas/.../12.json` schema file
 - [ ] Verifikasi `google-services.json` — Firebase features belum aktif
 
@@ -479,7 +479,7 @@ Prioritaskan **go deep** pada fitur yang sudah ada:
 - [ ] Setup release signing di CI pipeline
 - [ ] Tambah `lintOptions { abortOnError true }` di `build.gradle.kts`
 - [ ] Verify AI Assistant (`AiAssistant*`) — API integration mungkin placeholder
-- [ ] Update `SETUP.md` — test count masih 18, sekarang 27
+- [ ] Update `SETUP.md` — test count 38 (unit) + 1 (instrumented)
 
 ### 🟡 Medium (UX & Polish)
 - [ ] Tambah theme toggle UI di settings (meskipun dark theme HARM, user perlu opsi)
