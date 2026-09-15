@@ -16,11 +16,14 @@ Dokumen ini memetakan visi, target rilis, dan prioritas pengembangan ekosistem *
 
 ---
 
-## ⚡ Fase 2 — Sinkronisasi Real-Time & Mesh Radio (Q4 2026)
-- [ ] Integrasi WebSocket / Serverless Edge Sync untuk pembaruan posisi radar secepat sub-detik.
-- [ ] Mode Darurat Mesh Offline (Bluetooth Low Energy / Wi-Fi Direct SOS Broadcast saat hilang sinyal internet).
-- [ ] Push Notifications FCM tersertifikasi untuk peringatan darurat prioritas tinggi (High Priority Alert).
-- [ ] Integrasi API Cuaca BMKG Lokal Real-Time untuk peringatan dini banjir dan hujan badai.
+## ⚡ Fase 2 — Komunikasi P2P Serverless (Q4 2026)
+- [x] Modul `core/p2p/` — WebRTC DataChannel, STUN/TURN (Google free), FCM signaling
+- [x] Self-host server per device (port 8080) — setiap Android device = server
+- [x] PendingSyncQueue fallback — P2P gagal → simpan lokal, retry saat koneksi balik
+- [x] 10 file P2P + 3 test files + `docs/P2P_SERVERLESS_ARCHITECTURE.md`
+- [ ] P2P discovery via FCM topic — device menemukan peer terdekat
+- [ ] Adaptive icon/logo — proses image attachment ke `app/src/main/res/drawable/`
+- [ ] Database v13 explicit migrations complete — `MIGRATION_12_13` + `13.json` schema
 
 ---
 

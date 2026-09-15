@@ -1,6 +1,6 @@
 # Dokumentasi Migrasi Database Room — DRG Driver 🗄️
 
-Dokumen ini menjelaskan evolusi skema Room Database internal aplikasi **DRG Driver** (`drg_community.db`), strategi migrasi, dan riwayat versi dari `v1` hingga `v10`.
+Dokumen ini menjelaskan evolusi skema Room Database internal aplikasi **DRG Driver** (`drg_community.db`), strategi migrasi, dan riwayat versi dari `v1` hingga `v13`.
 
 ---
 
@@ -9,12 +9,13 @@ Dokumen ini menjelaskan evolusi skema Room Database internal aplikasi **DRG Driv
 Aplikasi menggunakan **Room Database** dengan `exportSchema = true` (disimpan di `app/schemas/com.example.core.database.AppDatabase/`).
 
 ### Kebijakan Migrasi:
-1. **Fase Pengembangan & Prototipe**:
-   - Dikonfigurasi dengan `.fallbackToDestructiveMigration()`.
-   - Menjamin perangkat penguji tidak mengalami SQLite Crash / `IllegalStateException` saat ada penambahan kolom atau entitas baru selama iterasi cepat.
+1. **Fase Pengembangan & Prototipe** *(historis — sudah dihapus)*:
+   - Pernah dikonfigurasi dengan `.fallbackToDestructiveMigration()` (v1-v12).
+   - **Dihapus di v13** — sekarang hanya menggunakan `Migration(from, to)` eksplisit.
 2. **Fase Produksi Stabil**:
    - Menggunakan objek `Migration(from, to)` eksplisit yang didaftarkan pada builder `addMigrations(...)`.
    - Seluruh mutasi struktur tabel wajib menyertakan skrip DDL SQL (`ALTER TABLE`, `CREATE TABLE IF NOT EXISTS`, atau pembuatan index baru).
+   - `fallbackToDestructiveMigration()` **DILARANG** (AGENTS.md: data loss risk).
 
 ---
 

@@ -190,16 +190,21 @@ Saat menerima tugas pengkodean, AI WAJIB mengeksekusi secara berurutan:
     2. *Cross-Module Failure* (event bus/dispatcher gagal).
     3. *UI Dead-End* (infinite loading / tombol mati saat offline).
 
-### Current Test Suite (35 suites)
+### Current Test Suite (38 suites)
 ```
-AdversarialAuditScenariosTest, AudioRouteManagerTest, AuthAndProfileSecurityTest,
-CacheAndBatteryTest, CrashDetectionTest, EmergencySmsFallbackTest, EmergencyTrcDispatchTest,
-ExampleRobolectricTest, ExampleUnitTest, ForumPersistenceTest, FreeMapAndTrafficTest,
-GamificationAndLoyaltyTest, GreetingScreenshotTest, KasTransparanComponentTest,
-LiveDriverMapTest, MapTileCacheAndStateTest, MemberRolePermissionDatabaseTest,
-PoskoCheckInRepositoryTest, PoskoProximityAndWatermarkTest, ProgressiveOnboardingLogicTest,
-RoleManagementAndSecurityTest, RolePermissionRepositoryTest, SosEmergencyScreenTest,
-SosFabAndModalTest, SosHapticTactileTest, TreasuryAuditComputationTest, ViewModelRefactorAuditTest
+AdversarialAuditScenariosTest, AiAssistantKnowledgeTest, AppDatabaseMigrationTest,
+AudioRouteManagerTest, AuthAndProfileSecurityTest, CacheAndBatteryTest,
+CrashDetectionTest, DriverContactInteractionTest, EmergencySmsFallbackHelperTest,
+EmergencySmsFallbackTest, EmergencyTrcDispatchTest, ExampleRobolectricTest,
+ExampleUnitTest, ForumPersistenceTest, FreeMapAndTrafficTest,
+GamificationAndLoyaltyTest, GreetingScreenshotTest, HelmetIntercomMonitorTest,
+KasTransparanComponentTest, LandingFeatureAutoScrollTest, LiveDriverMapTest,
+MapTileCacheAndStateTest, MemberRolePermissionDatabaseTest, P2PConnectionTest,
+P2PFallbackTest, P2PSignalingTest, PoskoCheckInRepositoryTest,
+PoskoContactLauncherTest, PoskoManagementTest, PoskoProximityAndWatermarkTest,
+ProgressiveOnboardingLogicTest, RoleManagementAndSecurityTest,
+RolePermissionRepositoryTest, SosEmergencyScreenTest, SosFabAndModalTest,
+SosHapticTactileTest, TreasuryAuditComputationTest, ViewModelRefactorAuditTest
 ```
 
 ### Test Commands
@@ -455,7 +460,7 @@ python3 .github/scripts/check_file_length.py  # Architecture audit
 | `SECURITY.md` | Security policy & vulnerability reporting |
 | `CHANGELOG.md` | Release history |
 | `ROADMAP.md` | Project roadmap (Phases 1-3) |
-| `docs/DATABASE_MIGRATIONS.md` | Room database migration history v1-v12 |
+| `docs/DATABASE_MIGRATIONS.md` | Room database migration history v1-v13 |
 | `docs/modules/README.md` | Module documentation index |
 | `.github/scripts/check_file_length.py` | Architecture quality enforcer |
 | `.github/workflows/android_ci.yml` | CI/CD pipeline definition |

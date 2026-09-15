@@ -30,3 +30,28 @@ Semua perubahan penting pada proyek **DRG Driver** didokumentasikan dalam file i
   - GitHub Actions automated CI (`.github/workflows/android_ci.yml`).
   - Network Security Config (`network_security_config.xml`) dengan enkripsi HTTPS/TLS 1.3.
   - Lisensi Apache 2.0, Panduan Kontribusi (`CONTRIBUTING.md`), dan Kode Etik (`CODE_OF_CONDUCT.md`).
+
+---
+
+## [1.1.0] - 2026-09-13
+
+### 🔧 Diperbaiki (Fixed)
+- **Dark Theme** — `values-night/themes.xml` parent diperbaiki ke `Material.Light.NoActionBar` (hard rule: HARAM dark theme).
+- **`fallbackToDestructiveMigration()`** — dihapus dari `AppDatabase.kt` (data loss risk).
+- **12.json & 13.json schema** — ditambahkan ke `app/schemas/` (exportSchema compliance).
+- **Duplicate schema files** — `app/schemas/12.json` dan `13.json` dihapus (hanya ada di `com.example.core.database.AppDatabase/`).
+- **`process_logo.sh`** — dihapus (ImageMagick dependency, menghasilkan `.webp` bukan `.png`).
+- **CI lint `continue-on-error: true`** — dihapus (lint failure sekarang hard-fail).
+
+### 🔗 Ditambahkan (Added)
+- **P2P Serverless Module** (`core/p2p/`) — 10 file:
+  - `P2PConfig.kt`, `P2PConstants.kt`, `P2PManager.kt`, `P2PConnection.kt`
+  - `P2PDataChannel.kt`, `P2PSignalingManager.kt`, `P2PDiscovery.kt`
+  - `P2PSelfHostServer.kt`, `P2PNetworkMonitor.kt`, `P2PFallbackManager.kt`
+  - WebRTC DataChannel, STUN/TURN (Google free), FCM signaling, PendingSyncQueue fallback
+- **3 Test files baru** — `P2PConnectionTest`, `P2PFallbackTest`, `P2PSignalingTest`
+- **`docs/P2P_SERVERLESS_ARCHITECTURE.md`** — arsitektur P2P lengkap
+- **`metadata.json`** — updated capabilities: `LOCAL_FIRST`, `P2P_COMMUNICATION`, `OFFLINE_SYNC`
+- **`check_file_length.py`** — `core/p2p` escape hatch ditambahkan
+- **`AGENTS.md`** — updated ke v13 database, 38 test suites, migration status
+- **`SETUP.md`** — test count updated 32→38 suite, 2100→2375+ baris
