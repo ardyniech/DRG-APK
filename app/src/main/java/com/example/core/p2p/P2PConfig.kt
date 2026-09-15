@@ -1,7 +1,5 @@
 package com.example.core.p2p
 
-import android.util.Log
-
 object P2PConfig {
     val STUN_SERVER = org.webrtc.PeerConnection.IceServer.builder(
         "stun:stun.l.google.com:19302"

@@ -1,25 +1,32 @@
 package com.example.core.p2p
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
-class P2PNetworkMonitor(private val context: android.content.Context) : AutoCloseable {
+class P2PNetworkMonitor(private val context: Context) : AutoCloseable {
 
     private val connectivityManager =
-        context.getSystemService(android.content.Context.CONNECTIVITY_SERVICE) as android.net.ConnectivityManager
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    private val _networkState = kotlinx.coroutines.flow.MutableStateFlow(false)
+    private val _networkState = MutableStateFlow(false)
     val networkState: Flow<Boolean> = _networkState.asStateFlow()
 
     fun isOnline(): Boolean = _networkState.value
 
     fun startMonitoring() {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             while (true) {
                 val activeNetwork = connectivityManager.activeNetwork
-                val networkInfo = connectivityManager.getNetworkInfo(activeNetwork)
+                val networkInfo: NetworkInfo? = connectivityManager.getNetworkInfo(activeNetwork)
                 val isConnected = networkInfo?.isConnected == true
                 _networkState.value = isConnected
                 if (!isConnected) {

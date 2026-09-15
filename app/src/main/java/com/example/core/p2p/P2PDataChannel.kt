@@ -3,9 +3,6 @@ package com.example.core.p2p
 import android.util.Log
 import org.webrtc.DataChannel
 import org.webrtc.DataChannel.Buffer
-import org.webrtc.PeerConnection
-import org.webrtc.PeerConnectionFactory
-import org.webrtc.IceCandidate
 
 class P2PDataChannel(private val channel: DataChannel) {
 
