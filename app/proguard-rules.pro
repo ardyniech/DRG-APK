@@ -35,3 +35,14 @@
 # Keep ViewModels
 -keep class * extends androidx.lifecycle.ViewModel { *; }
 -keep class * extends androidx.lifecycle.AndroidViewModel { *; }
+
+# Keep WebRTC (required for P2P DataChannel)
+-keep class org.webrtc.** { *; }
+-keepattributes Signature, InnerClasses, EnclosingMethod
+-dontwarn org.webrtc.**
+-keepclassmembers class org.webrtc.** { *; }
+
+# Keep Firebase Messaging (for P2P signaling)
+-keep class com.google.firebase.messaging.** { *; }
+-keep class com.google.firebase.** { *; }
+-dontwarn com.google.firebase.**

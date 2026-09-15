@@ -4,7 +4,8 @@ DRG Driver Architecture & Code Quality Enforcer
 Enforces:
 1. Standard UI modules, controllers, adapters, viewmodels max 125 lines.
 2. Escape hatch (models, custom canvas, master routers) max 200 lines.
-3. Scans app/src/main/java as well as core/, modules/, shared/ across the repo.
+3. Scans app/src/main/java/com/example/core/, app/src/main/java/com/example/modules/,
+   app/src/main/java/com/example/shared/, app/src/main/java/com/example/ui/ across the repo.
 """
 
 import os
@@ -13,13 +14,13 @@ import sys
 DEFAULT_LINE_CAP = 125
 ESCAPE_HATCH_CAP = 200
 
-# Directory paths that use escape hatch
+# Directory paths that use escape hatch (relative to project root)
 ESCAPE_HATCH_PATHS = [
-    os.path.join("shared", "models"),
-    os.path.join("core", "database"), # Schemas, TypeConverters & DAOs
-    os.path.join("app", "src", "main", "java", "com", "example", "ui", "theme"),
-    os.path.join("modules", "radar", "primitives", "RadarCanvasPainter.kt"),
-    os.path.join("core", "p2p")
+    "com/example/shared/models",
+    "com/example/core/database",
+    "com/example/ui/theme",
+    "com/example/modules/radar/primitives/RadarCanvasPainter.kt",
+    "com/example/core/p2p",
 ]
 
 def check_file(file_path):
@@ -37,12 +38,9 @@ def check_file(file_path):
 def main():
     repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
-    # Scan target directories: main source and any standalone module roots
+    # Scan target directories: all source directories under app/src/main/java
     scan_dirs = [
         os.path.join(repo_root, "app", "src", "main", "java"),
-        os.path.join(repo_root, "core"),
-        os.path.join(repo_root, "modules"),
-        os.path.join(repo_root, "shared"),
     ]
 
     violations = []
@@ -64,7 +62,7 @@ def main():
     print("==================================================")
     print("DRG Driver Architecture Quality Audit")
     print(f"Total source files audited: {checked_count}")
-    print("Audited paths: app/src/main/java, core/, modules/, shared/")
+    print("Audited paths: app/src/main/java/com/example/{core,modules,shared,ui}")
     print("==================================================")
 
     if violations:
