@@ -5,32 +5,28 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.mockito.Mockito.*
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
 class P2PConnectionTest {
 
-    @Before
-    fun setup() {
-        // Initialize WebRTC factory for testing
-    }
-
     @Test
     fun `STUN server configuration should be valid`() {
-        val stunServer = "stun:stun.l.google.com:19302"
-        assert(stunServer.isNotEmpty())
-        assert(stunServer.startsWith("stun:"))
+        val stunServer = P2PConfig.STUN_SERVER
+        assert(stunServer != null)
     }
 
     @Test
     fun `self-host port should match configuration`() {
-        val port = 8080
-        assert(port == 8080)
+        assert(P2PConfig.SELF_HOST_PORT == 8080)
     }
 
     @Test
-    fun `STUN connection should not be null`() {
-        val config = "stun:stun.l.google.com:19302"
-        assert(config != null)
+    fun `P2PConnectionManager should create peer connection`() {
+        val manager = com.example.core.p2p.P2PConnectionManager()
+        val factory = mock(org.webrtc.PeerConnectionFactory::class.java)
+        val connection = manager.createPeerConnection(factory)
+        assert(connection != null)
     }
 }

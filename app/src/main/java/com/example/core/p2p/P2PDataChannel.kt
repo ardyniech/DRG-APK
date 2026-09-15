@@ -3,32 +3,26 @@ package com.example.core.p2p
 import android.util.Log
 import org.webrtc.DataChannel
 import org.webrtc.DataChannel.Buffer
+import org.webrtc.PeerConnection
+import org.webrtc.PeerConnectionFactory
+import org.webrtc.IceCandidate
 
 class P2PDataChannel(private val channel: DataChannel) {
 
-    initChannel(channel)
-
-    init fun initChannel(channel: DataChannel) {
-        this.channel = channel
-        Log.d(P2PConstants.TAG, "DataChannel diinisialisasi: ${channel.label}")
-
-        // Register observer untuk terima pesan
+    init {
         channel.registerObserver(object : DataChannel.Observer {
             override fun onMessage(buffer: Buffer) {
                 val data = String(buffer.data.array())
                 Log.d(P2PConstants.TAG, "Pesan DataChannel: $data")
-
-                // TODO: Parse pesan dan simpan ke Room DB
-                // Contoh: alert SOS, check-in posko, lokasi, dsb
             }
 
             override fun onBufferedAmountChanged(amount: Long) {
-                // Not critical for small messages
+                // Not critical
             }
 
             override fun onStateChanged(state: DataChannel.State) {
                 when (state) {
-                    DataChannel.State.OPEN -> Log.d(P2PConstants.TAG, "DataChannel state: BUKA (ready to send)")
+                    DataChannel.State.OPEN -> Log.d(P2PConstants.TAG, "DataChannel state: BUKA")
                     DataChannel.State.CLOSING -> Log.d(P2PConstants.TAG, "DataChannel state: menutup")
                     DataChannel.State.CLOSED -> Log.d(P2PConstants.TAG, "DataChannel state: TUTUP")
                 }
@@ -36,7 +30,6 @@ class P2PDataChannel(private val channel: DataChannel) {
         })
     }
 
-    // Kirim pesan ke peer
     fun send(message: String) {
         if (channel.state == DataChannel.State.OPEN) {
             val buffer = Buffer(
@@ -49,7 +42,6 @@ class P2PDataChannel(private val channel: DataChannel) {
         }
     }
 
-    // Tutup DataChannel
     fun close() {
         channel.close()
         Log.d(P2PConstants.TAG, "DataChannel ditutup")

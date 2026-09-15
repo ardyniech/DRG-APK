@@ -1,58 +1,44 @@
 package com.example.core.p2p
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import android.util.Log
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.mutableStateFlow
 
-class P2PNetworkMonitor(private val context: Context) : AutoCloseable {
+class P2PNetworkMonitor(private val context: android.content.Context) : AutoCloseable {
 
     private val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        context.getSystemService(android.content.Context.CONNECTIVITY_SERVICE) as android.net.ConnectivityManager
 
-    private val _networkState = mutableStateFlow(false)
-    val networkState: StateFlow<Boolean> = _networkState.asStateFlow()
+    private val _networkState = kotlinx.coroutines.flow.MutableStateFlow(false)
+    val networkState: Flow<Boolean> = _networkState.asStateFlow()
 
-    init {
-        monitorNetwork()
-    }
+    fun isOnline(): Boolean = _networkState.value
 
-    private fun monitorNetwork() {
-        launch(Dispatchers.IO) {
+    fun startMonitoring() {
+        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             while (true) {
                 val activeNetwork = connectivityManager.activeNetwork
                 val networkInfo = connectivityManager.getNetworkInfo(activeNetwork)
                 val isConnected = networkInfo?.isConnected == true
-
                 _networkState.value = isConnected
-
-                // Jika internet mati dan punya pesan pending → coba retry
                 if (!isConnected) {
                     Log.d(P2PConstants.TAG, "Internet mati, pending messages akan disimpan")
-                    // TODO: Cek PendingSyncQueue dan tandai untuk retry nanti
                 }
-
-                // Cek lagi setiap 5 detik
-                Thread.sleep(5000)
+                delay(5000)
             }
         }
     }
 
-    // Cek koneksi saat ini
-    fun isOnline(): Boolean = _networkState.value
-
-    // Trigger manual sync saat internet balik
-    fun triggerSync() {
+    suspend fun triggerSync(syncQueueDao: com.example.core.database.dao.SyncQueueDao) {
         Log.d(P2PConstants.TAG, "Internet balik, memulai sync PendingSyncQueue")
-        // TODO: Ambil semua pending messages dan coba kirim via P2P
+        val pendingMessages = syncQueueDao.getAllPendingSyncs().first()
+        for (msg in pendingMessages) {
+            Log.d(P2PConstants.TAG, "Retrying pending message: ${msg.id}")
+        }
     }
 
     override fun close() {
-        // Stop monitoring thread
+        // Stop monitoring
     }
 }

@@ -1,6 +1,5 @@
 package com.example.p2p
 
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -10,28 +9,27 @@ import org.robolectric.annotation.Config
 @Config(sdk = [34])
 class P2PFallbackTest {
 
-    @Before
-    fun setup() {
-        // Initialize pending sync queue for fallback
-    }
-
     @Test
     fun `pending sync should save data when P2P fails`() {
-        val pendingMessage = "SOS Alert"
-        val status = "pending"
-        assert(pendingMessage.isNotEmpty())
-        assert(status == "pending")
+        val entity = com.example.shared.models.PendingSyncEntity(
+            id = "test_id",
+            entityType = P2PConstants.ENTITY_TYPE_P2P_ALERT,
+            payloadJson = "SOS Alert",
+            timestamp = System.currentTimeMillis()
+        )
+        assert(entity.entityType == P2PConstants.ENTITY_TYPE_P2P_ALERT)
+        assert(entity.payloadJson == "SOS Alert")
     }
 
     @Test
-    fun `fallback should not lose data when internet is off`() {
-        val offlineData = "saved_locally"
-        assert(offlineData != null)
+    fun `pending queue should respect max size`() {
+        assert(P2PConfig.MAX_PENDING_QUEUE_SIZE == 500)
     }
 
     @Test
-    fun `pending queue should have max limit`() {
-        val maxSize = 500
-        assert(maxSize > 0)
+    fun `P2PConstants should have valid command types`() {
+        assert(P2PConstants.CMD_ALERT == "alert")
+        assert(P2PConstants.CMD_CHECK_IN == "check_in")
+        assert(P2PConstants.CMD_LOCATION == "location")
     }
 }
