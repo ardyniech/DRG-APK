@@ -5,13 +5,11 @@ import android.util.Log
 class P2PSelfHostServer(
     private val port: Int = P2PConfig.SELF_HOST_PORT
 ) : Runnable {
-
     private var isRunning = false
 
     override fun run() {
         isRunning = true
-        Log.d(P2PConstants.TAG, "Self-host server aktif di port $port")
-
+        Log.d(P2PConstants.TAG, "Self-host server aktif di port \$port")
         while (isRunning) {
             try {
                 Thread.sleep(1000)

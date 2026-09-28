@@ -40,6 +40,30 @@ class MemberRepository(private val db: AppDatabase) {
         }
     }
 
+    suspend fun getMemberById(id: String): DriverMember? = withContext(Dispatchers.IO) {
+        db.memberDao().getMemberById(id)
+    }
+
+    suspend fun getMemberByDriverId(driverId: String): DriverMember? = withContext(Dispatchers.IO) {
+        db.memberDao().getMemberByDriverId(driverId)
+    }
+
+    suspend fun getMemberByPhone(phone: String): DriverMember? = withContext(Dispatchers.IO) {
+        db.memberDao().getMemberByPhone(phone)
+    }
+
+    suspend fun getMemberByPlate(plate: String): DriverMember? = withContext(Dispatchers.IO) {
+        db.memberDao().getMemberByPlate(plate)
+    }
+
+    suspend fun deleteMember(member: DriverMember) = withContext(Dispatchers.IO) {
+        db.memberDao().deleteMember(member)
+    }
+
+    suspend fun deleteMemberById(id: String) = withContext(Dispatchers.IO) {
+        db.memberDao().deleteMemberById(id)
+    }
+
     suspend fun addReview(review: DriverReview) = withContext(Dispatchers.IO) {
         db.reviewDao().insertReview(review)
     }

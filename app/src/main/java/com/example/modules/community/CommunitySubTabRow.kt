@@ -55,20 +55,20 @@ fun CommunitySubTabRow(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .clip(RoundedCornerShape(20.dp))
-                                .background(if (isSelected) DrgAmberContainer else Color.Transparent)
+                                .background(if (isSelected) DrgGreenContainer else Color.Transparent)
                                 .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
                             Icon(
                                 imageVector = icon,
                                 contentDescription = title,
                                 modifier = Modifier.size(15.dp),
-                                tint = if (isSelected) DrgAmberDark else DrgTextMuted
+                                tint = if (isSelected) DrgGrabGreenDark else DrgTextMuted
                             )
                             Text(
                                 text = title,
                                 fontSize = 12.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                color = if (isSelected) DrgAmberDark else DrgTextSecondary
+                                color = if (isSelected) DrgGrabGreenDark else DrgTextSecondary
                             )
                         }
                     }

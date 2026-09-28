@@ -46,8 +46,15 @@ class TileMetadataCacheEngine(
         sizeBytes
     }
 
-    suspend fun evictOldestTilesIfNeeded(maxTileCount: Int = 1000) = withContext(Dispatchers.IO) {
-        mapTileDao.evictOldestTiles(100)
+    suspend fun evictOldestTilesIfNeeded(maxTileCount: Int = 1000): Int = withContext(Dispatchers.IO) {
+        val currentCount = mapTileDao.getTileCountSync()
+        if (currentCount > maxTileCount) {
+            val excess = (currentCount - maxTileCount).coerceAtLeast(1)
+            mapTileDao.evictOldestTiles(excess)
+            excess
+        } else {
+            0
+        }
     }
 
     suspend fun pruneExpiredTiles(expiryDays: Int = 30) = withContext(Dispatchers.IO) {

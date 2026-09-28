@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 13,
-    "identityHash": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
+    "identityHash": "e5e4d526f11cc6e7ec9c77a9b4abf4c0",
     "entities": [
       {
         "tableName": "members",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `driverId` TEXT NOT NULL, `phone` TEXT NOT NULL, `role` TEXT NOT NULL, `motorcyclePlate` TEXT NOT NULL, `motorcycleModel` TEXT NOT NULL, `rating` REAL NOT NULL, `reviewCount` INTEGER NOT NULL, `loyaltyPoints` INTEGER NOT NULL, `loyaltyTier` TEXT NOT NULL, `verificationStatus` TEXT NOT NULL, `screeningNotes` TEXT NOT NULL, `isOnline` INTEGER NOT NULL, `currentStatus` TEXT NOT NULL, `currentLat` REAL NOT NULL, `currentLng` REAL NOT NULL, `baseArea` TEXT NOT NULL, `joinedDate` TEXT NOT NULL, `kasPaidStatus` INTEGER NOT NULL, `kopdarAttendanceCount` INTEGER NOT NULL, `isLocationSharingConsent` INTEGER NOT NULL, `profilePhotoUrl` TEXT NOT NULL, `canManageKas` INTEGER NOT NULL, `canVerifyDrivers` INTEGER NOT NULL, `canBroadcastSos` INTEGER NOT NULL, `canManagePosko` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `driverId` TEXT NOT NULL, `phone` TEXT NOT NULL, `role` TEXT NOT NULL, `motorcyclePlate` TEXT NOT NULL, `motorcycleModel` TEXT NOT NULL, `rating` REAL NOT NULL, `reviewCount` INTEGER NOT NULL, `loyaltyPoints` INTEGER NOT NULL, `loyaltyTier` TEXT NOT NULL, `verificationStatus` TEXT NOT NULL, `screeningNotes` TEXT NOT NULL, `isOnline` INTEGER NOT NULL, `currentStatus` TEXT NOT NULL, `currentLat` REAL NOT NULL, `currentLng` REAL NOT NULL, `baseArea` TEXT NOT NULL, `joinedDate` TEXT NOT NULL, `kasPaidStatus` INTEGER NOT NULL, `kopdarAttendanceCount` INTEGER NOT NULL, `isLocationSharingConsent` INTEGER NOT NULL, `profilePhotoUrl` TEXT NOT NULL, `canManageKas` INTEGER NOT NULL, `canVerifyDrivers` INTEGER NOT NULL, `canBroadcastSos` INTEGER NOT NULL, `canManagePosko` INTEGER NOT NULL, `address` TEXT NOT NULL, `bloodType` TEXT NOT NULL, `emergencyContact` TEXT NOT NULL, `emergencyPhone` TEXT NOT NULL, `simNumber` TEXT NOT NULL, `nik` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -168,6 +168,42 @@
             "fieldPath": "canManagePosko",
             "columnName": "canManagePosko",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bloodType",
+            "columnName": "bloodType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "emergencyContact",
+            "columnName": "emergencyContact",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "emergencyPhone",
+            "columnName": "emergencyPhone",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "simNumber",
+            "columnName": "simNumber",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nik",
+            "columnName": "nik",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],

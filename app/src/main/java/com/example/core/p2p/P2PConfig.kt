@@ -1,11 +1,13 @@
 package com.example.core.p2p
 
+import org.webrtc.PeerConnection
+
 object P2PConfig {
-    val STUN_SERVER = org.webrtc.PeerConnection.IceServer.builder(
+    val STUN_SERVER = PeerConnection.IceServer.builder(
         "stun:stun.l.google.com:19302"
     ).createIceServer()
 
-    val TURN_SERVER = org.webrtc.PeerConnection.IceServer.builder(
+    val TURN_SERVER = PeerConnection.IceServer.builder(
         "turn:stun.l.google.com:19302?transport=udp"
     ).createIceServer()
 

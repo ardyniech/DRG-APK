@@ -1,6 +1,8 @@
 package com.example.core.p2p
 
 import android.util.Log
+import com.google.firebase.messaging.RemoteMessage
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -8,9 +10,8 @@ import kotlinx.coroutines.withContext
 class P2PDiscovery(
     private val signalingManager: P2PSignalingManager
 ) {
-
     fun startDiscovery() {
-        kotlinx.coroutines.CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             signalingManager.joinDiscoveryTopic()
             Log.d(P2PConstants.TAG, "Discovery dimulai")
         }
@@ -20,7 +21,7 @@ class P2PDiscovery(
         signalingManager.broadcastPeerInfo(myIP, myPort)
     }
 
-    fun handleIncomingSignal(message: com.google.firebase.messaging.RemoteMessage) {
+    fun handleIncomingSignal(message: RemoteMessage) {
         signalingManager.onMessageReceived(message)
     }
 }

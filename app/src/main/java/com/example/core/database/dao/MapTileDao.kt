@@ -27,6 +27,9 @@ interface MapTileDao {
     @Query("SELECT COUNT(*) FROM map_tile_metadata")
     fun getTotalTileCount(): Flow<Int>
 
+    @Query("SELECT COUNT(*) FROM map_tile_metadata")
+    suspend fun getTileCountSync(): Int
+
     @Query("DELETE FROM map_tile_metadata WHERE tileKey IN (SELECT tileKey FROM map_tile_metadata ORDER BY lastAccessedAt ASC LIMIT :count)")
     suspend fun evictOldestTiles(count: Int)
 

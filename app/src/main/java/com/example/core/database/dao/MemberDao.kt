@@ -19,6 +19,15 @@ interface MemberDao {
     @Query("SELECT * FROM members WHERE id = :id")
     suspend fun getMemberById(id: String): DriverMember?
 
+    @Query("SELECT * FROM members WHERE driverId = :driverId LIMIT 1")
+    suspend fun getMemberByDriverId(driverId: String): DriverMember?
+
+    @Query("SELECT * FROM members WHERE phone = :phone LIMIT 1")
+    suspend fun getMemberByPhone(phone: String): DriverMember?
+
+    @Query("SELECT * FROM members WHERE motorcyclePlate = :plate LIMIT 1")
+    suspend fun getMemberByPlate(plate: String): DriverMember?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMembers(members: List<DriverMember>)
 
@@ -36,4 +45,13 @@ interface MemberDao {
 
     @Query("UPDATE members SET loyaltyPoints = loyaltyPoints + :points WHERE id = :id")
     suspend fun addLoyaltyPoints(id: String, points: Int)
+
+    @Delete
+    suspend fun deleteMember(member: DriverMember)
+
+    @Query("DELETE FROM members WHERE id = :id")
+    suspend fun deleteMemberById(id: String)
+
+    @Query("DELETE FROM members")
+    suspend fun deleteAllMembers()
 }

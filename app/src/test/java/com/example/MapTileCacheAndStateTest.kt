@@ -82,6 +82,10 @@ class MapTileCacheAndStateTest {
 
         val tile = db.mapTileDao().getTileMetadata("osm_14_13045_8496")
         assertEquals(2, tile?.accessCount)
+
+        val evicted = cacheEngine.evictOldestTilesIfNeeded(1)
+        assertEquals(1, evicted)
+        assertEquals(1, db.mapTileDao().getTileCountSync())
     }
 
     @Test

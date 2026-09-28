@@ -1,20 +1,24 @@
 package com.example.core.p2p
 
 import android.util.Log
+import com.example.core.database.dao.SyncQueueDao
+import com.example.shared.models.PendingSyncEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import java.util.UUID
 
 class P2PFallbackManager(
-    private val syncQueueDao: com.example.core.database.dao.SyncQueueDao,
+    private val syncQueueDao: SyncQueueDao,
     private val networkMonitor: P2PNetworkMonitor
 ) {
-
-    private val scope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO)
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     fun enqueuePendingAlert(message: String) {
-        val entity = com.example.shared.models.PendingSyncEntity(
-            id = java.util.UUID.randomUUID().toString(),
+        val entity = PendingSyncEntity(
+            id = UUID.randomUUID().toString(),
             entityType = P2PConstants.ENTITY_TYPE_P2P_ALERT,
             payloadJson = message,
             timestamp = System.currentTimeMillis()
@@ -29,7 +33,7 @@ class P2PFallbackManager(
         if (!networkMonitor.isOnline()) return
         val pendingMessages = syncQueueDao.getAllPendingSyncs().first()
         for (msg in pendingMessages) {
-            Log.d(P2PConstants.TAG, "Retrying pending message: ${msg.id}")
+            Log.d(P2PConstants.TAG, "Retrying pending message: \${msg.id}")
             syncQueueDao.removeSyncItem(msg.id)
         }
     }

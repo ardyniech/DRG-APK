@@ -5,30 +5,29 @@ import org.webrtc.DataChannel
 import org.webrtc.DataChannel.Buffer
 
 class P2PDataChannel(private val channel: DataChannel) {
-
     init {
         channel.registerObserver(object : DataChannel.Observer {
-            override fun onMessage(buffer: Buffer) {
-                val data = String(buffer.data.array())
-                Log.d(P2PConstants.TAG, "Pesan DataChannel: $data")
+            override fun onMessage(buffer: Buffer?) {
+                buffer?.let {
+                    val data = String(it.data.array())
+                    Log.d(P2PConstants.TAG, "Pesan DataChannel: \$data")
+                }
             }
-
-            override fun onBufferedAmountChanged(amount: Long) {
-                // Not critical
-            }
-
-            override fun onStateChanged(state: DataChannel.State) {
-                when (state) {
-                    DataChannel.State.OPEN -> Log.d(P2PConstants.TAG, "DataChannel state: BUKA")
-                    DataChannel.State.CLOSING -> Log.d(P2PConstants.TAG, "DataChannel state: menutup")
-                    DataChannel.State.CLOSED -> Log.d(P2PConstants.TAG, "DataChannel state: TUTUP")
+            override fun onBufferedAmountChange(amount: Long) {}
+            override fun onStateChange() {
+                when (channel.state()) {
+                    DataChannel.State.CONNECTING -> Log.d(P2PConstants.TAG, "DataChannel: CONNECTING")
+                    DataChannel.State.OPEN -> Log.d(P2PConstants.TAG, "DataChannel: OPEN")
+                    DataChannel.State.CLOSING -> Log.d(P2PConstants.TAG, "DataChannel: CLOSING")
+                    DataChannel.State.CLOSED -> Log.d(P2PConstants.TAG, "DataChannel: CLOSED")
+                    null -> {}
                 }
             }
         })
     }
 
     fun send(message: String) {
-        if (channel.state == DataChannel.State.OPEN) {
+        if (channel.state() == DataChannel.State.OPEN) {
             val buffer = Buffer(
                 java.nio.ByteBuffer.wrap(message.toByteArray()),
                 false
