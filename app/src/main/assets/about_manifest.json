@@ -13,21 +13,21 @@
     ]
   },
   "build": {
-    "version": "327ec80",
-    "commit": "327ec80",
-    "commitDate": "2026-10-13",
+    "version": "b619702",
+    "commit": "b619702",
+    "commitDate": "2026-10-14",
     "generatedBy": "generate_about_manifest.py"
   },
   "summary": {
     "overallProgress": 64,
     "totalFeatures": 33,
-    "done": 13,
-    "inProgress": 12,
+    "done": 12,
+    "inProgress": 13,
     "planned": 8,
     "modules": 15,
-    "totalSourceFiles": 326,
-    "totalLoc": 22344,
-    "testSuites": 41
+    "totalSourceFiles": 340,
+    "totalLoc": 23574,
+    "testSuites": 43
   },
   "phases": [
     {
@@ -38,7 +38,7 @@
       "summary": "Arsitektur Clean MVI + Compose M3, Room local-first, SOS/CrashGuard, Radar OSM, Kas Transparan, Forum, KTA Digital, dan RBAC.",
       "progress": 85,
       "featureCount": 21,
-      "doneCount": 11
+      "doneCount": 10
     },
     {
       "id": "phase-2",
@@ -70,7 +70,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 7,
-      "loc": 431,
+      "loc": 491,
       "todos": 0,
       "tests": [
         "AdversarialAuditScenariosTest",
@@ -84,8 +84,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 10,
-      "loc": 917,
+      "files": 12,
+      "loc": 1056,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
@@ -100,7 +100,7 @@
       "status": "IN_PROGRESS",
       "progress": 75,
       "files": 2,
-      "loc": 158,
+      "loc": 160,
       "todos": 0,
       "tests": []
     },
@@ -215,7 +215,7 @@
       "status": "IN_PROGRESS",
       "progress": 70,
       "files": 3,
-      "loc": 151,
+      "loc": 190,
       "todos": 0,
       "tests": [
         "CacheAndBatteryTest",
@@ -227,11 +227,11 @@
       "name": "Dashboard Driver",
       "description": "Ringkasan status shift, statistik komunitas, onboarding progresif, dan aksi cepat.",
       "phase": "phase-1",
-      "status": "DONE",
-      "progress": 100,
-      "files": 19,
-      "loc": 1658,
-      "todos": 0,
+      "status": "IN_PROGRESS",
+      "progress": 95,
+      "files": 25,
+      "loc": 2079,
+      "todos": 1,
       "tests": [
         "ProgressiveOnboardingLogicTest",
         "ViewModelRefactorAuditTest"
@@ -244,8 +244,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 17,
-      "loc": 1351,
+      "files": 18,
+      "loc": 1445,
       "todos": 0,
       "tests": [
         "CrashDetectionTest",
@@ -265,7 +265,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 16,
-      "loc": 1371,
+      "loc": 1381,
       "todos": 0,
       "tests": [
         "ForumPersistenceTest"
@@ -293,7 +293,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 22,
-      "loc": 1857,
+      "loc": 1880,
       "todos": 0,
       "tests": [
         "DriverContactInteractionTest",
@@ -315,7 +315,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 11,
-      "loc": 858,
+      "loc": 872,
       "todos": 0,
       "tests": [
         "CacheAndBatteryTest"
@@ -329,7 +329,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 19,
-      "loc": 1413,
+      "loc": 1383,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
@@ -343,8 +343,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 32,
-      "loc": 2557,
+      "files": 33,
+      "loc": 2697,
       "todos": 0,
       "tests": [
         "FreeMapAndTrafficTest",
@@ -361,7 +361,7 @@
       "status": "IN_PROGRESS",
       "progress": 70,
       "files": 8,
-      "loc": 741,
+      "loc": 758,
       "todos": 0,
       "tests": [
         "ViewModelRefactorAuditTest"
@@ -375,7 +375,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 9,
-      "loc": 727,
+      "loc": 732,
       "todos": 0,
       "tests": [
         "KasTransparanComponentTest",
@@ -390,7 +390,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 14,
-      "loc": 818,
+      "loc": 817,
       "todos": 0,
       "tests": [
         "AboutManifestTest"

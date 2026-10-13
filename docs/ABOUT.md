@@ -2,9 +2,9 @@
 
 > Aplikasi komunitas driver ojek online Driver Riang Gembira (DRG)
 
-**Progres pengembangan keseluruhan: 64%** (13 selesai · 12 dikerjakan · 8 direncanakan)
+**Progres pengembangan keseluruhan: 64%** (12 selesai · 13 dikerjakan · 8 direncanakan)
 
-Versi `327ec80` · commit `327ec80` · 2026-10-13 · 15 modul · 326 file sumber · 22344 baris · 41 test suite
+Versi `b619702` · commit `b619702` · 2026-10-14 · 15 modul · 340 file sumber · 23574 baris · 43 test suite
 
 > Dokumen ini di-generate otomatis oleh `generate_about_manifest.py`. Status & persentase dihitung dari kode nyata, bukan ditulis manual.
 
@@ -26,7 +26,7 @@ Arsitektur Clean MVI + Compose M3, Room local-first, SOS/CrashGuard, Radar OSM, 
 | RBAC & Role Audit Trail | Sedang Dibangun | 65% |
 | Deteksi Tabrakan | Sedang Dibangun | 65% |
 | Sinkronisasi Offline | Sedang Dibangun | 70% |
-| Dashboard Driver | Selesai | 100% |
+| Dashboard Driver | Sedang Dibangun | 95% |
 | Darurat SOS & CrashGuard | Selesai | 100% |
 | Forum & Bengkel Rekanan | Selesai | 100% |
 | Misi, Poin & Loyalitas | Selesai | 100% |
