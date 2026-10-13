@@ -1,0 +1,327 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "DRG Driver",
+    "tagline": "Aplikasi komunitas driver ojek online Driver Riang Gembira (DRG)",
+    "package": "com.aistudio.drgojol.pkrvw",
+    "audience": "Driver ojek online & pengurus komunitas DRG",
+    "philosophy": [
+      "Simplicity is King",
+      "Build One and Forget",
+      "Local-First & Serverless (P2P)",
+      "Hemat RAM & Baterai"
+    ]
+  },
+  "phases": [
+    {
+      "id": "phase-1",
+      "title": "Fase 1 — Fondasi Komunitas & Darurat",
+      "target": "v1.0.0",
+      "state": "shipped",
+      "summary": "Arsitektur Clean MVI + Compose M3, Room local-first, SOS/CrashGuard, Radar OSM, Kas Transparan, Forum, KTA Digital, dan RBAC."
+    },
+    {
+      "id": "phase-2",
+      "title": "Fase 2 — Komunikasi P2P Serverless",
+      "target": "v1.1.0",
+      "state": "active",
+      "summary": "WebRTC DataChannel, self-host per device, discovery via FCM, fallback PendingSyncQueue, dan pematangan menuju APK production."
+    },
+    {
+      "id": "phase-3",
+      "title": "Fase 3 — Layanan Finansial & Kemitraan",
+      "target": "v2.0.0",
+      "state": "planned",
+      "summary": "Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan klaim asuransi/santunan driver."
+    }
+  ],
+  "features": [
+    {
+      "id": "auth",
+      "name": "Autentikasi & Onboarding",
+      "description": "Landing, login PIN/KTA, registrasi anggota, dan area dropdown.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/modules/auth",
+      "testKeywords": ["AuthAndProfileSecurity", "LandingFeatureAutoScroll"]
+    },
+    {
+      "id": "dashboard",
+      "name": "Dashboard Driver",
+      "description": "Ringkasan status shift, statistik komunitas, onboarding progresif, dan aksi cepat.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/modules/dashboard",
+      "testKeywords": ["ViewModelRefactorAudit", "ProgressiveOnboardingLogic"]
+    },
+    {
+      "id": "radar",
+      "name": "Radar Live & Peta",
+      "description": "Peta OpenStreetMap, radar driver, tile LRU cache, mode Google Maps, dan manajemen hazard.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/modules/radar",
+      "testKeywords": ["LiveDriverMap", "MapTileCacheAndState", "FreeMapAndTraffic", "GoogleMapsDriverLogic", "PoskoTilePrefetch"]
+    },
+    {
+      "id": "emergency",
+      "name": "Darurat SOS & CrashGuard",
+      "description": "Tombol panik SOS, sensor tabrakan akselerometer, sirine desibel tinggi, dan fallback SMS darurat.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/modules/emergency",
+      "testKeywords": ["SosEmergencyScreen", "SosFabAndModal", "SosHapticTactile", "CrashDetection", "EmergencySmsFallback", "EmergencyTrcDispatch"]
+    },
+    {
+      "id": "treasury",
+      "name": "Kas Transparan",
+      "description": "Pembukuan kas masuk/keluar, saldo bersih, dan laporan transparansi komunitas.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/modules/treasury",
+      "testKeywords": ["KasTransparanComponent", "TreasuryAuditComputation"]
+    },
+    {
+      "id": "forum",
+      "name": "Forum & Bengkel Rekanan",
+      "description": "Diskusi internal, update jalur, komentar berantai, dan direktori bengkel rekanan.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/modules/forum_workshop",
+      "testKeywords": ["ForumPersistence"]
+    },
+    {
+      "id": "members",
+      "name": "Direktori Anggota & Posko",
+      "description": "Direktori anggota terverifikasi, manajemen posko, check-in, dan manajemen peran.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/modules/members",
+      "testKeywords": ["MemberDaoCrud", "MemberRolePermissionDatabase", "PoskoManagement", "PoskoCheckInRepository", "PoskoProximityAndWatermark", "RoleManagementAndSecurity", "RolePermissionRepository", "PoskoContactLauncher", "DriverContactInteraction"]
+    },
+    {
+      "id": "profile",
+      "name": "KTA Digital & Profil",
+      "description": "KTA digital dengan QR & watermark holografik, biodata lengkap, dan progres loyalitas.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/modules/profile",
+      "testKeywords": ["AuthAndProfileSecurity", "GreetingScreenshot"]
+    },
+    {
+      "id": "gamification",
+      "name": "Misi, Poin & Loyalitas",
+      "description": "Leaderboard, badge, misi komunitas, riwayat poin, dan penukaran reward.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/modules/gamification",
+      "testKeywords": ["GamificationAndLoyalty"]
+    },
+    {
+      "id": "admin",
+      "name": "Pusat Kendali & Governance",
+      "description": "Verifikasi screening anggota, broadcast pengumuman, audit log otorisasi, dan kesehatan sistem.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/modules/admin",
+      "testKeywords": ["RoleManagementAndSecurity", "AdversarialAuditScenarios"]
+    },
+    {
+      "id": "community",
+      "name": "Hub Komunitas",
+      "description": "Pusat navigasi sub-tab komunitas (kas, forum, anggota, misi).",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/modules/community",
+      "testKeywords": []
+    },
+    {
+      "id": "notifications",
+      "name": "Notifikasi & Pengaturan",
+      "description": "Pusat notifikasi, preferensi push, pengaturan cache, baterai, dan lokasi.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/modules/notifications",
+      "testKeywords": ["CacheAndBattery"]
+    },
+    {
+      "id": "services",
+      "name": "Layanan Driver (PTT, AI, Proteksi)",
+      "description": "Walkie-talkie PTT, asisten AI Gemini, proteksi, escort satgas, dan koperasi wholesale.",
+      "phase": "phase-2",
+      "modulePath": "app/src/main/java/com/example/modules/services",
+      "testKeywords": ["AiAssistantKnowledge", "HelmetIntercomMonitor", "AudioRouteManager"]
+    },
+    {
+      "id": "shell",
+      "name": "Navigasi & Shell Aplikasi",
+      "description": "Shell Compose, bottom navigation, header, dialog global, dan manajemen tab.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/modules/main",
+      "testKeywords": ["ViewModelRefactorAudit"]
+    },
+    {
+      "id": "core-database",
+      "name": "Database Local-First (Room v13)",
+      "description": "Room v13 dengan 23 entitas, DAO reaktif, dan migrasi eksplisit v1→v13.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/core/database",
+      "testKeywords": ["AppDatabaseMigration", "MemberDaoCrud"]
+    },
+    {
+      "id": "core-cache",
+      "name": "Map Tile LRU Cache",
+      "description": "Caching tile peta LRU hemat data & baterai, dengan kebijakan cache adaptif.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/core/cache",
+      "testKeywords": ["MapTileCacheAndState", "CacheAndBattery"]
+    },
+    {
+      "id": "core-battery",
+      "name": "Hemat Baterai & Data",
+      "description": "Power saver, data saver, dan penjadwal sinkronisasi sadar baterai.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/core/battery",
+      "testKeywords": ["CacheAndBattery"]
+    },
+    {
+      "id": "core-sync",
+      "name": "Sinkronisasi Offline",
+      "description": "Sync engine, status sinkronisasi, dan rekonsiliasi local-first.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/core/sync",
+      "testKeywords": ["P2PFallback", "CacheAndBattery"]
+    },
+    {
+      "id": "core-sensors",
+      "name": "Deteksi Tabrakan",
+      "description": "Monitor akselerometer untuk deteksi guncangan/tabrake dan pemicu CrashGuard.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/core/sensors",
+      "testKeywords": ["CrashDetection"]
+    },
+    {
+      "id": "core-location",
+      "name": "GPS & Location Sharing",
+      "description": "Location provider, berbagi koordinat live, dan profil profil daya lokasi.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/core/location",
+      "testKeywords": ["LiveDriverMap"]
+    },
+    {
+      "id": "core-audio",
+      "name": "Audio Route & Alarm",
+      "description": "Routing audio (speaker/intercom) dan manajer alarm sirine SOS desibel tinggi.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/core/audio",
+      "testKeywords": ["AudioRouteManager", "SosHapticTactile"]
+    },
+    {
+      "id": "core-firebase",
+      "name": "Firebase (FCM, Auth, AI)",
+      "description": "Integrasi Firebase Cloud Messaging, Auth, dan Firebase AI untuk sinyal P2P & asisten.",
+      "phase": "phase-2",
+      "modulePath": "app/src/main/java/com/example/core/firebase",
+      "testKeywords": ["P2PSignaling"]
+    },
+    {
+      "id": "core-role",
+      "name": "RBAC & Role Audit Trail",
+      "description": "RoleManager, validasi perubahan peran, dan audit trail otorisasi immutable.",
+      "phase": "phase-1",
+      "modulePath": "app/src/main/java/com/example/core/RoleManager.kt",
+      "testKeywords": ["RoleManagementAndSecurity", "RolePermissionRepository", "MemberRolePermissionDatabase"]
+    },
+    {
+      "id": "core-p2p",
+      "name": "P2P Serverless (WebRTC)",
+      "description": "WebRTC DataChannel device-to-device, STUN/TURN Google gratis, self-host server per device.",
+      "phase": "phase-2",
+      "modulePath": "app/src/main/java/com/example/core/p2p",
+      "testKeywords": ["P2PConnection", "P2PSignaling", "P2PFallback"]
+    },
+    {
+      "id": "about",
+      "name": "Halaman Tentang & Roadmap Otomatis",
+      "description": "Tree fitur (ada/belum), progres pengembangan jujur, fase pengerjaan, dan rencana penyempurnaan — digenerate otomatis dari kode.",
+      "phase": "phase-2",
+      "modulePath": "app/src/main/java/com/example/modules/about",
+      "testKeywords": ["AboutManifest"]
+    }
+  ],
+  "plannedFeatures": [
+    {
+      "id": "p2p-discovery",
+      "name": "Discovery Peer via FCM Topic",
+      "description": "Device menemukan peer terdekat otomatis lewat FCM topic + broadcast IP/port signaling.",
+      "phase": "phase-2"
+    },
+    {
+      "id": "adaptive-icon",
+      "name": "Adaptive Icon & Branding",
+      "description": "Konversi logo ke adaptive icon (foreground/background) + splash screen production.",
+      "phase": "phase-2"
+    },
+    {
+      "id": "play-integrity",
+      "name": "Play Integrity & Anti-Tamper",
+      "description": "Verifikasi integritas aplikasi, R8 aggressive obfuscation, dan stripping simbol sensitif.",
+      "phase": "phase-2"
+    },
+    {
+      "id": "release-pipeline",
+      "name": "Release Signing & Distribusi",
+      "description": "Keystore rilis aman, signing di CI, dan alur distribusi APK production.",
+      "phase": "phase-2"
+    },
+    {
+      "id": "arisan",
+      "name": "Arisan Digital & Dana Talangan",
+      "description": "Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.",
+      "phase": "phase-3"
+    },
+    {
+      "id": "marketplace",
+      "name": "Marketplace Kebutuhan Operasional",
+      "description": "Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.",
+      "phase": "phase-3"
+    },
+    {
+      "id": "insurance",
+      "name": "Klaim Asuransi & Santunan",
+      "description": "Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan.",
+      "phase": "phase-3"
+    },
+    {
+      "id": "crdt-sync",
+      "name": "Rekonsiliasi CRDT",
+      "description": "Conflict-free replicated data types untuk sinkronisasi multi-device tanpa locking.",
+      "phase": "phase-3"
+    }
+  ],
+  "refinements": [
+    {
+      "id": "instrumented-tests",
+      "title": "Instrumented UI Tests",
+      "detail": "Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).",
+      "phase": "phase-2",
+      "state": "pending"
+    },
+    {
+      "id": "static-analysis",
+      "title": "Detekt & KtLint di CI",
+      "detail": "Static analysis otomatis untuk kualitas kode selain batas 125 baris.",
+      "phase": "phase-2",
+      "state": "pending"
+    },
+    {
+      "id": "gemini-live",
+      "title": "Gemini Live & AI Assistant Production",
+      "detail": "Ganti placeholder AI dengan integrasi Gemini API production + rate limiting.",
+      "phase": "phase-2",
+      "state": "in-progress"
+    },
+    {
+      "id": "room-v13-verified",
+      "title": "Verifikasi Migrasi Room v1→v13",
+      "detail": "Uji migrasi tiap versi + commit semua schema JSON.",
+      "phase": "phase-2",
+      "state": "done"
+    },
+    {
+      "id": "docs-site",
+      "title": "Dokumentasi Publik",
+      "detail": "Situs dokumentasi (GitHub Pages) untuk pengurus & developer.",
+      "phase": "phase-3",
+      "state": "pending"
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import com.example.core.viewmodel.*
+import com.example.modules.about.AboutScreen
 import com.example.modules.admin.AdminGovernanceScreen
 import com.example.modules.dashboard.DashboardScreen
 import com.example.modules.emergency.EmergencyScreen
@@ -97,8 +98,9 @@ fun DrgTabContentSwitcher(
                     scope.launch { snackbarHostState.showSnackbar("Biodata lengkap berhasil disimpan!") }
                 },
                 isSosAlarmEnabled = isSosAlarmEnabled, onToggleSosAlarm = { viewModel.toggleSosAlarmSound(it) },
-                onOpenSettings = onShowSettingsDialog, onOpenAdmin = { viewModel.selectTab(MainNavTab.ADMIN) }, onLogout = { viewModel.logout() }
+                onOpenSettings = onShowSettingsDialog, onOpenAdmin = { viewModel.selectTab(MainNavTab.ADMIN) }, onOpenAbout = { viewModel.selectTab(MainNavTab.ABOUT) }, onLogout = { viewModel.logout() }
             )
+            MainNavTab.ABOUT -> AboutScreen(onBack = { viewModel.selectTab(MainNavTab.PROFILE) })
             MainNavTab.ADMIN -> AdminGovernanceScreen(
                 currentMember = currentMember, members = members,
                 onApproveScreening = { viewModel.approveMemberScreening(it) },

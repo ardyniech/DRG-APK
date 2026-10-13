@@ -31,3 +31,8 @@ Direktori ini berisi dokumentasi teknis mendalam untuk setiap modul arsitektural
    - Setiap Android device = server. Komunikasi P2P via internet, nol server tengah, nol cost.
    - WebRTC DataChannel, STUN/TURN (Google free), FCM signaling, PendingSyncQueue fallback.
    - Arsitektur self-hosted untuk ojol di jalan tanpa harus kumpul di satu tempat.
+
+8. **[ℹ️ Halaman Tentang & Roadmap Otomatis (`ABOUT.md`)](/ABOUT.md)**
+   - Tree fitur (tersedia / dibangun / rencana) dan progres pengembangan jujur.
+   - Manifest digenerate dari kode sumber oleh `.github/scripts/generate_about_manifest.py`, diverifikasi CI.
+   - In-app: `modules/about/` (AboutScreen) dibuka dari Profil → Tentang Aplikasi.

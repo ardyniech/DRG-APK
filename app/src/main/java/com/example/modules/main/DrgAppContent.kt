@@ -47,6 +47,7 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
             showAddHazardDialog -> showAddHazardDialog = false
             showNotifPrefDialog -> showNotifPrefDialog = false
             showSettingsDialog -> showSettingsDialog = false
+            state.currentTab.value == MainNavTab.ABOUT -> viewModel.selectTab(MainNavTab.PROFILE)
             state.currentTab.value != MainNavTab.DASHBOARD -> viewModel.selectTab(MainNavTab.DASHBOARD)
             else -> (context as? android.app.Activity)?.finish()
         }

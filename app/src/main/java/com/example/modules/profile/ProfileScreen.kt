@@ -29,6 +29,7 @@ fun ProfileScreen(
     onToggleSosAlarm: (Boolean) -> Unit = {},
     onOpenSettings: () -> Unit = {},
     onOpenAdmin: () -> Unit = {},
+    onOpenAbout: () -> Unit = {},
     onLogout: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -70,6 +71,8 @@ fun ProfileScreen(
                 onOpenSettings = onOpenSettings
             )
         }
+
+        item { ProfileAboutEntry(onOpenAbout = onOpenAbout) }
 
         item { GamificationCard(member = currentMember) }
 

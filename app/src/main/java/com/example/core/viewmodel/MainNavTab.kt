@@ -11,5 +11,6 @@ enum class MainNavTab(val title: String) {
     GAMIFICATION("Misi & Loyalitas"),
     PROFILE("Profil"),
     ADMIN("Pusat Kendali"),
-    ROLES("Manajemen Peran")
+    ROLES("Manajemen Peran"),
+    ABOUT("Tentang Aplikasi")
 }
