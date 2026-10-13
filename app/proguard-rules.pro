@@ -46,9 +46,3 @@
 -keep class com.google.firebase.messaging.** { *; }
 -keep class com.google.firebase.** { *; }
 -dontwarn com.google.firebase.**
-
-# Keep Google Maps Platform & Maps Compose
--keep class com.google.android.gms.maps.** { *; }
--dontwarn com.google.android.gms.maps.**
--keep class com.google.maps.android.** { *; }
--dontwarn com.google.maps.android.**
