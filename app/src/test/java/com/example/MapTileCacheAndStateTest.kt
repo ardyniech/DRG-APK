@@ -92,6 +92,17 @@ class MapTileCacheAndStateTest {
     }
 
     @Test
+    fun testPoskoPersistedTilesProtectedFromEviction() = runTest {
+        cacheEngine.recordTileCached(14, 20001, 5001, "OSM", 9000L, isPersistedOffline = true)
+        cacheEngine.recordTileCached(14, 20002, 5001, "OSM", 9000L, isPersistedOffline = false)
+
+        val evicted = cacheEngine.evictOldestTilesIfNeeded(1)
+        assertEquals(1, evicted)
+        assertEquals(1, db.mapTileDao().getTileCountSync())
+        assertEquals(1, db.mapTileDao().getPersistedOfflineTileCountSync())
+    }
+
+    @Test
     fun testAppStateDaoPersistenceAndRetrieval() = runTest {
         val setting = AppStateSetting(
             key = "map_cache_policy",

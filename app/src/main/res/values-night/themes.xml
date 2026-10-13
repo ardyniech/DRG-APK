@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Enforce Light Theme for DRG Driver even in system night mode -->
-    <style name="Theme.MyApplication" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.MyApplication" parent="android:Theme.Material.Light.NoActionBar" tools:targetApi="27">
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>

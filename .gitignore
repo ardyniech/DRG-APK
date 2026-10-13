@@ -25,3 +25,4 @@ secrets.properties
 # Exclude actual private credentials while tracking templates
 app/google-services.json
 !app/google-services.json.example
+debug.keystore

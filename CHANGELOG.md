@@ -4,6 +4,20 @@ Semua perubahan penting pada proyek **DRG Driver** didokumentasikan dalam file i
 
 ---
 
+## [Unreleased]
+
+### 🚀 Ditambahkan (Added)
+- **Halaman Tentang & Roadmap Otomatis**:
+  - Layar `modules/about/AboutScreen` (dari Profil → Tentang Aplikasi): tree fitur terpasang/dibangun/rencana, progres pengembangan jujur per fase, rencana penyempurnaan, dan antrian rencana.
+  - Manifest fitur digenerate otomatis dari kode sumber oleh `.github/scripts/generate_about_manifest.py` (dipicu CI, auto-commit) — tanpa edit manual.
+  - Output dokumen `docs/ABOUT.md` + index modul `docs/modules/README.md`.
+
+### 🐛 Diperbaiki (Fixed)
+- **Tile cache eviction anti-fabrikasi**: `evictOldestTilesIfNeeded` kini melaporkan jumlah tile yang benar-benar terhapus (tile Posko `isPersistedOffline` tetap terlindungi dari LRU). Fix dari pemicu test cacat akibat proteksi `fb2e788`.
+- **Lint `NewApi`**: `windowLightNavigationBar` diberi `tools:targetApi="27"` di `values` & `values-night` (minSdk 24).
+
+---
+
 ## [1.0.0] - 2026-09-10
 
 ### 🚀 Ditambahkan (Added)

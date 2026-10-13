@@ -17,7 +17,7 @@ class TileMetadataCacheEngine(
         tileY: Int,
         mapSource: String = "OSM",
         sizeBytes: Long = 18432L,
-        isPersistedOffline: Boolean = true
+        isPersistedOffline: Boolean = false
     ) = withContext(Dispatchers.IO) {
         val key = "${mapSource.lowercase()}_${zoom}_${tileX}_${tileY}"
         val existing = mapTileDao.getTileMetadata(key)
@@ -51,7 +51,6 @@ class TileMetadataCacheEngine(
         if (currentCount > maxTileCount) {
             val excess = (currentCount - maxTileCount).coerceAtLeast(1)
             mapTileDao.evictOldestTiles(excess)
-            excess
         } else {
             0
         }
