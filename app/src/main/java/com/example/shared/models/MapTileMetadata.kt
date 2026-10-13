@@ -14,5 +14,5 @@ data class MapTileMetadata(
     val cachedAt: Long = System.currentTimeMillis(),
     val lastAccessedAt: Long = System.currentTimeMillis(),
     val accessCount: Int = 1,
-    val isPersistedOffline: Boolean = true
+    val isPersistedOffline: Boolean = false
 )

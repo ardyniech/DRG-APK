@@ -28,7 +28,6 @@ fun RadarScreen(
     var focusedDriver by remember { mutableStateOf<DriverMember?>(null) }
     var selectedHazard by remember { mutableStateOf<HazardArea?>(null) }
     var selectedPosko by remember { mutableStateOf<PoskoLocation?>(null) }
-    var isGoogleMapsActive by remember { mutableStateOf(false) }
 
     val filters = listOf("Semua", "Lalu Lintas", "Satgas", "Posko", "Area Rawan", "Sedang Narik")
 
@@ -45,35 +44,28 @@ fun RadarScreen(
         modifier = modifier.fillMaxSize().background(DrgBackground).padding(horizontal = 10.dp, vertical = 4.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        MapEngineSwitchBar(isGoogleMapsActive = isGoogleMapsActive, onSelectEngine = { isGoogleMapsActive = it })
-
-        if (!isGoogleMapsActive) {
-            RadarConsentAndHazardBar(isConsentOn = isConsentOn, onToggleConsent = onToggleConsent, onAddHazardClick = onAddHazardClick)
-            RadarFilterChipsRow(filters = filters, selectedFilter = selectedFilter, onSelectFilter = {
-                selectedFilter = it; selectedHazard = null; selectedPosko = null
-            })
-        }
+        RadarConsentAndHazardBar(isConsentOn = isConsentOn, onToggleConsent = onToggleConsent, onAddHazardClick = onAddHazardClick)
+        RadarFilterChipsRow(filters = filters, selectedFilter = selectedFilter, onSelectFilter = {
+            selectedFilter = it; selectedHazard = null; selectedPosko = null
+        })
 
         Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
             RadarMapContentHost(
-                isGoogleMapsActive = isGoogleMapsActive, displayMembers = displayMembers, alerts = alerts,
+                displayMembers = displayMembers, alerts = alerts,
                 poskoList = poskoList, hazards = hazards, selectedFilter = selectedFilter, isConsentOn = isConsentOn,
                 focusedDriver = focusedDriver,
                 onSelectDriver = { focusedDriver = it; selectedHazard = null; selectedPosko = null },
                 onSelectHazard = { selectedHazard = it; focusedDriver = null; selectedPosko = null },
                 onSelectPosko = { selectedPosko = it; focusedDriver = null; selectedHazard = null },
-                onCallDriver = onCallDriver, onSwitchToFreeMap = { isGoogleMapsActive = false },
                 currentMember = currentMember, isPowerSaverEnabled = isPowerSaverEnabled
             )
         }
 
-        if (!isGoogleMapsActive) {
-            RadarBottomDetailCard(
-                selectedHazard = selectedHazard, selectedPosko = selectedPosko, focusedDriver = focusedDriver,
-                displayMembers = displayMembers, currentMember = currentMember, selectedFilter = selectedFilter,
-                poskoList = poskoList, onConfirmHazard = { onConfirmHazard(it); selectedHazard = null },
-                onCallDriver = onCallDriver
-            )
-        }
+        RadarBottomDetailCard(
+            selectedHazard = selectedHazard, selectedPosko = selectedPosko, focusedDriver = focusedDriver,
+            displayMembers = displayMembers, currentMember = currentMember, selectedFilter = selectedFilter,
+            poskoList = poskoList, onConfirmHazard = { onConfirmHazard(it); selectedHazard = null },
+            onCallDriver = onCallDriver
+        )
     }
 }

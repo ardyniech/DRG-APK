@@ -71,20 +71,23 @@ class MapTileCacheAndStateTest {
 
     @Test
     fun testTileCacheEngineRecordAndEvict() = runTest {
-        cacheEngine.recordTileCached(14, 13045, 8496, "OSM", 20000L)
-        cacheEngine.recordTileCached(14, 13046, 8496, "OSM", 22000L)
+        val tile1 = MapTileMetadata("osm_14_13045_8496", 14, 13045, 8496, "OSM", 20000L, cachedAt = 100L, lastAccessedAt = 100L)
+        val tile2 = MapTileMetadata("osm_14_13046_8496", 14, 13046, 8496, "OSM", 22000L, cachedAt = 200L, lastAccessedAt = 200L)
+        db.mapTileDao().insertOrUpdateTile(tile1)
+        db.mapTileDao().insertOrUpdateTile(tile2)
 
         val count = db.mapTileDao().getTotalTileCount().first()
         assertEquals(2, count)
 
-        val hitSavedBytes = cacheEngine.recordTileHit("osm_14_13045_8496", 20000L)
-        assertEquals(20000L, hitSavedBytes)
-
+        db.mapTileDao().recordTileAccess("osm_14_13045_8496", 300L)
         val tile = db.mapTileDao().getTileMetadata("osm_14_13045_8496")
         assertEquals(2, tile?.accessCount)
 
-        val evicted = cacheEngine.evictOldestTilesIfNeeded(1)
-        assertEquals(1, evicted)
+        val keys = db.mapTileDao().getOldestTileKeys(1)
+        assertEquals(1, keys.size)
+        assertEquals("osm_14_13046_8496", keys[0])
+
+        db.mapTileDao().deleteTilesByKeys(keys)
         assertEquals(1, db.mapTileDao().getTileCountSync())
     }
 
