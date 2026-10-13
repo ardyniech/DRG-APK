@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.modules.members.primitives.PoskoOfflineMapButton
 import com.example.shared.models.PoskoLocation
 import com.example.shared.utils.WhatsAppLauncher
 import com.example.ui.theme.*
@@ -48,6 +49,7 @@ fun PoskoCard(posko: PoskoLocation, distanceKm: Double? = null) {
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
+                PoskoOfflineMapButton(posko = posko)
                 if (posko.phone.isNotBlank()) {
                     IconButton(onClick = { showContactModal = true }, modifier = Modifier.size(36.dp)) {
                         Icon(Icons.Default.Phone, contentDescription = "Hubungi", tint = DrgGreenPrimary, modifier = Modifier.size(20.dp))

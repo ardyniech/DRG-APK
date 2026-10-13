@@ -30,7 +30,10 @@ interface MapTileDao {
     @Query("SELECT COUNT(*) FROM map_tile_metadata")
     suspend fun getTileCountSync(): Int
 
-    @Query("DELETE FROM map_tile_metadata WHERE tileKey IN (SELECT tileKey FROM map_tile_metadata ORDER BY lastAccessedAt ASC LIMIT :count)")
+    @Query("SELECT COUNT(*) FROM map_tile_metadata WHERE isPersistedOffline = 1")
+    suspend fun getPersistedOfflineTileCountSync(): Int
+
+    @Query("DELETE FROM map_tile_metadata WHERE tileKey IN (SELECT tileKey FROM map_tile_metadata WHERE isPersistedOffline = 0 ORDER BY lastAccessedAt ASC LIMIT :count)")
     suspend fun evictOldestTiles(count: Int)
 
     @Query("DELETE FROM map_tile_metadata WHERE cachedAt < :expiryThreshold AND isPersistedOffline = 0")

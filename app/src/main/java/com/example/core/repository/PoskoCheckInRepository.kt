@@ -1,6 +1,7 @@
 package com.example.core.repository
 
 import androidx.room.withTransaction
+import com.example.core.cache.PoskoTilePrefetchManager
 import com.example.core.database.AppDatabase
 import com.example.shared.models.DriverMember
 import com.example.shared.models.PoskoCheckInEntity
@@ -9,7 +10,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-class PoskoCheckInRepository(private val db: AppDatabase) {
+class PoskoCheckInRepository(
+    private val db: AppDatabase,
+    private val prefetchManager: PoskoTilePrefetchManager? = null
+) {
 
     val allCheckIns: Flow<List<PoskoCheckInEntity>> =
         db.poskoCheckInDao().getAllCheckIns()
@@ -39,6 +43,8 @@ class PoskoCheckInRepository(private val db: AppDatabase) {
             db.poskoCheckInDao().insertCheckIn(checkIn)
             db.memberDao().addLoyaltyPoints(member.id, pointsAwarded)
         }
+
+        prefetchManager?.prefetchTilesForPosko(posko)
 
         Result.success(checkIn)
     }
