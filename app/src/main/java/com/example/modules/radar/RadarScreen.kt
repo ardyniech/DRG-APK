@@ -41,7 +41,7 @@ fun RadarScreen(
     val isConsentOn = currentMember?.isLocationSharingConsent ?: true
 
     Column(
-        modifier = modifier.fillMaxSize().background(DrgBackground).padding(horizontal = 10.dp, vertical = 4.dp),
+        modifier = modifier.fillMaxSize().background(DrgBackgroundGradient).padding(horizontal = 10.dp, vertical = 4.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         RadarConsentAndHazardBar(isConsentOn = isConsentOn, onToggleConsent = onToggleConsent, onAddHazardClick = onAddHazardClick)

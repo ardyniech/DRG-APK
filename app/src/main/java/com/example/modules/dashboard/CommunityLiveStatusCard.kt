@@ -7,7 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.core.viewmodel.MainNavTab
+import com.example.modules.dashboard.primitives.GlassCard
 import com.example.ui.theme.*
 
 @Composable
@@ -30,24 +31,23 @@ fun CommunityLiveStatusCard(
 ) {
     val isSafe = activeHazardCount == 0
     val statusColor = if (isSafe) DrgGreenPrimary else DrgAmberSecondary
-    val statusBg = if (isSafe) DrgGreenContainer else DrgAmberContainer
+    val statusBg = if (isSafe) DrgGreenContainer.copy(alpha = 0.75f) else DrgAmberContainer.copy(alpha = 0.75f)
     val statusMsg = if (isSafe) "Kondisi Jalur Aman & Terkendali" else "$activeHazardCount Peringatan Bahaya di Radar"
 
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = Color.White,
-        shadowElevation = 2.dp,
-        modifier = modifier
-            .fillMaxWidth()
-            .border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(20.dp))
+    GlassCard(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(26.dp),
+        backgroundColor = Color.White.copy(alpha = 0.82f),
+        contentPadding = 16.dp
     ) {
-        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(12.dp))
                     .background(statusBg)
-                    .padding(horizontal = 10.dp, vertical = 6.dp),
+                    .border(1.dp, Color.White.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
+                    .padding(horizontal = 12.dp, vertical = 7.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {

@@ -81,6 +81,7 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
             snackbarHost = { SnackbarHost(snackbarHostState) }
         ) { paddingValues ->
             Box(modifier = Modifier.fillMaxSize().background(DrgBackgroundGradient).padding(paddingValues)) {
+                com.example.shared.atoms.DrgAtmosphericGlow()
                 DrgTabContentSwitcher(
                     currentTab = state.currentTab.value, viewModel = viewModel, cashViewModel = cashViewModel,
                     currentMember = state.currentMember.value, members = state.members.value, activeAlerts = state.activeAlerts.value,
@@ -112,7 +113,8 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
             crashSensitivity = state.crashSensitivity.value, mapCachePolicy = state.mapCachePolicy.value,
             locationSyncProfile = state.locationSyncProfile.value, isDataSaverMode = state.isDataSaverMode.value,
             isPowerSaverMode = state.isPowerSaverMode.value, crashDetectedEvent = state.crashDetectedEvent.value,
-            snackbarHostState = snackbarHostState, scope = scope
+            snackbarHostState = snackbarHostState, scope = scope,
+            onOpenAbout = { showSettingsDialog = false; viewModel.selectTab(MainNavTab.ABOUT) }
         )
     }
 }

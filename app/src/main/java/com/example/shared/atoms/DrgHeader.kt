@@ -1,14 +1,14 @@
 package com.example.shared.atoms
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.shared.models.DriverMember
-import com.example.ui.theme.*
+import com.example.ui.theme.DrgGlassBorderBrush
 
 @Composable
 fun DrgHeader(
@@ -18,17 +18,19 @@ fun DrgHeader(
     onSettingsClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        color = DrgSurface,
-        tonalElevation = 2.dp,
+    DrgGlassCard(
         modifier = modifier
             .fillMaxWidth()
-            .border(width = 1.dp, color = DrgOutline.copy(alpha = 0.5f))
+            .padding(horizontal = 12.dp, vertical = 6.dp),
+        shape = RoundedCornerShape(22.dp),
+        backgroundColor = Color.White.copy(alpha = 0.88f),
+        borderBrush = DrgGlassBorderBrush,
+        elevation = 8.dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 8.dp),
+                .padding(horizontal = 14.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {

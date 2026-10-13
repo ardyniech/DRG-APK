@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.modules.dashboard.primitives.GlassCard
 import com.example.shared.models.DriverMember
 import com.example.ui.theme.*
 
@@ -31,13 +32,12 @@ fun ScreeningPendingCard(
 ) {
     val context = LocalContext.current
 
-    Card(
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = DrgAmberContainer),
-        modifier = modifier.fillMaxWidth().padding(vertical = 4.dp),
-        border = BorderStroke(1.5.dp, DrgAmberSecondary)
+    GlassCard(
+        shape = RoundedCornerShape(24.dp),
+        backgroundColor = DrgAmberContainer.copy(alpha = 0.88f),
+        modifier = modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(14.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -46,14 +46,12 @@ fun ScreeningPendingCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(imageVector = Icons.Default.HourglassTop, contentDescription = null, tint = DrgAmberDark, modifier = Modifier.size(20.dp))
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(text = "Status KTA: Menunggu Screening", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = DrgAmberDark)
+                    Text(text = "Status KTA: Menunggu Screening", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgAmberDark)
                 }
                 Box(modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(DrgAmberSecondary.copy(alpha = 0.2f)).padding(horizontal = 8.dp, vertical = 2.dp)) {
                     Text("Tahap 1 dari 2", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = DrgAmberDark)
                 }
             }
-
-            Spacer(modifier = Modifier.height(10.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -67,7 +65,6 @@ fun ScreeningPendingCard(
                 StepItem(stepNum = "3", title = "KTA Aktif", isDone = false)
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)

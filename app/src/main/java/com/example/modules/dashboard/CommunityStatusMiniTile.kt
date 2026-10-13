@@ -29,9 +29,9 @@ fun CommunityStatusMiniTile(
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(DrgSurface)
-            .border(0.8.dp, DrgOutline.copy(alpha = 0.35f), RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(14.dp))
+            .background(Color.White.copy(alpha = 0.75f))
+            .border(1.dp, Color.White.copy(alpha = 0.9f), RoundedCornerShape(14.dp))
             .clickable(onClick = onClick)
             .padding(10.dp)
     ) {

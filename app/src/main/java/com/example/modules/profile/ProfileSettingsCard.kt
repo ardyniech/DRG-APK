@@ -1,7 +1,5 @@
 package com.example.modules.profile
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -10,9 +8,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgGlassCard
 import com.example.ui.theme.*
 
 @Composable
@@ -22,12 +22,11 @@ fun ProfileSettingsCard(
     onOpenSettings: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        shape = RoundedCornerShape(16.dp),
-        color = DrgSurface,
-        modifier = modifier
-            .fillMaxWidth()
-            .border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
+    DrgGlassCard(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(22.dp),
+        backgroundColor = Color.White.copy(alpha = 0.88f),
+        elevation = 6.dp
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -58,27 +57,17 @@ fun ProfileSettingsCard(
                     onClick = onOpenSettings,
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
                 ) {
-                    Text(
-                        text = "Semua Menu",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = DrgGreenPrimary
-                    )
+                    Text("Semua Menu", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary)
                     Spacer(modifier = Modifier.width(2.dp))
-                    Icon(
-                        imageVector = Icons.Default.ChevronRight,
-                        contentDescription = "Buka",
-                        modifier = Modifier.size(16.dp),
-                        tint = DrgGreenPrimary
-                    )
+                    Icon(Icons.Default.ChevronRight, contentDescription = "Buka", modifier = Modifier.size(16.dp), tint = DrgGreenPrimary)
                 }
             }
 
-            // Quick-Access Toggle for High-Decibel SOS Alarm
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = if (isSosAlarmEnabled) DrgRedContainer.copy(alpha = 0.4f) else DrgSurfaceVariant.copy(alpha = 0.4f),
-                modifier = Modifier.fillMaxWidth()
+            DrgGlassCard(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(14.dp),
+                backgroundColor = if (isSosAlarmEnabled) DrgRedContainer.copy(alpha = 0.5f) else DrgSurfaceVariant.copy(alpha = 0.5f),
+                elevation = 2.dp
             ) {
                 Row(
                     modifier = Modifier.padding(12.dp),

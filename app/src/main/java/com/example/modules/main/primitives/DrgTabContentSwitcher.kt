@@ -45,10 +45,8 @@ fun DrgTabContentSwitcher(
     crashSensitivity: CrashSensitivity,
     isPowerSaverMode: Boolean,
     snackbarHostState: SnackbarHostState,
-    onShowEmergencyTrigger: () -> Unit,
-    onShowAddKasDialog: () -> Unit,
-    onShowAddHazardDialog: () -> Unit,
-    onShowSettingsDialog: () -> Unit,
+    onShowEmergencyTrigger: () -> Unit, onShowAddKasDialog: () -> Unit,
+    onShowAddHazardDialog: () -> Unit, onShowSettingsDialog: () -> Unit,
     onShowAwardPointDialog: (DriverMember) -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -93,31 +91,33 @@ fun DrgTabContentSwitcher(
             }
             MainNavTab.PROFILE -> ProfileScreen(
                 currentMember = currentMember,
-                onUpdateProfile = { phone, area, model, plate, photoUrl, addr, blood, emContact, emPhone, sim, ktpNik ->
-                    viewModel.updateProfile(phone, area, model, plate, photoUrl, addr, blood, emContact, emPhone, sim, ktpNik)
+                onUpdateProfile = { p, a, m, pl, pu, ad, b, ec, ep, s, k ->
+                    viewModel.updateProfile(p, a, m, pl, pu, ad, b, ec, ep, s, k)
                     scope.launch { snackbarHostState.showSnackbar("Biodata lengkap berhasil disimpan!") }
                 },
                 isSosAlarmEnabled = isSosAlarmEnabled, onToggleSosAlarm = { viewModel.toggleSosAlarmSound(it) },
-                onOpenSettings = onShowSettingsDialog, onOpenAdmin = { viewModel.selectTab(MainNavTab.ADMIN) }, onOpenAbout = { viewModel.selectTab(MainNavTab.ABOUT) }, onLogout = { viewModel.logout() }
+                onOpenSettings = onShowSettingsDialog, onOpenAdmin = { viewModel.selectTab(MainNavTab.ADMIN) },
+                onOpenAbout = { viewModel.selectTab(MainNavTab.ABOUT) }, onLogout = { viewModel.logout() }
             )
             MainNavTab.ABOUT -> AboutScreen(onBack = { viewModel.selectTab(MainNavTab.PROFILE) })
             MainNavTab.ADMIN -> AdminGovernanceScreen(
                 currentMember = currentMember, members = members,
                 onApproveScreening = { viewModel.approveMemberScreening(it) },
-                onSendNotification = { title, msg, sev ->
-                    viewModel.sendNotification(title, msg, sev)
+                onRejectScreening = { id, r -> viewModel.rejectMemberScreening(id, r) },
+                onSendNotification = { t, msg, s ->
+                    viewModel.sendNotification(t, msg, s)
                     scope.launch { snackbarHostState.showSnackbar("Pengumuman berhasil dipancarkan!") }
                 },
                 onOpenRoleManagement = { viewModel.selectTab(MainNavTab.ROLES) },
-                onUpdateMemberPermissions = { id, role, kas, verify, sos, posko, st ->
-                    viewModel.updateMemberPermissions(id, role, kas, verify, sos, posko, st)
+                onUpdateMemberPermissions = { id, ro, k, v, so, po, st ->
+                    viewModel.updateMemberPermissions(id, ro, k, v, so, po, st)
                 }
             )
             MainNavTab.ROLES -> RolePermissionManagementScreen(
                 members = members, currentMember = currentMember,
                 onBack = { viewModel.selectTab(MainNavTab.ADMIN) },
-                onSavePermissions = { id, role, kas, verify, sos, posko, st ->
-                    viewModel.updateMemberPermissions(id, role, kas, verify, sos, posko, st)
+                onSavePermissions = { id, ro, k, v, so, po, st ->
+                    viewModel.updateMemberPermissions(id, ro, k, v, so, po, st)
                 }
             )
         }

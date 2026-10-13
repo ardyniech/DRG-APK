@@ -1,7 +1,5 @@
 package com.example.modules.dashboard
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -13,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.modules.dashboard.primitives.GlassCard
 import com.example.shared.models.EmergencyAlert
 import com.example.ui.theme.*
 
@@ -21,15 +20,15 @@ fun ActiveAlertBanner(
     alert: EmergencyAlert,
     onViewDetail: () -> Unit
 ) {
-    Surface(
-        shape = RoundedCornerShape(12.dp),
-        color = DrgRedDanger.copy(alpha = 0.1f),
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, DrgRedDanger, RoundedCornerShape(12.dp))
+    GlassCard(
+        shape = RoundedCornerShape(22.dp),
+        backgroundColor = DrgRedContainer.copy(alpha = 0.88f),
+        borderHighlightColor = DrgRedDanger,
+        contentPadding = 12.dp,
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -41,7 +40,7 @@ fun ActiveAlertBanner(
                     imageVector = Icons.Default.Warning,
                     contentDescription = "Darurat",
                     tint = DrgRedDanger,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(22.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Column {
@@ -58,8 +57,13 @@ fun ActiveAlertBanner(
                     )
                 }
             }
-            TextButton(onClick = onViewDetail) {
-                Text("Respon", color = DrgRedDanger, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+            Button(
+                onClick = onViewDetail,
+                colors = ButtonDefaults.buttonColors(containerColor = DrgRedDanger),
+                shape = RoundedCornerShape(12.dp),
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+            ) {
+                Text("Respon", color = androidx.compose.ui.graphics.Color.White, fontWeight = FontWeight.Bold, fontSize = 11.sp)
             }
         }
     }

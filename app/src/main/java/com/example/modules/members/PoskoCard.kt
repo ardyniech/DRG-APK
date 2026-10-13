@@ -10,6 +10,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,13 +26,22 @@ import com.example.ui.theme.*
 fun PoskoCard(posko: PoskoLocation, distanceKm: Double? = null) {
     val context = LocalContext.current
     var showContactModal by remember { mutableStateOf(false) }
+    val cardShape = RoundedCornerShape(20.dp)
+    val highlightBrush = Brush.linearGradient(
+        listOf(Color.White, Color.White.copy(alpha = 0.5f), DrgGreenPrimary.copy(alpha = 0.25f))
+    )
 
     Surface(
-        shape = RoundedCornerShape(12.dp), color = DrgSurface,
-        modifier = Modifier.fillMaxWidth().border(1.dp, DrgGreenPrimary.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+        shape = cardShape,
+        color = Color.White.copy(alpha = 0.88f),
+        tonalElevation = 0.dp,
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(4.dp, cardShape, ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+            .border(1.2.dp, highlightBrush, cardShape)
     ) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(14.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -57,7 +69,7 @@ fun PoskoCard(posko: PoskoLocation, distanceKm: Double? = null) {
                 }
                 if (distanceKm != null) {
                     Spacer(modifier = Modifier.width(4.dp))
-                    Surface(shape = RoundedCornerShape(8.dp), color = DrgGreenContainer) {
+                    Surface(shape = RoundedCornerShape(10.dp), color = DrgGreenContainer) {
                         Text(
                             text = String.format("%.1f KM", distanceKm),
                             fontSize = 10.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary,

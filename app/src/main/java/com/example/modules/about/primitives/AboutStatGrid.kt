@@ -1,26 +1,21 @@
 package com.example.modules.about.primitives
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.modules.about.AboutSummary
-import com.example.ui.theme.DrgGreenPrimary
-import com.example.ui.theme.DrgOutline
-import com.example.ui.theme.DrgSurface
-import com.example.ui.theme.DrgTextMuted
-import com.example.ui.theme.DrgTextPrimary
+import com.example.ui.theme.*
 
 @Composable
 fun AboutStatGrid(summary: AboutSummary) {
@@ -38,17 +33,25 @@ fun AboutStatGrid(summary: AboutSummary) {
 
 @Composable
 private fun StatTile(label: String, value: String, modifier: Modifier = Modifier) {
+    val cardShape = RoundedCornerShape(18.dp)
+    val highlightBrush = Brush.linearGradient(
+        listOf(Color.White, Color.White.copy(alpha = 0.5f), DrgGreenPrimary.copy(alpha = 0.2f))
+    )
+
     Surface(
-        shape = RoundedCornerShape(14.dp),
-        color = DrgSurface,
-        modifier = modifier.border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
+        shape = cardShape,
+        color = Color.White.copy(alpha = 0.85f),
+        tonalElevation = 0.dp,
+        modifier = modifier
+            .shadow(3.dp, cardShape, ambientColor = Color(0x12003617), spotColor = Color(0x0A003617))
+            .border(1.2.dp, highlightBrush, cardShape)
     ) {
         Column(
-            modifier = Modifier.padding(12.dp).fillMaxWidth(),
+            modifier = Modifier.padding(14.dp).fillMaxWidth(),
             horizontalAlignment = Alignment.Start
         ) {
             Text(value, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold, color = DrgGreenPrimary)
-            Text(label, fontSize = 10.5.sp, color = DrgTextMuted)
+            Text(label, fontSize = 11.sp, color = DrgTextMuted)
         }
     }
 }

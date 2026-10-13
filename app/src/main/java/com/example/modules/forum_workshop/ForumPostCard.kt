@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -28,16 +30,22 @@ fun ForumPostCard(
     onDeletePost: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
+    val cardShape = RoundedCornerShape(22.dp)
+    val highlightBrush = Brush.linearGradient(
+        listOf(Color.White, Color.White.copy(alpha = 0.5f), DrgGreenPrimary.copy(alpha = 0.2f))
+    )
+
     Surface(
-        shape = RoundedCornerShape(16.dp),
-        color = DrgSurface,
-        tonalElevation = 2.dp,
+        shape = cardShape,
+        color = Color.White.copy(alpha = 0.88f),
+        tonalElevation = 0.dp,
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, DrgOutline.copy(alpha = 0.6f), RoundedCornerShape(16.dp))
+            .shadow(4.dp, cardShape, ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+            .border(1.2.dp, highlightBrush, cardShape)
             .testTag("forum_post_card_${post.id}")
     ) {
-        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             ForumPostCardHeader(post = post, onDeletePost = onDeletePost)
 
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -48,18 +56,18 @@ fun ForumPostCard(
 
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
+                        .clip(RoundedCornerShape(8.dp))
                         .background(typeBg)
-                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                        .padding(horizontal = 7.dp, vertical = 2.dp)
                 ) {
                     Text(text = typeLabel, fontSize = 9.sp, fontWeight = FontWeight.ExtraBold, color = typeColor)
                 }
 
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(Color(post.category.badgeColorHex).copy(alpha = 0.12f))
-                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color(post.category.badgeColorHex).copy(alpha = 0.14f))
+                        .padding(horizontal = 7.dp, vertical = 2.dp)
                 ) {
                     Text(text = post.category.label, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color(post.category.badgeColorHex))
                 }

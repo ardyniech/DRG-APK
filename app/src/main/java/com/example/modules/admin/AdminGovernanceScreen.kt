@@ -26,6 +26,7 @@ fun AdminGovernanceScreen(
     currentMember: DriverMember?,
     members: List<DriverMember>,
     onApproveScreening: (String) -> Unit,
+    onRejectScreening: (String, String) -> Unit = { _, _ -> },
     onSendNotification: (String, String, NotificationSeverity) -> Unit,
     onOpenRoleManagement: () -> Unit = {},
     onUpdateMemberPermissions: (String, MemberRole, Boolean, Boolean, Boolean, Boolean, VerificationStatus) -> Unit = { _, _, _, _, _, _, _ -> },
@@ -85,7 +86,12 @@ fun AdminGovernanceScreen(
             }
         } else {
             items(pendingScreenings) { pending ->
-                PendingMemberCard(member = pending, canApprove = isLeadershipOrAdmin, onApprove = { onApproveScreening(pending.id) })
+                PendingMemberCard(
+                    member = pending,
+                    canApprove = isLeadershipOrAdmin,
+                    onApprove = { onApproveScreening(pending.id) },
+                    onReject = { reason -> onRejectScreening(pending.id, reason) }
+                )
             }
         }
 

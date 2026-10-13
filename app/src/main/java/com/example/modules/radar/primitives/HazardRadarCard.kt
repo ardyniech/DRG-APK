@@ -10,6 +10,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,34 +26,33 @@ fun HazardRadarCard(
     modifier: Modifier = Modifier
 ) {
     val hazardColor = Color(hazard.hazardType.colorHex)
+    val cardShape = RoundedCornerShape(20.dp)
+    val highlightBrush = Brush.linearGradient(
+        listOf(Color.White, Color.White.copy(alpha = 0.5f), hazardColor.copy(alpha = 0.25f))
+    )
+
     Surface(
-        shape = RoundedCornerShape(16.dp),
-        color = DrgSurface,
-        tonalElevation = 2.dp,
+        shape = cardShape,
+        color = Color.White.copy(alpha = 0.88f),
+        tonalElevation = 0.dp,
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, hazardColor.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
+            .shadow(4.dp, cardShape, ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+            .border(1.2.dp, highlightBrush, cardShape)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(14.dp),
+            modifier = Modifier.fillMaxWidth().padding(14.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
                 Surface(
-                    shape = RoundedCornerShape(10.dp),
+                    shape = RoundedCornerShape(12.dp),
                     color = hazardColor.copy(alpha = 0.15f),
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(42.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            Icons.Default.Warning,
-                            contentDescription = null,
-                            tint = hazardColor,
-                            modifier = Modifier.size(22.dp)
-                        )
+                        Icon(Icons.Default.Warning, contentDescription = null, tint = hazardColor, modifier = Modifier.size(22.dp))
                     }
                 }
                 Spacer(modifier = Modifier.width(10.dp))
@@ -59,7 +60,7 @@ fun HazardRadarCard(
                     Text(
                         text = "${hazard.hazardType.emoji} ${hazard.title.ifEmpty { hazard.hazardType.label }}",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp,
+                        fontSize = 13.sp,
                         color = DrgTextDark
                     )
                     Text(
@@ -82,7 +83,7 @@ fun HazardRadarCard(
             Button(
                 onClick = { onConfirmHazard(hazard.id) },
                 colors = ButtonDefaults.buttonColors(containerColor = hazardColor),
-                shape = RoundedCornerShape(10.dp),
+                shape = RoundedCornerShape(12.dp),
                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
             ) {
                 Icon(Icons.Default.CheckCircle, contentDescription = null, modifier = Modifier.size(14.dp), tint = Color.White)

@@ -99,6 +99,16 @@ object AppFeatureRepository {
             drawableResId = R.drawable.img_ptt_intercom_real_1789133521397,
             badgeText = "Intercom PTT",
             accentColor = Color(0xFFEA580C)
+        ),
+        AppFeatureThumbnail(
+            id = "about_app",
+            title = "Tentang Aplikasi & Visi DRG",
+            category = "Tentang Kami",
+            description = "Pelajari sejarah solidaritas driver ojek online Malang Raya, peta jalan pengembangan, dan pengembang.",
+            icon = Icons.Default.Info,
+            drawableResId = null,
+            badgeText = "Visi & Peta Jalan",
+            accentColor = DrgGrabGreenPrimary
         )
     )
 }

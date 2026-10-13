@@ -53,7 +53,7 @@ fun CommunityHubScreen(
 ) {
     var selectedSubTab by remember { mutableIntStateOf(initialSubTab) }
 
-    Column(modifier = modifier.fillMaxSize().background(DrgBackground)) {
+    Column(modifier = modifier.fillMaxSize().background(DrgBackgroundGradient)) {
         CommunitySubTabRow(selectedSubTab = selectedSubTab, onSelectSubTab = { selectedSubTab = it })
 
         Box(modifier = Modifier.fillMaxSize()) {

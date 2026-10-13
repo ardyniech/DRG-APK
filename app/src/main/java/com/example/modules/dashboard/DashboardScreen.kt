@@ -2,22 +2,16 @@ package com.example.modules.dashboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.runtime.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.core.viewmodel.MainNavTab
 import com.example.shared.models.*
 import com.example.ui.theme.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     currentMember: DriverMember?,
@@ -33,69 +27,81 @@ fun DashboardScreen(
     onUpdateDutyStatus: (String, Boolean) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier
 ) {
-    var isRefreshing by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
+    val activeMemberCount = members.count { it.isOnline }
 
-    PullToRefreshBox(
-        isRefreshing = isRefreshing,
-        onRefresh = {
-            scope.launch {
-                isRefreshing = true
-                delay(800)
-                isRefreshing = false
-            }
-        },
-        modifier = modifier.fillMaxSize().background(DrgBackground)
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(DrgBackgroundGradient)
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp, vertical = 18.dp)
+            .testTag("dashboard_screen"),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
-        ) {
-            item { DriverProfileOverviewCard(member = currentMember, onStatusChange = onUpdateDutyStatus) }
-            item { RiderHardwareRouteCard() }
-
-            if (currentMember?.verificationStatus == VerificationStatus.PENDING_SCREENING) {
-                item { ScreeningPendingCard(member = currentMember) }
-            }
-
-            item {
-                DriverProgressiveOnboardingCard(
-                    member = currentMember,
-                    onStartShift = { currentMember?.id?.let { onUpdateDutyStatus(it, true) } },
-                    onOpenEmergency = { onNavigateTab(MainNavTab.EMERGENCY) },
-                    onOpenForum = { onNavigateTab(MainNavTab.FORUM) }
+        // 1. Active Emergency Alert Glass Banners
+        if (activeAlerts.isNotEmpty()) {
+            activeAlerts.take(2).forEach { alert ->
+                ActiveAlertBanner(
+                    alert = alert,
+                    onViewDetail = { onNavigateTab(MainNavTab.EMERGENCY) }
                 )
             }
-
-            val activeSos = activeAlerts.firstOrNull { it.isActive }
-            if (activeSos != null) {
-                item { ActiveAlertBanner(alert = activeSos, onViewDetail = { onNavigateTab(MainNavTab.EMERGENCY) }) }
-            }
-
-            item {
-                CommunityStatusSection(
-                    activeMemberCount = members.count { it.isOnline },
-                    activeHazardCount = hazards.size,
-                    kasFormatted = totalKasFormatted,
-                    poskoCount = poskoCount,
-                    onNavigateTab = onNavigateTab
-                )
-            }
-
-            item {
-                Text(text = "Akses Cepat (Quick Actions)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
-            }
-            item { QuickActionGrid(onNavigate = onNavigateTab, onQuickEmergency = onTriggerEmergency) }
-
-            item {
-                RecentCommunityActivitiesSection(
-                    announcements = announcements,
-                    cashTransactions = cashTransactions,
-                    hazards = hazards,
-                    onNavigateTab = onNavigateTab
-                )
-            }
-            item { Spacer(modifier = Modifier.height(16.dp)) }
         }
+
+        // 2. Pending Verification Glass Banner
+        if (currentMember?.verificationStatus == VerificationStatus.PENDING_SCREENING) {
+            ScreeningPendingCard(member = currentMember)
+        }
+
+        // 3. Weather Atmosphere & Driver Patrol Hero Glass Card
+        WeatherHeroCard(
+            member = currentMember,
+            onUpdateDutyStatus = onUpdateDutyStatus,
+            modifier = Modifier.testTag("weather_hero_card")
+        )
+
+        // 4. Floating Emergency TRC Glass Bar
+        DashboardSosGlassBar(
+            onTriggerEmergency = onTriggerEmergency,
+            modifier = Modifier.testTag("dashboard_sos_bar")
+        )
+
+        // 5. Live Radar & Community Safety Glass Card
+        CommunityLiveStatusCard(
+            activeMemberCount = activeMemberCount,
+            activeHazardCount = hazards.size,
+            kasFormatted = totalKasFormatted,
+            poskoCount = poskoCount,
+            onNavigateTab = onNavigateTab,
+            modifier = Modifier.testTag("community_live_status_card")
+        )
+
+        // 6. Quick Action Floating Glass Tiles
+        QuickActionGrid(
+            onNavigate = onNavigateTab,
+            modifier = Modifier.testTag("quick_action_grid")
+        )
+
+        // 7. Rider Audio & Local-First Hardware Glass Card
+        RiderHardwareRouteCard(
+            modifier = Modifier.testTag("rider_hardware_card")
+        )
+
+        // 8. Community Announcements Floating Glass Card
+        RecentAnnouncementsSection(
+            announcements = announcements,
+            modifier = Modifier.testTag("announcements_section")
+        )
+
+        // 9. Recent Community Activity Glass Card
+        RecentCommunityActivitiesSection(
+            announcements = announcements,
+            cashTransactions = cashTransactions,
+            hazards = hazards,
+            onNavigateTab = onNavigateTab,
+            modifier = Modifier.testTag("community_activities_section")
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }

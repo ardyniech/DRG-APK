@@ -4,12 +4,15 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Chat
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,10 +30,19 @@ fun DriverRadarCard(
 ) {
     val context = LocalContext.current
     var showOptionsModal by remember { mutableStateOf(false) }
+    val cardShape = RoundedCornerShape(20.dp)
+    val highlightBrush = Brush.linearGradient(
+        listOf(Color.White, Color.White.copy(alpha = 0.5f), DrgGreenPrimary.copy(alpha = 0.2f))
+    )
 
     Surface(
-        shape = RoundedCornerShape(16.dp), color = DrgSurface, tonalElevation = 2.dp,
-        modifier = modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.6f), RoundedCornerShape(16.dp))
+        shape = cardShape,
+        color = Color.White.copy(alpha = 0.88f),
+        tonalElevation = 0.dp,
+        modifier = modifier
+            .fillMaxWidth()
+            .shadow(4.dp, cardShape, ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+            .border(1.2.dp, highlightBrush, cardShape)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(14.dp),
@@ -58,7 +70,7 @@ fun DriverRadarCard(
                     colors = ButtonDefaults.filledTonalButtonColors(containerColor = DrgGreenPrimary.copy(alpha = 0.15f)),
                     contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp)
                 ) {
-                    Icon(Icons.Default.Chat, contentDescription = "WA", modifier = Modifier.size(15.dp), tint = DrgGreenPrimary)
+                    Icon(Icons.AutoMirrored.Filled.Chat, contentDescription = "WA", modifier = Modifier.size(15.dp), tint = DrgGreenPrimary)
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("WA", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary)
                 }

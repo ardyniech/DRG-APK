@@ -7,6 +7,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,16 +22,23 @@ fun DriverMemberCard(
     member: DriverMember,
     onMemberClick: () -> Unit
 ) {
+    val cardShape = RoundedCornerShape(20.dp)
+    val highlightBrush = Brush.linearGradient(
+        listOf(Color.White, Color.White.copy(alpha = 0.5f), DrgGreenPrimary.copy(alpha = 0.2f))
+    )
+
     Surface(
         onClick = onMemberClick,
-        shape = RoundedCornerShape(12.dp),
-        color = DrgSurface,
+        shape = cardShape,
+        color = Color.White.copy(alpha = 0.88f),
+        tonalElevation = 0.dp,
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+            .shadow(4.dp, cardShape, ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+            .border(1.2.dp, highlightBrush, cardShape)
     ) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(14.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -37,19 +47,20 @@ fun DriverMemberCard(
                     Text(
                         text = member.name,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp,
+                        fontSize = 14.sp,
                         color = DrgTextPrimary
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     RoleBadge(role = member.role)
                 }
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = "${member.motorcycleModel} (${member.motorcyclePlate})",
                     fontSize = 11.sp,
                     color = DrgTextSecondary
                 )
                 Text(
-                    text = "ID: ${member.id} • Rating: ⭐ ${member.rating} (${member.reviewCount} Ulasan)",
+                    text = "ID: ${member.id} • ⭐ ${member.rating} (${member.reviewCount} ulasan)",
                     fontSize = 10.sp,
                     color = DrgTextMuted
                 )

@@ -12,13 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ui.theme.DrgOutline
-import com.example.ui.theme.DrgSurface
 
 @Composable
 fun StatCard(
@@ -30,23 +30,38 @@ fun StatCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null
 ) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(14.dp))
-            .background(DrgSurface)
-            .border(1.dp, DrgOutline.copy(alpha = 0.6f), RoundedCornerShape(14.dp))
-            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
-            .padding(10.dp)
-    ) {
+    val cardShape = RoundedCornerShape(20.dp)
+    val highlightBrush = Brush.linearGradient(
+        colors = listOf(
+            Color.White,
+            Color.White.copy(alpha = 0.5f),
+            iconColor.copy(alpha = 0.15f)
+        )
+    )
+
+    val baseModifier = modifier
+        .shadow(5.dp, cardShape, ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+        .clip(cardShape)
+        .background(Color.White.copy(alpha = 0.82f))
+        .border(1.2.dp, highlightBrush, cardShape)
+
+    val finalModifier = if (onClick != null) {
+        baseModifier.clickable { onClick() }
+    } else {
+        baseModifier
+    }
+
+    Box(modifier = finalModifier.padding(12.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Box(
                 modifier = Modifier
-                    .size(42.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(iconColor.copy(alpha = 0.12f)),
+                    .size(44.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(iconColor.copy(alpha = 0.14f))
+                    .border(1.dp, Color.White.copy(alpha = 0.9f), RoundedCornerShape(14.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -65,13 +80,13 @@ fun StatCard(
                 )
                 Text(
                     text = value,
-                    fontSize = 19.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = subtitle,
-                    fontSize = 11.sp,
+                    fontSize = 10.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }

@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.core.viewmodel.MainNavTab
+import com.example.modules.dashboard.primitives.GlassCard
 import com.example.shared.models.*
 import com.example.ui.theme.*
 
@@ -55,13 +56,13 @@ fun RecentCommunityActivitiesSection(
         list
     }
 
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = Color.White,
-        shadowElevation = 2.dp,
-        modifier = modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(20.dp))
+    GlassCard(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(26.dp),
+        backgroundColor = Color.White.copy(alpha = 0.82f),
+        contentPadding = 16.dp
     ) {
-        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Icon(Icons.Default.History, contentDescription = null, tint = DrgGreenPrimary, modifier = Modifier.size(18.dp))
@@ -76,8 +77,8 @@ fun RecentCommunityActivitiesSection(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
-                            .background(if (isSelected) DrgGreenPrimary else DrgSurface)
-                            .border(0.8.dp, if (isSelected) DrgGreenPrimary else DrgOutline.copy(alpha = 0.3f), RoundedCornerShape(8.dp))
+                            .background(if (isSelected) DrgGreenPrimary else Color.White.copy(alpha = 0.6f))
+                            .border(0.8.dp, if (isSelected) DrgGreenPrimary else DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(8.dp))
                             .clickable { selectedFilter = filter }
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {

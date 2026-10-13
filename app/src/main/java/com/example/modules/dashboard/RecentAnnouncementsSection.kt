@@ -1,7 +1,6 @@
 package com.example.modules.dashboard
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +16,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.modules.dashboard.primitives.GlassCard
 import com.example.shared.models.CommunityNotification
 import com.example.ui.theme.DrgGreenContainer
 import com.example.ui.theme.DrgGreenPrimary
@@ -29,25 +29,22 @@ fun RecentAnnouncementsSection(
     announcements: List<CommunityNotification>,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        shape = RoundedCornerShape(16.dp),
-        color = Color.White,
+    GlassCard(
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
-            .testTag("recent_announcements_section")
+            .testTag("recent_announcements_section"),
+        shape = RoundedCornerShape(26.dp),
+        backgroundColor = Color.White.copy(alpha = 0.82f),
+        contentPadding = 16.dp
     ) {
-        Column(
-            modifier = Modifier.padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Box(
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(34.dp)
                         .clip(CircleShape)
                         .background(DrgGreenContainer),
                     contentAlignment = Alignment.Center

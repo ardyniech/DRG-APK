@@ -17,9 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shared.models.DriverMember
 import com.example.shared.models.MemberRole
-import com.example.ui.theme.DrgBackground
-import com.example.ui.theme.DrgGreenPrimary
-import com.example.ui.theme.DrgRedDanger
+import com.example.ui.theme.*
 
 @Composable
 fun ProfileScreen(
@@ -37,11 +35,8 @@ fun ProfileScreen(
     var showLogoutDialog by remember { mutableStateOf(false) }
 
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .background(DrgBackground)
-            .padding(horizontal = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = modifier.fillMaxSize().background(DrgBackgroundGradient).padding(horizontal = 14.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(top = 10.dp, bottom = 24.dp)
     ) {
         item { KtaDigitalCard(member = currentMember) }
@@ -50,12 +45,9 @@ fun ProfileScreen(
             item {
                 Button(
                     onClick = onOpenAdmin,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .testTag("btn_admin_governance"),
+                    modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_admin_governance"),
                     colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(14.dp)
                 ) {
                     Icon(Icons.Default.AdminPanelSettings, contentDescription = null, tint = Color.White)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -64,51 +56,28 @@ fun ProfileScreen(
             }
         }
 
-        item {
-            ProfileSettingsCard(
-                isSosAlarmEnabled = isSosAlarmEnabled,
-                onToggleSosAlarm = onToggleSosAlarm,
-                onOpenSettings = onOpenSettings
-            )
-        }
-
+        item { ProfileSettingsCard(isSosAlarmEnabled = isSosAlarmEnabled, onToggleSosAlarm = onToggleSosAlarm, onOpenSettings = onOpenSettings) }
         item { ProfileAboutEntry(onOpenAbout = onOpenAbout) }
-
         item { GamificationCard(member = currentMember) }
+        item { VehicleInfoCard(member = currentMember, onEditClick = { showEditDialog = true }) }
 
         item {
-            VehicleInfoCard(
-                member = currentMember,
-                onEditClick = { showEditDialog = true }
-            )
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             Button(
                 onClick = { showLogoutDialog = true },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    .testTag("btn_logout_profile"),
+                modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_logout_profile"),
                 colors = ButtonDefaults.buttonColors(containerColor = DrgRedDanger),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(14.dp)
             ) {
                 Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = null, tint = Color.White)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Keluar Aplikasi (Logout)", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                Text("Keluar Aplikasi (Logout)", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
             }
         }
     }
 
     if (showLogoutDialog) {
-        ProfileLogoutDialog(
-            onDismiss = { showLogoutDialog = false },
-            onConfirm = {
-                showLogoutDialog = false
-                onLogout()
-            }
-        )
+        ProfileLogoutDialog(onDismiss = { showLogoutDialog = false }, onConfirm = { showLogoutDialog = false; onLogout() })
     }
 
     if (showEditDialog && currentMember != null) {

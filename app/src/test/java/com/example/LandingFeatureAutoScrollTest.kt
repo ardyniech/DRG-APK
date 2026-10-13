@@ -10,7 +10,7 @@ class LandingFeatureAutoScrollTest {
     fun testAllFeaturesRepositoryNotEmpty() {
         val features = AppFeatureRepository.allFeatures
         assertTrue(features.isNotEmpty())
-        assertEquals(8, features.size)
+        assertEquals(9, features.size)
     }
 
     @Test

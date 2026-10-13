@@ -2,12 +2,7 @@ package com.example.modules.auth
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -15,18 +10,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.core.viewmodel.DRGViewModel
+import com.example.modules.about.AboutScreen
 import com.example.core.viewmodel.*
-import com.example.ui.theme.DrgBackgroundGradient
-import com.example.ui.theme.DrgGrabGreenPrimary
-import com.example.ui.theme.DrgTextDark
+import com.example.shared.atoms.DrgAtmosphericGlow
+import com.example.shared.models.MemberRole
+import com.example.ui.theme.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 enum class AuthStage {
-    LANDING,
-    LOGIN,
-    REGISTER
+    LANDING, LOGIN, REGISTER, ABOUT
 }
 
 @Composable
@@ -56,11 +49,18 @@ fun AuthContainerScreen(
             .windowInsetsPadding(WindowInsets.systemBars)
             .imePadding()
     ) {
+        DrgAtmosphericGlow()
+
         Crossfade(targetState = currentStage, label = "authTransition") { stage ->
             when (stage) {
                 AuthStage.LANDING -> LandingScreen(
                     onNavigateToLogin = { currentStage = AuthStage.LOGIN },
-                    onNavigateToRegister = { currentStage = AuthStage.REGISTER }
+                    onNavigateToRegister = { currentStage = AuthStage.REGISTER },
+                    onNavigateToAbout = { currentStage = AuthStage.ABOUT },
+                    onQuickDemoLogin = {
+                        val superAdmin = members.find { it.role == MemberRole.SUPER_ADMIN } ?: members.firstOrNull()
+                        if (superAdmin != null) onLoginSuccess(superAdmin.id) else currentStage = AuthStage.LOGIN
+                    }
                 )
                 AuthStage.LOGIN -> LoginScreen(
                     members = members,
@@ -73,6 +73,9 @@ fun AuthContainerScreen(
                         viewModel.registerNewDriver(name, phone, plate, model, area, pin)
                         showRegisterSuccessDialog = true
                     }
+                )
+                AuthStage.ABOUT -> AboutScreen(
+                    onBack = { currentStage = AuthStage.LANDING }
                 )
             }
         }
@@ -89,7 +92,7 @@ fun AuthContainerScreen(
             },
             text = {
                 Text(
-                    "Data registrasi Anda telah tersimpan. Pengurus / Dewan Etika akan melakukan proses verifikasi KTA & berkas. Silakan login untuk memantau status screening Anda.",
+                    "Data registrasi Anda telah tersimpan. Pengurus / Satgas akan memverifikasi berkas KTA Anda.",
                     fontSize = 13.sp
                 )
             },

@@ -1,10 +1,10 @@
 package com.example.modules.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,16 +28,21 @@ fun DrgBottomNavItem(
     onClick: () -> Unit
 ) {
     val tint = if (isSelected) DrgGrabGreenPrimary else DrgTextMuted
-    val bg = if (isSelected) DrgGreenContainer else Color.Transparent
+    val bg = if (isSelected) DrgGrabGreenContainer.copy(alpha = 0.85f) else Color.Transparent
+    val itemShape = RoundedCornerShape(16.dp)
 
-    Box(
-        modifier = Modifier
-            .height(52.dp)
-            .padding(horizontal = 2.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(bg)
-            .bouncyClick { onClick() }
-    ) {
+    val itemModifier = Modifier
+        .height(52.dp)
+        .padding(horizontal = 2.dp)
+        .clip(itemShape)
+        .background(bg)
+        .then(
+            if (isSelected) Modifier.border(1.dp, Color.White.copy(alpha = 0.9f), itemShape)
+            else Modifier
+        )
+        .bouncyClick { onClick() }
+
+    Box(modifier = itemModifier) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,

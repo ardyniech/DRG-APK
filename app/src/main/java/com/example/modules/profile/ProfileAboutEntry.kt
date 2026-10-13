@@ -1,43 +1,43 @@
 package com.example.modules.profile
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.BuildConfig
-import com.example.ui.theme.DrgGreenContainer
-import com.example.ui.theme.DrgGreenPrimary
-import com.example.ui.theme.DrgOutline
-import com.example.ui.theme.DrgSurface
-import com.example.ui.theme.DrgTextMuted
-import com.example.ui.theme.DrgTextPrimary
+import com.example.ui.theme.*
 
 @Composable
 fun ProfileAboutEntry(onOpenAbout: () -> Unit, modifier: Modifier = Modifier) {
+    val cardShape = RoundedCornerShape(20.dp)
+    val highlightBrush = Brush.linearGradient(
+        listOf(Color.White, Color.White.copy(alpha = 0.5f), DrgGreenPrimary.copy(alpha = 0.2f))
+    )
+
     Surface(
-        shape = RoundedCornerShape(16.dp),
-        color = DrgSurface,
+        shape = cardShape,
+        color = Color.White.copy(alpha = 0.85f),
+        tonalElevation = 0.dp,
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
+            .shadow(4.dp, cardShape, ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+            .border(1.2.dp, highlightBrush, cardShape)
+            .clickable(onClick = onOpenAbout)
     ) {
         Row(
             modifier = Modifier.padding(14.dp).fillMaxWidth(),
@@ -46,29 +46,29 @@ fun ProfileAboutEntry(onOpenAbout: () -> Unit, modifier: Modifier = Modifier) {
         ) {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                 Surface(
-                    shape = RoundedCornerShape(10.dp),
-                    color = DrgGreenContainer,
-                    modifier = Modifier.size(38.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    color = DrgGreenContainer.copy(alpha = 0.8f),
+                    modifier = Modifier.size(40.dp)
                 ) {
                     Icon(
                         Icons.Default.Info,
                         contentDescription = "Tentang Aplikasi",
                         tint = DrgGreenPrimary,
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(10.dp)
                     )
                 }
-                Spacer(Modifier.width(10.dp))
+                Spacer(Modifier.width(12.dp))
                 Column {
-                    Text("Tentang Aplikasi", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
+                    Text("Tentang Aplikasi & Sistem", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
                     Text(
-                        "Fitur, progres & peta jalan v${BuildConfig.VERSION_NAME}",
-                        fontSize = 10.sp,
+                        "Peta jalan & spesifikasi v${BuildConfig.VERSION_NAME}",
+                        fontSize = 11.sp,
                         color = DrgTextMuted
                     )
                 }
             }
             Icon(
-                Icons.Default.KeyboardArrowRight,
+                Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
                 tint = DrgGreenPrimary,
                 modifier = Modifier.size(22.dp)

@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgGlassCard
 import com.example.ui.theme.*
 
 @Composable
@@ -30,17 +31,18 @@ fun CommunitySubTabRow(
         "Layanan & Koperasi" to Icons.Default.ShoppingBag
     )
 
-    Surface(
-        color = DrgSurface,
-        tonalElevation = 2.dp,
-        modifier = modifier.fillMaxWidth()
+    DrgGlassCard(
+        modifier = modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
+        shape = RoundedCornerShape(20.dp),
+        backgroundColor = Color.White.copy(alpha = 0.88f),
+        elevation = 4.dp
     ) {
         ScrollableTabRow(
             selectedTabIndex = selectedSubTab,
-            edgePadding = 12.dp,
-            containerColor = DrgSurface,
-            contentColor = Color.Transparent, // Hide default line indicator to use our pill background instead
-            indicator = {}, // No default line indicator
+            edgePadding = 8.dp,
+            containerColor = Color.Transparent,
+            contentColor = Color.Transparent,
+            indicator = {},
             divider = {}
         ) {
             subTabs.forEachIndexed { index, (title, icon) ->
@@ -54,8 +56,8 @@ fun CommunitySubTabRow(
                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
-                                .clip(RoundedCornerShape(20.dp))
-                                .background(if (isSelected) DrgGreenContainer else Color.Transparent)
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(if (isSelected) DrgGrabGreenContainer else Color.Transparent)
                                 .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
                             Icon(

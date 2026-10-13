@@ -10,6 +10,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
@@ -26,22 +29,25 @@ fun EmergencyAlertCard(
     onCall: () -> Unit
 ) {
     val isLeaderOrSatgas = currentMember?.role?.name in listOf("SATGAS", "KETUA", "WAKIL_KETUA")
+    val cardShape = RoundedCornerShape(20.dp)
+    val highlightBrush = Brush.linearGradient(
+        colors = listOf(
+            Color.White,
+            Color.White.copy(alpha = 0.5f),
+            if (alert.isActive) DrgRedDanger.copy(alpha = 0.3f) else DrgGreenPrimary.copy(alpha = 0.2f)
+        )
+    )
 
     Surface(
-        shape = RoundedCornerShape(14.dp),
-        color = DrgSurface,
+        shape = cardShape,
+        color = if (alert.isActive) DrgRedContainer.copy(alpha = 0.88f) else Color.White.copy(alpha = 0.85f),
+        tonalElevation = 0.dp,
         modifier = Modifier
             .fillMaxWidth()
-            .border(
-                1.dp,
-                if (alert.isActive) DrgRedDanger.copy(alpha = 0.5f) else DrgOutline.copy(alpha = 0.4f),
-                RoundedCornerShape(14.dp)
-            )
+            .shadow(4.dp, cardShape, ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+            .border(1.2.dp, highlightBrush, cardShape)
     ) {
-        Column(
-            modifier = Modifier.padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -70,19 +76,11 @@ fun EmergencyAlertCard(
                 )
             }
 
-            Text(
-                text = "${alert.driverName} (${alert.plateNumber})",
-                fontWeight = FontWeight.Bold,
-                fontSize = 13.sp,
-                color = DrgTextPrimary
-            )
+            Text(text = "${alert.driverName} (${alert.plateNumber})", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
             Text(text = "📍 ${alert.locationName}", fontSize = 11.sp, color = DrgTextSecondary)
             Text(text = "💬 \"${alert.message}\"", fontSize = 12.sp, color = DrgTextPrimary)
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedButton(
                     onClick = onCall,
                     shape = RoundedCornerShape(10.dp),

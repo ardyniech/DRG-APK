@@ -17,6 +17,7 @@ data class DriverMember(
     val loyaltyPoints: Int = 150,
     val loyaltyTier: String = "Road Captain",
     val verificationStatus: VerificationStatus = VerificationStatus.VERIFIED,
+    val isVerified: Boolean = verificationStatus == VerificationStatus.VERIFIED,
     val screeningNotes: String = "Lulus verifikasi SIM, STNK, SKCK & wawancara loyalitas",
     val isOnline: Boolean = true,
     val currentStatus: String = "Tersedia",

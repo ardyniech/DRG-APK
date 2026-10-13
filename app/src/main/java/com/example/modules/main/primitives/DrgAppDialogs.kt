@@ -49,7 +49,8 @@ fun DrgAppDialogs(
     isPowerSaverMode: Boolean,
     crashDetectedEvent: Float?,
     snackbarHostState: SnackbarHostState,
-    scope: CoroutineScope
+    scope: CoroutineScope,
+    onOpenAbout: () -> Unit
 ) {
     if (showEmergencyTrigger) {
         EmergencyTriggerDialog(onDismiss = onDismissEmergencyTrigger, onConfirm = { type, msg, loc ->
@@ -96,7 +97,7 @@ fun DrgAppDialogs(
             crashSensitivity = crashSensitivity, mapCachePolicy = mapCachePolicy,
             locationSyncProfile = locationSyncProfile, isDataSaverMode = isDataSaverMode,
             isPowerSaverMode = isPowerSaverMode, snackbarHostState = snackbarHostState,
-            scope = scope, onDismiss = onDismissSettingsDialog
+            scope = scope, onOpenAbout = onOpenAbout, onDismiss = onDismissSettingsDialog
         )
     }
 

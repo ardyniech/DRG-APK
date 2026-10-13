@@ -28,6 +28,7 @@ fun AppSettingsDialogDelegate(
     isPowerSaverMode: Boolean,
     snackbarHostState: SnackbarHostState,
     scope: CoroutineScope,
+    onOpenAbout: () -> Unit,
     onDismiss: () -> Unit
 ) {
     AppSettingsDialog(
@@ -54,6 +55,7 @@ fun AppSettingsDialogDelegate(
         onPrecacheMap = { viewModel.precacheMap(context) },
         onClearCache = { viewModel.clearMapCache(context) },
         initialPref = NotificationPreference(currentMember?.id ?: "DRG-001"),
+        onOpenAbout = onOpenAbout,
         onDismiss = onDismiss,
         onSavePref = {
             viewModel.saveNotificationPref(it)

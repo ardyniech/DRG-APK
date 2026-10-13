@@ -21,6 +21,7 @@ import com.example.shared.atoms.RoleBadge
 import com.example.shared.models.DriverMember
 import com.example.shared.models.VerificationStatus
 import com.example.ui.theme.*
+import com.example.modules.dashboard.primitives.StatusChips
 
 @Composable
 fun DriverProfileOverviewCard(
@@ -94,32 +95,7 @@ fun DriverProfileOverviewCard(
             }
 
             // Interactive Duty Chips
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                listOf(
-                    Triple("Aktif Narik", true, DrgGreenPrimary),
-                    Triple("Siaga Posko", true, DrgAmberSecondary),
-                    Triple("Rehat", false, DrgTextSecondary)
-                ).forEach { (status, online, color) ->
-                    val isSelected = currentStatus.contains(status, ignoreCase = true)
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(34.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(if (isSelected) color.copy(alpha = 0.15f) else DrgSurface)
-                            .border(1.dp, if (isSelected) color else DrgOutline.copy(alpha = 0.3f), RoundedCornerShape(10.dp))
-                            .clickable { onStatusChange(status, online) },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = status,
-                            fontSize = 11.sp,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                            color = if (isSelected) color else DrgTextSecondary
-                        )
-                    }
-                }
-            }
+            StatusChips(currentStatus = currentStatus, onStatusChange = onStatusChange)
         }
     }
 }

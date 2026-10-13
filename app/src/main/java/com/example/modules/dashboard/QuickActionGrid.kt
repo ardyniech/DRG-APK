@@ -12,15 +12,12 @@ import com.example.ui.theme.*
 @Composable
 fun QuickActionGrid(
     onNavigate: (MainNavTab) -> Unit,
-    onQuickEmergency: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        RoadEmergencySosBar(onQuickEmergency = onQuickEmergency)
-
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             QuickTile(
                 title = "Live Radar",
@@ -34,7 +31,7 @@ fun QuickActionGrid(
                 title = "Kas Transparan",
                 desc = "Laporan Keuangan",
                 icon = Icons.Default.AccountBalanceWallet,
-                color = DrgAmberSecondary,
+                color = DrgAmberWarning,
                 modifier = Modifier.weight(1f),
                 onClick = { onNavigate(MainNavTab.KAS) }
             )

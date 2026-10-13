@@ -42,6 +42,7 @@ fun AppSettingsDialog(
     onPrecacheMap: () -> Unit = {},
     onClearCache: () -> Unit = {},
     initialPref: NotificationPreference,
+    onOpenAbout: () -> Unit = {},
     onDismiss: () -> Unit,
     onSavePref: (NotificationPreference) -> Unit
 ) {
@@ -91,6 +92,19 @@ fun AppSettingsDialog(
                     shape = RoundedCornerShape(10.dp)
                 ) {
                     Text("Simpan Pengaturan", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                }
+
+                OutlinedButton(
+                    onClick = {
+                        if (isTestingSound) onStopSosAlarm()
+                        onDismiss()
+                        onOpenAbout()
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = DrgGreenPrimary)
+                ) {
+                    Text("Tentang Aplikasi & Peta Jalan V", fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }

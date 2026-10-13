@@ -9,15 +9,24 @@ import androidx.compose.ui.graphics.Color
 // Color Aliases mapped to Grab Green Brand Theme
 val DrgBackground = DrgCanvasBg
 val DrgSurface = DrgCardSurface
-val DrgSurfaceVariant = Color(0xFFEBF6F0)
+val DrgSurfaceVariant = Color(0xFFE2F4E9)
 
 val DrgBackgroundGradient = Brush.verticalGradient(
     colors = listOf(
-        Color(0xFFD2EFE0), // Subtle Grab Green top tint
-        Color(0xFFE9F5EE), // Soft fresh middle
-        Color(0xFFF4F9F6)  // Light clean bottom
+        Color(0xFFBCE8D0), // Radiant Grab Emerald atmospheric top aura
+        Color(0xFFD6F2E2), // Vibrant fresh mint middle
+        Color(0xFFEBF6F0)  // Luminous pearl-mint base
     )
 )
+
+val DrgGlassBorderBrush = Brush.linearGradient(
+    colors = listOf(
+        Color.White.copy(alpha = 0.95f),
+        Color.White.copy(alpha = 0.50f),
+        DrgGrabGreenPrimary.copy(alpha = 0.25f)
+    )
+)
+
 val DrgOutline = DrgBorderLight
 val DrgTextPrimary = DrgTextDark
 val DrgTextSecondary = DrgTextSlate
@@ -63,4 +72,3 @@ fun DRGDriverTheme(content: @Composable () -> Unit) {
         content = content
     )
 }
-
