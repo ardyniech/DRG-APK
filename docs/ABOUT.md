@@ -4,7 +4,7 @@
 
 **Progres pengembangan keseluruhan: 64%** (13 selesai · 12 dikerjakan · 8 direncanakan)
 
-Versi `fb2e788` · commit `fb2e788` · 2026-10-13 · 15 modul · 335 file sumber · 22981 baris · 42 test suite
+Versi `327ec80` · commit `327ec80` · 2026-10-13 · 15 modul · 326 file sumber · 22344 baris · 41 test suite
 
 > Dokumen ini di-generate otomatis oleh `generate_about_manifest.py`. Status & persentase dihitung dari kode nyata, bukan ditulis manual.
 

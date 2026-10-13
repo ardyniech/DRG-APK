@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "fb2e788",
-    "commit": "fb2e788",
+    "version": "327ec80",
+    "commit": "327ec80",
     "commitDate": "2026-10-13",
     "generatedBy": "generate_about_manifest.py"
   },
@@ -25,9 +25,9 @@
     "inProgress": 12,
     "planned": 8,
     "modules": 15,
-    "totalSourceFiles": 335,
-    "totalLoc": 22981,
-    "testSuites": 42
+    "totalSourceFiles": 326,
+    "totalLoc": 22344,
+    "testSuites": 41
   },
   "phases": [
     {
@@ -156,7 +156,7 @@
       "status": "IN_PROGRESS",
       "progress": 70,
       "files": 22,
-      "loc": 777,
+      "loc": 788,
       "todos": 0,
       "tests": [
         "AppDatabaseMigrationTest",
@@ -343,12 +343,11 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 41,
-      "loc": 3205,
+      "files": 32,
+      "loc": 2557,
       "todos": 0,
       "tests": [
         "FreeMapAndTrafficTest",
-        "GoogleMapsDriverLogicTest",
         "LiveDriverMapTest",
         "MapTileCacheAndStateTest",
         "PoskoTilePrefetchTest"
