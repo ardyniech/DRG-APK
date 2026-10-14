@@ -25,18 +25,19 @@ fun LandingScreen(
     onNavigateToAbout: () -> Unit,
     onQuickDemoLogin: () -> Unit = onNavigateToLogin
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp, vertical = 12.dp)
-            .testTag("landing_screen"),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        LandingHeroCard(modifier = Modifier.padding(top = 6.dp))
-        LandingFeatureAutoScrollRow()
-        LandingAboutCard(onClick = onNavigateToAbout)
+    DrgScreenContainer {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .testTag("landing_screen"),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            LandingHeroCard(modifier = Modifier.padding(top = 6.dp))
+            LandingFeatureAutoScrollRow()
+            LandingAboutCard(onClick = onNavigateToAbout)
 
         Column(
             modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
