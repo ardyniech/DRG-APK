@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "b619702",
-    "commit": "b619702",
+    "version": "47acbc8",
+    "commit": "47acbc8",
     "commitDate": "2026-10-14",
     "generatedBy": "generate_about_manifest.py"
   },
@@ -25,8 +25,8 @@
     "inProgress": 13,
     "planned": 8,
     "modules": 15,
-    "totalSourceFiles": 340,
-    "totalLoc": 23574,
+    "totalSourceFiles": 341,
+    "totalLoc": 23601,
     "testSuites": 43
   },
   "phases": [
