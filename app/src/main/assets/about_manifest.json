@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "b092406",
-    "commit": "b092406",
+    "version": "a1d1f45",
+    "commit": "a1d1f45",
     "commitDate": "2026-10-14",
     "generatedBy": "generate_about_manifest.py"
   },
@@ -25,8 +25,8 @@
     "inProgress": 13,
     "planned": 8,
     "modules": 15,
-    "totalSourceFiles": 343,
-    "totalLoc": 23830,
+    "totalSourceFiles": 352,
+    "totalLoc": 24503,
     "testSuites": 43
   },
   "phases": [
@@ -84,8 +84,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 12,
-      "loc": 1044,
+      "files": 13,
+      "loc": 1144,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
