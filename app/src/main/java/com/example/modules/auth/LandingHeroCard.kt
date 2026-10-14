@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
+import com.example.shared.atoms.DrgFloatingLogo
 import com.example.shared.atoms.DrgGlassCard
 import com.example.ui.theme.*
 
@@ -36,21 +37,7 @@ fun LandingHeroCard(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth().padding(vertical = 18.dp, horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier
-                    .size(96.dp)
-                    .clip(RoundedCornerShape(22.dp))
-                    .background(Color.Black)
-                    .border(2.dp, DrgGrabGreenPrimary, RoundedCornerShape(22.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.drg_app_icon),
-                    contentDescription = "Logo Resmi DRG",
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.fillMaxSize().padding(4.dp)
-                )
-            }
+            DrgFloatingLogo(logoRes = R.drawable.drg_app_icon, baseSize = 108)
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier
