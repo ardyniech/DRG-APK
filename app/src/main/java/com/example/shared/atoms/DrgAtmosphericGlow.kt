@@ -93,8 +93,8 @@ fun DrgAtmosphericGlow(modifier: Modifier = Modifier, cinematic: Boolean = true)
         )
 
         val orbCenter = Offset(
-            w * (0.72f + t * 0.05f),
-            h * (0.48f + sin(t * 2 * PI) * 0.05f)
+            x = (w * (0.72f + t * 0.05f)),
+            y = (h * (0.48f + (sin(t * 2 * PI).toFloat()) * 0.05f))
         )
         drawCircle(
             brush = Brush.radialGradient(
