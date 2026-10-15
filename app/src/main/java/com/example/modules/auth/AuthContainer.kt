@@ -1,20 +1,18 @@
 package com.example.modules.auth
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import com.example.core.viewmodel.DRGViewModel
+import com.example.core.viewmodel.registerNewDriver
 import com.example.modules.about.AboutScreen
-import com.example.core.viewmodel.*
 import com.example.shared.atoms.DrgAtmosphericGlow
 import com.example.shared.models.MemberRole
-import com.example.ui.theme.*
+import com.example.shared.utils.rememberDoubleBackExitHandler
+import com.example.ui.theme.DrgBackgroundGradient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -31,6 +29,23 @@ fun AuthContainerScreen(
     var showRegisterSuccessDialog by remember { mutableStateOf(false) }
     val members by viewModel.allMembers.collectAsState()
     val context = androidx.compose.ui.platform.LocalContext.current
+    val doubleBackHandler = rememberDoubleBackExitHandler()
+
+    BackHandler {
+        when {
+            showRegisterSuccessDialog -> {
+                showRegisterSuccessDialog = false
+                currentStage = AuthStage.LOGIN
+            }
+            currentStage != AuthStage.LANDING -> {
+                doubleBackHandler.reset()
+                currentStage = AuthStage.LANDING
+            }
+            else -> {
+                doubleBackHandler.handleBackPress()
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
         val savedId = withContext(Dispatchers.IO) {
@@ -82,29 +97,10 @@ fun AuthContainerScreen(
     }
 
     if (showRegisterSuccessDialog) {
-        AlertDialog(
-            onDismissRequest = {
+        RegisterSuccessDialog(
+            onDismiss = {
                 showRegisterSuccessDialog = false
                 currentStage = AuthStage.LOGIN
-            },
-            title = {
-                Text("Pendaftaran Berhasil! 🎉", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = DrgTextDark)
-            },
-            text = {
-                Text(
-                    "Data registrasi Anda telah tersimpan. Pengurus / Satgas akan memverifikasi berkas KTA Anda.",
-                    fontSize = 13.sp
-                )
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showRegisterSuccessDialog = false
-                        currentStage = AuthStage.LOGIN
-                    }
-                ) {
-                    Text("Lanjut ke Halaman Login", fontWeight = FontWeight.Bold, color = DrgGrabGreenPrimary)
-                }
             }
         )
     }

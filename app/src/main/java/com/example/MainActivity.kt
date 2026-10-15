@@ -54,5 +54,14 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        // App transitions seamlessly to background state ("tenggelam") on Home / Recents
+    }
+
+    fun sinkToBackground(): Boolean {
+        return moveTaskToBack(true)
+    }
 }
 

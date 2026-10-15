@@ -12,10 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.core.sync.SyncStatus
-import com.example.core.viewmodel.CashManagementViewModel
-import com.example.core.viewmodel.DRGViewModel
 import com.example.core.viewmodel.*
-import com.example.core.viewmodel.MainNavTab
 import com.example.modules.auth.AuthContainerScreen
 import com.example.modules.main.primitives.DrgAppDialogs
 import com.example.modules.main.primitives.DrgTabContentSwitcher
@@ -38,8 +35,10 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
+    val doubleBackHandler = com.example.shared.utils.rememberDoubleBackExitHandler()
+
     // Android Back Button Handler
-    BackHandler {
+    BackHandler(enabled = state.isLoggedIn.value) {
         when {
             showEmergencyTrigger -> showEmergencyTrigger = false
             showAddKasDialog -> showAddKasDialog = false
@@ -48,8 +47,11 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
             showNotifPrefDialog -> showNotifPrefDialog = false
             showSettingsDialog -> showSettingsDialog = false
             state.currentTab.value == MainNavTab.ABOUT -> viewModel.selectTab(MainNavTab.PROFILE)
-            state.currentTab.value != MainNavTab.DASHBOARD -> viewModel.selectTab(MainNavTab.DASHBOARD)
-            else -> (context as? android.app.Activity)?.finish()
+            state.currentTab.value != MainNavTab.DASHBOARD -> {
+                doubleBackHandler.reset()
+                viewModel.selectTab(MainNavTab.DASHBOARD)
+            }
+            else -> doubleBackHandler.handleBackPress()
         }
     }
 
