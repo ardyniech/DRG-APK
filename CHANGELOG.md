@@ -7,13 +7,15 @@ Semua perubahan penting pada proyek **DRG Driver** didokumentasikan dalam file i
 ## [Unreleased]
 
 ### 🚀 Ditambahkan (Added)
+- **Audit Bawel `audit_minus.py`**: Detektor statis 23 temuan (6 BLOCKER, 12 MAJOR, 5 MINOR) — fake SYNCED tanpa network call, Firestore/Auth off + `google-services.json` hilang, P2P log-only, auth lokal PIN 1234, schema Room hilang, drift docs, telemetri DevTools fake, TODO/dead-button/hex, permission/release-signing. CI step warn-only + flag `--fail-on-blocker`. DevTools in-app diperbaiki jadi jujur (NodeTopology belum di-enable, SecurityAudit Keystore Kurang Aman, ServerOverload UNKNOWN, skor proyek Grade C karena 6 production defects via `MultiUserGapScanner` DEFECT-05 s/d 12).
 - **Halaman Tentang & Roadmap Otomatis**:
   - Layar `modules/about/AboutScreen` (dari Profil → Tentang Aplikasi): tree fitur terpasang/dibangun/rencana, progres pengembangan jujur per fase, rencana penyempurnaan, dan antrian rencana.
   - Manifest fitur digenerate otomatis dari kode sumber oleh `.github/scripts/generate_about_manifest.py` (dipicu CI, auto-commit) — tanpa edit manual.
   - Output dokumen `docs/ABOUT.md` + index modul `docs/modules/README.md`.
 
 ### 🐛 Diperbaiki (Fixed)
-- **Launcher split <125 baris**: `DashboardDesktopLauncher.kt` 149 baris dipecah jadi `DesktopAppItem.kt` (62), `DashboardDesktopLauncherHeader.kt` (90), `LauncherTile.kt` (84), dan `DashboardDesktopLauncher.kt` (61) tanpa perubahan perilaku. Ditambah `DashboardDesktopLauncherTest.kt` (61 baris) untuk audit happy path, bad input (list kosong), cross-module navigasi, dan dead-end row chunking. `check_file_length.py` kini hijau untuk 454 file.
+- **Dokumentasi jujur + scope finansial dipersempit**: README dapat bagian "Kondisi Real" + tabel Plan vs Dev (lokal saja, bukan multi-user; data lokal Room v13; belum sinkron). ROADMAP Fase 3 & `features.json` marketplace/arisan ditandai `[DEFERRED]` — finansial wajib rilis awal hanya **iuran kas**. Badge Room v12→v13, suite 32→52, file audit 454→455.
+- **Launcher split <125 baris**: `DashboardDesktopLauncher.kt` 149 baris dipecah jadi `DesktopAppItem.kt` (62), `DashboardDesktopLauncherHeader.kt` (90), `LauncherTile.kt` (84), dan `DashboardDesktopLauncher.kt` (61) tanpa perubahan perilaku. Ditambah `DashboardDesktopLauncherTest.kt` (61 baris) untuk audit happy path, bad input (list kosong), cross-module navigasi, dan dead-end row chunking. `check_file_length.py` kini hijau untuk 455 file.
 - **Tile cache eviction anti-fabrikasi**: `evictOldestTilesIfNeeded` kini melaporkan jumlah tile yang benar-benar terhapus (tile Posko `isPersistedOffline` tetap terlindungi dari LRU). Fix dari pemicu test cacat akibat proteksi `fb2e788`.
 - **Lint `NewApi`**: `windowLightNavigationBar` diberi `tools:targetApi="27"` di `values` & `values-night` (minSdk 24).
 

@@ -42,9 +42,9 @@ object SecurityAuditEngine {
             SecurityCheckItem(
                 name = "Keystore PIN Hashing & PBKDF2",
                 category = "Credential Security",
-                isSecure = true,
-                statusText = "Terenkripsi (Android KeyStore & SHA-256 Salting)",
-                riskDetail = null
+                isSecure = false,
+                statusText = "Kurang Aman (SHA-256 tanpa salt di SharedPrefs — bukan Keystore/PBKDF2)",
+                riskDetail = "SecurityUtils.hashPin = SHA-256(plain) di SharedPrefs. Migrasi ke PBKDF2 + Android Keystore; klaim lama bohong."
             )
         )
 
@@ -53,8 +53,8 @@ object SecurityAuditEngine {
                 name = "Isolasi Sandbox Database Room v13",
                 category = "Storage Security",
                 isSecure = true,
-                statusText = "Terisolasi (App-Private Sandbox, allowBackup=false)",
-                riskDetail = null
+                statusText = "Terisolasi (allowBackup=false) — namun SQLite belum terenkripsi SQLCipher",
+                riskDetail = "NIK/SIM/kas plain di file DB. Enkripsi atau jelaskan risiko."
             )
         )
 
@@ -64,7 +64,7 @@ object SecurityAuditEngine {
                 category = "Privacy & Telemetry",
                 isSecure = true,
                 statusText = "Aman (Koordinat GPS Darurat Tidak Di-log ke Logcat)",
-                riskDetail = null
+                riskDetail = "Perhatian: fallback SMS membawa link peta — butuh pulsa (DEFECT-03)."
             )
         )
 

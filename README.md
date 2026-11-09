@@ -4,15 +4,53 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android_15-green.svg)](https://developer.android.com)
 [![Compose](https://img.shields.io/badge/Jetpack_Compose-Material_3-emerald.svg)](https://developer.android.com/jetpack/compose)
-[![Database](https://img.shields.io/badge/Room_Database-v12_Posko_RBAC_Local_First-teal.svg)](docs/DATABASE_MIGRATIONS.md)
+[![Database](https://img.shields.io/badge/Room_Database-v13_Posko_RBAC_Local_First-teal.svg)](docs/DATABASE_MIGRATIONS.md)
 [![Architecture Gating](https://img.shields.io/badge/Architecture-125_Lines_Cap_Enforced-success.svg)](.github/scripts/check_file_length.py)
-[![Tests](https://img.shields.io/badge/Unit_Tests-32_Suites_Passed-brightgreen.svg)](#-strategi-pengujian-testing-suite)
+[![Tests](https://img.shields.io/badge/Unit_Tests-52_Suites_Passed-brightgreen.svg)](#-strategi-pengujian-testing-suite)
 
 ---
 
 ## 📌 Ringkasan Proyek
 
 **DRG Driver** adalah platform komunitas terintegrasi untuk pengemudi ojek online (*Gojek, Grab, Maxim, ShopeeFood, InDrive*) di bawah naungan komunitas **Driver Riang Gembira (DRG)**. Aplikasi ini dirancang dengan prinsip **Local-First Architecture**, **Zero Cognitive Overload**, dan **Material Design 3 (M3)** untuk menghadirkan rasa aman, solidaritas, transparansi keuangan kas, serta respons darurat secepat kilat di jalan raya.
+
+---
+
+## ⚠️ Kondisi Real Saat Ini (Jujur, 2026-11-09) — Baca ini dulu
+
+> Bagian ini ditulis karena audit bawel (`audit_minus.py`) menemukan kesenjangan antara klaim lama dan kode nyata. Jangan klaim multi-user/sinkron sebelum BLOCKER di bawah diperbaiki.
+
+**Bisa dipakai banyak HP:** APK bisa di-install di banyak HP, **tapi data tidak saling berbagi**. Tiap HP punya database lokal sendiri — kas, forum, anggota, SOS di HP A tidak terlihat di HP B.
+
+**Data tersimpan:** Ya, tapi **hanya lokal** di Room SQLite (`drg_community.db`, v13, 23 entitas). Persist setelah restart, tapi:
+* `allowBackup = false` + tidak ada cloud sync/backup → ganti HP / reset / uninstal = data hilang.
+* `BackgroundSyncEngine` berlabel "Tersinkronisasi ke Cloud" padahal cuma hapus antrean lokal (`removeSyncItem()`) tanpa network call — **belum sinkron**.
+* Login PIN lokal (`SharedPreferences` + SHA-256 app-in-tanpa-salt, bukan Keystore/PBKDF2) + seed dummy per HP (`DRG-001` / PIN `1234` di `.env.example`).
+
+**Belum terhubung ke server:** `firestore`/`auth` di `app/build.gradle.kts` masih dikomentari, `app/google-services.json` belum ada, P2P signaling (`P2PSignalingManager`) cuma `Log.d`, FCM token cuma disimpan lokal.
+
+**Scope finansial sementara: iuran kas saja yang wajib.** Kas Transparan (masuk/keluar/saldo + export) adalah satu-satunya fitur finansial yang harus ada di rilis awal. **Marketplace & arisan = [DEFERRED] di luar scope** — ditandai di `.github/about/features.json`, `ROADMAP.md`, dan `docs/ABOUT.md`. Jangan jadikan blocker. Asuransi & CRDT juga ditunda.
+
+**Hasil audit bawel terbaru:** `python3 .github/scripts/audit_minus.py` → **33 temuan (7 BLOCKER, 16 MAJOR, 8 MINOR, 2 NOTE)** per 2026-11-09. Detail di [DEVTOOLS.md](DEVTOOLS.md) §9 + tab **Cacat Sistem** di DevTools in-app.
+
+---
+
+## 📋 Plan vs Dev Saat Ini
+
+| Area | Plan (target) | Dev sekarang (realita) | Status |
+|---|---|---|---|
+| Arsitektur | Clean MVI + Compose M3, <125 baris/file | 454 file audit, 0 pelanggaran via `check_file_length.py` | ✅ Selesai |
+| Database | Room v13 lokal + migrasi eksplisit | 23 entitas, migrasi 1→13 di kode, tapi schema `1-4,8,9.json` belum dicommit | ⚠️ Sebagian |
+| **Iuran Kas (finansial)** | **Kas masuk/keluar/saldo + export (wajib rilis awal)** | Kas Transparan Selesai 100%, grafik + periode + export | ✅ Selesai (lokal) |
+| Marketplace / Arisan | Oli/ban/helm distributor, arisan/talangan | Belum ada modul | ⏸️ **DEFERRED** — bukan blocker |
+| Multi-user sinkron | Firestore/Auth + FCM, data bersama antar driver | Lokal saja, Firestore/Auth off, `google-services.json` hilang | ❌ BLOCKER |
+| Sinkron offline | Outbox → cloud saat online | Outbox dihapus lokal tanpa upload; label "SYNCED" menipu | ❌ BLOCKER |
+| SOS / Radar / Forum | SOS broadcast ke tim, radar live antar HP | Tersimpan lokal + SMS fallback (butuh pulsa); radar lokal saja | ⚠️ Lokal saja |
+| P2P / FCM discovery | Peer discovery via FCM topic + WebRTC | Kerangka WebRTC ada, signaling cuma log, discovery 0% | ❌ Belum |
+| Keamanan | Keystore, TLS 1.3, RBAC server-side | TLS strict ✅, tapi PIN SHA-256 SharedPrefs, role client-side, SQLite belum terenkripsi | ⚠️ Perlu perkuat |
+| CI/CD | Audit + lint + test + release AAB | Audit/lint/test/debug APK ✅, release signing belum ada | ⚠️ Sebagian |
+
+Bacaan lanjut: [DEVTOOLS.md](DEVTOOLS.md) (peta bawel), [ROADMAP.md](ROADMAP.md) (jadwal fase), [docs/ABOUT.md](docs/ABOUT.md) (manifest auto).
 
 ---
 
@@ -51,7 +89,7 @@ Aplikasi ini dibangun menggunakan arsitektur **Clean Architecture + MVI/UDF (Uni
 ```
 app/src/main/java/com/example/
 ├── core/
-│   ├── database/                 # Room Database (AppDatabase v10, TypeConverters, DAOs)
+│   ├── database/                 # Room Database (AppDatabase v13, TypeConverters, DAOs)
 │   ├── repository/               # DRGRepository & CommunityRepository (Single source of truth)
 │   └── viewmodel/                # DRGViewModel & Coordinator Delegates (Centralized state management)
 ├── shared/
@@ -74,7 +112,7 @@ app/src/main/java/com/example/
 
 ---
 
-## 🗄️ Skema Database Lokal (Room v12)
+## 🗄️ Skema Database Lokal (Room v13)
 
 Detail skema dan panduan migrasi dapat dibaca di **[Dokumentasi Migrasi Database (docs/DATABASE_MIGRATIONS.md)](docs/DATABASE_MIGRATIONS.md)**.
 
@@ -98,12 +136,12 @@ Detail skema dan panduan migrasi dapat dibaca di **[Dokumentasi Migrasi Database
 
 ## 🧪 Strategi Pengujian (Testing Suite)
 
-Proyek ini dilengkapi dengan 32 suite pengujian unit & integrasi otomatis (2.100+ baris kode tes) berbasis **Robolectric** dan **Roborazzi**:
+Proyek ini dilengkapi dengan 52 suite pengujian unit & integrasi otomatis berbasis **Robolectric** dan **Roborazzi**:
 
 - `LandingFeatureAutoScrollTest.kt`: Pengujian kelengkapan data & properti thumbnail fitur unggulan aplikasi pada landing screen.
 - `EmergencySmsFallbackHelperTest.kt`: Pengujian fallback SMS darurat saat jaringan data offline.
 - `HelmetIntercomMonitorTest.kt`: Pengujian listener koneksi audio headset/intercom helm bluetooth.
-- `AppDatabaseMigrationTest.kt`: Verifikasi menyeluruh migrasi Room berantai dari v1 hingga v12 tanpa data loss.
+- `AppDatabaseMigrationTest.kt`: Verifikasi menyeluruh migrasi Room berantai dari v1 hingga v13 tanpa data loss.
 - `AiAssistantKnowledgeTest.kt`: Validasi basis pengetahuan AI Assistant rekomendasi rute dan posko.
 - `PoskoCheckInRepositoryTest.kt`: Pengujian pencatatan check-in posko dan pemberian poin loyalitas.
 - `RolePermissionRepositoryTest.kt`: Pengujian granular access control (kas, SOS, dashboard, promosi role).
@@ -129,6 +167,13 @@ Proyek ini dilengkapi dengan 32 suite pengujian unit & integrasi otomatis (2.100
 ### Menjalankan Audit Arsitektur (Batas 125 Baris):
 ```bash
 python3 .github/scripts/check_file_length.py
+```
+
+### Menjalankan Audit Bawel (deteksi semua minus):
+```bash
+python3 .github/scripts/audit_minus.py --json
+# untuk CI yang fail bila ada BLOCKER:
+python3 .github/scripts/audit_minus.py --fail-on-blocker
 ```
 
 ### Membangun APK Debug:

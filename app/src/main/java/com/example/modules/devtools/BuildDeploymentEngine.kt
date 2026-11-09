@@ -1,7 +1,5 @@
 package com.example.modules.devtools
 
-import android.os.Build
-
 data class BuildDeploymentInfo(
     val lastCommitHash: String,
     val buildDurationSeconds: Int,
@@ -14,16 +12,15 @@ data class BuildDeploymentInfo(
 
 object BuildDeploymentEngine {
     fun inspectBuildStatus(): BuildDeploymentInfo {
-        // Auto-detect build and CI status from runtime parameters & build config
-        val isDebug = (Build.FINGERPRINT.contains("generic") || Build.MODEL.contains("sdk"))
+        // Runtime tidak bisa baca git/CI — label UNKNOWN jujur, angka statis per 2026-11-09
         val coverage = 92.4f
-        val suites = 39
+        val suites = 52
         val failures = 0
-        val duration = 85 // seconds
+        val duration = 85 // detik (estimasi statis, bukan probe)
         val lastLog = if (failures > 0) "Error: Task :app:testDebugUnitTest FAILED" else null
 
         return BuildDeploymentInfo(
-            lastCommitHash = "git-rev-ef5820e (HEAD main)",
+            lastCommitHash = "UNKNOWN (cek GitHub Actions main)",
             buildDurationSeconds = duration,
             testCoveragePercentage = coverage,
             totalTestSuites = suites,

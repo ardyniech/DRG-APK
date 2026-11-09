@@ -13,9 +13,9 @@
     ]
   },
   "build": {
-    "version": "dev",
-    "commit": "",
-    "commitDate": "",
+    "version": "dfbb821",
+    "commit": "dfbb821",
+    "commitDate": "2026-11-09",
     "generatedBy": "generate_about_manifest.py"
   },
   "summary": {
@@ -25,9 +25,9 @@
     "inProgress": 13,
     "planned": 8,
     "modules": 17,
-    "totalSourceFiles": 449,
-    "totalLoc": 31861,
-    "testSuites": 50
+    "totalSourceFiles": 455,
+    "totalLoc": 32562,
+    "testSuites": 52
   },
   "phases": [
     {
@@ -229,8 +229,8 @@
       "phase": "phase-1",
       "status": "IN_PROGRESS",
       "progress": 95,
-      "files": 25,
-      "loc": 2079,
+      "files": 29,
+      "loc": 2400,
       "todos": 1,
       "tests": [
         "ProgressiveOnboardingLogicTest",
@@ -329,7 +329,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 20,
-      "loc": 1501,
+      "loc": 1567,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
@@ -374,8 +374,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 11,
-      "loc": 896,
+      "files": 12,
+      "loc": 1022,
       "todos": 0,
       "tests": [
         "KasTransparanComponentTest",
@@ -479,7 +479,7 @@
     {
       "id": "arisan",
       "name": "Arisan Digital & Dana Talangan",
-      "description": "Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.",
+      "description": "[DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.",
       "phase": "phase-3",
       "status": "PLANNED",
       "progress": 0
@@ -487,7 +487,7 @@
     {
       "id": "marketplace",
       "name": "Marketplace Kebutuhan Operasional",
-      "description": "Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.",
+      "description": "[DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.",
       "phase": "phase-3",
       "status": "PLANNED",
       "progress": 0
@@ -547,18 +547,21 @@
     }
   ],
   "backlog": [
-    "P2P discovery via FCM topic — device menemukan peer terdekat",
+    "Room schema `1-4,8,9.json` hilang — generate & commit (detail: `audit_minus.py` category `database`).",
+    "P2P discovery via FCM topic — device menemukan peer terdekat (BAWEL: `audit_minus.py` BLOCKER `p2p`; signaling sekarang cuma `Log.d`)",
+    "Backend multi-user + sinkron nyata — uncomment `firestore`/`auth`, isi `google-services.json`, ganti `BackgroundSyncEngine` dari \"hapus antrean lokal\" ke upload sungguhan (BAWEL: BLOCKER `firebase`/`fake-sync`)",
     "Adaptive icon/logo — proses image attachment ke `app/src/main/res/drawable/`",
-    "Database v13 explicit migrations complete — `MIGRATION_12_13` + `13.json` schema",
-    "Fitur Arisan & Dana Talangan Darurat Berbasis Smart Contract / Kas Terverifikasi.",
-    "Marketplace Kebutuhan Operasional (Oli, Ban, Helm, Jas Hujan) langsung dari distributor resmi dengan diskon anggota.",
-    "Integrasi Klaim Asuransi Mandiri & Santunan Cepat bagi driver korban kecelakaan di jalan raya.",
+    "Release signing & distribusi AAB — CI sekarang hanya `assembleDebug` (BAWEL: MAJOR `ci`)",
+    "[DEFERRED] Fitur Arisan & Dana Talangan Darurat Berbasis Smart Contract / Kas Terverifikasi.",
+    "[DEFERRED] Marketplace Kebutuhan Operasional (Oli, Ban, Helm, Jas Hujan) langsung dari distributor resmi dengan diskon anggota.",
+    "[DEFERRED] Integrasi Klaim Asuransi Mandiri & Santunan Cepat bagi driver korban kecelakaan di jalan raya.",
+    "[DEFERRED] Rekonsiliasi CRDT — conflict-free multi-device tanpa locking.",
     "Discovery Peer via FCM Topic — Device menemukan peer terdekat otomatis lewat FCM topic + broadcast IP/port signaling.",
     "Adaptive Icon & Branding — Konversi logo ke adaptive icon (foreground/background) + splash screen production.",
     "Play Integrity & Anti-Tamper — Verifikasi integritas aplikasi, R8 aggressive obfuscation, dan stripping simbol sensitif.",
     "Release Signing & Distribusi — Keystore rilis aman, signing di CI, dan alur distribusi APK production.",
-    "Arisan Digital & Dana Talangan — Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.",
-    "Marketplace Kebutuhan Operasional — Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.",
+    "Arisan Digital & Dana Talangan — [DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.",
+    "Marketplace Kebutuhan Operasional — [DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.",
     "Klaim Asuransi & Santunan — Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan.",
     "Rekonsiliasi CRDT — Conflict-free replicated data types untuk sinkronisasi multi-device tanpa locking.",
     "Instrumented UI Tests — Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).",

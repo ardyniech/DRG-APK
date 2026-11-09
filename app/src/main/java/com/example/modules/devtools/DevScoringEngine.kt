@@ -4,7 +4,7 @@ data class ProjectHealthScore(
     val baseScore: Float = 95.0f,
     val deadButtonsCount: Int = DeadButtonShallowScanner.countDeadButtons(),
     val shallowFeaturesCount: Int = DeadButtonShallowScanner.countShallowFeatures(),
-    val bugPenaltiesCount: Int = 2,
+    val bugPenaltiesCount: Int = ProductionDefectScanner.scanKnownDefects().count { it.type == DefectType.PRODUCTION_DEFECT },
     val progressPenaltiesCount: Int = 1,
     val penaltyPerDeadButton: Float = 4.0f,
     val penaltyPerShallow: Float = 3.0f,

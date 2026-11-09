@@ -7,29 +7,24 @@ data class ServerOverloadStatus(
     val loadDescription: String
 )
 
+/**
+ * Tanpa backend, beban server tidak bisa di-probe — laporkan UNKNOWN.
+ * Angka 1420 user/145ms lama adalah fabrikasi dan sudah dihapus.
+ */
 object ServerOverloadMonitor {
     fun inspectServerLoad(): ServerOverloadStatus {
-        // Auto-detect concurrent server pressure and latency
-        val latency = 145L
-        val concurrent = 1420 // active driver sessions
-        val isOverloaded = latency > 300L || concurrent > 5000
-
-        val desc = if (isOverloaded) {
-            "PERINGATAN SERVER OVERLOAD! Akses bersamaan tinggi (${concurrent} user), latency ${latency}ms."
-        } else {
-            "Kapasitas server stabil. Akses bersamaan ${concurrent} user, latency respons ${latency}ms optimal."
-        }
-
+        // Tanpa backend multi-user, tidak ada telemetri server riil.
         return ServerOverloadStatus(
-            concurrentUsersEstimate = concurrent,
-            requestLatencyMs = latency,
-            isServerOverloaded = isOverloaded,
-            loadDescription = desc
+            concurrentUsersEstimate = 0,
+            requestLatencyMs = -1L,
+            isServerOverloaded = false,
+            loadDescription = "UNKNOWN: belum ada backend multi-user — tidak ada telemetri server riil. Cek audit_minus.py BLOCKER firebase/fake-sync."
         )
     }
 
     fun hasSystemFailures(): Boolean {
-        // True if any failure detected across security, defects, server overload, or battery thermal
-        return false // Stable currently, badge triggers only on real active anomalies
+        // Jujur: belum ada backend, jadi bukan "stable" — badge harus tanya user.
+        // Kembalikan false hanya karena tidak ada probe gagal; status tetap UNKNOWN via inspectServerLoad.
+        return false
     }
 }

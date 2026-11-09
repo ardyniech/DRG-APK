@@ -265,13 +265,13 @@
     {
       "id": "arisan",
       "name": "Arisan Digital & Dana Talangan",
-      "description": "Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.",
+      "description": "[DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.",
       "phase": "phase-3"
     },
     {
       "id": "marketplace",
       "name": "Marketplace Kebutuhan Operasional",
-      "description": "Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.",
+      "description": "[DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.",
       "phase": "phase-3"
     },
     {

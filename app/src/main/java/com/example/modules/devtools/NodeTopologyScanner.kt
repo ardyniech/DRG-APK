@@ -11,7 +11,12 @@ data class TopologyNode(
     val syncState: String
 )
 
+/**
+ * Topologi kluster 5 node — jujur per audit_minus.py (2026-11-09).
+ * Cloud node tidak boleh klaim Synced sebelum Firestore di-enable.
+ */
 object NodeTopologyScanner {
+    @Suppress("UNUSED_PARAMETER")
     fun getClusterNodes(isNetworkOnline: Boolean): List<TopologyNode> = listOf(
         TopologyNode(
             nodeId = "NODE-LOCAL-01",
@@ -29,9 +34,9 @@ object NodeTopologyScanner {
             nodeType = "Cloud Multi-Region Master Node",
             endpointHost = "firestore.googleapis.com:443",
             protocol = "gRPC / HTTP/2 TLS 1.3",
-            isConnected = isNetworkOnline,
-            activeConnectionsCount = if (isNetworkOnline) 4 else 0,
-            syncState = if (isNetworkOnline) "Realtime Snapshot Synced" else "Offline Queue Buffering"
+            isConnected = false,
+            activeConnectionsCount = 0,
+            syncState = "Belum di-enable: firestore off + google-services.json hilang (BLOCKER firebase)"
         ),
         TopologyNode(
             nodeId = "NODE-AI-01",
@@ -39,9 +44,9 @@ object NodeTopologyScanner {
             nodeType = "Edge Inference Microservice",
             endpointHost = "generativelanguage.googleapis.com:443",
             protocol = "HTTPS REST / gRPC Streaming",
-            isConnected = isNetworkOnline,
-            activeConnectionsCount = if (isNetworkOnline) 1 else 0,
-            syncState = if (isNetworkOnline) "Standby / Dynamic Quota Ready" else "Disconnected"
+            isConnected = false,
+            activeConnectionsCount = 0,
+            syncState = "Placeholder lokal: AiAssistantKnowledge (API key dummy)"
         ),
         TopologyNode(
             nodeId = "NODE-MESH-01",
@@ -50,8 +55,8 @@ object NodeTopologyScanner {
             endpointHost = "224.0.0.1:multicast_udp / WiFi Direct",
             protocol = "UDP Multicast & WebRTC DataChannel",
             isConnected = true,
-            activeConnectionsCount = 6,
-            syncState = "Proximity Radar Active (Malang Raya)"
+            activeConnectionsCount = 0,
+            syncState = "Terbatas 1 subnet WiFi posko (DEFECT-02/09, P2P log-only)"
         ),
         TopologyNode(
             nodeId = "NODE-AUTH-01",
@@ -59,9 +64,9 @@ object NodeTopologyScanner {
             nodeType = "Device Fingerprint & Tamper Sentinel",
             endpointHost = "play.googleapis.com/integrity",
             protocol = "HTTPS Play Core IPC",
-            isConnected = isNetworkOnline,
-            activeConnectionsCount = if (isNetworkOnline) 1 else 0,
-            syncState = "App Licensing & Signature Verified"
+            isConnected = false,
+            activeConnectionsCount = 0,
+            syncState = "Belum di-enable: Play Integrity belum diimplementasikan"
         )
     )
 

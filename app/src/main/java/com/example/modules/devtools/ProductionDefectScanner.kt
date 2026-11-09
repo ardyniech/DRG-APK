@@ -53,5 +53,5 @@ object ProductionDefectScanner {
             honestDefectExplanation = "Mode gacor/darurat melakukan lock GPS presisi tinggi setiap 1 detik. Menyedot 12-15% baterai per jam jika tidak di-cas di holder motor.",
             engineeringRoadmapFix = "Gunakan geofencing adaptif: turunkan interval ke 5s bila driver diam/stagnan di lampu merah."
         )
-    )
+    ) + MultiUserGapScanner.extraDefects()
 }

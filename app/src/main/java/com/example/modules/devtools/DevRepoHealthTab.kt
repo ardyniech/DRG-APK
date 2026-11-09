@@ -43,7 +43,7 @@ fun DevRepoHealthTab(
                     Icon(Icons.Default.CheckCircle, contentDescription = null, tint = Color(0xFF2E7D32), modifier = Modifier.size(24.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text("Architecture Quality Audit: PASSED", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color(0xFF1B5E20))
-                        Text("Total source files audited: 411 files. 100% compliant with < 125 lines per file cap.", fontSize = 10.sp, color = Color(0xFF2E7D32))
+                        Text("Total source files audited: 455 files (statis per 2026-11-09, recheck via check_file_length.py CI). 100% compliant with < 125 lines per file cap.", fontSize = 10.sp, color = Color(0xFF2E7D32))
                     }
                 }
             }
@@ -56,7 +56,7 @@ fun DevRepoHealthTab(
                     HorizontalDivider(color = DrgOutline.copy(alpha = 0.3f))
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Total Files Audited:", fontSize = 11.sp, color = DrgTextSecondary)
-                        Text("411 Files", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
+                        Text("455 Files (statis)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
                     }
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Max Line Cap Violation:", fontSize = 11.sp, color = DrgTextSecondary)

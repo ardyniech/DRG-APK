@@ -4,7 +4,7 @@
 
 **Progres pengembangan keseluruhan: 64%** (12 selesai · 13 dikerjakan · 8 direncanakan)
 
-Versi `dev` · commit `` ·  · 17 modul · 449 file sumber · 31861 baris · 50 test suite
+Versi `dfbb821` · commit `dfbb821` · 2026-11-09 · 17 modul · 455 file sumber · 32562 baris · 52 test suite
 
 > Dokumen ini di-generate otomatis oleh `generate_about_manifest.py`. Status & persentase dihitung dari kode nyata, bukan ditulis manual.
 
@@ -71,18 +71,21 @@ Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan kl
 
 ## Backlog Berjalan
 
-- P2P discovery via FCM topic — device menemukan peer terdekat
+- Room schema `1-4,8,9.json` hilang — generate & commit (detail: `audit_minus.py` category `database`).
+- P2P discovery via FCM topic — device menemukan peer terdekat (BAWEL: `audit_minus.py` BLOCKER `p2p`; signaling sekarang cuma `Log.d`)
+- Backend multi-user + sinkron nyata — uncomment `firestore`/`auth`, isi `google-services.json`, ganti `BackgroundSyncEngine` dari "hapus antrean lokal" ke upload sungguhan (BAWEL: BLOCKER `firebase`/`fake-sync`)
 - Adaptive icon/logo — proses image attachment ke `app/src/main/res/drawable/`
-- Database v13 explicit migrations complete — `MIGRATION_12_13` + `13.json` schema
-- Fitur Arisan & Dana Talangan Darurat Berbasis Smart Contract / Kas Terverifikasi.
-- Marketplace Kebutuhan Operasional (Oli, Ban, Helm, Jas Hujan) langsung dari distributor resmi dengan diskon anggota.
-- Integrasi Klaim Asuransi Mandiri & Santunan Cepat bagi driver korban kecelakaan di jalan raya.
+- Release signing & distribusi AAB — CI sekarang hanya `assembleDebug` (BAWEL: MAJOR `ci`)
+- [DEFERRED] Fitur Arisan & Dana Talangan Darurat Berbasis Smart Contract / Kas Terverifikasi.
+- [DEFERRED] Marketplace Kebutuhan Operasional (Oli, Ban, Helm, Jas Hujan) langsung dari distributor resmi dengan diskon anggota.
+- [DEFERRED] Integrasi Klaim Asuransi Mandiri & Santunan Cepat bagi driver korban kecelakaan di jalan raya.
+- [DEFERRED] Rekonsiliasi CRDT — conflict-free multi-device tanpa locking.
 - Discovery Peer via FCM Topic — Device menemukan peer terdekat otomatis lewat FCM topic + broadcast IP/port signaling.
 - Adaptive Icon & Branding — Konversi logo ke adaptive icon (foreground/background) + splash screen production.
 - Play Integrity & Anti-Tamper — Verifikasi integritas aplikasi, R8 aggressive obfuscation, dan stripping simbol sensitif.
 - Release Signing & Distribusi — Keystore rilis aman, signing di CI, dan alur distribusi APK production.
-- Arisan Digital & Dana Talangan — Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.
-- Marketplace Kebutuhan Operasional — Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.
+- Arisan Digital & Dana Talangan — [DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.
+- Marketplace Kebutuhan Operasional — [DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.
 - Klaim Asuransi & Santunan — Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan.
 - Rekonsiliasi CRDT — Conflict-free replicated data types untuk sinkronisasi multi-device tanpa locking.
 - Instrumented UI Tests — Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).

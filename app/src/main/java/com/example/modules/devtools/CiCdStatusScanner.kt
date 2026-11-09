@@ -26,7 +26,7 @@ object CiCdStatusScanner {
         targetBranches = listOf("main", "develop"),
         timeoutMinutes = 25,
         isConcurrencyCancelled = true,
-        totalTestSuites = 39,
+        totalTestSuites = 52,
         artifactRetentionDays = 14,
         steps = listOf(
             CiStepStatus(
@@ -34,7 +34,7 @@ object CiCdStatusScanner {
                 name = "Architecture Quality Audit",
                 command = "python3 .github/scripts/check_file_length.py",
                 isMandatory = true,
-                status = "PASS (0 Pelanggaran / 426 Berkas < 125 Baris)",
+                status = "PASS (0 Pelanggaran / 455 Berkas, per 2026-11-09 — recheck via GitHub Actions)",
                 executionTimeEstimate = "2 detik",
                 failurePolicy = "HARD FAIL (Pipeline Berhenti Seketika)"
             ),
@@ -43,7 +43,7 @@ object CiCdStatusScanner {
                 name = "Feature Manifest Sync",
                 command = "python3 .github/scripts/generate_about_manifest.py",
                 isMandatory = true,
-                status = "PASS (about_manifest.json Auto-Updated)",
+                status = "UNKNOWN di runtime (about_manifest.json auto dari kode — cek ABOUT.md)",
                 executionTimeEstimate = "3 detik",
                 failurePolicy = "Auto-Commit via github-actions[bot]"
             ),
@@ -52,7 +52,7 @@ object CiCdStatusScanner {
                 name = "Android Lint Static Analysis",
                 command = "./gradlew :app:lintDebug --no-daemon",
                 isMandatory = true,
-                status = "PASS (0 Fatal Errors / Deprecation Captured)",
+                status = "UNKNOWN di runtime (cek GitHub Actions lint report)",
                 executionTimeEstimate = "45 detik",
                 failurePolicy = "Upload Lint HTML Report"
             ),
@@ -61,7 +61,7 @@ object CiCdStatusScanner {
                 name = "Robolectric & JVM Unit Tests",
                 command = "./gradlew :app:testDebugUnitTest --no-daemon",
                 isMandatory = true,
-                status = "PASS (39 Test Suites / 100% Passing)",
+                status = "UNKNOWN di runtime (52 Test Suites statis — cek GitHub Actions)",
                 executionTimeEstimate = "30 detik",
                 failurePolicy = "HARD FAIL (Reject PR Bila 1 Test Gagal)"
             ),
