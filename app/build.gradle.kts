@@ -42,10 +42,18 @@ android {
           keystoreFile.writeBytes(bytes)
         } catch (_: Exception) {}
       }
-      storeFile = keystoreFile
-      storePassword = System.getenv("DEBUG_STORE_PASSWORD") ?: "android"
-      keyAlias = System.getenv("DEBUG_KEY_ALIAS") ?: "androiddebugkey"
-      keyPassword = System.getenv("DEBUG_KEY_PASSWORD") ?: "android"
+      if (keystoreFile.exists()) {
+        storeFile = keystoreFile
+        storePassword = System.getenv("DEBUG_STORE_PASSWORD") ?: "android"
+        keyAlias = System.getenv("DEBUG_KEY_ALIAS") ?: "androiddebugkey"
+        keyPassword = System.getenv("DEBUG_KEY_PASSWORD") ?: "android"
+      } else {
+        val defaultKeystore = file("${System.getProperty("user.home")}/.android/debug.keystore")
+        storeFile = defaultKeystore
+        storePassword = "android"
+        keyAlias = "androiddebugkey"
+        keyPassword = "android"
+      }
     }
   }
 
