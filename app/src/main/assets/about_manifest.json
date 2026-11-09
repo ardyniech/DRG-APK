@@ -13,10 +13,10 @@
     ]
   },
   "build": {
-    "version": "v3.0.0",
-    "commit": "v3.0-stable",
-    "commitDate": "2026-10-16",
-    "generatedBy": "DRG Driver Architecture Engine"
+    "version": "dev",
+    "commit": "",
+    "commitDate": "",
+    "generatedBy": "generate_about_manifest.py"
   },
   "summary": {
     "overallProgress": 64,
@@ -24,10 +24,10 @@
     "done": 12,
     "inProgress": 13,
     "planned": 8,
-    "modules": 15,
-    "totalSourceFiles": 378,
-    "totalLoc": 26543,
-    "testSuites": 45
+    "modules": 17,
+    "totalSourceFiles": 449,
+    "totalLoc": 31861,
+    "testSuites": 50
   },
   "phases": [
     {
@@ -84,8 +84,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 14,
-      "loc": 1113,
+      "files": 16,
+      "loc": 1287,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
@@ -100,7 +100,7 @@
       "status": "IN_PROGRESS",
       "progress": 75,
       "files": 2,
-      "loc": 160,
+      "loc": 165,
       "todos": 0,
       "tests": []
     },
@@ -264,8 +264,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 16,
-      "loc": 1381,
+      "files": 20,
+      "loc": 1725,
       "todos": 0,
       "tests": [
         "ForumPersistenceTest"
@@ -279,7 +279,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 7,
-      "loc": 542,
+      "loc": 545,
       "todos": 0,
       "tests": [
         "GamificationAndLoyaltyTest"
@@ -328,8 +328,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 19,
-      "loc": 1383,
+      "files": 20,
+      "loc": 1501,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
@@ -360,8 +360,8 @@
       "phase": "phase-1",
       "status": "IN_PROGRESS",
       "progress": 70,
-      "files": 8,
-      "loc": 760,
+      "files": 9,
+      "loc": 803,
       "todos": 0,
       "tests": [
         "ViewModelRefactorAuditTest"
@@ -374,8 +374,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 9,
-      "loc": 732,
+      "files": 11,
+      "loc": 896,
       "todos": 0,
       "tests": [
         "KasTransparanComponentTest",

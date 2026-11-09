@@ -10,6 +10,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
   build-and-test:
     name: Build, Lint & Unit Tests
@@ -56,8 +59,8 @@ jobs:
           if git diff --cached --quiet; then
             echo "About manifest up to date, nothing to commit."
           else
-            git commit -m "chore(about): auto-update feature manifest"
-            git push
+            git commit -m "chore(about): auto-update feature manifest [skip ci]"
+            git push || echo "Git push skipped or failed due to branch protection"
           fi
 
       - name: Run Android Lint
