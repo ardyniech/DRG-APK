@@ -13,6 +13,7 @@ Semua perubahan penting pada proyek **DRG Driver** didokumentasikan dalam file i
   - Output dokumen `docs/ABOUT.md` + index modul `docs/modules/README.md`.
 
 ### 🐛 Diperbaiki (Fixed)
+- **Launcher split <125 baris**: `DashboardDesktopLauncher.kt` 149 baris dipecah jadi `DesktopAppItem.kt` (62), `DashboardDesktopLauncherHeader.kt` (90), `LauncherTile.kt` (84), dan `DashboardDesktopLauncher.kt` (61) tanpa perubahan perilaku. Ditambah `DashboardDesktopLauncherTest.kt` (61 baris) untuk audit happy path, bad input (list kosong), cross-module navigasi, dan dead-end row chunking. `check_file_length.py` kini hijau untuk 454 file.
 - **Tile cache eviction anti-fabrikasi**: `evictOldestTilesIfNeeded` kini melaporkan jumlah tile yang benar-benar terhapus (tile Posko `isPersistedOffline` tetap terlindungi dari LRU). Fix dari pemicu test cacat akibat proteksi `fb2e788`.
 - **Lint `NewApi`**: `windowLightNavigationBar` diberi `tools:targetApi="27"` di `values` & `values-night` (minSdk 24).
 
