@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -26,14 +27,18 @@ fun DevToolsDashboardScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val isSuperAdmin = currentMember?.role == MemberRole.SUPER_ADMIN
     var selectedTab by remember { mutableIntStateOf(0) }
     val tabs = listOf(
-        "RCA & Gejala", "Audit Keamanan", "Node Server", "Cacat Sistem",
-        "Saran Device", "Maturity", "Bug Hunter", "Progress",
-        "RAM & Memory", "Server API", "Tech & Git CLI", "Repo Health"
+        "Tree Progress", "Audit UI/UX", "Git CI/CD", "Build & Deploy", "Code Integrity", "Device Perf",
+        "RCA & Gejala", "Audit Keamanan", "Node Server", "Cacat Sistem", "Saran Device",
+        "Maturity", "Bug Hunter", "RAM & Memory", "Server API", "Tech Stack", "Repo Health"
     )
     val score = remember { ProjectHealthScore() }
+    val apkInfo = remember { DynamicApkInspector.inspectRunningApk(context) }
+    val dbReport = remember { DynamicDbIntrospector.introspectDatabase(context) }
+    val capsReport = remember { RuntimeCapabilityProber.probeRunningCapabilities() }
 
     Column(
         modifier = modifier
@@ -47,7 +52,7 @@ fun DevToolsDashboardScreen(
                     Icon(Icons.Default.Terminal, contentDescription = null, tint = DrgGreenPrimary)
                     Column {
                         Text("DRG Dev Tools AI & Super Admin", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = DrgTextPrimary)
-                        Text("Auto-Audit Keamanan, Node Server, Cacat Sistem, & Saran Device", fontSize = 10.sp, color = DrgTextMuted)
+                        Text("Observabilitas Enterprise: CI/CD, Code Integrity, Device Perf, & Keamanan", fontSize = 10.sp, color = DrgTextMuted)
                     }
                 }
             },
@@ -71,6 +76,10 @@ fun DevToolsDashboardScreen(
             }
         } else {
             DevScoreBanner(score = score)
+
+            Box(modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)) {
+                DevApkSkewCard(apkInfo = apkInfo, dbReport = dbReport, capsReport = capsReport)
+            }
 
             ScrollableTabRow(
                 selectedTabIndex = selectedTab,

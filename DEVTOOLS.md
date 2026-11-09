@@ -1,149 +1,138 @@
-# DRG DevTools — Dedicated Engineering & Diagnostics Manual (v5.0)
+# DRG DevTools — Dedicated Engineering & Diagnostics Manual (v6.0)
 
-> **MANDATE:** Dilarang keras memalsukan skor (No Fake 100%) dan **DILARANG MENGGUNAKAN MOCKING DATA** di DevTools. Seluruh telemetri, latensi, penggunaan memori, deteksi dead button, audit keamanan, topologi node, cacat produksi, dan saran optimasi device di-probe secara **otomatis (auto-detect)** langsung dari runtime Android riil.
+> **MANDATE:** Dilarang keras memalsukan skor (No Fake 100%) dan **DILARANG MENGGUNAKAN MOCKING DATA** di DevTools. Seluruh telemetri, latensi, penggunaan memori, deteksi dead button, audit keamanan, topologi node, cacat produksi, model pohon fase pengembangan, audit UI/UX berkendara, dan status CI/CD di-probe secara **otomatis (auto-detect)** langsung dari runtime Android riil.
 
 ---
 
 ## 1. TUJUAN & FILOSOFI OBSERVABILITAS ENTERPRISE
 DevTools DRG (Driver Riang Gembira) diciptakan sebagai **Pusat Kendali Observabilitas, Audit Keamanan, & Diagnosis Kritis (Pre-Failure Watchdog)** untuk AI Developer dan Human Engineer:
-1. **Root Cause Analysis (RCA) Mendalam:** Setiap anomali langsung menyertakan file sumber (`sourceFile`), nama method (`sourceFunction`), penjelasan teknis akar masalah (`rootCauseTechnical`), dan langkah perbaikan solutif (`actionableFix`).
-2. **Pendeteksian Gejala Awal (Pre-Failure Symptom Early Warning):** Mampu mengenali gejala performa, saturasi memori, atau timeout sebelum pengguna atau developer mengalami crash/freeze di jalanan.
-3. **Audit Keamanan Ketat (Strict Security Audit):** Deteksi root/su binary, enforce TLS 1.3 & disable cleartext traffic, proteksi Android Keystore PIN, SQLite App-Private isolation, dan kerahasiaan koordinat SOS.
-4. **Topologi Jaringan & Kluster Multi-Node:** Memantau 5 node distributed system (Local SQLite, Firestore Cloud Cluster, Gemini AI Gateway, P2P WiFi Direct Mesh, Google Play Integrity).
-5. **Transparansi Cacat Produksi & Konsep:** Pengungkapan jujur atas kelemahan arsitektural (misal: role validation client-side, P2P tanpa STUN/TURN, fallback SMS butuh pulsa operator).
-6. **Device Android Advisor:** Mengevaluasi kondisi HP driver (RAM, Suhu Baterai, Battery Optimization Whitelist) dan memberikan rekomendasi optimasi praktis di lapangan.
-7. **Zero Mocking Telemetry:** Latensi diuji langsung menggunakan socket TCP/SSL handshake (`RealtimeNetworkProbe`), memori diinspeksi dari OS `ActivityManager` dan JVM `Runtime` (`RealtimeMemoryProbe`).
-8. **Deteksi Tombol Mati & Fitur Dangkal:** Menangkap tombol tanpa backend receiver dan komponen UI yang belum terhubung ke Room database.
-9. **Matriks Kematangan Modul 4 Tingkat:** Mengklasifikasikan modul secara jujur: *Benih*, *Anak*, *Mature*, *Lulus*.
-10. **Skor Penalti Ketat:** Memotong skor proyek secara berlipat agar tidak ada klaim sukses palsu.
+1. **Model Pohon Fase Pengembangan (Hierarchical Phase & Sub-Feature Tree):** Tidak ada klaim lulus prematur! Jika dalam suatu sub-fase terdapat cacat atau tombol mati, fase tersebut ditandai **TERKENDALA CACAT**, lengkap dengan rincian *Apa Fungsinya* dan *Kenapa Wajib Ada* (*"what & why"*).
+2. **Audit UI/UX Real Experience Ojol:** Mengevaluasi ergonomi berkendara (target sentuh min 48x48dp, kontras terik matahari siang hari, beban kognitif one-thumb, getaran taktil haptic, dan jaminan zero dead-end saat offline).
+3. **Observabilitas Real GitHub Actions CI/CD:** Memonitor 5 tahapan pipeline build, audit batas baris (<125 lines), linting, 39 test suites Robolectric, dan retention artifact.
+4. **Root Cause Analysis (RCA) Mendalam:** Setiap anomali langsung menyertakan file sumber (`sourceFile`), nama method (`sourceFunction`), penjelasan teknis akar masalah (`rootCauseTechnical`), dan langkah perbaikan solutif (`actionableFix`).
+5. **Audit Keamanan Ketat (Strict Security Audit):** Deteksi root/su binary, enforce TLS 1.3 & disable cleartext traffic, proteksi Android Keystore PIN, SQLite App-Private isolation, dan kerahasiaan koordinat SOS.
+6. **Topologi Jaringan & Kluster Multi-Node:** Memantau 5 node distributed system (Local SQLite, Firestore Cloud Cluster, Gemini AI Gateway, P2P WiFi Direct Mesh, Google Play Integrity).
+7. **Transparansi Cacat Produksi & Konsep:** Pengungkapan jujur atas kelemahan arsitektural (misal: role validation client-side, P2P tanpa STUN/TURN, fallback SMS butuh pulsa operator).
+8. **Device Android Advisor:** Mengevaluasi kondisi HP driver (RAM, Suhu Baterai, Battery Optimization Whitelist) dan memberikan rekomendasi optimasi praktis di lapangan.
+9. **Zero Mocking Telemetry:** Latensi diuji langsung menggunakan socket TCP/SSL handshake (`RealtimeNetworkProbe`), memori diinspeksi dari OS `ActivityManager` dan JVM `Runtime` (`RealtimeMemoryProbe`).
+10. **Matriks Kematangan Modul 4 Tingkat:** Mengklasifikasikan modul secara jujur: *Benih*, *Anak*, *Mature*, *Lulus*.
 
 ---
 
 ## 2. AKSES KEAMANAN (SUPER ADMIN ONLY)
 - **Role Restriction:** Fitur DevTools hanya dapat dibuka oleh akun dengan peran `MemberRole.SUPER_ADMIN` (Founding Ketua / System Controller).
 - **Access Point:** Tombol **"🛠️ Dev Tools AI & Super Admin Monitor"** di layar `ProfileScreen.kt` (dibawah KTA Digital).
-- **Safety Gate:** Akun non-Super Admin (Anggota, Bendahara, Satgas) otomatis diblokir dengan kartu *Access Denied* demi keamanan kredensial dan telemetri sistem.
+- **Safety Gate:** Akun non-Super Admin otomatis diblokir dengan kartu *Access Denied*.
 
 ---
 
-## 3. 12 TAB DIAGNOSTIK DEVTOOLS TERINTEGRASI
+## 3. 14 TAB DIAGNOSTIK DEVTOOLS TERINTEGRASI
 
-| Tab # | Nama Tab | File Komponen | Engine / Probe | Fungsi Utama |
+| Tab # | Nama Tab | File Komponen | Engine / Scanner | Fungsi Utama |
 |---|---|---|---|---|
-| 1 | **RCA** | `DevRootCauseTab.kt` | `EarlySymptomDetector.kt` | Root Cause Analysis: file sumber, fungsi, akar masalah, & kode solusi. |
-| 2 | **Security** | `DevSecurityAuditTab.kt` | `SecurityAuditEngine.kt` | Audit 5 vektor: Root/SU, TLS/Cleartext, Keystore, Sandbox SQLite, SOS Privacy. |
-| 3 | **Nodes** | `DevNodeTopologyTab.kt` | `NodeTopologyScanner.kt` | Status 5 distributed node kluster & protokol komunikasi. |
-| 4 | **Defects** | `DevDefectsTab.kt` | `ProductionDefectScanner.kt` | Transparansi cacat produksi, konsep arsitektur rapuh, & roadmap perbaikan. |
-| 5 | **Device** | `DevDeviceAdvisorTab.kt` | `DeviceAdvisorEngine.kt` | Evaluasi HP driver (RAM, Baterai, Suhu, Whitelist) & saran lapangan. |
-| 6 | **Tech Stack** | `DevTechStackTab.kt` | Runtime reflection & Git | Stack library, toolchain Kotlin/Compose/Room, & Git commit tracking. |
-| 7 | **Maturity** | `DevMaturityTab.kt` | `FeatureMaturity.kt` | 4 Tingkat kematangan: Benih, Anak, Mature, Lulus. |
-| 8 | **Bug Hunter** | `DevBugHunterTab.kt` | `DeadButtonShallowScanner.kt` | Deteksi tombol mati, form dangkal, dan penalti bobot. |
-| 9 | **Progress** | `DevProgressTab.kt` | `DevProgressTab.kt` | Roadmap pengerjaan fitur DRG & backlog yang belum tuntas. |
-| 10 | **Memory** | `DevMemoryTab.kt` | `RealtimeMemoryProbe.kt` | Heap JVM, total RAM OS, available RAM, dan status low memory device. |
-| 11 | **Server** | `DevServerTab.kt` | `RealtimeNetworkProbe.kt` | Live socket ping ke Firestore, Gemini, & posko nodes (zero mock). |
-| 12 | **Repo** | `DevRepoHealthTab.kt` | Static architecture audit | Audit 415+ file sumber terhadap batas baris < 125 baris per file. |
+| 1 | **Tree Progress** | `DevProgressTab.kt` | `PhaseTreeScanner.kt` | Model pohon fase & sub-fitur jujur, rincian apa & kenapa, larangan lulus bila ada cacat. |
+| 2 | **Audit UI/UX** | `DevUiUxAuditTab.kt` | `UiUxAuditEngine.kt` | Skor ergonomi berkendara, target sentuh min 48dp, kontras terik matahari, & haptic. |
+| 3 | **Git CI/CD** | `DevCiCdTab.kt` | `CiCdStatusScanner.kt` | Status riil GitHub Actions CI/CD (5 langkah build, 39 test suites, hard fail policy). |
+| 4 | **RCA & Gejala** | `DevRootCauseTab.kt` | `EarlySymptomDetector.kt` | Root Cause Analysis: file sumber, fungsi, akar masalah, & kode solusi. |
+| 5 | **Audit Keamanan** | `DevSecurityAuditTab.kt` | `SecurityAuditEngine.kt` | Audit 5 vektor: Root/SU, TLS/Cleartext, Keystore, Sandbox SQLite, SOS Privacy. |
+| 6 | **Node Server** | `DevNodeTopologyTab.kt` | `NodeTopologyScanner.kt` | Status 5 distributed node kluster & protokol komunikasi. |
+| 7 | **Cacat Sistem** | `DevDefectsTab.kt` | `ProductionDefectScanner.kt` | Transparansi cacat produksi, konsep arsitektur rapuh, & roadmap perbaikan. |
+| 8 | **Saran Device** | `DevDeviceAdvisorTab.kt` | `DeviceAdvisorEngine.kt` | Evaluasi HP driver (RAM, Baterai, Suhu, Whitelist) & saran lapangan. |
+| 9 | **Maturity** | `DevMaturityTab.kt` | `FeatureMaturity.kt` | 4 Tingkat kematangan: Benih, Anak, Mature, Lulus. |
+| 10 | **Bug Hunter** | `DevBugHunterTab.kt` | `DeadButtonShallowScanner.kt` | Deteksi tombol mati, form dangkal, dan penalti bobot. |
+| 11 | **RAM & Memory** | `DevMemoryTab.kt` | `RealtimeMemoryProbe.kt` | Heap JVM, total RAM OS, available RAM, dan status low memory device. |
+| 12 | **Server API** | `DevServerTab.kt` | `RealtimeNetworkProbe.kt` | Live socket ping ke Firestore, Gemini, & posko nodes (zero mock). |
+| 13 | **Tech Stack** | `DevTechStackTab.kt` | Runtime reflection & Git | Stack library, toolchain Kotlin/Compose/Room, & Git commit tracking. |
+| 14 | **Repo Health** | `DevRepoHealthTab.kt` | Static architecture audit | Audit 426+ file sumber terhadap batas baris < 125 baris per file. |
 
 ---
 
-## 4. AUDIT KEAMANAN KETAT (SECURITY AUDIT ENGINE)
+## 4. MODEL POHON FASE PENGEMBANGAN (PHASE TREE ARCHITECTURE)
 
-Engine: `SecurityAuditEngine.kt`
-Menguji 5 parameter keamanan langsung pada device Android:
-1. **Root / Jailbreak Binary Check:**
-   - Memeriksa keberadaan file binary `su`, `busybox`, `magisk` pada direktori `/system/bin`, `/system/xbin`, `/sbin`, `/vendor/bin`, dll.
-2. **Network Security Config (Cleartext Traffic Policy):**
-   - Memastikan `usesCleartextTraffic` dimatikan (`false`) dan TLS 1.3 enforced via `network_security_config.xml`.
-3. **Android Keystore Hardware-Backed PIN:**
-   - Memeriksa alias `DRG_SECURITY_KEY` pada provider `AndroidKeyStore` untuk enkripsi data sensitif (KTA, wallet, role audit).
-4. **App-Private SQLite Sandbox Isolation:**
-   - Memastikan database `drg_master_v13.db` tersimpan di sandbox private internal `/data/user/0/com.example/databases` tanpa permission `WorldReadable`.
-5. **SOS Emergency Telemetry Confidentiality:**
-   - Memverifikasi koordinat GPS latitude/longitude tidak pernah diekspos ke Logcat atau shared storage publik.
+Engine: `PhaseTreeScanner.kt`, `DevPhaseCard.kt`, `DevFeatureItemCard.kt`
 
----
+Prinsip Kejujuran Dev: **Jika salah satu sub-fitur memiliki cacat atau berstatus pending, maka sub-fase dan fase induknya HARAM dinyatakan Lulus!** Status langsung ditandai `TERKENDALA_CACAT`.
 
-## 5. TOPOLOGI KLUSTER MULTI-NODE DISTRIBUSI
+### Struktur 5 Fase Pengembangan DRG:
+1. **Fase 1: Fondasi Arsitektur, Keamanan & RBAC (Status: TERKENDALA CACAT)**
+   - Sub-Fase 1.1: Room v13 Storage & Multi-Entity (Lulus Sempurna - 23 tabel aktif).
+   - Sub-Fase 1.2: Wewenang Role & Keamanan Sesi (Terkendala Cacat - Validasi role masih client-side di Room).
+2. **Fase 2: Komunitas, Kas Transparan & Mitra (Status: TERKENDALA CACAT)**
+   - Sub-Fase 2.1: Kas Transparan & Laporan Keuangan (Lulus Sempurna - Input kas & export text/CSV).
+   - Sub-Fase 2.2: Forum Diskusi & Rating Bengkel (Terkendala Cacat - Tombol kirim dokumen asuransi belum terhubung ke upload worker).
+3. **Fase 3: Hardware, Audio Intercom & Offline P2P (Status: TERKENDALA CACAT)**
+   - Sub-Fase 3.1: P2P Walkie Talkie & Mesh Radar (Terkendala Cacat - Terbatas satu subnet WiFi posko).
+   - Sub-Fase 3.2: Integrasi Bluetooth Intercom Helm (Terkendala Cacat - Dead button pairing GATT helm).
+4. **Fase 4: Emergency SOS & Telemetri Lapangan (Status: TERKENDALA CACAT)**
+   - Sub-Fase 4.1: Trigger Darurat & Sirene Taktis (Lulus Sempurna - Countdown 5s & pulsa haptic).
+   - Sub-Fase 4.2: Transmisi Sinyal Darurat Lapangan (Terkendala Cacat - SMS fallback butuh pulsa & GPS polling 1s memakan baterai).
+5. **Fase 5: AI Engine, Observabilitas & CI/CD (Status: DALAM PENGERJAAN)**
+   - Sub-Fase 5.1: AI Assistant & Gamifikasi Lapangan (Lulus Sempurna - Gemini AI route summary & loyalty badge).
+   - Sub-Fase 5.2: Observabilitas DevTools & Pipeline CI/CD (Dalam Pengerjaan - Task sync worker cloud masih pending).
 
-Engine: `NodeTopologyScanner.kt`
-Melacak konektivitas 5 node jaringan yang membentuk ekosistem DRG:
-1. **Local SQLite Node (Room v13):**
-   - Protocol: `sqlite3 / Room Flow`
-   - Role: Local-first persistence (23 entitas). Selalu aktif & mandiri saat offline.
-2. **Firebase Firestore Master Cluster:**
-   - Protocol: `gRPC over TLS (port 443)`
-   - Role: Cloud synchronizer untuk profil anggota, status posko, dan feed komunitas.
-3. **Gemini AI Logic Gateway:**
-   - Protocol: `HTTPS / TLS 1.3 REST`
-   - Role: AI Assistant pengendali rute cerdas dan summary keselamatan lapangan.
-4. **P2P WiFi Direct Mesh Network:**
-   - Protocol: `WiFi P2P / NSD (mDNS UDP)`
-   - Role: Komunikasi konvoi lokal, audio walkie-talkie tanpa internet saat di pelosok.
-5. **Google Play Integrity & Safety Attestation:**
-   - Protocol: `Google Play Services RPC`
-   - Role: Attestasi integritas APK, pencegahan anti-tampering dan kloning aplikasi.
+Setiap sub-fitur menyertakan uraian jelas:
+- **Apa Fungsinya:** Penjelasan operasional komponen.
+- **Kenapa Wajib Ada:** Urgensi fungsional bagi kelangsungan driver di jalan raya.
+- **Alasan Belum Lulus:** Fakta teknis mengapa belum boleh dinyatakan selesai 100%.
 
 ---
 
-## 6. CACAT PRODUKSI & KONSEP YANG CACAT (HONEST DEFECT DISCLOSURE)
+## 5. AUDIT UI/UX REAL EXPERIENCE DRIVER
 
-Engine: `ProductionDefectScanner.kt`
-DRG menerapkan kejujuran teknis tanpa manipulasi status:
-1. **Konsep Cacat #1 (CRITICAL): Client-Side Role Validation:**
-   - *Masalah:* Validasi role admin saat ini dilakukan secara lokal di perangkat via Room `RoleManager`. Pengguna dengan akses root dapat memodifikasi SQLite secara lokal.
-   - *Rencana Solusi:* Validasi role wajib diverifikasi melalui Cloud Firestore Security Rules dan Firebase Custom Claims / Ephemeral JWT Token.
-2. **Konsep Cacat #2 (WARNING): P2P Mesh Terbatas Satu Subnet:**
-   - *Masalah:* Fitur P2P Walkie Talkie dan Mesh Posko hanya berfungsi saat sesama driver berada di SSID WiFi Direct yang sama. Tidak bisa tembus NAT publik.
-   - *Rencana Solusi:* Implementasi STUN/TURN public relay server (misal: LiveKit atau coturn) untuk bridging WebSockets publik.
-3. **Cacat Produksi #1 (WARNING): Fallback SMS Butuh Pulsa Operator:**
-   - *Masalah:* `EmergencySmsFallbackHelper` mengirimkan SMS darurat otomatis saat sinyal internet drop. Jika pulsa SIM driver habis (Rp 0), SMS gagal terkirim.
-   - *Rencana Solusi:* Berikan peringatan visual status pulsa minimal Rp 1.000 atau sediakan integrasi API gateway toll-free SMS berbasis komunitas.
-4. **Cacat Produksi #2 (MINOR): GPS Polling 1 Detik Boros Baterai:**
-   - *Masalah:* Live driver map memperbarui lokasi setiap 1.000 ms. Menyebabkan konsumsi baterai meningkat signifikan saat ngojek seharian.
-   - *Rencana Solusi:* Gunakan Adaptive Location Request (polling 1 detik saat bergerak >20 km/jam, polling 10-30 detik saat berhenti di posko).
+Engine: `UiUxAuditEngine.kt`, `DevUiUxAuditTab.kt`
+
+Audit mengevaluasi 6 pilar ergonomi nyata pengemudi:
+1. **Touch Target Standard (Min 48x48dp - Skor 92%):** Seluruh elemen aksi interaktif memenuhi batas M3. FAB SOS darurat berukuran jumbo (96dp) ramah sarung tangan tebal.
+2. **Kontras Terik Matahari Siang Hari (Skor 88%):** Warna dasar terang dengan teks hitam pekat `DrgTextPrimary` (#0F172A) menjamin keterbacaan tinggi saat berkendara di siang terik.
+3. **Beban Kognitif Berkendara (One-Thumb Usability - Skor 80%):** Membatasi maksimal 3 tombol aksi primer per layar agar pengemudi tidak terdistraksi mencari menu saat melaju.
+4. **Recomposition Smoothness & 60 FPS (Skor 78%):** Memeriksa penggunaan `derivedStateOf` pada filter kas dan navigasi agar tidak memicu micro-stutter.
+5. **Cakupan Respon Haptic Taktil (Skor 90%):** Injeksi mikro-vibrasi pada countdown SOS, konfirmasi kas, dan pergantian tab navigasi agar driver merasakan konfirmasi tanpa melirik layar.
+6. **Zero Dead-End Resilience Saat Offline (Skor 85%):** Layar kosong menyajikan pesan informatif dan tombol muat ulang tanpa infinite loading atau layar putih.
 
 ---
 
-## 7. DEVICE ANDROID ADVISOR UNTUK PENGEMUDI
+## 6. OBSERVABILITAS REAL GITHUB ACTIONS CI/CD
 
-Engine: `DeviceAdvisorEngine.kt`
-Menganalisis kondisi hardware HP driver dan memberikan saran taktis:
-1. **Battery Optimization Whitelist (`PowerManager.isIgnoringBatteryOptimizations`):**
-   - Jika belum whitelisted, background SOS listener berpotensi di-kill oleh vendor agresif (Xiaomi MIUI, Oppo ColorOS, Vivo FuntouchOS, Samsung OneUI). DevTools langsung memberi instruksi membuka Settings battery.
-2. **Suhu Baterai (`BatteryManager.EXTRA_TEMPERATURE`):**
-   - Jika suhu baterai melebihi 40°C, driver disarankan melepas casing tebal atau memindahkan posisi holder HP dari sorotan terik matahari langsung saat memasang charger motor.
-3. **Kapasitas RAM (`ActivityManager.MemoryInfo`):**
-   - Menghitung sisa RAM bebas. Jika tersisa < 500 MB, menyarankan driver menutup aplikasi berat di latar belakang agar peta tidak freeze saat menerima orderan.
-4. **Status Baterai Rendah (< 20%):**
-   - Memberikan notifikasi taktis untuk segera menghubungkan powerbank atau charger motor agar sistem SOS darurat tetap aktif.
+Engine: `CiCdStatusScanner.kt`, `DevCiCdTab.kt`
+Konfigurasi: `.github/workflows/android_ci.yml`
 
----
-
-## 8. STACK TEKNOLOGI & GIT CLI AUDIT
-
-Engine: `DevTechStackTab.kt`
-- **Bahasa:** Kotlin 2.2.10
-- **UI Framework:** Jetpack Compose 1.7+ (Material 3)
-- **Database Lokal:** Android Room v13 (23 entities, Room KSP Compiler)
-- **Asynchronous:** Kotlin Coroutines & Flow UDF
-- **Image Loader:** Coil 3.0.4
-- **Testing Framework:** Robolectric 4.14.1, JUnit 4, Kotlinx Coroutines Test
-- **Security:** AndroidX Security Crypto & Network Security Config TLS 1.3
-- **Build System:** Gradle Kotlin DSL (AGP 8.8+)
+| Langkah | Nama Tugas | Perintah CI | Waktu Est. | Kebijakan Kegagalan |
+|---|---|---|---|---|
+| Step 1 | **Architecture Quality Audit** | `python3 .github/scripts/check_file_length.py` | 2 detik | **HARD FAIL** (Stop bila ada file > 125 baris) |
+| Step 2 | **Feature Manifest Sync** | `python3 .github/scripts/generate_about_manifest.py` | 3 detik | Auto-Commit via `github-actions[bot]` |
+| Step 3 | **Android Lint Static Analysis** | `./gradlew :app:lintDebug --no-daemon` | 45 detik | Upload Lint HTML Report |
+| Step 4 | **Robolectric & JVM Unit Tests** | `./gradlew :app:testDebugUnitTest --no-daemon` | 30 detik | **HARD FAIL** (Reject PR bila 1 test gagal) |
+| Step 5 | **Assemble Debug APK** | `./gradlew assembleDebug --no-daemon` | 50 detik | Upload APK Artifact (14 hari) |
 
 ---
 
-## 9. COMMANDS & VERIFIKASI LOKAL
+## 7. MEKANISME ADAPTASI APK BELUM DI-UPDATE (100% AKURAT PADA BUILD APAPUN)
+
+Engine: `DynamicApkInspector.kt`, `DynamicDbIntrospector.kt`, `RuntimeCapabilityProber.kt`, `DevApkSkewCard.kt`
+
+Masalah di Lapangan: Developer atau tester sering kali menguji aplikasi menggunakan APK lama (belum di-update ke build terbaru). Jika DevTools mengasumsikan data statis, maka laporan menjadi palsu, bias, atau bahkan crash karena tabel database / class yang belum ada di APK lawas tersebut.
+
+Solusi Arsitektur DevTools DRG:
+1. **Introspeksi PackageManager Riil:** Membaca `versionCode`, `versionName`, dan timestamp kompilasi langsung dari kernel Android via `PackageInfo`. DevTools secara otomatis menghitung *Version Skew Delta*.
+2. **Introspeksi Pragma SQLite Langsung:** Menjalankan query `PRAGMA user_version` dan `SELECT name FROM sqlite_master` langsung pada database SQLite yang sedang aktif di HP pengguna. Jika APK lawas masih menjalankan Room v11 atau v12, DevTools akan melaporkan versi v11/v12 secara jujur tanpa crash!
+3. **Penyelidikan Bytecode DEX via Reflection:** Menggunakan `Class.forName(...)` untuk mendeteksi modul yang benar-benar ada di dalam file APK yang sedang berjalan. Modul yang belum ter-compile ditandai `Belum Di-compile (Versi APK Lama)` tanpa memicu `ClassNotFoundException`.
+4. **DevApkSkewCard Adaptif:** Banner peringatan otomatis muncul di dashboard atas (`⚡ RUNNING ON OUTDATED APK`), menyajikan fakta binary yang terpasang dan adaptasi pengujian secara transparan.
+
+---
+
+## 8. COMMANDS & VERIFIKASI LOKAL
 
 ```bash
 # 1. Audit kepatuhan batas baris kode (< 125 baris per file)
 python3 .github/scripts/check_file_length.py
 
-# 2. Jalankan test suite Robolectric
+# 2. Jalankan test suite Robolectric (39+ test suites)
 gradle :app:testDebugUnitTest
 
 # 3. Jalankan test khusus DevTools
-gradle :app:testDebugUnitTest --tests "com.example.DevToolsMaturityScoringTest"
+gradle :app:testDebugUnitTest --tests "com.example.DevTools*"
 
 # 4. Verifikasi kompilasi aplikasi
 gradle assembleDebug
 ```
+
