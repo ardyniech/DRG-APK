@@ -76,7 +76,13 @@ fun DashboardScreen(
             modifier = Modifier.testTag("community_live_status_card")
         )
 
-        // 6. Quick Action Floating Glass Tiles
+        // 6. Desktop / Android Style Launcher Icon Grid
+        DashboardDesktopLauncher(
+            onNavigate = onNavigateTab,
+            modifier = Modifier.testTag("dashboard_desktop_launcher")
+        )
+
+        // 7. Quick Action Floating Glass Tiles
         QuickActionGrid(
             onNavigate = onNavigateTab,
             modifier = Modifier.testTag("quick_action_grid")

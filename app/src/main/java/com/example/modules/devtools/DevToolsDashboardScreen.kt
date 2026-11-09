@@ -75,12 +75,6 @@ fun DevToolsDashboardScreen(
                 }
             }
         } else {
-            DevScoreBanner(score = score)
-
-            Box(modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)) {
-                DevApkSkewCard(apkInfo = apkInfo, dbReport = dbReport, capsReport = capsReport)
-            }
-
             ScrollableTabRow(
                 selectedTabIndex = selectedTab,
                 containerColor = Color.White,
@@ -96,8 +90,16 @@ fun DevToolsDashboardScreen(
                 }
             }
 
-            Box(modifier = Modifier.fillMaxSize().padding(12.dp)) {
-                DevToolsTabSwitcher(selectedTab = selectedTab)
+            Box(modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp, vertical = 6.dp)) {
+                DevToolsTabSwitcher(
+                    selectedTab = selectedTab,
+                    headerContent = {
+                        DevScoreBanner(score = score)
+                        Spacer(modifier = Modifier.height(6.dp))
+                        DevApkSkewCard(apkInfo = apkInfo, dbReport = dbReport, capsReport = capsReport)
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                )
             }
         }
     }

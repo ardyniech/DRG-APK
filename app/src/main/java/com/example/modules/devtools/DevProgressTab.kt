@@ -14,7 +14,9 @@ import androidx.compose.ui.unit.sp
 import com.example.ui.theme.*
 
 @Composable
-fun DevProgressTab() {
+fun DevProgressTab(
+    headerContent: (@Composable () -> Unit)? = null
+) {
     val phases = remember { PhaseTreeScanner.scanFullTree() }
     val (total, completed, defect) = remember { PhaseTreeScanner.getTotalMetrics() }
     val progressPct = if (total > 0) (completed.toFloat() / total) * 100f else 0f
@@ -24,6 +26,9 @@ fun DevProgressTab() {
         verticalArrangement = Arrangement.spacedBy(10.dp),
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
+        if (headerContent != null) {
+            item { headerContent() }
+        }
         item {
             Surface(
                 shape = RoundedCornerShape(12.dp),

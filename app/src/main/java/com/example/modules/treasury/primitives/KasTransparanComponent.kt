@@ -49,6 +49,7 @@ fun KasTransparanComponent(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         KasSummaryHeader(totalIncome = totalIncome, totalExpense = totalExpense, netBalance = netBalance)
+        KasFinancialChartCard(totalIncome = totalIncome, totalExpense = totalExpense, netBalance = netBalance)
         KasPeriodSummaryCard(transactions = transactions, selectedPeriod = selectedPeriod, onPeriodSelected = { selectedPeriod = it })
 
         val context = LocalContext.current

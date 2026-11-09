@@ -19,7 +19,9 @@ import androidx.compose.ui.unit.sp
 import com.example.ui.theme.*
 
 @Composable
-fun DevNodeTopologyTab() {
+fun DevNodeTopologyTab(
+    headerContent: (@Composable () -> Unit)? = null
+) {
     val context = LocalContext.current
     var isOnline by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
@@ -32,6 +34,9 @@ fun DevNodeTopologyTab() {
     val totalConnections = remember(isOnline) { NodeTopologyScanner.countTotalConnections(isOnline) }
 
     LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+        if (headerContent != null) {
+            item { headerContent() }
+        }
         item {
             Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))) {
                 Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {

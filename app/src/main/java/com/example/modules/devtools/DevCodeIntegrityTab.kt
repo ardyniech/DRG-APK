@@ -20,7 +20,9 @@ import androidx.compose.ui.unit.sp
 import com.example.ui.theme.*
 
 @Composable
-fun DevCodeIntegrityTab() {
+fun DevCodeIntegrityTab(
+    headerContent: (@Composable () -> Unit)? = null
+) {
     val tree = remember { CodeIntegrityAuditor.auditCodebase() }
     val totalSmells = tree.sumOf { it.totalPendingIssues }
 
@@ -29,6 +31,9 @@ fun DevCodeIntegrityTab() {
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
+        if (headerContent != null) {
+            item { headerContent() }
+        }
         item {
             Surface(
                 shape = RoundedCornerShape(12.dp),

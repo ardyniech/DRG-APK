@@ -20,13 +20,18 @@ import androidx.compose.ui.unit.sp
 import com.example.ui.theme.*
 
 @Composable
-fun DevRootCauseTab() {
+fun DevRootCauseTab(
+    headerContent: (@Composable () -> Unit)? = null
+) {
     val context = LocalContext.current
     val findings = remember { EarlySymptomDetector.diagnose(context) }
     var selectedSeverity by remember { mutableStateOf<SymptomSeverity?>(null) }
     val filtered = if (selectedSeverity == null) findings else findings.filter { it.severity == selectedSeverity }
 
     LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+        if (headerContent != null) {
+            item { headerContent() }
+        }
         item {
             Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))) {
                 Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {

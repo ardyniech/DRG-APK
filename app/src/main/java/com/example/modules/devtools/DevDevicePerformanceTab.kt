@@ -20,7 +20,9 @@ import androidx.compose.ui.unit.sp
 import com.example.ui.theme.*
 
 @Composable
-fun DevDevicePerformanceTab() {
+fun DevDevicePerformanceTab(
+    headerContent: (@Composable () -> Unit)? = null
+) {
     val context = LocalContext.current
     val perf = remember { DevicePerformanceEngine.inspectPerformance(context) }
 
@@ -29,6 +31,9 @@ fun DevDevicePerformanceTab() {
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
+        if (headerContent != null) {
+            item { headerContent() }
+        }
         item {
             Surface(
                 shape = RoundedCornerShape(12.dp),

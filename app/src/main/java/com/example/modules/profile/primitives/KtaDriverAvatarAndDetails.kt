@@ -10,10 +10,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
@@ -44,13 +46,36 @@ fun KtaDriverAvatarAndDetails(member: DriverMember?, modifier: Modifier = Modifi
                 .border(1.dp, DrgGreenPrimary, RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center
         ) {
-            val avatarIcon = when (member?.profilePhotoUrl) {
-                "satgas" -> Icons.Default.Shield
-                "captain" -> Icons.Default.MilitaryTech
-                "ojol" -> Icons.Default.TwoWheeler
-                else -> Icons.Default.Person
+            val photoUrl = member?.profilePhotoUrl ?: ""
+            if (photoUrl.startsWith("data:image/")) {
+                val pureBase64 = photoUrl.substringAfter("base64,")
+                val bitmap = remember(photoUrl) {
+                    try {
+                        val decodedBytes = android.util.Base64.decode(pureBase64, android.util.Base64.DEFAULT)
+                        android.graphics.BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                    } catch (e: Exception) {
+                        null
+                    }
+                }
+                if (bitmap != null) {
+                    androidx.compose.foundation.Image(
+                        bitmap = bitmap.asImageBitmap(),
+                        contentDescription = "Foto Profil Kamera",
+                        contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                } else {
+                    Icon(imageVector = Icons.Default.Person, contentDescription = "Foto Profil", tint = DrgGreenPrimary, modifier = Modifier.size(34.dp))
+                }
+            } else {
+                val avatarIcon = when (photoUrl) {
+                    "satgas" -> Icons.Default.Shield
+                    "captain" -> Icons.Default.MilitaryTech
+                    "ojol" -> Icons.Default.TwoWheeler
+                    else -> Icons.Default.Person
+                }
+                Icon(imageVector = avatarIcon, contentDescription = "Foto Profil", tint = DrgGreenPrimary, modifier = Modifier.size(34.dp))
             }
-            Icon(imageVector = avatarIcon, contentDescription = "Foto Profil", tint = DrgGreenPrimary, modifier = Modifier.size(34.dp))
         }
 
         Column(modifier = Modifier.weight(1f)) {

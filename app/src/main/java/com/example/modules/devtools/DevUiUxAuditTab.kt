@@ -20,7 +20,9 @@ import androidx.compose.ui.unit.sp
 import com.example.ui.theme.*
 
 @Composable
-fun DevUiUxAuditTab() {
+fun DevUiUxAuditTab(
+    headerContent: (@Composable () -> Unit)? = null
+) {
     val audit = remember { UiUxAuditEngine.auditExperience() }
 
     LazyColumn(
@@ -28,6 +30,9 @@ fun DevUiUxAuditTab() {
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
+        if (headerContent != null) {
+            item { headerContent() }
+        }
         item {
             Surface(
                 shape = RoundedCornerShape(12.dp),

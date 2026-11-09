@@ -100,7 +100,7 @@ fun AnnouncementRow(
             ) {
                 Text(
                     text = "Oleh: ${announcement.senderName}",
-                    fontSize = 9.sp,
+                    fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = DrgTextPrimary
                 )

@@ -19,7 +19,9 @@ import androidx.compose.ui.unit.sp
 import com.example.ui.theme.*
 
 @Composable
-fun DevCiCdTab() {
+fun DevCiCdTab(
+    headerContent: (@Composable () -> Unit)? = null
+) {
     val ci = remember { CiCdStatusScanner.inspectPipeline() }
 
     LazyColumn(
@@ -27,6 +29,9 @@ fun DevCiCdTab() {
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
+        if (headerContent != null) {
+            item { headerContent() }
+        }
         item {
             Surface(
                 shape = RoundedCornerShape(12.dp),
