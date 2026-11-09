@@ -4,7 +4,7 @@
 
 **Progres pengembangan keseluruhan: 64%** (12 selesai · 13 dikerjakan · 8 direncanakan)
 
-Versi `f70db5a` · commit `f70db5a` · 2026-11-09 · 17 modul · 449 file sumber · 31861 baris · 50 test suite
+Versi `079bae7` · commit `079bae7` · 2026-11-09 · 17 modul · 449 file sumber · 31861 baris · 50 test suite
 
 > Dokumen ini di-generate otomatis oleh `generate_about_manifest.py`. Status & persentase dihitung dari kode nyata, bukan ditulis manual.
 
