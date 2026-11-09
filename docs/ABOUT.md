@@ -4,9 +4,9 @@
 
 **Progres pengembangan keseluruhan: 64%** (12 selesai · 13 dikerjakan · 8 direncanakan)
 
-Versi `43112ce` · commit `43112ce` · 2026-11-09 · 17 modul · 455 file sumber · 32562 baris · 52 test suite
+Versi `2fbfa24` · commit `2fbfa24` · 2026-11-09 · 17 modul · 457 file sumber · 32521 baris · 53 test suite
 
-**Kekurangan (Bawel Audit): 23 temuan (6 BLOCKER · 12 MAJOR · 5 MINOR · 0 NOTE)**
+**Kekurangan (Bawel Audit): 22 temuan (6 BLOCKER · 12 MAJOR · 4 MINOR · 0 NOTE)**
 
 > **SINGLE SOURCE OF TRUTH** — dokumen ini adalah acuan tunggal untuk AI dev, DevTools in-app, dan in-app Tentang. Digenerate otomatis oleh `generate_about_manifest.py` (mengandung `.github/scripts/audit_minus.py --json`). Jangan tulis manual. Jangan merujuk ke DEVTOOLS.md/README untuk angka — rujuk ke sini.
 
@@ -93,8 +93,7 @@ Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan kl
 | **MINOR** | security | Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB. | Enkripsi database atau minimal jelaskan risiko di docs. |
 | **MAJOR** | database | Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v13 tidak lengkap. | Generate & commit schema hilang via Room export. |
 | **MAJOR** | code | 1 TODO/FIXME tersisa (mis. DashboardHeader.kt: StatusChips(currentStatus = member.currentStatus, onStatusChange = { _, _ -> /* ). | Implementasikan sebelum klaim Selesai. |
-| **MINOR** | code | Hardcode hex Color(0x...) di80 file — melanggar 'No Magic Numbers' AGENTS §1. | Pindah ke DesignTokens/Theme. |
-| **MINOR** | hygiene | gradlew tidak executable (mode 644) → ./gradlew lokal gagal tanpa chmod. | chmod +x atau commit mode 755. |
+| **MINOR** | code | Hardcode hex Color(0x...) di78 file — melanggar 'No Magic Numbers' AGENTS §1. | Pindah ke DesignTokens/Theme. |
 | **MINOR** | test | androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented. | Tambah UI test untuk login, SOS, kas. |
 | **MINOR** | ci | Detekt/KtLint tidak ada di CI — hanya line-cap + lint. | Tambah static analysis (sudah masuk backlog). |
 | **MAJOR** | ci | CI hanya assembleDebug, tidak ada release/AAB signing & distribusi. | Tambah job release dengan Keystore via Secrets. |

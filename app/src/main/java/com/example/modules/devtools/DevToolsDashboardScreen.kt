@@ -33,7 +33,7 @@ fun DevToolsDashboardScreen(
     val tabs = listOf(
         "Tree Progress", "Audit UI/UX", "Git CI/CD", "Build & Deploy", "Code Integrity", "Device Perf",
         "RCA & Gejala", "Audit Keamanan", "Node Server", "Cacat Sistem", "Saran Device",
-        "Maturity", "Bug Hunter", "RAM & Memory", "Server API", "Tech Stack", "Repo Health"
+        "Maturity", "Bug Hunter", "RAM & Memory", "Server API", "Tech Stack", "Repo Health", "SSOT (Acuan)"
     )
     val score = remember { ProjectHealthScore() }
     val apkInfo = remember { DynamicApkInspector.inspectRunningApk(context) }

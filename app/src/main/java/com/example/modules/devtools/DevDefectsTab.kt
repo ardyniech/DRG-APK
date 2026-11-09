@@ -25,18 +25,12 @@ fun DevDefectsTab(
     var selectedFilter by remember { mutableStateOf<DefectType?>(null) }
     val filtered = if (selectedFilter == null) defects else defects.filter { it.type == selectedFilter }
 
-    LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
-        if (headerContent != null) {
-            item { headerContent() }
-        }
-        item {
-            Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))) {
-                Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Icon(Icons.Default.ReportProblem, contentDescription = null, tint = Color(0xFFC62828))
-                        Text("Transparansi Cacat Produksi & Konsep Sistem", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
-                    }
-                    Text("Audit terbuka tanpa sembunyikan cacat sekecil apapun: kelemahan arsitektur, limitasi P2P, dan kompromi baterai.", fontSize = 11.sp, color = DrgTextSecondary)
+    DevTabShell(
+        headerContent = headerContent,
+        headerIcon = Icons.Default.ReportProblem,
+        headerTitle = "Transparansi Cacat Produksi & Konsep Sistem",
+        headerDesc = "Audit terbuka tanpa sembunyikan cacat sekecil apapun: kelemahan arsitektur, limitasi P2P, dan kompromi baterai.",
+        headerExtra = {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         FilterChip(selected = selectedFilter == null, onClick = { selectedFilter = null }, label = { Text("Semua (${defects.size})", fontSize = 10.sp) })
                         DefectType.values().forEach { type ->
@@ -46,9 +40,8 @@ fun DevDefectsTab(
                             )
                         }
                     }
-                }
-            }
         }
+    ) {
 
         items(filtered) { item ->
             Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))) {

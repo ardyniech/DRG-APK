@@ -27,15 +27,12 @@ fun DevMaturityTab(
     val features = remember { DeadButtonShallowScanner.getAuditedFeatures() }
     val filtered = if (selectedFilter == null) features else features.filter { it.stage == selectedFilter }
 
-    LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
-        if (headerContent != null) {
-            item { headerContent() }
-        }
-        item {
-            Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))) {
-                Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("🌱 Matriks Kematangan Modul (Auto-Detect)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
-                    Text("Klasifikasi ketat: Benih (Konsep), Anak (Incubating), Mature (Stabil), Lulus (Production-grade).", fontSize = 11.sp, color = DrgTextSecondary)
+    DevTabShell(
+        headerContent = headerContent,
+        headerIcon = null,
+        headerTitle = "🌱 Matriks Kematangan Modul (Auto-Detect)",
+        headerDesc = "Klasifikasi ketat: Benih (Konsep), Anak (Incubating), Mature (Stabil), Lulus (Production-grade).",
+        headerExtra = {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         FilterChip(selected = selectedFilter == null, onClick = { selectedFilter = null }, label = { Text("Semua (${features.size})", fontSize = 10.sp) })
                         FeatureStage.values().forEach { stage ->
@@ -47,9 +44,8 @@ fun DevMaturityTab(
                             )
                         }
                     }
-                }
-            }
         }
+    ) {
 
         items(filtered) { item ->
             Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))) {

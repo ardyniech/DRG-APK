@@ -24,6 +24,7 @@ fun DevToolsTabSwitcher(
         13 -> DevMemoryTab(headerContent = headerContent)
         14 -> DevServerTab(headerContent = headerContent)
         15 -> DevTechStackTab(headerContent = headerContent)
-        else -> DevRepoHealthTab(headerContent = headerContent)
+        16 -> DevRepoHealthTab(headerContent = headerContent)
+        else -> DevSsotTab(headerContent = headerContent)
     }
 }

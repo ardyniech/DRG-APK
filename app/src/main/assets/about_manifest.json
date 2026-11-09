@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "43112ce",
-    "commit": "43112ce",
+    "version": "2fbfa24",
+    "commit": "2fbfa24",
     "commitDate": "2026-11-09",
     "generatedBy": "generate_about_manifest.py"
   },
@@ -25,9 +25,9 @@
     "inProgress": 13,
     "planned": 8,
     "modules": 17,
-    "totalSourceFiles": 455,
-    "totalLoc": 32562,
-    "testSuites": 52
+    "totalSourceFiles": 457,
+    "totalLoc": 32521,
+    "testSuites": 53
   },
   "phases": [
     {
@@ -229,8 +229,8 @@
       "phase": "phase-1",
       "status": "IN_PROGRESS",
       "progress": 95,
-      "files": 29,
-      "loc": 2400,
+      "files": 28,
+      "loc": 2263,
       "todos": 1,
       "tests": [
         "ProgressiveOnboardingLogicTest",
@@ -570,10 +570,10 @@
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 23,
+    "total": 22,
     "blocker": 6,
     "major": 12,
-    "minor": 5,
+    "minor": 4,
     "note": 0
   },
   "minus": [
@@ -688,14 +688,8 @@
     {
       "severity": "MINOR",
       "category": "code",
-      "detail": "Hardcode hex Color(0x...) di80 file — melanggar 'No Magic Numbers' AGENTS §1.",
+      "detail": "Hardcode hex Color(0x...) di78 file — melanggar 'No Magic Numbers' AGENTS §1.",
       "fix": "Pindah ke DesignTokens/Theme."
-    },
-    {
-      "severity": "MINOR",
-      "category": "hygiene",
-      "detail": "gradlew tidak executable (mode 644) → ./gradlew lokal gagal tanpa chmod.",
-      "fix": "chmod +x atau commit mode 755."
     },
     {
       "severity": "MINOR",

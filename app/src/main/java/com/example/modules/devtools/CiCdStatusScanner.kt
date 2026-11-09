@@ -26,7 +26,7 @@ object CiCdStatusScanner {
         targetBranches = listOf("main", "develop"),
         timeoutMinutes = 25,
         isConcurrencyCancelled = true,
-        totalTestSuites = 52,
+        totalTestSuites = 53,
         artifactRetentionDays = 14,
         steps = listOf(
             CiStepStatus(
@@ -34,7 +34,7 @@ object CiCdStatusScanner {
                 name = "Architecture Quality Audit",
                 command = "python3 .github/scripts/check_file_length.py",
                 isMandatory = true,
-                status = "PASS (0 Pelanggaran / 455 Berkas, per 2026-11-09 — recheck via GitHub Actions)",
+                status = "PASS (0 Pelanggaran / 457 Berkas, per 2026-11-09 — recheck via GitHub Actions)",
                 executionTimeEstimate = "2 detik",
                 failurePolicy = "HARD FAIL (Pipeline Berhenti Seketika)"
             ),
@@ -61,7 +61,7 @@ object CiCdStatusScanner {
                 name = "Robolectric & JVM Unit Tests",
                 command = "./gradlew :app:testDebugUnitTest --no-daemon",
                 isMandatory = true,
-                status = "UNKNOWN di runtime (52 Test Suites statis — cek GitHub Actions)",
+                status = "UNKNOWN di runtime (53 Test Suites statis — cek GitHub Actions)",
                 executionTimeEstimate = "30 detik",
                 failurePolicy = "HARD FAIL (Reject PR Bila 1 Test Gagal)"
             ),

@@ -14,7 +14,7 @@ object BuildDeploymentEngine {
     fun inspectBuildStatus(): BuildDeploymentInfo {
         // Runtime tidak bisa baca git/CI — label UNKNOWN jujur, angka statis per 2026-11-09
         val coverage = 92.4f
-        val suites = 52
+        val suites = 53
         val failures = 0
         val duration = 85 // detik (estimasi statis, bukan probe)
         val lastLog = if (failures > 0) "Error: Task :app:testDebugUnitTest FAILED" else null

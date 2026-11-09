@@ -28,18 +28,12 @@ fun DevRootCauseTab(
     var selectedSeverity by remember { mutableStateOf<SymptomSeverity?>(null) }
     val filtered = if (selectedSeverity == null) findings else findings.filter { it.severity == selectedSeverity }
 
-    LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
-        if (headerContent != null) {
-            item { headerContent() }
-        }
-        item {
-            Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))) {
-                Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Icon(Icons.Default.Build, contentDescription = null, tint = DrgGreenPrimary)
-                        Text("Root Cause Analysis & Gejala Awal", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
-                    }
-                    Text("Auto-deteksi teknis: Mengenali gejala sebelum user/dev menemukan crash/stuck di lapangan.", fontSize = 11.sp, color = DrgTextSecondary)
+    DevTabShell(
+        headerContent = headerContent,
+        headerIcon = Icons.Default.Build,
+        headerTitle = "Root Cause Analysis & Gejala Awal",
+        headerDesc = "Auto-deteksi teknis: Mengenali gejala sebelum user/dev menemukan crash/stuck di lapangan.",
+        headerExtra = {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         FilterChip(selected = selectedSeverity == null, onClick = { selectedSeverity = null }, label = { Text("Semua (${findings.size})", fontSize = 10.sp) })
                         SymptomSeverity.values().forEach { sev ->
@@ -50,9 +44,8 @@ fun DevRootCauseTab(
                             )
                         }
                     }
-                }
-            }
         }
+    ) {
 
         items(filtered) { item ->
             Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))) {

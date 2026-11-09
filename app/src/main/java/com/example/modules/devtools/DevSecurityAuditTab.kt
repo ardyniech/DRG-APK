@@ -28,21 +28,12 @@ fun DevSecurityAuditTab(
     val auditItems = remember { SecurityAuditEngine.audit(context) }
     val allSecure = auditItems.all { it.isSecure }
 
-    LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
-        if (headerContent != null) {
-            item { headerContent() }
-        }
-        item {
-            Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))) {
-                Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Icon(Icons.Default.Security, contentDescription = null, tint = DrgGreenPrimary)
-                        Text("Audit Keamanan Sistem & Enkripsi Data", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
-                    }
-                    Text("Auto-audit integritas root OS, TLS 1.3 network security config, Android KeyStore, dan privasi koordinat SOS.", fontSize = 11.sp, color = DrgTextSecondary)
-                }
-            }
-        }
+    DevTabShell(
+        headerContent = headerContent,
+        headerIcon = Icons.Default.Security,
+        headerTitle = "Audit Keamanan Sistem & Enkripsi Data",
+        headerDesc = "Auto-audit integritas root OS, TLS 1.3 network security config, Android KeyStore, dan privasi koordinat SOS."
+    ) {
 
         item {
             Surface(shape = RoundedCornerShape(12.dp), color = if (allSecure) Color(0xFFE8F5E9) else Color(0xFFFFEBEE), modifier = Modifier.fillMaxWidth()) {

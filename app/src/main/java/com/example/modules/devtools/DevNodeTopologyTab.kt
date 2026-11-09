@@ -33,21 +33,12 @@ fun DevNodeTopologyTab(
     val connectedCount = remember(isOnline) { NodeTopologyScanner.countConnectedNodes(isOnline) }
     val totalConnections = remember(isOnline) { NodeTopologyScanner.countTotalConnections(isOnline) }
 
-    LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
-        if (headerContent != null) {
-            item { headerContent() }
-        }
-        item {
-            Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))) {
-                Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Icon(Icons.Default.Hub, contentDescription = null, tint = DrgGreenPrimary)
-                        Text("Topologi Multi-Node & Arsitektur Cluster", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
-                    }
-                    Text("Auto-detect status $connectedCount dari ${nodes.size} node terhubung dengan total $totalConnections koneksi aktif.", fontSize = 11.sp, color = DrgTextSecondary)
-                }
-            }
-        }
+    DevTabShell(
+        headerContent = headerContent,
+        headerIcon = Icons.Default.Hub,
+        headerTitle = "Topologi Multi-Node & Arsitektur Cluster",
+        headerDesc = "Auto-detect status $connectedCount dari ${nodes.size} node terhubung dengan total $totalConnections koneksi aktif."
+    ) {
 
         item {
             Surface(shape = RoundedCornerShape(12.dp), color = DrgGreenLight, modifier = Modifier.fillMaxWidth()) {

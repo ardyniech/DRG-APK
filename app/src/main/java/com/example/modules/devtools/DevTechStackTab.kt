@@ -22,21 +22,12 @@ import com.example.ui.theme.*
 fun DevTechStackTab(
     headerContent: (@Composable () -> Unit)? = null
 ) {
-    LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
-        if (headerContent != null) {
-            item { headerContent() }
-        }
-        item {
-            Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))) {
-                Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Icon(Icons.Default.IntegrationInstructions, contentDescription = null, tint = DrgGreenPrimary)
-                        Text("Transparansi Seluruh Teknologi & Git CLI", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
-                    }
-                    Text("Daftar teknologi resmi yang berjalan di aplikasi DRG Driver Malang Raya secara jujur dan transparan.", fontSize = 11.sp, color = DrgTextSecondary)
-                }
-            }
-        }
+    DevTabShell(
+        headerContent = headerContent,
+        headerIcon = Icons.Default.IntegrationInstructions,
+        headerTitle = "Transparansi Seluruh Teknologi & Git CLI",
+        headerDesc = "Daftar teknologi resmi yang berjalan di aplikasi DRG Driver Malang Raya secara jujur dan transparan."
+    ) {
 
         item {
             Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))) {

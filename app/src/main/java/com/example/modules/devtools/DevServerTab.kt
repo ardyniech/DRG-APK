@@ -35,26 +35,20 @@ fun DevServerTab(
         isProbing = false
     }
 
-    LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
-        if (headerContent != null) {
-            item { headerContent() }
-        }
-        item {
-            Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))) {
-                Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Icon(Icons.Default.Cloud, contentDescription = null, tint = DrgGreenPrimary)
-                            Text("Diagnostik Server & Cloud Riil", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
-                        }
-                        IconButton(onClick = { scope.launch { isProbing = true; probeResult = RealtimeNetworkProbe.probe(context); isProbing = false } }, modifier = Modifier.size(28.dp)) {
-                            Icon(Icons.Default.Refresh, contentDescription = "Ping Ulang", tint = DrgGreenPrimary)
-                        }
-                    }
-                    Text("Pengukuran socket ping riil tanpa mock data: latency RTT ke Google Cloud & status jaringan.", fontSize = 11.sp, color = DrgTextSecondary)
-                }
+    DevTabShell(
+        headerContent = headerContent,
+        headerIcon = Icons.Default.Cloud,
+        headerTitle = "Diagnostik Server & Cloud Riil",
+        headerDesc = "Pengukuran socket ping riil tanpa mock data: latency RTT ke Google Cloud & status jaringan.",
+        headerTrailing = {
+            IconButton(
+                onClick = { scope.launch { isProbing = true; probeResult = RealtimeNetworkProbe.probe(context); isProbing = false } },
+                modifier = Modifier.size(28.dp)
+            ) {
+                Icon(Icons.Default.Refresh, contentDescription = "Ping Ulang", tint = DrgGreenPrimary)
             }
         }
+    ) {
 
         item {
             val isOnline = probeResult?.isOnline == true

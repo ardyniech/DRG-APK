@@ -76,16 +76,10 @@ fun DashboardScreen(
             modifier = Modifier.testTag("community_live_status_card")
         )
 
-        // 6. Desktop / Android Style Launcher Icon Grid
+        // 6. Desktop / Android Style Launcher Icon Grid (kanonis, satu-satunya launcher — QuickActionGrid dihapus sebagai duplikat)
         DashboardDesktopLauncher(
             onNavigate = onNavigateTab,
             modifier = Modifier.testTag("dashboard_desktop_launcher")
-        )
-
-        // 7. Quick Action Floating Glass Tiles
-        QuickActionGrid(
-            onNavigate = onNavigateTab,
-            modifier = Modifier.testTag("quick_action_grid")
         )
 
         // 7. Rider Audio & Local-First Hardware Glass Card

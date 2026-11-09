@@ -26,21 +26,12 @@ fun DevDeviceAdvisorTab(
     val context = LocalContext.current
     val adviceList = remember { DeviceAdvisorEngine.evaluateDevice(context) }
 
-    LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
-        if (headerContent != null) {
-            item { headerContent() }
-        }
-        item {
-            Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))) {
-                Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Icon(Icons.Default.PhoneAndroid, contentDescription = null, tint = DrgGreenPrimary)
-                        Text("Saran Optimasi Perangkat Pengemudi", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
-                    }
-                    Text("Auto-analisis kondisi fisik HP driver (RAM, baterai, suhu, background whitelist) untuk efisiensi maksimum di jalan.", fontSize = 11.sp, color = DrgTextSecondary)
-                }
-            }
-        }
+    DevTabShell(
+        headerContent = headerContent,
+        headerIcon = Icons.Default.PhoneAndroid,
+        headerTitle = "Saran Optimasi Perangkat Pengemudi",
+        headerDesc = "Auto-analisis kondisi fisik HP driver (RAM, baterai, suhu, background whitelist) untuk efisiensi maksimum di jalan."
+    ) {
 
         if (adviceList.isEmpty()) {
             item {
