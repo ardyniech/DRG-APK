@@ -13,9 +13,9 @@
     ]
   },
   "build": {
-    "version": "5045402",
-    "commit": "5045402",
-    "commitDate": "2026-11-09",
+    "version": "dev",
+    "commit": "",
+    "commitDate": "",
     "generatedBy": "generate_about_manifest.py"
   },
   "summary": {
