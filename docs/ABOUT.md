@@ -4,9 +4,11 @@
 
 **Progres pengembangan keseluruhan: 64%** (12 selesai · 13 dikerjakan · 8 direncanakan)
 
-Versi `dfbb821` · commit `dfbb821` · 2026-11-09 · 17 modul · 455 file sumber · 32562 baris · 52 test suite
+Versi `43112ce` · commit `43112ce` · 2026-11-09 · 17 modul · 455 file sumber · 32562 baris · 52 test suite
 
-> Dokumen ini di-generate otomatis oleh `generate_about_manifest.py`. Status & persentase dihitung dari kode nyata, bukan ditulis manual.
+**Kekurangan (Bawel Audit): 23 temuan (6 BLOCKER · 12 MAJOR · 5 MINOR · 0 NOTE)**
+
+> **SINGLE SOURCE OF TRUTH** — dokumen ini adalah acuan tunggal untuk AI dev, DevTools in-app, dan in-app Tentang. Digenerate otomatis oleh `generate_about_manifest.py` (mengandung `.github/scripts/audit_minus.py --json`). Jangan tulis manual. Jangan merujuk ke DEVTOOLS.md/README untuk angka — rujuk ke sini.
 
 ## Fase Pengembangan
 
@@ -68,6 +70,36 @@ Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan kl
 - **Gemini Live & AI Assistant Production** (in-progress) — Ganti placeholder AI dengan integrasi Gemini API production + rate limiting.
 - **Verifikasi Migrasi Room v1→v13** (done) — Uji migrasi tiap versi + commit semua schema JSON.
 - **Dokumentasi Publik** (pending) — Situs dokumentasi (GitHub Pages) untuk pengurus & developer.
+
+## Kekurangan (Bawel Audit) — WAJIB dibaca AI dev sebelum klaim
+
+| Severity | Kategori | Detail | Perbaikan |
+|---|---|---|---|
+| **BLOCKER** | fake-sync | BackgroundSyncEngine label "Tersinkronisasi ke Cloud" padahal triggerBackgroundSync() cuma delay + removeSyncItem() — TIDAK ada network call (Retrofit/OkHttp/Firestore). | Ganti jadi upload sungguhan atau label jujur OFFLINE_SAVED (anti-fabrikasi AGENTS §7). |
+| **BLOCKER** | firebase | firestore dependency dikomentari → multi-user tidak bisa sinkron. | Uncomment firestore + auth + credentials bersama google-services.json asli. |
+| **BLOCKER** | firebase | auth dependency dikomentari → akun server tidak ada, login lokal saja. | Uncomment auth + Credential Manager. |
+| **BLOCKER** | firebase | app/google-services.json HILANG (hanya .example) → FCM/Auth/AI tidak jalan produksi, P2P signaling gagal join topic. | Isi google-services.json asli dari Firebase Console (jangan commit key prod, tapi CI perlu). |
+| **BLOCKER** | auth | Seed super-admin PIN default 1234 di .env.example — kalau tidak diganti, akun pengurus bisa ditebak. | Ganti sebelum rilis; tolak login bila PIN masih default. |
+| **MAJOR** | permission | Permission RECORD_AUDIO belum dideklarasi (PTT/notif/foreground/Bluetooth). | Tambah di manifest + runtime request. |
+| **MAJOR** | permission | Permission POST_NOTIFICATIONS belum dideklarasi (PTT/notif/foreground/Bluetooth). | Tambah di manifest + runtime request. |
+| **MAJOR** | permission | Permission FOREGROUND_SERVICE belum dideklarasi (PTT/notif/foreground/Bluetooth). | Tambah di manifest + runtime request. |
+| **MAJOR** | permission | Permission BLUETOOTH_CONNECT belum dideklarasi (PTT/notif/foreground/Bluetooth). | Tambah di manifest + runtime request. |
+| **BLOCKER** | p2p | P2PSignalingManager.broadcastPeerInfo() dan onMessageReceived() hanya Log.d — discovery FCM topic 0%, peer tidak pernah dicatat/dihubungi. | Implementasikan FCM signaling sungguhan + WebRTC SDP/ICE exchange. |
+| **MAJOR** | p2p | P2PManager.connectToPeer() bikin ICE candidate string palsu 'candidate:1...' — bukan SDP asli. | Ganti dengan jalur signaling SDP/ICE penuh + STUN/TURN relay. |
+| **MAJOR** | multi-user | Seed hanya bila members kosong → tiap HP baru punya data dummy sendiri, bukan data komunitas bersama. | Butuh backend + akun server agar komunitas sinkron. |
+| **MAJOR** | backup | allowBackup=false + tidak ada cloud backup/sync → ganti HP = data hilang permanen. | Tambah auto-backup terenkripsi atau export/import kas terenkripsi. |
+| **MAJOR** | privacy | MIGRATION_12_13 DEFAULT kolom members berisi NIK/SIM/no HP dummy (3507123456780001) — data pribadi palsu masuk skema. | Ganti DEFAULT jadi '' dan jangan hardcode PII. |
+| **MAJOR** | security | PIN hanya SHA-256(plain) di SharedPrefs, bukan PBKDF2/Keystore — klaim DevTools 'Keystore PIN & PBKDF2' bohong. | Ganti ke PBKDF2 + Android Keystore atau label jujur di DevTools. |
+| **MINOR** | security | Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB. | Enkripsi database atau minimal jelaskan risiko di docs. |
+| **MAJOR** | database | Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v13 tidak lengkap. | Generate & commit schema hilang via Room export. |
+| **MAJOR** | code | 1 TODO/FIXME tersisa (mis. DashboardHeader.kt: StatusChips(currentStatus = member.currentStatus, onStatusChange = { _, _ -> /* ). | Implementasikan sebelum klaim Selesai. |
+| **MINOR** | code | Hardcode hex Color(0x...) di80 file — melanggar 'No Magic Numbers' AGENTS §1. | Pindah ke DesignTokens/Theme. |
+| **MINOR** | hygiene | gradlew tidak executable (mode 644) → ./gradlew lokal gagal tanpa chmod. | chmod +x atau commit mode 755. |
+| **MINOR** | test | androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented. | Tambah UI test untuk login, SOS, kas. |
+| **MINOR** | ci | Detekt/KtLint tidak ada di CI — hanya line-cap + lint. | Tambah static analysis (sudah masuk backlog). |
+| **MAJOR** | ci | CI hanya assembleDebug, tidak ada release/AAB signing & distribusi. | Tambah job release dengan Keystore via Secrets. |
+
+BLOCKER = dilarang klaim multi-user/sinkron sebelum diperbaiki. Jalankan `python3 .github/scripts/audit_minus.py --json` untuk detail mesin.
 
 ## Backlog Berjalan
 

@@ -1,6 +1,8 @@
-# DRG DevTools — Dedicated Engineering & Diagnostics Manual (v6.0)
+# DRG DevTools — Dedicated Engineering & Diagnostics Manual (v7.0)
 
 > **MANDATE:** Dilarang keras memalsukan skor (No Fake 100%) dan **DILARANG MENGGUNAKAN MOCKING DATA** di DevTools. Seluruh telemetri, latensi, penggunaan memori, deteksi dead button, audit keamanan, topologi node, cacat produksi, model pohon fase pengembangan, audit UI/UX berkendara, dan status CI/CD di-probe secara **otomatis (auto-detect)** langsung dari runtime Android riil.
+>
+> **SINGLE SOURCE OF TRUTH:** Hasil audit (`audit_minus.py`) + progres (`generate_about_manifest.py`) digabung menjadi `docs/ABOUT.md` + `app/src/main/assets/about_manifest.json`. File ini adalah *cara pakai* DevTools — **bukan sumber angka**. AI dev wajib baca SSOT di `docs/ABOUT.md` (lihat `AGENTS.md` §18).
 
 ---
 
@@ -135,25 +137,26 @@ gradle :app:testDebugUnitTest --tests "com.example.DevTools*"
 # 4. Verifikasi kompilasi aplikasi
 gradle assembleDebug
 
-# 5. Audit bawel — deteksi semua minus (23 temuan per 2026-11-09)
+# 5. Audit bawel + refresh SSOT (satukan ke docs/ABOUT.md)
 python3 .github/scripts/audit_minus.py
-python3 .github/scripts/audit_minus.py --fail-on-blocker  # CI strict
+python3 .github/scripts/generate_about_manifest.py  # SSOT: about_manifest.json + docs/ABOUT.md
+python3 .github/scripts/audit_minus.py --fail-on-blocker  # CI strict (view only, minus digabung via generator)
 ```
 
 ---
 
-## 9. BAWEL MINUS AUDIT — `audit_minus.py` (2026-11-09)
+## 9. BAWEL MINUS AUDIT — SSOT (per 2026-11-09)
 
-Skrip `.github/scripts/audit_minus.py` adalah detektor statis paling cerewet repo. Ia membaca file nyata (bukan klaim UI DevTools) dan melaporkan **23 temuan (6 BLOCKER, 12 MAJOR, 5 MINOR, 0 NOTE)**:
+Skrip `.github/scripts/audit_minus.py` adalah detektor statis paling cerewet repo. Hasilnya **bukan ditulis di sini** — digabung ke **SSOT** oleh `generate_about_manifest.py` menjadi `docs/ABOUT.md` (manusia) + `app/src/main/assets/about_manifest.json` (mesin). Baca SSOT untuk hitungan terkini; jangan copy angka ke README/DEVTOOLS (pasti basi).
 
 | Severity | Contoh temuan | Artinya |
 |---|---|---|
-| BLOCKER (7) | Fake "Tersinkronisasi ke Cloud" tanpa network call; Firestore/Auth dikomentari + `google-services.json` hilang; seed PIN 1234; P2P signaling `Log.d` saja; DevTools klaim Firestore "Synced" | **BELUM multi-user** — dilarang klaim sinkron/berbagi data |
-| MAJOR (12) | Permission kurang (RECORD_AUDIO, dsb.); ICE palsu `candidate:1`; login lokal saja; `allowBackup=false` tanpa backup; NIK/SIM dummy di DEFAULT; PIN SHA-256 bukan Keystore; schema `1-4,8,9.json` hilang; README stale v12/32 → v13/52; TODO `DashboardHeader`; telemetri ServerOverload/Build fake; SecurityAudit hardcode; CI tanpa release | Risiko produksi / data-loss / keamanan |
-| MINOR (5) | SQLite belum SQLCipher; gradlew 644; androidTest 1 file; Detekt hilang; hex hardcode 79 file; CiCd hardcode | Hygiene / debt kecil yang tetap dilaporkan |
-| NOTE (0) | (sudah di CI warn-only;) marketplace/arisan DEFERRED (scope kas saja, bukan blocker) | Deferred — bukan blocker rilis awal |
+| BLOCKER | Fake "Tersinkronisasi ke Cloud" tanpa network call; Firestore/Auth dikomentari + `google-services.json` hilang; seed PIN 1234; P2P signaling `Log.d` saja | **BELUM multi-user** — dilarang klaim sinkron/berbagi data |
+| MAJOR | Permission kurang (RECORD_AUDIO, dsb.); ICE palsu `candidate:1`; login lokal saja; `allowBackup=false` tanpa backup; NIK/SIM dummy di DEFAULT; PIN SHA-256 bukan Keystore; schema `1-4,8,9.json` hilang; TODO `DashboardHeader`; CI tanpa release | Risiko produksi / data-loss / keamanan |
+| MINOR | SQLite belum SQLCipher; gradlew 644; androidTest 1 file; Detekt hilang; hex hardcode | Hygiene / debt kecil yang tetap dilaporkan |
+| NOTE | Marketplace/arisan [DEFERRED] (scope kas saja) | Deferred — bukan blocker rilis awal |
 
-**Aturan finansial (diputuskan 2026-11-09):** Marketplace & arisan = `[DEFERRED]` di `.github/about/features.json` + `ROADMAP.md`. DevTools/audit **tidak** menghitungnya sebagai blocker. Satu-satunya finansial wajib rilis awal adalah **iuran kas** (Kas Transparan, phase-1).
+**Aturan finansial (2026-11-09):** Marketplace & arisan = `[DEFERRED]` di `.github/about/features.json` + `ROADMAP.md` + SSOT. Finansial wajib rilis awal hanya **iuran kas** (Kas Transparan, phase-1).
 
-**DevTools in-app wajib jujur:** `NodeTopologyScanner` (Firestore belum di-enable), `SecurityAuditEngine` (Keystore = Kurang Aman), `ServerOverloadMonitor` (tanpa backend = UNKNOWN), `ProductionDefectScanner` (+ `MultiUserGapScanner` DEFECT-05 s/d 12), `BuildDeploymentEngine`/`CiCdStatusScanner` (angka statis basi, label UNKNOWN bila runtime). Jangan tulis "PASSED / Synced / HEALTHY" dari hardcode — sumber kebenaran adalah `audit_minus.py` + GitHub Actions.
+**DevTools in-app wajib jujur:** `NodeTopologyScanner` (Firestore belum di-enable), `SecurityAuditEngine` (Keystore = Kurang Aman), `ServerOverloadMonitor` (tanpa backend = UNKNOWN), `ProductionDefectScanner` (+ `MultiUserGapScanner` DEFECT-05 s/d 12), `BuildDeploymentEngine`/`CiCdStatusScanner` (angka statis basi, label UNKNOWN bila runtime). Jangan tulis "PASSED / Synced / HEALTHY" dari hardcode — sumber kebenaran adalah **SSOT** (`docs/ABOUT.md`), bukan file ini.
 

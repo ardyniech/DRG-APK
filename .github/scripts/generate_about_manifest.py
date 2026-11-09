@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 """
-DRG Driver — About Manifest Generator
-=====================================
-Single source of truth for the in-app "Tentang Aplikasi" page and docs/ABOUT.md.
+DRG Driver — About Manifest Generator (SINGLE SOURCE OF TRUTH)
+================================================================
+Satu-satunya sumber kebenaran status repo untuk AI dev, in-app Tentang,
+dan docs/ABOUT.md. Jangan buat sumber kedua: DevTools, README, dan AI
+wajib merujuk ke output generator ini.
 
-It reads the *intent* declarations from .github/about/features.json and derives
-every status / progress value by inspecting the REAL repository (module files,
-screen composables, unit tests, TODO/FIXME markers, ROADMAP checkboxes, git).
+Menggabungkan dua bukti nyata:
+  1) Intent fitur dari .github/about/features.json + progres dari kode nyata
+     (module files, tests, TODO/FIXME, ROADMAP via git).
+  2) Minus bawel dari .github/scripts/audit_minus.py --json (BLOCKER/MAJOR/MINOR).
 
-This means progress is honest and self-updating: nobody edits a percentage by
-hand. Ship the code and the number moves.
+Jangan edit persentase/status manual. Ship code → angka bergerak.
 
-Outputs (both overwritten):
-  - app/src/main/assets/about_manifest.json   (consumed by the Android app)
-  - docs/ABOUT.md                             (human readable)
+Outputs (both overwritten, selalu sinkron):
+  - app/src/main/assets/about_manifest.json   (machine SSOT, consumed by app)
+  - docs/ABOUT.md                             (human SSOT, wajib dibaca AI dev)
 """
 
 import json
@@ -24,6 +26,7 @@ import sys
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 CONFIG = os.path.join(REPO, ".github", "about", "features.json")
+AUDIT_SCRIPT = os.path.join(REPO, ".github", "scripts", "audit_minus.py")
 MAIN_JAVA = os.path.join(REPO, "app", "src", "main", "java")
 TEST_DIR = os.path.join(REPO, "app", "src", "test", "java")
 OUT_JSON = os.path.join(REPO, "app", "src", "main", "assets", "about_manifest.json")
@@ -41,6 +44,19 @@ def sh(*args):
         return subprocess.check_output(args, cwd=REPO, stderr=subprocess.DEVNULL).decode().strip()
     except Exception:
         return ""
+
+
+def run_audit_minus():
+    """Jalankan audit_minus.py --json dan kembalikan daftar temuan (SSOT minus)."""
+    if not os.path.exists(AUDIT_SCRIPT):
+        return []
+    try:
+        out = subprocess.check_output(
+            [sys.executable, AUDIT_SCRIPT, "--json"],
+            cwd=REPO, stderr=subprocess.DEVNULL, timeout=120).decode().strip()
+        return json.loads(out) if out else []
+    except Exception:
+        return []
 
 
 def read_json(path):
@@ -183,6 +199,11 @@ def main():
     backlog += [f"{p['name']} — {p['description']}" for p in planned]
     backlog += [f"{r['title']} — {r['detail']}" for r in refinements if r.get("state") != "done"]
 
+    minus_findings = run_audit_minus()
+    minus_summary = {"total": len(minus_findings)}
+    for sev in ("BLOCKER", "MAJOR", "MINOR", "NOTE"):
+        minus_summary[sev.lower()] = sum(1 for f in minus_findings if f.get("severity") == sev)
+
     manifest = {
         "schemaVersion": cfg["schemaVersion"],
         "app": cfg["app"],
@@ -198,6 +219,8 @@ def main():
         "plannedFeatures": planned,
         "refinements": refinements,
         "backlog": backlog,
+        "minusSummary": minus_summary,
+        "minus": minus_findings,
     }
 
     os.makedirs(os.path.dirname(OUT_JSON), exist_ok=True)
@@ -209,13 +232,16 @@ def main():
         fh.write(render_markdown(manifest))
 
     print(f"✅ About manifest generated: overall {overall}% "
-          f"({summary['done']} done / {summary['inProgress']} in-progress / {summary['planned']} planned)")
+          f"({summary['done']} done / {summary['inProgress']} in-progress / {summary['planned']} planned) "
+          f"· minus {minus_summary['total']} ({minus_summary.get('blocker', 0)} BLOCKER)")
     print(f"   → {os.path.relpath(OUT_JSON, REPO)}")
     print(f"   → {os.path.relpath(OUT_MD, REPO)}")
+    return 0
 
 
 def render_markdown(m):
     s, b = m["summary"], m["build"]
+    ms = m.get("minusSummary", {})
     out = [f"# Tentang {m['app']['name']} — Fitur & Progres", ""]
     out.append(f"> {m['app']['tagline']}")
     out.append("")
@@ -225,8 +251,14 @@ def render_markdown(m):
     out.append(f"Versi `{b['version']}` · commit `{b['commit']}` · {b['commitDate']} · "
                f"{s['modules']} modul · {s['totalSourceFiles']} file sumber · {s['totalLoc']} baris · {s['testSuites']} test suite")
     out.append("")
-    out.append("> Dokumen ini di-generate otomatis oleh `generate_about_manifest.py`. "
-               "Status & persentase dihitung dari kode nyata, bukan ditulis manual.")
+    if ms:
+        out.append(f"**Kekurangan (Bawel Audit): {ms.get('total', 0)} temuan "
+                   f"({ms.get('blocker', 0)} BLOCKER · {ms.get('major', 0)} MAJOR · {ms.get('minor', 0)} MINOR · {ms.get('note', 0)} NOTE)**")
+        out.append("")
+    out.append("> **SINGLE SOURCE OF TRUTH** — dokumen ini adalah acuan tunggal untuk AI dev, "
+               "DevTools in-app, dan in-app Tentang. Digenerate otomatis oleh "
+               "`generate_about_manifest.py` (mengandung `.github/scripts/audit_minus.py --json`). "
+               "Jangan tulis manual. Jangan merujuk ke DEVTOOLS.md/README untuk angka — rujuk ke sini.")
     out.append("")
     out.append("## Fase Pengembangan")
     out.append("")
@@ -246,6 +278,23 @@ def render_markdown(m):
     for r in m["refinements"]:
         out.append(f"- **{r['title']}** ({r['state']}) — {r['detail']}")
     out.append("")
+    out.append("## Kekurangan (Bawel Audit) — WAJIB dibaca AI dev sebelum klaim")
+    out.append("")
+    if not m.get("minus"):
+        out.append("Tidak ada temuan — audit bersih. Tetap jalankan `audit_minus.py` tiap sesi.")
+    else:
+        out.append("| Severity | Kategori | Detail | Perbaikan |")
+        out.append("|---|---|---|---|")
+        for f in m["minus"]:
+            sev, cat = f.get("severity", ""), f.get("category", "")
+            detail = (f.get("detail") or "").replace("|", "/")[:220]
+            fix = (f.get("fix") or "").replace("|", "/")[:160]
+            out.append(f"| **{sev}** | {cat} | {detail} | {fix} |")
+    out.append("")
+    out.append("BLOCKER = dilarang klaim multi-user/sinkron sebelum diperbaiki. "
+               "Jalankan `python3 .github/scripts/audit_minus.py --json` untuk detail mesin.")
+    out.append("")
+
     out.append("## Backlog Berjalan")
     out.append("")
     for item in m["backlog"]:

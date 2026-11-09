@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "dfbb821",
-    "commit": "dfbb821",
+    "version": "43112ce",
+    "commit": "43112ce",
     "commitDate": "2026-11-09",
     "generatedBy": "generate_about_manifest.py"
   },
@@ -568,5 +568,152 @@
     "Detekt & KtLint di CI — Static analysis otomatis untuk kualitas kode selain batas 125 baris.",
     "Gemini Live & AI Assistant Production — Ganti placeholder AI dengan integrasi Gemini API production + rate limiting.",
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
+  ],
+  "minusSummary": {
+    "total": 23,
+    "blocker": 6,
+    "major": 12,
+    "minor": 5,
+    "note": 0
+  },
+  "minus": [
+    {
+      "severity": "BLOCKER",
+      "category": "fake-sync",
+      "detail": "BackgroundSyncEngine label \"Tersinkronisasi ke Cloud\" padahal triggerBackgroundSync() cuma delay + removeSyncItem() — TIDAK ada network call (Retrofit/OkHttp/Firestore).",
+      "fix": "Ganti jadi upload sungguhan atau label jujur OFFLINE_SAVED (anti-fabrikasi AGENTS §7)."
+    },
+    {
+      "severity": "BLOCKER",
+      "category": "firebase",
+      "detail": "firestore dependency dikomentari → multi-user tidak bisa sinkron.",
+      "fix": "Uncomment firestore + auth + credentials bersama google-services.json asli."
+    },
+    {
+      "severity": "BLOCKER",
+      "category": "firebase",
+      "detail": "auth dependency dikomentari → akun server tidak ada, login lokal saja.",
+      "fix": "Uncomment auth + Credential Manager."
+    },
+    {
+      "severity": "BLOCKER",
+      "category": "firebase",
+      "detail": "app/google-services.json HILANG (hanya .example) → FCM/Auth/AI tidak jalan produksi, P2P signaling gagal join topic.",
+      "fix": "Isi google-services.json asli dari Firebase Console (jangan commit key prod, tapi CI perlu)."
+    },
+    {
+      "severity": "BLOCKER",
+      "category": "auth",
+      "detail": "Seed super-admin PIN default 1234 di .env.example — kalau tidak diganti, akun pengurus bisa ditebak.",
+      "fix": "Ganti sebelum rilis; tolak login bila PIN masih default."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "permission",
+      "detail": "Permission RECORD_AUDIO belum dideklarasi (PTT/notif/foreground/Bluetooth).",
+      "fix": "Tambah di manifest + runtime request."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "permission",
+      "detail": "Permission POST_NOTIFICATIONS belum dideklarasi (PTT/notif/foreground/Bluetooth).",
+      "fix": "Tambah di manifest + runtime request."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "permission",
+      "detail": "Permission FOREGROUND_SERVICE belum dideklarasi (PTT/notif/foreground/Bluetooth).",
+      "fix": "Tambah di manifest + runtime request."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "permission",
+      "detail": "Permission BLUETOOTH_CONNECT belum dideklarasi (PTT/notif/foreground/Bluetooth).",
+      "fix": "Tambah di manifest + runtime request."
+    },
+    {
+      "severity": "BLOCKER",
+      "category": "p2p",
+      "detail": "P2PSignalingManager.broadcastPeerInfo() dan onMessageReceived() hanya Log.d — discovery FCM topic 0%, peer tidak pernah dicatat/dihubungi.",
+      "fix": "Implementasikan FCM signaling sungguhan + WebRTC SDP/ICE exchange."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "p2p",
+      "detail": "P2PManager.connectToPeer() bikin ICE candidate string palsu 'candidate:1...' — bukan SDP asli.",
+      "fix": "Ganti dengan jalur signaling SDP/ICE penuh + STUN/TURN relay."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "multi-user",
+      "detail": "Seed hanya bila members kosong → tiap HP baru punya data dummy sendiri, bukan data komunitas bersama.",
+      "fix": "Butuh backend + akun server agar komunitas sinkron."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "backup",
+      "detail": "allowBackup=false + tidak ada cloud backup/sync → ganti HP = data hilang permanen.",
+      "fix": "Tambah auto-backup terenkripsi atau export/import kas terenkripsi."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "privacy",
+      "detail": "MIGRATION_12_13 DEFAULT kolom members berisi NIK/SIM/no HP dummy (3507123456780001) — data pribadi palsu masuk skema.",
+      "fix": "Ganti DEFAULT jadi '' dan jangan hardcode PII."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "security",
+      "detail": "PIN hanya SHA-256(plain) di SharedPrefs, bukan PBKDF2/Keystore — klaim DevTools 'Keystore PIN & PBKDF2' bohong.",
+      "fix": "Ganti ke PBKDF2 + Android Keystore atau label jujur di DevTools."
+    },
+    {
+      "severity": "MINOR",
+      "category": "security",
+      "detail": "Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB.",
+      "fix": "Enkripsi database atau minimal jelaskan risiko di docs."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "database",
+      "detail": "Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v13 tidak lengkap.",
+      "fix": "Generate & commit schema hilang via Room export."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "code",
+      "detail": "1 TODO/FIXME tersisa (mis. DashboardHeader.kt: StatusChips(currentStatus = member.currentStatus, onStatusChange = { _, _ -> /* ).",
+      "fix": "Implementasikan sebelum klaim Selesai."
+    },
+    {
+      "severity": "MINOR",
+      "category": "code",
+      "detail": "Hardcode hex Color(0x...) di80 file — melanggar 'No Magic Numbers' AGENTS §1.",
+      "fix": "Pindah ke DesignTokens/Theme."
+    },
+    {
+      "severity": "MINOR",
+      "category": "hygiene",
+      "detail": "gradlew tidak executable (mode 644) → ./gradlew lokal gagal tanpa chmod.",
+      "fix": "chmod +x atau commit mode 755."
+    },
+    {
+      "severity": "MINOR",
+      "category": "test",
+      "detail": "androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented.",
+      "fix": "Tambah UI test untuk login, SOS, kas."
+    },
+    {
+      "severity": "MINOR",
+      "category": "ci",
+      "detail": "Detekt/KtLint tidak ada di CI — hanya line-cap + lint.",
+      "fix": "Tambah static analysis (sudah masuk backlog)."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "ci",
+      "detail": "CI hanya assembleDebug, tidak ada release/AAB signing & distribusi.",
+      "fix": "Tambah job release dengan Keystore via Secrets."
+    }
   ]
 }

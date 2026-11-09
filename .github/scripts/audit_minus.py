@@ -21,7 +21,10 @@ Usage:
   python3 .github/scripts/audit_minus.py --fail-on-blocker
   python3 .github/scripts/audit_minus.py --json > minus.json
 
-Sumber kebenaran: DevTools in-app WAJIB mencerminkan laporan ini.
+Sumber kebenaran: laporan ini digabung ke about_manifest.json + docs/ABOUT.md
+via generate_about_manifest.py menjadi SINGLE SOURCE OF TRUTH.
+AI dev wajib baca docs/ABOUT.md (mesin: about_manifest.json) sebelum klaim.
+DevTools in-app wajib mencerminkan laporan ini.
 """
 
 import json, os, re, sys

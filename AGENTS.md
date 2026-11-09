@@ -1,6 +1,7 @@
 # DRG Driver — AI Coding Agent Architecture & Operational SOP (v3.0)
 
 > **MANDATE:** Dilarang keras "vibe coding" (perbaikan asal jalan, file monolitik, state mutation tanpa aturan, hardcoded value, atau status sukses palsu).
+> **SINGLE SOURCE OF TRUTH:** `docs/ABOUT.md` (+ `app/src/main/assets/about_manifest.json`) adalah acuan wajib AI dev & DevTools. Jangan pakai DEVTOOLS.md/README untuk angka. Jalankan `python3 .github/scripts/generate_about_manifest.py` untuk refresh (sudah gabung `audit_minus.py --json` — lihat §18).
 > **Core Philosophy:** **"Simplicity is King"** & **"Build One and Forget"** — Isolasi total, performa kelas atas, zero future regressions, batas modul sangat ketat.
 > **Project:** DRG Driver (Driver Riang Gembira) — Enterprise Android Application
 > **Architecture:** Clean Architecture + MVI/UDF + Jetpack Compose Material 3
@@ -244,9 +245,11 @@ python3 .github/scripts/check_file_length.py
 
 - **GitHub Actions** (`.github/workflows/android_ci.yml`) enforces:
     1. Architecture quality check (`check_file_length.py`) — **hard fail** jika >125 lines.
-    2. Android Lint (`./gradlew :app:lintDebug`) — warnings captured.
-    3. Robolectric tests (`./gradlew :app:testDebugUnitTest`) — **hard fail** jika tests gagal.
-    4. Debug APK assembly.
+    2. Bawel audit (`audit_minus.py`, warn-only) — BLOCKER wajib diperbaiki sebelum klaim multi-user.
+    3. Manifest SSOT sync (`generate_about_manifest.py` → `about_manifest.json` + `docs/ABOUT.md`) — auto-commit via `github-actions[bot]`.
+    4. Android Lint (`./gradlew :app:lintDebug`) — warnings captured.
+    5. Robolectric tests (`./gradlew :app:testDebugUnitTest`) — **hard fail** jika tests gagal.
+    6. Debug APK assembly.
 - **NEVER** push code tanpa verifikasi lokal pertama. CI akan reject non-compliant code.
 - **Concurrency**: Cancel in-progress runs pada new push.
 - **Timeout**: 25 menit per run.
@@ -350,11 +353,12 @@ class MyFeatureTest {
 ## 18. WORKFLOW — AI AGENT PROCEDURE
 
 ### Before Starting Work
-1. **Read** `AGENTS.md`, `CONTRIBUTING.md`, `docs/DATABASE_MIGRATIONS.md`.
-2. **Check** `.github/scripts/check_file_length.py` untuk understand 125-line rule.
+1. **Read** `AGENTS.md`, `CONTRIBUTING.md`, `docs/DATABASE_MIGRATIONS.md`, lalu **`docs/ABOUT.md` (SSOT)** — jangan pakai README/DEVTOOLS untuk angka.
+2. **Check** `.github/scripts/check_file_length.py` untuk understand 125-line rule + `audit_minus.py` untuk bawel.
 3. **Run** `python3 .github/scripts/check_file_length.py` untuk lihat current violations.
-4. **Run** `./gradlew :app:testDebugUnitTest` untuk verify baseline tests pass.
-5. **Analyze** fitur yang sudah ada dan identifikasi ruang improvement.
+4. **Run** `python3 .github/scripts/audit_minus.py` (warn) lalu `python3 .github/scripts/generate_about_manifest.py` untuk refresh SSOT (`about_manifest.json` + `docs/ABOUT.md`, minus digabung). Baca bagian **Kekurangan (Bawel Audit)** di `docs/ABOUT.md` sebagai acuan.
+5. **Run** `./gradlew :app:testDebugUnitTest` untuk verify baseline tests pass.
+6. **Analyze** fitur yang sudah ada dan identifikasi ruang improvement.
 
 ### During Development
 1. **Phase 1**: Deklarasikan models di `shared/models/` dan kontrak di `index.[ext]`.
@@ -362,19 +366,21 @@ class MyFeatureTest {
 3. **Phase 3**: Injeksi design tokens, animasi fisika, shaders, haptics.
 4. **Phase 4**: Tulis unit test + adversarial audit (3 skenario negatif).
 5. **Verify** file line counts < 125 baris.
-6. **Run** `python3 .github/scripts/check_file_length.py`.
-7. **Run** `./gradlew :app:testDebugUnitTest`.
-8. **Update** `docs/DATABASE_MIGRATIONS.md` jika database berubah.
-9. **Update** `CHANGELOG.md` jika feature-worthy.
+6. **Run** `python3 .github/scripts/check_file_length.py` + `python3 .github/scripts/audit_minus.py`.
+7. **Run** `python3 .github/scripts/generate_about_manifest.py` untuk refresh SSOT bila fitur/backlog berubah.
+8. **Run** `./gradlew :app:testDebugUnitTest`.
+9. **Update** `docs/DATABASE_MIGRATIONS.md` jika database berubah.
+10. **Update** `CHANGELOG.md` jika feature-worthy.
 
 ### Before Committing
 1. **Run** `./gradlew :app:testDebugUnitTest`.
 2. **Run** `python3 .github/scripts/check_file_length.py`.
-3. **Run** `./gradlew :app:lintDebug`.
-4. **Verify** no `TODO()`, `FIXME()`, `Log.d` sensitif.
-5. **Verify** no hardcoded colors/strings.
-6. **Verify** no cross-module imports.
-7. **Commit** dengan descriptive message.
+3. **Run** `python3 .github/scripts/audit_minus.py --json` dan `python3 .github/scripts/generate_about_manifest.py`; pastikan `docs/ABOUT.md` minus mutakhir ter-commit.
+4. **Run** `./gradlew :app:lintDebug`.
+5. **Verify** no `TODO()`, `FIXME()`, `Log.d` sensitif.
+6. **Verify** no hardcoded colors/strings.
+7. **Verify** no cross-module imports.
+8. **Commit** dengan descriptive message.
 
 ### After Pushing
 1. **Verify** CI pipeline passes di GitHub Actions.
@@ -440,6 +446,8 @@ class MyFeatureTest {
 ./gradlew :app:lintDebug                  # Lint check
 ./gradlew assembleDebug                   # Build debug APK
 python3 .github/scripts/check_file_length.py  # Architecture audit
+python3 .github/scripts/audit_minus.py    # Bawel audit (SSOT minus)
+python3 .github/scripts/generate_about_manifest.py  # Refresh SSOT (about_manifest.json + docs/ABOUT.md)
 ```
 
 ### CI Pipeline
@@ -460,9 +468,13 @@ python3 .github/scripts/check_file_length.py  # Architecture audit
 | `SECURITY.md` | Security policy & vulnerability reporting |
 | `CHANGELOG.md` | Release history |
 | `ROADMAP.md` | Project roadmap (Phases 1-3) |
+| `docs/ABOUT.md` | **SSOT manusia** — wajib dibaca AI dev (progres + Kekurangan Bawel Audit, digenerate otomatis) |
+| `app/src/main/assets/about_manifest.json` | **SSOT mesin** — minus + progres (generated dari `generate_about_manifest.py` + `audit_minus.py`) |
 | `docs/DATABASE_MIGRATIONS.md` | Room database migration history v1-v13 |
 | `docs/modules/README.md` | Module documentation index |
 | `.github/scripts/check_file_length.py` | Architecture quality enforcer |
+| `.github/scripts/audit_minus.py` | Bawel minus detector (digabung ke SSOT) |
+| `.github/scripts/generate_about_manifest.py` | Generator SSOT (wajib dijalankan tiap sesi AI dev) |
 | `.github/workflows/android_ci.yml` | CI/CD pipeline definition |
 | `app/proguard-rules.pro` | R8/ProGuard rules |
 | `app/src/main/res/xml/network_security_config.xml` | Network security config |

@@ -31,7 +31,7 @@
 
 **Scope finansial sementara: iuran kas saja yang wajib.** Kas Transparan (masuk/keluar/saldo + export) adalah satu-satunya fitur finansial yang harus ada di rilis awal. **Marketplace & arisan = [DEFERRED] di luar scope** — ditandai di `.github/about/features.json`, `ROADMAP.md`, dan `docs/ABOUT.md`. Jangan jadikan blocker. Asuransi & CRDT juga ditunda.
 
-**Hasil audit bawel terbaru:** `python3 .github/scripts/audit_minus.py` → **33 temuan (7 BLOCKER, 16 MAJOR, 8 MINOR, 2 NOTE)** per 2026-11-09. Detail di [DEVTOOLS.md](DEVTOOLS.md) §9 + tab **Cacat Sistem** di DevTools in-app.
+**Sumber kebenaran tunggal:** Hitungan audit terkini **hanya** di [docs/ABOUT.md](docs/ABOUT.md) — bagian **Kekurangan (Bawel Audit)** (digenerate dari `audit_minus.py --json` via `generate_about_manifest.py`, machine: `app/src/main/assets/about_manifest.json`, kunci `minus`/`minusSummary`). Jangan refer ke README/DEVTOOLS untuk angka — rujuk SSOT tersebut. AI dev wajib baca SSOT dulu (`.AGENTS.md` §18).
 
 ---
 
