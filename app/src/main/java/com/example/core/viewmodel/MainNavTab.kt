@@ -12,5 +12,7 @@ enum class MainNavTab(val title: String) {
     PROFILE("Profil"),
     ADMIN("Pusat Kendali"),
     ROLES("Manajemen Peran"),
-    ABOUT("Tentang Aplikasi")
+    ABOUT("Tentang Aplikasi"),
+    FIELD_WORKFLOW("Alur Kerja Lapangan"),
+    DEV_TOOLS("Dev Tools AI & Super Admin")
 }

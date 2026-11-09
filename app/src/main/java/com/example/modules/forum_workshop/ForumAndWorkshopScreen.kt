@@ -19,6 +19,7 @@ fun ForumAndWorkshopScreen(
     posts: List<ForumPost>,
     workshops: List<WorkshopPartner>,
     currentMemberId: String = "DRG-001",
+    currentMember: DriverMember? = null,
     onCreatePost: (String, String, ForumCategory, PostType) -> Unit,
     onToggleLike: (String, Boolean) -> Unit,
     onDeletePost: (String) -> Unit = {},
@@ -26,6 +27,9 @@ fun ForumAndWorkshopScreen(
     onAddComment: (String, String) -> Unit = { _, _ -> },
     onDeleteComment: (String) -> Unit = {},
     onCallWorkshop: (String) -> Unit,
+    onRateWorkshop: (WorkshopPartner, Float, String, String) -> Unit = { _, _, _, _ -> },
+    onBookingWorkshop: (WorkshopPartner, String) -> Unit = { _, _ -> },
+    reviewsMap: Map<String, List<DriverReview>> = emptyMap(),
     modifier: Modifier = Modifier
 ) {
     var selectedSubTab by remember { mutableIntStateOf(0) }
@@ -77,7 +81,11 @@ fun ForumAndWorkshopScreen(
         } else {
             WorkshopSection(
                 workshops = workshops,
-                onCallWorkshop = onCallWorkshop
+                onCallWorkshop = onCallWorkshop,
+                currentMember = currentMember,
+                onRateWorkshop = onRateWorkshop,
+                onBookingWorkshop = onBookingWorkshop,
+                reviewsMap = reviewsMap
             )
         }
 

@@ -7,11 +7,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -32,8 +34,14 @@ fun KasTransparanComponent(
     modifier: Modifier = Modifier
 ) {
     var selectedFilter by remember { mutableStateOf<TransactionType?>(null) }
-    val filteredList = remember(transactions, selectedFilter) {
-        if (selectedFilter == null) transactions else transactions.filter { it.type == selectedFilter }
+    var selectedPeriod by remember { mutableStateOf("Semua") }
+    val filteredList = remember(transactions, selectedFilter, selectedPeriod) {
+        val byPeriod = when (selectedPeriod) {
+            "Bulan Ini" -> transactions.filter { it.dateString.contains("Okt 2026") || it.dateString.contains("Hari ini") }
+            "Tahun Ini" -> transactions.filter { it.dateString.contains("2026") }
+            else -> transactions
+        }
+        if (selectedFilter == null) byPeriod else byPeriod.filter { it.type == selectedFilter }
     }
 
     Column(
@@ -41,17 +49,30 @@ fun KasTransparanComponent(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         KasSummaryHeader(totalIncome = totalIncome, totalExpense = totalExpense, netBalance = netBalance)
+        KasPeriodSummaryCard(transactions = transactions, selectedPeriod = selectedPeriod, onPeriodSelected = { selectedPeriod = it })
 
-        if (canAddTransaction) {
-            Button(
-                onClick = onAddTransactionClick,
-                colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
+        val context = LocalContext.current
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            if (canAddTransaction) {
+                Button(
+                    onClick = onAddTransactionClick,
+                    colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.weight(1.3f).height(42.dp).testTag("add_kas_transaction_button")
+                ) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "Tambah", tint = Color.White, modifier = Modifier.size(14.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Catat Kas", fontWeight = FontWeight.Bold, fontSize = 11.sp)
+                }
+            }
+            OutlinedButton(
+                onClick = { KasReportExporter.exportReport(context, selectedPeriod, totalIncome, totalExpense, netBalance, filteredList) },
                 shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth().height(44.dp).testTag("add_kas_transaction_button")
+                modifier = Modifier.weight(1f).height(42.dp).testTag("export_kas_report_button")
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Tambah", tint = Color.White)
-                Spacer(modifier = Modifier.width(6.dp))
-                Text("Catat Mutasi Kas Transparan", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                Icon(imageVector = Icons.Default.Share, contentDescription = "Ekspor", tint = DrgGreenPrimary, modifier = Modifier.size(14.dp))
+                Spacer(modifier = Modifier.width(4.dp))
+                Text("Ekspor Rekap", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = DrgGreenPrimary)
             }
         }
 

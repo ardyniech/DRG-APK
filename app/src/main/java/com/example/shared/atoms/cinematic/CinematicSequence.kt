@@ -20,17 +20,17 @@ internal val CinematicShots = listOf(
     CinematicScene(
         headline = "JALAN ADALAH RUANG KERJA",
         caption = "Nol server. Nol biaya. Semua nyimpan di HP kamu sendiri.",
-        durationMillis = 4600L
+        durationMillis = 4800L
     ),
     CinematicScene(
         headline = "KOMUNITAS YANG MENJAGA",
         caption = "Radar langsung, SOS satu sentuh, kas transparan, forum bengkel.",
-        durationMillis = 4600L
+        durationMillis = 4800L
     ),
     CinematicScene(
         headline = "DATA TIDAK PINDAH KE MANA",
         caption = "P2P device-to-device. Serverless. Terenkripsi di perangkat.",
-        durationMillis = 4600L
+        durationMillis = 4800L
     )
 )
 
@@ -38,11 +38,14 @@ internal val CinematicShots = listOf(
 class CinematicDirectorState(
     val sceneIndex: Int,
     val ctaVisible: Boolean,
-    val skipToCta: () -> Unit,
+    val openMenu: () -> Unit,
+    val closeMenu: () -> Unit,
+    val skipToNext: () -> Unit,
     val replay: () -> Unit
 ) {
     val scene: CinematicScene get() = CinematicShots[sceneIndex.coerceIn(0, CinematicShots.lastIndex)]
     val isLastScene: Boolean get() = sceneIndex >= CinematicShots.lastIndex
+    val skipToCta: () -> Unit get() = openMenu
 }
 
 @Composable
@@ -50,21 +53,19 @@ fun rememberCinematicDirector(): CinematicDirectorState {
     var sceneIndex by remember { mutableIntStateOf(0) }
     var ctaVisible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(sceneIndex, ctaVisible) {
-        if (ctaVisible) return@LaunchedEffect
+    // Continuous scenic looping — NEVER pop up CTA automatically
+    LaunchedEffect(sceneIndex) {
         val duration = CinematicShots[sceneIndex.coerceIn(0, CinematicShots.lastIndex)].durationMillis
         delay(duration)
-        if (sceneIndex >= CinematicShots.lastIndex) {
-            ctaVisible = true
-        } else {
-            sceneIndex += 1
-        }
+        sceneIndex = (sceneIndex + 1) % CinematicShots.size
     }
 
     return CinematicDirectorState(
         sceneIndex = sceneIndex,
         ctaVisible = ctaVisible,
-        skipToCta = { ctaVisible = true },
+        openMenu = { ctaVisible = true },
+        closeMenu = { ctaVisible = false },
+        skipToNext = { sceneIndex = (sceneIndex + 1) % CinematicShots.size },
         replay = {
             sceneIndex = 0
             ctaVisible = false

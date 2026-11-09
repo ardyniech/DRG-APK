@@ -49,6 +49,9 @@ fun CommunityHubScreen(
     onOrderMarketItem: (ServiceMarketItem) -> Unit = {},
     onClaimInsurance: (InsuranceClaimItem) -> Unit = {},
     onAddPosko: (String, String, String, Double, Double) -> Unit = { _, _, _, _, _ -> },
+    onRateWorkshop: (WorkshopPartner, Float, String, String) -> Unit = { _, _, _, _ -> },
+    onBookingWorkshop: (WorkshopPartner, String) -> Unit = { _, _ -> },
+    workshopReviewsMap: Map<String, List<DriverReview>> = emptyMap(),
     modifier: Modifier = Modifier
 ) {
     var selectedSubTab by remember { mutableIntStateOf(initialSubTab) }
@@ -66,9 +69,11 @@ fun CommunityHubScreen(
                 }
                 1 -> ForumAndWorkshopScreen(
                     posts = posts, workshops = workshops, currentMemberId = currentMember?.id ?: "DRG-001",
+                    currentMember = currentMember,
                     onCreatePost = onCreatePost, onToggleLike = onToggleLike, onDeletePost = onDeletePost,
                     commentsMap = commentsMap, onAddComment = onAddComment, onDeleteComment = onDeleteComment,
-                    onCallWorkshop = onCallWorkshop
+                    onCallWorkshop = onCallWorkshop, onRateWorkshop = onRateWorkshop, onBookingWorkshop = onBookingWorkshop,
+                    reviewsMap = workshopReviewsMap
                 )
                 2 -> GamificationLeaderboardScreen(currentMember = currentMember, members = members, badges = badges, tasks = tasks, rewards = rewards, pointTransactions = pointTransactions, onAwardPointsClick = onAwardPointsClick, onClaimTask = onClaimTask, onCompleteTask = onCompleteTask, onRedeemReward = onRedeemReward)
                 3 -> MembersAndPoskoScreen(currentMember = currentMember, members = members, poskoList = poskoList, adminLogs = adminLogs, onRecordKopdarAttendance = onRecordKopdarAttendance, onAddReview = onAddReview, onUpdateMemberRole = onUpdateMemberRole, onUpdateMemberVerification = onUpdateMemberVerification, onUpdateMemberPermissions = onUpdateMemberPermissions, onAddPosko = onAddPosko)

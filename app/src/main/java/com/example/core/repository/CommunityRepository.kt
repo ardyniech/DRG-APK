@@ -57,4 +57,32 @@ class CommunityRepository(private val db: AppDatabase) {
     suspend fun saveNotificationPreference(pref: NotificationPreference) = withContext(Dispatchers.IO) {
         db.notificationPrefDao().savePref(pref)
     }
+
+    fun getReviewsForWorkshop(workshopId: String): Flow<List<DriverReview>> =
+        db.reviewDao().getReviewsForDriver(workshopId)
+
+    suspend fun addWorkshopReview(
+        workshop: WorkshopPartner,
+        reviewerMember: DriverMember,
+        rating: Float,
+        serviceType: String,
+        comment: String
+    ) = withContext(Dispatchers.IO) {
+        val newCount = workshop.reviewCount + 1
+        val newRating = ((workshop.rating * workshop.reviewCount) + rating) / newCount
+        val updated = workshop.copy(rating = (newRating * 10).toInt() / 10f, reviewCount = newCount)
+        val review = DriverReview(
+            id = "REV-${java.util.UUID.randomUUID().toString().replace("-", "").take(8)}",
+            targetDriverId = workshop.id,
+            reviewerName = reviewerMember.name,
+            reviewerRole = reviewerMember.role,
+            rating = rating,
+            tag = serviceType,
+            comment = comment,
+            dateText = "Hari ini"
+        )
+        db.reviewDao().insertReview(review)
+        db.workshopDao().insertWorkshop(updated)
+        db.memberDao().addLoyaltyPoints(reviewerMember.id, 15)
+    }
 }

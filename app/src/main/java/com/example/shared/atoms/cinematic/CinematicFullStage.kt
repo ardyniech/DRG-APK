@@ -1,25 +1,16 @@
 package com.example.shared.atoms.cinematic
 
 import androidx.compose.foundation.background
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.unit.dp
-import com.example.ui.theme.DrgAsphaltDeep
+import com.example.modules.auth.LandingAuthMenuDialog
 import com.example.shared.atoms.cinematic.rider.RiderPovOverlay
 import com.example.shared.atoms.cinematic.rider.rememberRiderSteeringState
+import com.example.ui.theme.DrgAsphaltDeep
 import com.example.ui.theme.DrgNightSkyTop
 
 @Composable
@@ -33,61 +24,61 @@ fun CinematicFullStage(
 ) {
     val riderState = rememberRiderSteeringState()
 
-    val ctaProgress by animateFloatAsState(
-        targetValue = if (director.ctaVisible) 1f else 0f,
-        animationSpec = tween(650),
-        label = "stage-cta"
-    )
-
     Box(modifier = modifier.fillMaxSize().testTag("landing_screen")) {
-        RoadRushBackdrop(modifier = Modifier.fillMaxSize(), horizonRatio = 0.335f, showRain = true)
+        // 1. Dynamic city night road backdrop
+        RoadRushBackdrop(
+            modifier = Modifier.fillMaxSize(),
+            horizonRatio = 0.335f,
+            showRain = true,
+            riderState = riderState
+        )
+
+        // 2. Night lighting overlay
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        0f to DrgNightSkyTop.copy(alpha = 0.62f),
-                        0.42f to DrgAsphaltDeep.copy(alpha = 0.12f),
-                        1f to DrgNightSkyTop.copy(alpha = 0.86f)
+                        0f to DrgNightSkyTop.copy(alpha = 0.58f),
+                        0.40f to DrgAsphaltDeep.copy(alpha = 0.10f),
+                        1f to DrgNightSkyTop.copy(alpha = 0.82f)
                     )
                 )
         )
 
+        // 3. Cinematic film grain texture
         FilmGrainOverlay(
             modifier = Modifier.fillMaxSize(),
-            speckCount = 80,
-            grainSpeed = 0.9f,
-            vignetteStrength = 0.52f
+            speckCount = 75,
+            grainSpeed = 0.85f,
+            vignetteStrength = 0.48f
         )
 
+        // 4. Headline and scene captions
         CinematicSceneChrome(
             scene = director.scene,
             sceneIndex = director.sceneIndex,
             ctaVisible = director.ctaVisible,
-            onSkip = director.skipToCta,
+            onSkip = director.openMenu,
             onReplay = director.replay,
             modifier = Modifier.fillMaxSize()
         )
 
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(horizontal = 22.dp, vertical = 148.dp)
-                .scale(0.94f + ctaProgress * 0.06f)
-        ) {
-            CinematicCtaPanel(
-                visible = director.ctaVisible,
-                onQuickDemo = onQuickDemoLogin,
-                onLogin = onNavigateToLogin,
-                onRegister = onNavigateToRegister,
-                onAbout = onNavigateToAbout
-            )
-        }
-
-        val povAlpha = (1f - ctaProgress * 0.72f).coerceIn(0.16f, 1f)
+        // 5. Realistic motorcycle cockpit POV with interactive dashboard button
         RiderPovOverlay(
             state = riderState,
-            modifier = Modifier.fillMaxSize().alpha(povAlpha)
+            onOpenMenu = director.openMenu,
+            modifier = Modifier.fillMaxSize()
+        )
+
+        // 6. On-demand Auth menu dialog triggered ONLY when tapping dashboard button
+        LandingAuthMenuDialog(
+            visible = director.ctaVisible,
+            onDismiss = director.closeMenu,
+            onQuickDemo = onQuickDemoLogin,
+            onLogin = onNavigateToLogin,
+            onRegister = onNavigateToRegister,
+            onAbout = onNavigateToAbout
         )
     }
 }

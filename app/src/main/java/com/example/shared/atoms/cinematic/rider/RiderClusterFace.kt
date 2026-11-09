@@ -38,6 +38,12 @@ internal fun DrawScope.drawGearBadge(
     faceH: Float,
     state: RiderSteeringState
 ) {
+    if (state.speed < 1) {
+        val nCenter = Offset(topLeft.x + faceW * 0.745f, topLeft.y + faceH * 0.29f)
+        drawCircle(color = DrgSegmentOn, radius = faceH * 0.08f, center = nCenter)
+        drawCircle(color = DrgSegmentOn.copy(alpha = 0.22f), radius = faceH * 0.14f, center = nCenter)
+    }
+
     val gearLevel = when {
         state.speed < 1 -> 0
         state.speed < 32 -> 1

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +26,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ui.theme.DrgGrabGreenPrimary
 import com.example.ui.theme.DrgTextMuted
 
 @Composable
@@ -41,7 +39,7 @@ fun CinematicSceneChrome(
 ) {
     val reveal by animateFloatAsState(
         targetValue = if (ctaVisible) 0f else 1f,
-        animationSpec = tween(700),
+        animationSpec = tween(500),
         label = "chrome-reveal"
     )
 
@@ -58,39 +56,40 @@ fun CinematicSceneChrome(
                 activeIndex = sceneIndex,
                 running = !ctaVisible
             )
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                CinematicChromeChip(text = "DRG • 01", onClick = null)
+                CinematicChromeChip(text = "DRG • MALANG", onClick = null)
                 CinematicChromeChip(
-                    text = if (ctaVisible) "Putar Ulang" else "Lewati",
-                    onClick = { if (ctaVisible) onReplay() else onSkip() }
+                    text = "Masuk • Menu",
+                    onClick = onSkip
                 )
             }
         }
 
+        // Headline & caption positioned in the sky area, never blocking motorcycle dashboard
         Column(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
+                .align(Alignment.TopCenter)
                 .fillMaxWidth()
-                .padding(start = 24.dp, end = 24.dp, bottom = 32.dp)
+                .padding(start = 24.dp, end = 24.dp, top = 84.dp)
                 .alpha(reveal),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = scene.headline,
-                fontSize = 25.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Black,
                 color = Color.White,
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = scene.caption,
-                fontSize = 13.sp,
+                fontSize = 12.sp,
                 color = DrgTextMuted,
                 textAlign = TextAlign.Center
             )
@@ -103,7 +102,7 @@ private fun CinematicChromeChip(text: String, onClick: (() -> Unit)?) {
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(50))
-            .background(Color.Black.copy(alpha = 0.34f))
+            .background(Color.Black.copy(alpha = 0.38f))
             .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
             .padding(horizontal = 14.dp, vertical = 7.dp)
     ) {

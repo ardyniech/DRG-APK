@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.RateReview
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -24,20 +25,22 @@ import com.example.ui.theme.*
 @Composable
 fun WorkshopCard(
     bkl: WorkshopPartner,
-    onCall: () -> Unit
+    onCall: () -> Unit,
+    onRateClick: () -> Unit = {},
+    onViewReviewsClick: () -> Unit = {},
+    onBookingClick: () -> Unit = onCall
 ) {
-    val cardShape = RoundedCornerShape(22.dp)
+    val cardShape = RoundedCornerShape(20.dp)
     val highlightBrush = Brush.linearGradient(
         listOf(Color.White, Color.White.copy(alpha = 0.5f), DrgAmberSecondary.copy(alpha = 0.25f))
     )
 
     Surface(
         shape = cardShape,
-        color = Color.White.copy(alpha = 0.88f),
-        tonalElevation = 0.dp,
+        color = Color.White.copy(alpha = 0.92f),
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(4.dp, cardShape, ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+            .shadow(4.dp, cardShape)
             .border(1.2.dp, highlightBrush, cardShape)
     ) {
         Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -51,10 +54,7 @@ fun WorkshopCard(
                     Text(text = "📍 ${bkl.address} (${bkl.distanceKm} KM)", fontSize = 11.sp, color = DrgTextSecondary)
                 }
                 Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(DrgAmberSecondary)
-                        .padding(horizontal = 8.dp, vertical = 3.dp)
+                    modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(DrgAmberSecondary).padding(horizontal = 8.dp, vertical = 3.dp)
                 ) {
                     Text(text = "DISC ${bkl.discountPercent}%", fontSize = 10.sp, fontWeight = FontWeight.Black, color = Color.White)
                 }
@@ -67,15 +67,37 @@ fun WorkshopCard(
                 Text(text = "${bkl.rating} (${bkl.reviewCount} ulasan) • Buka: ${bkl.openHours}", fontSize = 10.sp, color = DrgTextMuted)
             }
 
-            Button(
-                onClick = onCall,
-                colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth().height(38.dp)
-            ) {
-                Icon(imageVector = Icons.Default.Phone, contentDescription = "Hubungi", modifier = Modifier.size(14.dp))
-                Spacer(modifier = Modifier.width(6.dp))
-                Text("Hubungi Bengkel / Booking", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                OutlinedButton(
+                    onClick = onViewReviewsClick,
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.weight(1f).height(36.dp),
+                    contentPadding = PaddingValues(horizontal = 4.dp)
+                ) {
+                    Text("Ulasan (${bkl.reviewCount})", fontSize = 10.sp, fontWeight = FontWeight.SemiBold)
+                }
+                OutlinedButton(
+                    onClick = onRateClick,
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = DrgAmberWarning),
+                    modifier = Modifier.weight(1f).height(36.dp),
+                    contentPadding = PaddingValues(horizontal = 4.dp)
+                ) {
+                    Icon(Icons.Default.RateReview, contentDescription = null, modifier = Modifier.size(12.dp))
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Text("Beri Nilai", fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                }
+                Button(
+                    onClick = onBookingClick,
+                    colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.weight(1.2f).height(36.dp),
+                    contentPadding = PaddingValues(horizontal = 4.dp)
+                ) {
+                    Icon(imageVector = Icons.Default.Phone, contentDescription = "Hubungi", modifier = Modifier.size(12.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Booking", fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                }
             }
         }
     }

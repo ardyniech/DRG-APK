@@ -8,12 +8,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import com.example.core.viewmodel.*
 import com.example.modules.about.AboutScreen
-import com.example.modules.admin.AdminGovernanceScreen
 import com.example.modules.dashboard.DashboardScreen
+import com.example.modules.devtools.DevToolsDashboardScreen
 import com.example.modules.emergency.EmergencyScreen
-import com.example.modules.members.role_management.RolePermissionManagementScreen
 import com.example.modules.profile.ProfileScreen
 import com.example.modules.radar.RadarScreen
+import com.example.modules.workflow.FieldWorkflowScreen
 import com.example.shared.models.*
 import com.example.shared.utils.WhatsAppLauncher
 import kotlinx.coroutines.launch
@@ -90,36 +90,27 @@ fun DrgTabContentSwitcher(
                 )
             }
             MainNavTab.PROFILE -> ProfileScreen(
-                currentMember = currentMember,
+                currentMember = currentMember, badges = badges,
                 onUpdateProfile = { p, a, m, pl, pu, ad, b, ec, ep, s, k ->
                     viewModel.updateProfile(p, a, m, pl, pu, ad, b, ec, ep, s, k)
                     scope.launch { snackbarHostState.showSnackbar("Biodata lengkap berhasil disimpan!") }
                 },
                 isSosAlarmEnabled = isSosAlarmEnabled, onToggleSosAlarm = { viewModel.toggleSosAlarmSound(it) },
                 onOpenSettings = onShowSettingsDialog, onOpenAdmin = { viewModel.selectTab(MainNavTab.ADMIN) },
+                onOpenDevTools = { viewModel.selectTab(MainNavTab.DEV_TOOLS) },
                 onOpenAbout = { viewModel.selectTab(MainNavTab.ABOUT) }, onLogout = { viewModel.logout() }
             )
             MainNavTab.ABOUT -> AboutScreen(onBack = { viewModel.selectTab(MainNavTab.PROFILE) })
-            MainNavTab.ADMIN -> AdminGovernanceScreen(
-                currentMember = currentMember, members = members,
-                onApproveScreening = { viewModel.approveMemberScreening(it) },
-                onRejectScreening = { id, r -> viewModel.rejectMemberScreening(id, r) },
-                onSendNotification = { t, msg, s ->
-                    viewModel.sendNotification(t, msg, s)
-                    scope.launch { snackbarHostState.showSnackbar("Pengumuman berhasil dipancarkan!") }
-                },
-                onOpenRoleManagement = { viewModel.selectTab(MainNavTab.ROLES) },
-                onUpdateMemberPermissions = { id, ro, k, v, so, po, st ->
-                    viewModel.updateMemberPermissions(id, ro, k, v, so, po, st)
-                }
+            MainNavTab.FIELD_WORKFLOW -> FieldWorkflowScreen(
+                onBack = { viewModel.selectTab(MainNavTab.DASHBOARD) },
+                onNavigateRadar = { viewModel.selectTab(MainNavTab.RADAR) },
+                onTriggerEmergency = onShowEmergencyTrigger
             )
-            MainNavTab.ROLES -> RolePermissionManagementScreen(
-                members = members, currentMember = currentMember,
-                onBack = { viewModel.selectTab(MainNavTab.ADMIN) },
-                onSavePermissions = { id, ro, k, v, so, po, st ->
-                    viewModel.updateMemberPermissions(id, ro, k, v, so, po, st)
-                }
+            MainNavTab.DEV_TOOLS -> DevToolsDashboardScreen(
+                currentMember = currentMember,
+                onBack = { viewModel.selectTab(MainNavTab.PROFILE) }
             )
+            MainNavTab.ADMIN, MainNavTab.ROLES -> AdminTabDelegate(tab = tab, viewModel = viewModel, currentMember = currentMember, members = members, snackbarHostState = snackbarHostState)
         }
     }
 }

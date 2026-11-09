@@ -13,16 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.core.repository.CommunitySeedData
 import com.example.shared.models.BadgeItem
 import com.example.ui.theme.*
 
 @Composable
 fun BadgesTabContent(badges: List<BadgeItem>) {
+    val displayBadges = if (badges.isNotEmpty()) badges else CommunitySeedData.defaultBadges()
+
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
-        items(badges) { b ->
+        items(displayBadges) { b ->
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = DrgSurface,
@@ -35,7 +38,7 @@ fun BadgesTabContent(badges: List<BadgeItem>) {
                         Text(text = b.title, fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
                         Text(text = b.description, fontSize = 11.sp, color = DrgTextSecondary)
                         Text(
-                            text = if (b.isEarned) "DIERAIH (${b.earnedDate})" else "Dibutuhkan ${b.requiredXp} XP",
+                            text = if (b.isEarned) "DIRAIH (${b.earnedDate})" else "Dibutuhkan ${b.requiredXp} XP",
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
                             color = if (b.isEarned) DrgGreenPrimary else DrgTextMuted

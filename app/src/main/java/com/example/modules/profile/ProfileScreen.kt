@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.AdminPanelSettings
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -27,8 +28,10 @@ fun ProfileScreen(
     onToggleSosAlarm: (Boolean) -> Unit = {},
     onOpenSettings: () -> Unit = {},
     onOpenAdmin: () -> Unit = {},
+    onOpenDevTools: () -> Unit = {},
     onOpenAbout: () -> Unit = {},
     onLogout: () -> Unit = {},
+    badges: List<com.example.shared.models.BadgeItem> = emptyList(),
     modifier: Modifier = Modifier
 ) {
     var showEditDialog by remember { mutableStateOf(false) }
@@ -56,9 +59,24 @@ fun ProfileScreen(
             }
         }
 
+        if (currentMember?.role == MemberRole.SUPER_ADMIN) {
+            item {
+                Button(
+                    onClick = onOpenDevTools,
+                    modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_superadmin_dev_tools"),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0F172A)),
+                    shape = RoundedCornerShape(14.dp)
+                ) {
+                    Icon(Icons.Default.Code, contentDescription = null, tint = Color.White)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("🛠️ Dev Tools AI & Super Admin Monitor", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                }
+            }
+        }
+
         item { ProfileSettingsCard(isSosAlarmEnabled = isSosAlarmEnabled, onToggleSosAlarm = onToggleSosAlarm, onOpenSettings = onOpenSettings) }
         item { ProfileAboutEntry(onOpenAbout = onOpenAbout) }
-        item { GamificationCard(member = currentMember) }
+        item { GamificationCard(member = currentMember, badges = badges) }
         item { VehicleInfoCard(member = currentMember, onEditClick = { showEditDialog = true }) }
 
         item {

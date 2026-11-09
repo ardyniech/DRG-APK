@@ -13,10 +13,10 @@
     ]
   },
   "build": {
-    "version": "f159d3b",
-    "commit": "f159d3b",
-    "commitDate": "2026-10-15",
-    "generatedBy": "generate_about_manifest.py"
+    "version": "v3.0.0",
+    "commit": "v3.0-stable",
+    "commitDate": "2026-10-16",
+    "generatedBy": "DRG Driver Architecture Engine"
   },
   "summary": {
     "overallProgress": 64,
@@ -25,9 +25,9 @@
     "inProgress": 13,
     "planned": 8,
     "modules": 15,
-    "totalSourceFiles": 369,
-    "totalLoc": 25807,
-    "testSuites": 43
+    "totalSourceFiles": 378,
+    "totalLoc": 26543,
+    "testSuites": 45
   },
   "phases": [
     {
@@ -84,8 +84,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 13,
-      "loc": 1075,
+      "files": 14,
+      "loc": 1113,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
@@ -361,7 +361,7 @@
       "status": "IN_PROGRESS",
       "progress": 70,
       "files": 8,
-      "loc": 758,
+      "loc": 760,
       "todos": 0,
       "tests": [
         "ViewModelRefactorAuditTest"

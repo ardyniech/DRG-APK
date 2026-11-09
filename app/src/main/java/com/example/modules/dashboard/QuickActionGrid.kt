@@ -47,12 +47,12 @@ fun QuickActionGrid(
                 onClick = { onNavigate(MainNavTab.FORUM) }
             )
             QuickTile(
-                title = "Anggota & Posko",
-                desc = "Screening & Absensi",
-                icon = Icons.Default.People,
-                color = DrgGrabGreenDark,
+                title = "Alur Lapangan",
+                desc = "Simulasi Nyata Off-App",
+                icon = Icons.Default.ElectricBike,
+                color = DrgIndigoDark,
                 modifier = Modifier.weight(1f),
-                onClick = { onNavigate(MainNavTab.MEMBERS) }
+                onClick = { onNavigate(MainNavTab.FIELD_WORKFLOW) }
             )
         }
     }

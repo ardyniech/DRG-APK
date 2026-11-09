@@ -70,6 +70,13 @@ fun CommunityTabDelegate(
         onCallWorkshop = { phone ->
             WhatsAppLauncher.openChat(context, phone, "Halo Bengkel Rekanan DRG, saya anggota DRG ingin menanyakan perihal servis/booking.")
         },
+        onRateWorkshop = { bkl, rate, srv, cmt ->
+            viewModel.addWorkshopReview(bkl, rate, srv, cmt)
+        },
+        onBookingWorkshop = { bkl, msg ->
+            WhatsAppLauncher.openChat(context, bkl.phone, msg)
+            scope.launch { snackbarHostState.showSnackbar("Membuka WhatsApp booking ke ${bkl.name}...") }
+        },
         onAwardPointsClick = {
             val other = members.find { it.id != currentMember?.id } ?: members.firstOrNull()
             other?.let { onShowAwardPointDialog(it) }

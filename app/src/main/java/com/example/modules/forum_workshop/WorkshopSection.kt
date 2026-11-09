@@ -1,125 +1,107 @@
 package com.example.modules.forum_workshop
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.models.DriverMember
+import com.example.shared.models.DriverReview
 import com.example.shared.models.WorkshopPartner
-import com.example.ui.theme.DrgAmberContainer
-import com.example.ui.theme.DrgAmberSecondary
-import com.example.ui.theme.DrgGreenPrimary
-import com.example.ui.theme.DrgOutline
-import com.example.ui.theme.DrgOnAmberContainer
-import com.example.ui.theme.DrgSurface
 import com.example.ui.theme.DrgTextSecondary
 
 @Composable
 fun WorkshopSection(
     workshops: List<WorkshopPartner>,
     onCallWorkshop: (String) -> Unit,
+    currentMember: DriverMember? = null,
+    onRateWorkshop: (WorkshopPartner, Float, String, String) -> Unit = { _, _, _, _ -> },
+    onBookingWorkshop: (WorkshopPartner, String) -> Unit = { _, _ -> },
+    reviewsMap: Map<String, List<DriverReview>> = emptyMap(),
     modifier: Modifier = Modifier
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("Semua") }
-    val categories = listOf("Semua", "Tambal Ban", "Bengkel Umum", "Kelistrikan", "Panggilan 24 Jam")
+    var reviewingWorkshop by remember { mutableStateOf<WorkshopPartner?>(null) }
+    var viewingReviewsWorkshop by remember { mutableStateOf<WorkshopPartner?>(null) }
+    var bookingWorkshop by remember { mutableStateOf<WorkshopPartner?>(null) }
+    val categories = listOf("Semua", "★ Terpercaya (4.5+)", "Tambal Ban", "Bengkel Umum", "Kelistrikan")
 
-    val filteredWorkshops = remember(workshops, searchQuery, selectedCategory) {
+    val filtered = remember(workshops, searchQuery, selectedCategory) {
         workshops.filter { bkl ->
-            val matchesSearch = bkl.name.contains(searchQuery, ignoreCase = true) || 
-                                bkl.services.contains(searchQuery, ignoreCase = true) ||
-                                bkl.address.contains(searchQuery, ignoreCase = true)
-            val matchesCategory = selectedCategory == "Semua" || bkl.services.contains(selectedCategory, ignoreCase = true)
-            matchesSearch && matchesCategory
+            val matchesSearch = bkl.name.contains(searchQuery, true) || bkl.services.contains(searchQuery, true)
+            val matchesCat = when (selectedCategory) {
+                "Semua" -> true
+                "★ Terpercaya (4.5+)" -> bkl.rating >= 4.5f
+                else -> bkl.services.contains(selectedCategory, true)
+            }
+            matchesSearch && matchesCat
         }
     }
 
     Column(modifier = modifier.fillMaxSize().padding(top = 4.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        OutlinedTextField(
-            value = searchQuery,
-            onValueChange = { searchQuery = it },
-            placeholder = { Text("Cari bengkel rekanan...", fontSize = 13.sp) },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Cari", modifier = Modifier.size(18.dp)) },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = DrgSurface,
-                unfocusedContainerColor = DrgSurface,
-                focusedBorderColor = DrgGreenPrimary,
-                unfocusedBorderColor = DrgOutline
-            ),
-            shape = RoundedCornerShape(12.dp),
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth().height(52.dp)
+        WorkshopFilterBar(
+            searchQuery = searchQuery,
+            onSearchChange = { searchQuery = it },
+            selectedCategory = selectedCategory,
+            onCategoryChange = { selectedCategory = it },
+            categories = categories
         )
 
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(vertical = 4.dp)
-        ) {
-            items(categories) { cat ->
-                val isSelected = selectedCategory == cat
-                FilterChip(
-                    selected = isSelected,
-                    onClick = { selectedCategory = cat },
-                    label = { Text(cat, fontSize = 11.sp, fontWeight = FontWeight.Bold) },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = DrgGreenPrimary,
-                        selectedLabelColor = Color.White,
-                        containerColor = DrgSurface,
-                        labelColor = DrgTextSecondary
-                    ),
-                    border = FilterChipDefaults.filterChipBorder(
-                        enabled = true,
-                        selected = isSelected,
-                        borderColor = DrgOutline,
-                        selectedBorderColor = DrgGreenPrimary
-                    )
-                )
-            }
-        }
-
-        Surface(
-            shape = RoundedCornerShape(12.dp),
-            color = DrgAmberContainer,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                Icon(imageVector = Icons.Default.Build, contentDescription = "Promo", tint = DrgAmberSecondary, modifier = Modifier.size(16.dp))
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    text = "Diskon khusus anggota DRG s/d 20% cukup tunjukkan KTA digital.",
-                    fontSize = 10.sp, fontWeight = FontWeight.SemiBold, color = DrgOnAmberContainer
-                )
-            }
-        }
-
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = PaddingValues(bottom = 24.dp),
-            modifier = Modifier.weight(1f)
-        ) {
-            if (filteredWorkshops.isEmpty()) {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+            if (filtered.isEmpty()) {
                 item {
                     Box(modifier = Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
                         Text("Tidak ada bengkel rekanan yang cocok.", color = DrgTextSecondary, fontSize = 12.sp)
                     }
                 }
             } else {
-                items(filteredWorkshops) { bkl ->
-                    WorkshopCard(bkl = bkl, onCall = { onCallWorkshop(bkl.phone) })
+                items(filtered) { bkl ->
+                    WorkshopCard(
+                        bkl = bkl,
+                        onCall = { onCallWorkshop(bkl.phone) },
+                        onRateClick = { reviewingWorkshop = bkl },
+                        onViewReviewsClick = { viewingReviewsWorkshop = bkl },
+                        onBookingClick = { bookingWorkshop = bkl }
+                    )
                 }
             }
         }
+    }
+
+    reviewingWorkshop?.let { bkl ->
+        ReviewWorkshopDialog(
+            workshop = bkl,
+            onDismiss = { reviewingWorkshop = null },
+            onSubmitReview = { rating, srv, cmt ->
+                onRateWorkshop(bkl, rating, srv, cmt)
+                reviewingWorkshop = null
+            }
+        )
+    }
+
+    bookingWorkshop?.let { bkl ->
+        BookingWorkshopDialog(
+            workshop = bkl,
+            currentMember = currentMember,
+            onDismiss = { bookingWorkshop = null },
+            onConfirmBooking = { msg ->
+                onBookingWorkshop(bkl, msg)
+                bookingWorkshop = null
+            }
+        )
+    }
+
+    viewingReviewsWorkshop?.let { bkl ->
+        WorkshopReviewsSheet(
+            workshop = bkl,
+            reviews = reviewsMap[bkl.id] ?: emptyList(),
+            onDismiss = { viewingReviewsWorkshop = null },
+            onOpenWriteReview = { reviewingWorkshop = bkl }
+        )
     }
 }

@@ -61,8 +61,13 @@ fun AuthContainerScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(DrgBackgroundGradient)
-            .windowInsetsPadding(WindowInsets.systemBars)
-            .imePadding()
+            .let {
+                if (currentStage != AuthStage.LANDING) {
+                    it.windowInsetsPadding(WindowInsets.systemBars).imePadding()
+                } else {
+                    it
+                }
+            }
     ) {
         DrgAtmosphericGlow()
 

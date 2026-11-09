@@ -39,43 +39,11 @@ class DRGRepository(val db: AppDatabase) {
     fun getPrefForMember(memberId: String) = communityRepo.getPrefForMember(memberId)
     fun getReviewsForDriver(driverId: String) = memberRepo.getReviewsForDriver(driverId)
 
-    suspend fun initializeSeedDataIfNeeded() = withContext(Dispatchers.IO) {
-        if (memberRepo.getMemberCount() == 0) {
-            val foundingKetua = DriverMember(
-                id = com.example.BuildConfig.SEED_SUPER_ADMIN_ID,
-                name = com.example.BuildConfig.SEED_SUPER_ADMIN_NAME,
-                driverId = com.example.BuildConfig.SEED_SUPER_ADMIN_ID,
-                phone = com.example.BuildConfig.SEED_SUPER_ADMIN_PHONE,
-                role = MemberRole.SUPER_ADMIN,
-                motorcyclePlate = com.example.BuildConfig.SEED_SUPER_ADMIN_PLATE,
-                motorcycleModel = "Honda PCX 160",
-                rating = 5.0f,
-                reviewCount = 12,
-                loyaltyPoints = 300,
-                loyaltyTier = "Leader",
-                verificationStatus = VerificationStatus.VERIFIED,
-                screeningNotes = "Super Admin Komunitas DRG Malang Raya",
-                isOnline = true,
-                currentStatus = "Siaga Komando DRG",
-                baseArea = "Klojen, Malang",
-                canManageKas = true,
-                canVerifyDrivers = true,
-                canBroadcastSos = true,
-                canManagePosko = true
-            )
-            memberRepo.registerMember(foundingKetua)
+    suspend fun initializeSeedDataIfNeeded() = DRGRepositorySeeder.seedInitialData(this, db)
 
-            // Auto-store PIN hash so they can log in seamlessly with the configured seed PIN
-            try {
-                val context = com.example.DRGApplication.instance
-                com.example.shared.utils.SecurityUtils.storePinHash(context, foundingKetua.id, com.example.BuildConfig.SEED_SUPER_ADMIN_PIN)
-                com.example.shared.utils.SecurityUtils.storePinHash(context, foundingKetua.driverId, com.example.BuildConfig.SEED_SUPER_ADMIN_PIN)
-                com.example.shared.utils.SecurityUtils.storePinHash(context, foundingKetua.phone, com.example.BuildConfig.SEED_SUPER_ADMIN_PIN)
-            } catch (e: Exception) {
-                // Fail-safe to avoid crash during offline JVM tests
-            }
-        }
-    }
+    fun getReviewsForWorkshop(workshopId: String) = communityRepo.getReviewsForWorkshop(workshopId)
+    suspend fun addWorkshopReview(w: WorkshopPartner, r: DriverMember, rate: Float, s: String, c: String) =
+        communityRepo.addWorkshopReview(w, r, rate, s, c)
 
     // Method Delegations
     suspend fun awardPeerPoints(tId: String, tN: String, g: DriverMember, isB: Boolean, r: String) =
