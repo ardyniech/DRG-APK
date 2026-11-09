@@ -43,8 +43,13 @@ jobs:
           touch .env
           echo "GEMINI_API_KEY=dummy_ci_key" >> .env
           echo "MAPS_API_KEY=dummy_ci_key" >> .env
-          if [ -f "debug.keystore.base64" ]; then
-            base64 -d debug.keystore.base64 > debug.keystore 2>/dev/null || base64 --decode debug.keystore.base64 > debug.keystore 2>/dev/null || true
+          if [ ! -f "debug.keystore" ]; then
+            if [ -f "debug.keystore.base64" ]; then
+              base64 -d debug.keystore.base64 > debug.keystore 2>/dev/null || base64 --decode debug.keystore.base64 > debug.keystore 2>/dev/null || true
+            fi
+            if [ ! -f "debug.keystore" ]; then
+              keytool -genkeypair -keystore debug.keystore -storepass android -keypass android -alias androiddebugkey -dname "CN=Android Debug,O=Android,C=US" -keyalg RSA -keysize 2048 -validity 10000 || true
+            fi
           fi
 
       - name: Enforce Architecture Rules (Max 125 Lines & Modular Isolation)

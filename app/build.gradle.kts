@@ -36,24 +36,28 @@ android {
     create("debugConfig") {
       val keystoreFile = file(System.getenv("DEBUG_KEYSTORE_PATH") ?: "${rootDir}/debug.keystore")
       val base64File = file("${rootDir}/debug.keystore.base64")
-      if (!keystoreFile.exists() && base64File.exists()) {
-        try {
-          val bytes = Base64.getDecoder().decode(base64File.readText().trim())
-          keystoreFile.writeBytes(bytes)
-        } catch (_: Exception) {}
+      if (!keystoreFile.exists()) {
+        if (base64File.exists()) {
+          try {
+            val bytes = Base64.getDecoder().decode(base64File.readText().trim())
+            keystoreFile.writeBytes(bytes)
+          } catch (_: Exception) {}
+        }
+        if (!keystoreFile.exists()) {
+          try {
+            val proc = ProcessBuilder(
+              "keytool", "-genkeypair", "-keystore", keystoreFile.absolutePath,
+              "-storepass", "android", "-keypass", "android", "-alias", "androiddebugkey",
+              "-dname", "CN=Android Debug,O=Android,C=US", "-keyalg", "RSA", "-keysize", "2048", "-validity", "10000"
+            ).start()
+            proc.waitFor()
+          } catch (_: Exception) {}
+        }
       }
-      if (keystoreFile.exists()) {
-        storeFile = keystoreFile
-        storePassword = System.getenv("DEBUG_STORE_PASSWORD") ?: "android"
-        keyAlias = System.getenv("DEBUG_KEY_ALIAS") ?: "androiddebugkey"
-        keyPassword = System.getenv("DEBUG_KEY_PASSWORD") ?: "android"
-      } else {
-        val defaultKeystore = file("${System.getProperty("user.home")}/.android/debug.keystore")
-        storeFile = defaultKeystore
-        storePassword = "android"
-        keyAlias = "androiddebugkey"
-        keyPassword = "android"
-      }
+      storeFile = keystoreFile
+      storePassword = System.getenv("DEBUG_STORE_PASSWORD") ?: "android"
+      keyAlias = System.getenv("DEBUG_KEY_ALIAS") ?: "androiddebugkey"
+      keyPassword = System.getenv("DEBUG_KEY_PASSWORD") ?: "android"
     }
   }
 
