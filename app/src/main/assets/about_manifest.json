@@ -13,20 +13,20 @@
     ]
   },
   "build": {
-    "version": "v1.8",
-    "commit": "2a624ef",
+    "version": "v1.8-2-g71ab228",
+    "commit": "71ab228",
     "commitDate": "2026-11-10",
     "generatedBy": "generate_about_manifest.py"
   },
   "summary": {
     "overallProgress": 64,
     "totalFeatures": 33,
-    "done": 12,
-    "inProgress": 13,
+    "done": 13,
+    "inProgress": 12,
     "planned": 8,
     "modules": 17,
     "totalSourceFiles": 472,
-    "totalLoc": 33824,
+    "totalLoc": 34024,
     "testSuites": 59
   },
   "phases": [
@@ -38,7 +38,7 @@
       "summary": "Arsitektur Clean MVI + Compose M3, Room local-first, SOS/CrashGuard, Radar OSM, Kas Transparan, Forum, KTA Digital, dan RBAC.",
       "progress": 85,
       "featureCount": 21,
-      "doneCount": 10
+      "doneCount": 11
     },
     {
       "id": "phase-2",
@@ -215,7 +215,7 @@
       "status": "IN_PROGRESS",
       "progress": 70,
       "files": 3,
-      "loc": 190,
+      "loc": 210,
       "todos": 0,
       "tests": [
         "CacheAndBatteryTest",
@@ -227,11 +227,11 @@
       "name": "Dashboard Driver",
       "description": "Ringkasan status shift, statistik komunitas, onboarding progresif, dan aksi cepat.",
       "phase": "phase-1",
-      "status": "IN_PROGRESS",
-      "progress": 95,
+      "status": "DONE",
+      "progress": 100,
       "files": 28,
       "loc": 2263,
-      "todos": 1,
+      "todos": 0,
       "tests": [
         "ProgressiveOnboardingLogicTest",
         "ViewModelRefactorAuditTest"
@@ -416,10 +416,10 @@
       "description": "WebRTC DataChannel device-to-device, STUN/TURN Google gratis, self-host server per device.",
       "phase": "phase-2",
       "status": "IN_PROGRESS",
-      "progress": 70,
+      "progress": 67,
       "files": 10,
-      "loc": 441,
-      "todos": 0,
+      "loc": 618,
+      "todos": 1,
       "tests": [
         "P2PConnectionTest",
         "P2PFallbackTest",
@@ -570,11 +570,60 @@
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 0,
+    "total": 8,
     "blocker": 0,
-    "major": 0,
-    "minor": 0,
+    "major": 3,
+    "minor": 5,
     "note": 0
   },
-  "minus": []
+  "minus": [
+    {
+      "severity": "MAJOR",
+      "category": "multi-user",
+      "detail": "Seed hanya bila members kosong → tiap HP baru punya data dummy sendiri, bukan data komunitas bersama.",
+      "fix": "Butuh backend + akun server agar komunitas sinkron."
+    },
+    {
+      "severity": "MINOR",
+      "category": "security",
+      "detail": "Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB.",
+      "fix": "Enkripsi database atau minimal jelaskan risiko di docs."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "database",
+      "detail": "Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v13 tidak lengkap.",
+      "fix": "Generate & commit schema hilang via Room export."
+    },
+    {
+      "severity": "MINOR",
+      "category": "docs",
+      "detail": "README klaim 55 suite, realita 59 file Test.kt.",
+      "fix": "Update README badge + SETUP/DEVTOOLS jumlahnya."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "code",
+      "detail": "1 TODO/FIXME tersisa (mis. P2PSignalingManager.kt: /** TODO: Implementasi offer/answer untuk WebRTC handshake belum diasankan di si).",
+      "fix": "Implementasikan sebelum klaim Selesai."
+    },
+    {
+      "severity": "MINOR",
+      "category": "code",
+      "detail": "Hardcode hex Color(0x...) di78 file — melanggar 'No Magic Numbers' AGENTS §1.",
+      "fix": "Pindah ke DesignTokens/Theme."
+    },
+    {
+      "severity": "MINOR",
+      "category": "test",
+      "detail": "androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented.",
+      "fix": "Tambah UI test untuk login, SOS, kas."
+    },
+    {
+      "severity": "MINOR",
+      "category": "ci",
+      "detail": "Detekt/KtLint tidak ada di CI — hanya line-cap + lint.",
+      "fix": "Tambah static analysis (sudah masuk backlog)."
+    }
+  ]
 }

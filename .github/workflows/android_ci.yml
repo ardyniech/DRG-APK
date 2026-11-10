@@ -93,3 +93,53 @@ jobs:
           name: drg-driver-debug-apk
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 14
+
+  release-apk:
+    name: Release APK & Signing
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Grant Execute Permission for Gradle Wrapper
+        run: chmod +x gradlew || true
+
+      - name: Prepare Keystore from Secrets
+        run: |
+          echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > app/release.keystore
+          echo "${{ secrets.RELEASE_KEY_PASSWORD }}" >> .env
+          echo "${{ secrets.RELEASE_ALIAS_PASSWORD }}" >> .env
+
+      - name: Assemble Release APK
+        run: ./gradlew assembleRelease --no-daemon -Pandroid.injected.signing.store.uri=androidkeystore:///app/release.keystore?alias=${{ secrets.RELEASE_ALIAS_NAME }}
+
+      - name: Upload Release Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: drg-driver-release-apk
+          path: app/build/outputs/apk/release/*.apk
+          retention-days: 30
+
+      - name: Generate Release Notes
+        run: |
+          echo "Release $(date +%Y-%m-%d)" > release_notes.txt
+          cat app/src/main/assets/about_manifest.json | python3 -c "import json, sys; d=json.load(sys.stdin); print(d['summary']['overallProgress'])" >> release_notes.txt

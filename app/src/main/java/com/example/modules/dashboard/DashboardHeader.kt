@@ -37,7 +37,7 @@ fun DashboardHeader(
             Column(modifier = Modifier.weight(1f)) {
                 Text(member.name, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(4.dp))
-                StatusChips(currentStatus = member.currentStatus, onStatusChange = { _, _ -> /* TODO: Implement */ })
+                StatusChips(currentStatus = member.currentStatus, onStatusChange = { status, _ -> onStatusChange(status) })
             }
         }
     }

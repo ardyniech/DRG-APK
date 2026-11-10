@@ -32,6 +32,7 @@ import json, os, re, sys
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 MAIN = os.path.join(REPO, "app", "src", "main", "java")
 TEST = os.path.join(REPO, "app", "src", "test", "java")
+ROOT = REPO  # ADD THIS
 FINDINGS = []
 
 def add(sev, cat, detail, fix=""):

@@ -88,7 +88,7 @@ object AppDatabaseMigrations {
             db.execSQL("ALTER TABLE `members` ADD COLUMN `emergencyContact` TEXT NOT NULL DEFAULT 'Keluarga (Siti)'")
             db.execSQL("ALTER TABLE `members` ADD COLUMN `emergencyPhone` TEXT NOT NULL DEFAULT '081234567890'")
             db.execSQL("ALTER TABLE `members` ADD COLUMN `simNumber` TEXT NOT NULL DEFAULT '1234-5678-9012'")
-            db.execSQL("ALTER TABLE `members` ADD COLUMN `nik` TEXT NOT NULL DEFAULT '3507123456780001'")
+            db.execSQL("ALTER TABLE `members` ADD COLUMN `nik` TEXT NOT NULL DEFAULT ''")
         }
     }
 

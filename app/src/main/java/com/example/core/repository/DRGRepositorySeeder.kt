@@ -8,6 +8,9 @@ import kotlinx.coroutines.withContext
 object DRGRepositorySeeder {
     suspend fun seedInitialData(repo: DRGRepository, db: AppDatabase) = withContext(Dispatchers.IO) {
         if (repo.memberRepo.getMemberCount() == 0) {
+            // NOTE: Multi-user community sync requires backend + akun server (FIREBASE/Firestore).
+            //       Untuk rilis lokal MVP: Ketua seeding di bawah, data bersifat lokal per-device (tidak sinkron antar HP).
+            //       Untuk sinkronisasi komunitas: implementasikan Firebase Auth + Firestore atau Tailscale mesh.
             val foundingKetua = DriverMember(
                 id = com.example.BuildConfig.SEED_SUPER_ADMIN_ID,
                 name = com.example.BuildConfig.SEED_SUPER_ADMIN_NAME,
