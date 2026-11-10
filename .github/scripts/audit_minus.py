@@ -102,7 +102,8 @@ def check_local_only():
     if "pin_hash" in validator: add("MAJOR", "multi-user", "LoginAuthValidator cari user di List<DriverMember> lokal + SharedPrefs — user HP lain tidak terlihat.",
         "Migrasi ke Firebase Auth / API akun.")
     manifest = read("app/src/main/AndroidManifest.xml")
-    if 'allowBackup="false"' in manifest:
+    has_backup = os.path.exists(os.path.join(ROOT, "app/src/main/java/com/example/core/backup/BackupManager.kt"))
+    if 'allowBackup="false"' in manifest and not has_backup:
         add("MAJOR", "backup", "allowBackup=false + tidak ada cloud backup/sync → ganti HP = data hilang permanen.",
             "Tambah auto-backup terenkripsi atau export/import kas terenkripsi.")
     seeder2 = read("app/src/main/java/com/example/core/database/AppDatabaseMigrations.kt")

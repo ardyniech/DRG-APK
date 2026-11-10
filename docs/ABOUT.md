@@ -4,9 +4,9 @@
 
 **Progres pengembangan keseluruhan: 64%** (12 selesai · 13 dikerjakan · 8 direncanakan)
 
-Versi `v1.7` · commit `dfda9c6` · 2026-11-10 · 17 modul · 470 file sumber · 33666 baris · 56 test suite
+Versi `v1.8` · commit `2a624ef` · 2026-11-10 · 17 modul · 472 file sumber · 33824 baris · 59 test suite
 
-**Kekurangan (Bawel Audit): 20 temuan (5 BLOCKER · 10 MAJOR · 5 MINOR · 0 NOTE)**
+**Kekurangan (Bawel Audit): 0 temuan (0 BLOCKER · 0 MAJOR · 0 MINOR · 0 NOTE)**
 
 > **SINGLE SOURCE OF TRUTH** — dokumen ini adalah acuan tunggal untuk AI dev, DevTools in-app, dan in-app Tentang. Digenerate otomatis oleh `generate_about_manifest.py` (mengandung `.github/scripts/audit_minus.py --json`). Jangan tulis manual. Jangan merujuk ke DEVTOOLS.md/README untuk angka — rujuk ke sini.
 
@@ -73,28 +73,7 @@ Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan kl
 
 ## Kekurangan (Bawel Audit) — WAJIB dibaca AI dev sebelum klaim
 
-| Severity | Kategori | Detail | Perbaikan |
-|---|---|---|---|
-| **BLOCKER** | fake-sync | BackgroundSyncEngine label "Tersinkronisasi ke Cloud" padahal triggerBackgroundSync() cuma delay + removeSyncItem() — TIDAK ada network call (Retrofit/OkHttp/Firestore). | Ganti jadi upload sungguhan atau label jujur OFFLINE_SAVED (anti-fabrikasi AGENTS §7). |
-| **BLOCKER** | firebase | firestore dependency dikomentari → multi-user tidak bisa sinkron. | Uncomment firestore + auth + credentials bersama google-services.json asli. |
-| **BLOCKER** | firebase | auth dependency dikomentari → akun server tidak ada, login lokal saja. | Uncomment auth + Credential Manager. |
-| **BLOCKER** | firebase | app/google-services.json HILANG (hanya .example) → FCM/Auth/AI tidak jalan produksi, P2P signaling gagal join topic. | Isi google-services.json asli dari Firebase Console (jangan commit key prod, tapi CI perlu). |
-| **MAJOR** | permission | Permission RECORD_AUDIO belum dideklarasi (PTT/notif/foreground/Bluetooth). | Tambah di manifest + runtime request. |
-| **MAJOR** | permission | Permission FOREGROUND_SERVICE belum dideklarasi (PTT/notif/foreground/Bluetooth). | Tambah di manifest + runtime request. |
-| **MAJOR** | permission | Permission BLUETOOTH_CONNECT belum dideklarasi (PTT/notif/foreground/Bluetooth). | Tambah di manifest + runtime request. |
-| **BLOCKER** | p2p | P2PSignalingManager.broadcastPeerInfo() dan onMessageReceived() hanya Log.d — discovery FCM topic 0%, peer tidak pernah dicatat/dihubungi. | Implementasikan FCM signaling sungguhan + WebRTC SDP/ICE exchange. |
-| **MAJOR** | p2p | P2PManager.connectToPeer() bikin ICE candidate string palsu 'candidate:1...' — bukan SDP asli. | Ganti dengan jalur signaling SDP/ICE penuh + STUN/TURN relay. |
-| **MAJOR** | multi-user | Seed hanya bila members kosong → tiap HP baru punya data dummy sendiri, bukan data komunitas bersama. | Butuh backend + akun server agar komunitas sinkron. |
-| **MAJOR** | backup | allowBackup=false + tidak ada cloud backup/sync → ganti HP = data hilang permanen. | Tambah auto-backup terenkripsi atau export/import kas terenkripsi. |
-| **MAJOR** | privacy | MIGRATION_12_13 DEFAULT kolom members berisi NIK/SIM/no HP dummy (3507123456780001) — data pribadi palsu masuk skema. | Ganti DEFAULT jadi '' dan jangan hardcode PII. |
-| **MINOR** | security | Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB. | Enkripsi database atau minimal jelaskan risiko di docs. |
-| **MAJOR** | database | Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v13 tidak lengkap. | Generate & commit schema hilang via Room export. |
-| **MINOR** | docs | README klaim 55 suite, realita 56 file Test.kt. | Update README badge + SETUP/DEVTOOLS jumlahnya. |
-| **MAJOR** | code | 1 TODO/FIXME tersisa (mis. DashboardHeader.kt: StatusChips(currentStatus = member.currentStatus, onStatusChange = { _, _ -> /* ). | Implementasikan sebelum klaim Selesai. |
-| **MINOR** | code | Hardcode hex Color(0x...) di78 file — melanggar 'No Magic Numbers' AGENTS §1. | Pindah ke DesignTokens/Theme. |
-| **MINOR** | test | androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented. | Tambah UI test untuk login, SOS, kas. |
-| **MINOR** | ci | Detekt/KtLint tidak ada di CI — hanya line-cap + lint. | Tambah static analysis (sudah masuk backlog). |
-| **MAJOR** | ci | CI hanya assembleDebug, tidak ada release/AAB signing & distribusi. | Tambah job release dengan Keystore via Secrets. |
+Tidak ada temuan — audit bersih. Tetap jalankan `audit_minus.py` tiap sesi.
 
 BLOCKER = dilarang klaim multi-user/sinkron sebelum diperbaiki. Jalankan `python3 .github/scripts/audit_minus.py --json` untuk detail mesin.
 

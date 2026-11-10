@@ -63,5 +63,13 @@ abstract class AppDatabase : RoomDatabase() {
                 instance
             }
         }
+
+        /** Tutup & hapus instance (untuk restore backup). */
+        fun closeInstance() {
+            synchronized(this) {
+                INSTANCE?.close()
+                INSTANCE = null
+            }
+        }
     }
 }
