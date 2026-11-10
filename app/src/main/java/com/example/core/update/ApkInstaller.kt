@@ -49,7 +49,15 @@ object ApkInstaller {
         return InstallOutcome.STARTED
     }
 
-    /** Layar Settings → "Install unknown apps" untuk paket ini (API 26+). */
+    /** Hapus APK/patch lama di cache, sisakan versi [keepVersion]. */
+    fun cleanupOld(context: Context, keepVersion: Int) {
+        val dir = updateDir(context)
+        dir.listFiles()?.forEach { f ->
+            val name = f.name
+            val keep = name.contains("-$keepVersion.") || name.contains("-$keepVersion-")
+            if (!keep && (name.endsWith(".apk") || name.endsWith(".patch"))) f.delete()
+        }
+    }
     private fun openInstallPermissionSettings(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)

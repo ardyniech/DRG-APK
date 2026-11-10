@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.BuildConfig
 import com.example.core.update.ApkInstaller
+import com.example.core.update.UpdateChecker
 import com.example.core.update.UpdateManager
 import com.example.core.update.UpdateUiState
 import com.example.shared.atoms.DrgGlassCard
@@ -50,16 +51,15 @@ fun ProfileUpdateEntry(modifier: Modifier = Modifier) {
     var hint by remember { mutableStateOf<String?>(null) }
     val available = state as? UpdateUiState.Available
     val ready = state as? UpdateUiState.ReadyToInstall
-    fun check() {
+    fun check(force: Boolean = false) {
         if (busy) return
         hint = null
         busy = true
         scope.launch {
-            state = UpdateManager.check(context, BuildConfig.UPDATE_MANIFEST_URL)
+            state = UpdateManager.check(context, BuildConfig.UPDATE_MANIFEST_URL, force)
             busy = false
         }
     }
-
     fun prepare() {
         val target = available ?: return
         if (busy) return
@@ -73,6 +73,7 @@ fun ProfileUpdateEntry(modifier: Modifier = Modifier) {
     ProfileUpdateAutoActions(
         state = state,
         context = context,
+        allowAutoCheck = !UpdateChecker.isMetered(context),
         onCheck = { check() },
         onMissingFile = {
             hint = null
@@ -80,7 +81,7 @@ fun ProfileUpdateEntry(modifier: Modifier = Modifier) {
         },
         onPermissionNeeded = { hint = it }
     )
-    DrgGlassCard(modifier = modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp), onClick = { check() }) {
+    DrgGlassCard(modifier = modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp), onClick = { check(true) }) {
         Row(
             modifier = Modifier.padding(14.dp).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -110,7 +111,6 @@ fun ProfileUpdateEntry(modifier: Modifier = Modifier) {
                     colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
                     shape = RoundedCornerShape(12.dp)
                 ) { Text("Pasang", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold) }
-
                 available != null -> Button(
                     onClick = { prepare() },
                     enabled = !busy,

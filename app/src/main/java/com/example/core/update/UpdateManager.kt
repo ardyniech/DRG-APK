@@ -5,12 +5,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-/** State UI updater (dipakai [UpdateManager] dan kartu profil). */
 sealed class UpdateUiState {
     data object Idle : UpdateUiState()
     data object Checking : UpdateUiState()
     data class UpToDate(val currentVersionCode: Int) : UpdateUiState()
-
     data class Available(
         val release: UpdateRelease,
         val patch: UpdatePatch?,
@@ -21,82 +19,79 @@ sealed class UpdateUiState {
         val savingsPercent: Int
             get() = if (fullBytes > 0) (100 - downloadBytes * 100 / fullBytes).toInt() else 0
     }
-
     data class Downloading(val percent: Int, val bytes: Long, val total: Long) : UpdateUiState()
     data object Applying : UpdateUiState()
     data class ReadyToInstall(val apk: File) : UpdateUiState()
     data class Failed(val message: String) : UpdateUiState()
 }
 
-/**
- * Orkestrasi OTA: cek manifest → pilih patch yang cocok → unduh → apply →
- * verifikasi sha256 → siap install. Semua I/O di Dispatchers.IO.
- */
 object UpdateManager {
 
-    /** Cek versi terbaru tanpa mengunduh APK (cukup beberapa KB). */
     suspend fun check(
         context: Context,
-        manifestUrl: String
+        manifestUrl: String,
+        force: Boolean = false
     ): UpdateUiState = withContext(Dispatchers.IO) {
         val current = UpdateChecker.currentVersionCode(context)
+        // Pakai cache kalau masih segar dan bukan paksa refresh.
+        if (!force) {
+            UpdateCheckCache.cached(current)?.let { r ->
+                if (r.versionCode <= current) return@withContext UpdateUiState.UpToDate(current)
+                val sha = UpdateChecker.installedApkSha256(context)
+                return@withContext UpdateUiState.Available(
+                    release = r, patch = r.patchFor(current, sha),
+                    downloadBytes = r.patchFor(current, sha)?.sizeBytes ?: r.apkSizeBytes,
+                    fullBytes = r.apkSizeBytes
+                )
+            }
+        }
         val release = UpdateChecker.fetchManifest(manifestUrl)
             ?: return@withContext UpdateUiState.Failed("Gagal baca update.json (offline / server?)")
+        UpdateCheckCache.store(current, release)
         if (release.versionCode <= current) return@withContext UpdateUiState.UpToDate(current)
-
-        val installedSha = UpdateChecker.installedApkSha256(context)
-        val patch = release.patchFor(current, installedSha)
-        UpdateUiState.Available(
-            release = release,
-            patch = patch,
-            downloadBytes = patch?.sizeBytes ?: release.apkSizeBytes,
-            fullBytes = release.apkSizeBytes
-        )
+        val sha = UpdateChecker.installedApkSha256(context)
+        val patch = release.patchFor(current, sha)
+        UpdateUiState.Available(release, patch, patch?.sizeBytes ?: release.apkSizeBytes, release.apkSizeBytes)
     }
 
-    /**
-     * Unduh + siapkan APK baru. Kalau patch tersedia, hanya patch yang diunduh
-     * lalu diterapkan ke APK terpasang (hemat kuota besar).
-     */
     suspend fun prepare(
         context: Context,
         available: UpdateUiState.Available,
         onProgress: (UpdateUiState) -> Unit
     ): UpdateUiState = withContext(Dispatchers.IO) {
+        // Cegah dua unduhan paralel (hemat tenaga).
+        UpdateCheckCache.downloadLock.lock()
         try {
             val dir = ApkInstaller.updateDir(context)
             val version = available.release.versionCode
             val patch = available.patch
-
+            val apk = File(dir, "app-$version.apk")
             if (patch != null) {
                 val patchFile = File(dir, "update-$version.patch")
                 downloadWithProgress(patch.url, patchFile, onProgress)
                 if (!UpdateChecker.sha256(patchFile).equals(patch.sha256, ignoreCase = true)) {
-                    patchFile.delete()
+                    patchFile.delete(); apk.delete()
                     return@withContext UpdateUiState.Failed("Patch korup (sha256 beda)")
                 }
                 onProgress(UpdateUiState.Applying)
-                val apk = File(dir, "app-$version.apk")
                 DeltaPatchApplier.apply(File(context.applicationInfo.sourceDir), patchFile, apk)
                 patchFile.delete()
-                verifyAndFinish(apk, available.release.apkSha256, available.release.apkSizeBytes)
             } else {
-                val apk = File(dir, "app-$version.apk")
                 downloadWithProgress(available.release.apkUrl, apk, onProgress)
-                verifyAndFinish(apk, available.release.apkSha256, available.release.apkSizeBytes)
             }
+            // Bersihkan aset lama untuk hemat ruang.
+            ApkInstaller.cleanupOld(context, version)
+            verifyAndFinish(apk, available.release.apkSha256, available.release.apkSizeBytes)
         } catch (cancel: kotlinx.coroutines.CancellationException) {
-            throw cancel // jangan ubah pembatalan jadi "gagal"
+            throw cancel
         } catch (t: Exception) {
             UpdateUiState.Failed(t.message ?: t::class.java.simpleName)
+        } finally {
+            UpdateCheckCache.downloadLock.unlock()
         }
     }
 
-    private fun downloadWithProgress(
-        url: String,
-        target: File,
-        onProgress: (UpdateUiState) -> Unit
-    ) {
+    private fun downloadWithProgress(url: String, target: File, onProgress: (UpdateUiState) -> Unit) {
         UpdateChecker.download(url, target) { done, total ->
             val percent = if (total > 0) (done * 100 / total).toInt() else 0
             onProgress(UpdateUiState.Downloading(percent, done, total))
@@ -105,12 +100,10 @@ object UpdateManager {
 
     private fun verifyAndFinish(apk: File, expectedSha256: String, expectedSize: Long): UpdateUiState {
         if (expectedSize > 0 && apk.length() != expectedSize) {
-            apk.delete()
-            return UpdateUiState.Failed("Ukuran hasil tidak cocok manifest")
+            apk.delete(); return UpdateUiState.Failed("Ukuran hasil tidak cocok manifest")
         }
         if (!UpdateChecker.sha256(apk).equals(expectedSha256, ignoreCase = true)) {
-            apk.delete()
-            return UpdateUiState.Failed("Hasil unduhan tidak cocok sha256")
+            apk.delete(); return UpdateUiState.Failed("Hasil unduhan tidak cocok sha256")
         }
         return UpdateUiState.ReadyToInstall(apk)
     }

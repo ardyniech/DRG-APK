@@ -75,4 +75,17 @@ object UpdateChecker {
         }
         return target
     }
+
+    /**
+     * True kalau koneksi aktif terukur (data seluler) — untuk mode hemat kuota.
+     * Kalau tidak ada info jaringan, anggap terukur (konservatif).
+     */
+    fun isMetered(context: Context): Boolean = runCatching {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE)
+            as? android.net.ConnectivityManager ?: return true
+        val network = cm.activeNetwork ?: return true
+        val caps = cm.getNetworkCapabilities(network) ?: return true
+        !caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+    }.getOrDefault(true)
 }
+

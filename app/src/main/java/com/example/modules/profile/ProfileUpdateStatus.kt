@@ -17,10 +17,12 @@ internal fun updateStatusText(state: UpdateUiState, busy: Boolean): String = whe
     is UpdateUiState.UpToDate -> "Sudah versi terbaru (v${state.currentVersionCode})"
     is UpdateUiState.Available -> {
         val size = formatMb(state.downloadBytes)
+        val note = state.release.changelog.firstOrNull()?.take(46)
+        val suffix = if (note.isNullOrBlank()) "" else " · $note"
         if (state.usesPatch) {
-            "v${state.release.versionName} · patch $size (hemat ${state.savingsPercent}% dari ${formatMb(state.fullBytes)})"
+            "v${state.release.versionName} · patch $size (hemat ${state.savingsPercent}% dari ${formatMb(state.fullBytes)})$suffix"
         } else {
-            "v${state.release.versionName} · unduh APK $size (patch belum tersedia)"
+            "v${state.release.versionName} · unduh APK $size (patch belum tersedia)$suffix"
         }
     }
     is UpdateUiState.Downloading ->
@@ -57,12 +59,13 @@ internal fun handleInstallOutcome(
 internal fun ProfileUpdateAutoActions(
     state: UpdateUiState,
     context: Context,
+    allowAutoCheck: Boolean,
     onCheck: () -> Unit,
     onMissingFile: () -> Unit,
     onPermissionNeeded: (String) -> Unit
 ) {
     LaunchedEffect(Unit) {
-        if (state is UpdateUiState.Idle) onCheck()
+        if (allowAutoCheck && state is UpdateUiState.Idle) onCheck()
     }
     LaunchedEffect(state) {
         val ready = state as? UpdateUiState.ReadyToInstall ?: return@LaunchedEffect
