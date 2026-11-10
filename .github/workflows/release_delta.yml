@@ -1,0 +1,134 @@
+name: Delta OTA Release
+
+# Kanal preview: APK debug (ditandatangani debug.keystore repo, konsisten antar
+# build) + patch delta. Produksi tetap butuh release keystore di secrets.
+on:
+  push:
+    tags: [ 'v*' ]
+  workflow_dispatch:
+    inputs:
+      version_name:
+        description: "versionName rilis (mis. 1.1)"
+        required: true
+        default: "1.1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: delta-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build APK, Generate Delta Patch, Publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Grant Execute Permission for Gradle Wrapper
+        run: chmod +x gradlew || true
+
+      - name: Prepare Local Environment Secrets & Keystore
+        run: |
+          touch .env
+          echo "GEMINI_API_KEY=dummy_ci_key" >> .env
+          echo "MAPS_API_KEY=dummy_ci_key" >> .env
+          if [ ! -f "debug.keystore" ]; then
+            keytool -genkeypair -keystore debug.keystore -storepass android -keypass android \
+              -alias androiddebugkey -dname "CN=Android Debug,O=Android,C=US" -keyalg RSA -keysize 2048 -validity 10000 || true
+          fi
+
+      - name: Resolve Version & Previous Release
+        id: ver
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="${{ github.ref_name }}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION_NAME="${{ inputs.version_name }}"
+          else
+            VERSION_NAME="${TAG#v}"
+          fi
+          mkdir -p prev dist
+          PREV_VC=1
+          # Unduh aset rilis terakhir (APK + manifest) untuk basis patch.
+          if gh release download --pattern 'app-debug.apk' --dir prev --clobber 2>/dev/null; then
+            gh release download --pattern 'update.json' --dir prev --clobber 2>/dev/null || true
+            if [ -f prev/update.json ]; then
+              PREV_VC=$(python3 -c "import json;print(json.load(open('prev/update.json'))['versionCode'])")
+            fi
+            echo "Basis patch: APK rilis sebelumnya (versionCode=$PREV_VC)"
+          else
+            rm -f prev/app-debug.apk
+            echo "Belum ada rilis sebelumnya — rilis pertama tanpa patch."
+          fi
+          VERSION_CODE=$((PREV_VC + 1))
+          echo "versionName=$VERSION_NAME versionCode=$VERSION_CODE"
+          echo "VERSION_NAME=$VERSION_NAME" >> "$GITHUB_ENV"
+          echo "VERSION_CODE=$VERSION_CODE" >> "$GITHUB_ENV"
+          echo "PREV_VC=$PREV_VC" >> "$GITHUB_ENV"
+
+      - name: Assemble Debug APK (signed, konsisten)
+        env:
+          VERSION_CODE: ${{ env.VERSION_CODE }}
+          VERSION_NAME: ${{ env.VERSION_NAME }}
+        run: ./gradlew :app:assembleDebug --no-daemon
+
+      - name: Install bsdiff4
+        run: python3 -m pip install --quiet --break-system-packages bsdiff4
+
+      - name: Generate Delta Patch + update.json
+        env:
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          cp app/build/outputs/apk/debug/app-debug.apk dist/app-debug.apk
+          BASE_URL="https://github.com/${GH_REPO}/releases/download/${{ github.ref_name }}"
+          ARGS=(--new-apk dist/app-debug.apk
+                --version-code "$VERSION_CODE" --version-name "$VERSION_NAME"
+                --base-url "$BASE_URL" --out-dir dist)
+          if [ -f prev/app-debug.apk ]; then
+            ARGS+=(--old-apk prev/app-debug.apk --old-version-code "$PREV_VC")
+          fi
+          python3 .github/scripts/gen_delta_update.py "${ARGS[@]}" \
+            --changelog "Rilis $VERSION_NAME (versionCode $VERSION_CODE)"
+
+      - name: Publish Release Assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          NOTES="Delta OTA preview $VERSION_NAME (versionCode $VERSION_CODE). HP cukup unduh patch kecil; update.json berisi sha256 untuk verifikasi."
+          if gh release view "${{ github.ref_name }}" >/dev/null 2>&1; then
+            gh release upload "${{ github.ref_name }}" dist/* --clobber
+          else
+            gh release create "${{ github.ref_name }}" dist/* \
+              --title "DRG Driver $VERSION_NAME" --notes "$NOTES"
+          fi
+
+      - name: Upload Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: delta-ota-${{ github.ref_name }}
+          path: dist/
+          retention-days: 14

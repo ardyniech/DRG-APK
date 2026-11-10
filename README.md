@@ -6,7 +6,7 @@
 [![Compose](https://img.shields.io/badge/Jetpack_Compose-Material_3-emerald.svg)](https://developer.android.com/jetpack/compose)
 [![Database](https://img.shields.io/badge/Room_Database-v13_Posko_RBAC_Local_First-teal.svg)](docs/DATABASE_MIGRATIONS.md)
 [![Architecture Gating](https://img.shields.io/badge/Architecture-125_Lines_Cap_Enforced-success.svg)](.github/scripts/check_file_length.py)
-[![Tests](https://img.shields.io/badge/Unit_Tests-53_Suites_Passed-brightgreen.svg)](#-strategi-pengujian-testing-suite)
+[![Tests](https://img.shields.io/badge/Unit_Tests-55_Suites_Passed-brightgreen.svg)](#-strategi-pengujian-testing-suite)
 
 ---
 
@@ -39,7 +39,7 @@
 
 | Area | Plan (target) | Dev sekarang (realita) | Status |
 |---|---|---|---|
-| Arsitektur | Clean MVI + Compose M3, <125 baris/file | 454 file audit, 0 pelanggaran via `check_file_length.py` | ✅ Selesai |
+| Arsitektur | Clean MVI + Compose M3, <125 baris/file | 465 file audit, 0 pelanggaran via `check_file_length.py` | ✅ Selesai |
 | Database | Room v13 lokal + migrasi eksplisit | 23 entitas, migrasi 1→13 di kode, tapi schema `1-4,8,9.json` belum dicommit | ⚠️ Sebagian |
 | **Iuran Kas (finansial)** | **Kas masuk/keluar/saldo + export (wajib rilis awal)** | Kas Transparan Selesai 100%, grafik + periode + export | ✅ Selesai (lokal) |
 | Marketplace / Arisan | Oli/ban/helm distributor, arisan/talangan | Belum ada modul | ⏸️ **DEFERRED** — bukan blocker |
@@ -49,8 +49,27 @@
 | P2P / FCM discovery | Peer discovery via FCM topic + WebRTC | Kerangka WebRTC ada, signaling cuma log, discovery 0% | ❌ Belum |
 | Keamanan | Keystore, TLS 1.3, RBAC server-side | TLS strict ✅, tapi PIN SHA-256 SharedPrefs, role client-side, SQLite belum terenkripsi | ⚠️ Perlu perkuat |
 | CI/CD | Audit + lint + test + release AAB | Audit/lint/test/debug APK ✅, release signing belum ada | ⚠️ Sebagian |
+| Update OTA | Update tanpa unduh APK penuh | Delta BSDIFF40: patch 2,4 MB vs APK 73,5 MB (hemat 96,7%), kanal preview debug | ✅ Selesai (preview) |
 
-Bacaan lanjut: [DEVTOOLS.md](DEVTOOLS.md) (peta bawel), [ROADMAP.md](ROADMAP.md) (jadwal fase), [docs/ABOUT.md](docs/ABOUT.md) (manifest auto).
+Bacaan lanjut: [DEVTOOLS.md](DEVTOOLS.md) (peta bawel), [ROADMAP.md](ROADMAP.md) (jadwal fase), [docs/ABOUT.md](docs/ABOUT.md) (manifest auto), [docs/UPDATE_DELTA.md](docs/UPDATE_DELTA.md) (OTA hemat kuota).
+
+---
+
+## 🔄 Update Delta OTA (Hemat Kuota)
+
+Update minor **tidak** lagi mengunduh APK 73 MB. Aplikasi hanya mengambil:
+
+1. `update.json` (≈1 KB) dari GitHub Releases — cek versi terbaru.
+2. **Patch BSDIFF40** dari APK terpasang ke APK baru (terukur **2,4 MB = 3,26%** dari APK 73,5 MB pada uji 2026-11-09).
+
+Patch diterapkan di HP ke APK terpasang, hasilnya byte-identik dengan APK yang
+ditandatangani CI → signature v2/v3 tetap sah, Android menerima instalasi.
+Kalau patch tidak cocok (APK dari sumber lain), aplikasi fallback ke APK penuh.
+
+* UI: Profil → kartu **"Pembaruan Aplikasi"** (`ProfileUpdateEntry.kt`).
+* Engine: `core/update/` (`DeltaPatchApplier`, `UpdateChecker`, `UpdateManager`, `ApkInstaller`).
+* Rilis: `git tag v1.1 && git push origin v1.1` → workflow `Delta OTA Release` membuat patch + `update.json`.
+* Status: **kanal preview** (APK debug). Produksi butuh release keystore di secrets — detail & batasan di [docs/UPDATE_DELTA.md](docs/UPDATE_DELTA.md).
 
 ---
 
@@ -136,7 +155,7 @@ Detail skema dan panduan migrasi dapat dibaca di **[Dokumentasi Migrasi Database
 
 ## 🧪 Strategi Pengujian (Testing Suite)
 
-Proyek ini dilengkapi dengan 53 suite pengujian unit & integrasi otomatis berbasis **Robolectric** dan **Roborazzi**:
+Proyek ini dilengkapi dengan 55 suite pengujian unit & integrasi otomatis berbasis **Robolectric** dan **Roborazzi**:
 
 - `LandingFeatureAutoScrollTest.kt`: Pengujian kelengkapan data & properti thumbnail fitur unggulan aplikasi pada landing screen.
 - `EmergencySmsFallbackHelperTest.kt`: Pengujian fallback SMS darurat saat jaringan data offline.

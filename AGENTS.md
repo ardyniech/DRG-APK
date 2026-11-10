@@ -191,22 +191,30 @@ Saat menerima tugas pengkodean, AI WAJIB mengeksekusi secara berurutan:
     2. *Cross-Module Failure* (event bus/dispatcher gagal).
     3. *UI Dead-End* (infinite loading / tombol mati saat offline).
 
-### Current Test Suite (38 suites)
+### Current Test Suite (55 suites)
 ```
-AdversarialAuditScenariosTest, AiAssistantKnowledgeTest, AppDatabaseMigrationTest,
-AudioRouteManagerTest, AuthAndProfileSecurityTest, CacheAndBatteryTest,
-CrashDetectionTest, DriverContactInteractionTest, EmergencySmsFallbackHelperTest,
-EmergencySmsFallbackTest, EmergencyTrcDispatchTest, ExampleRobolectricTest,
-ExampleUnitTest, ForumPersistenceTest, FreeMapAndTrafficTest,
+AboutManifestTest, AdversarialAuditScenariosTest, AiAssistantKnowledgeTest,
+AppDatabaseMigrationTest, AudioRouteManagerTest, AuthAndProfileSecurityTest,
+CacheAndBatteryTest, CommunityAndWorkflowFeaturesTest, CrashDetectionTest,
+DashboardDesktopLauncherTest, DashboardGlassmorphismTest, DeltaPatchApplierTest,
+DevToolsMaturityScoringTest, DevToolsMultiUserGapTest, DevToolsNextGenAuditTest,
+DevToolsOutdatedApkCompatibilityTest, DevToolsPhaseTreeAndUiUxTest,
+DevToolsSsotShellTest, DoubleBackExitHandlerTest, DriverContactInteractionTest,
+EmergencySmsFallbackHelperTest, EmergencySmsFallbackTest, EmergencyTrcDispatchTest,
+ExampleRobolectricTest, ExampleUnitTest, ForumPersistenceTest, FreeMapAndTrafficTest,
 GamificationAndLoyaltyTest, GreetingScreenshotTest, HelmetIntercomMonitorTest,
 KasTransparanComponentTest, LandingFeatureAutoScrollTest, LiveDriverMapTest,
-MapTileCacheAndStateTest, MemberRolePermissionDatabaseTest, P2PConnectionTest,
-P2PFallbackTest, P2PSignalingTest, PoskoCheckInRepositoryTest,
+MapTileCacheAndStateTest, MemberDaoCrudTest, MemberRolePermissionDatabaseTest,
+P2PConnectionTest, P2PFallbackTest, P2PSignalingTest, PoskoCheckInRepositoryTest,
 PoskoContactLauncherTest, PoskoManagementTest, PoskoProximityAndWatermarkTest,
-ProgressiveOnboardingLogicTest, RoleManagementAndSecurityTest,
-RolePermissionRepositoryTest, SosEmergencyScreenTest, SosFabAndModalTest,
-SosHapticTactileTest, TreasuryAuditComputationTest, ViewModelRefactorAuditTest
+PoskoTilePrefetchTest, ProgressiveOnboardingLogicTest, RiderPovCinematicTest,
+RoleManagementAndSecurityTest, RolePermissionRepositoryTest, SosEmergencyScreenTest,
+SosFabAndModalTest, SosHapticTactileTest, TreasuryAuditComputationTest,
+UpdateManifestParserTest, VerificationManagerTest, ViewModelRefactorAuditTest
 ```
+
+> Jumlah suite mengikuti `find app/src/test -name "*.kt" | wc -l`. Jangan hardcode
+> angka baru tanpa menjalankan perintah itu (SSOT angka = `docs/ABOUT.md`).
 
 ### Test Commands
 ```bash
@@ -250,6 +258,7 @@ python3 .github/scripts/check_file_length.py
     4. Android Lint (`./gradlew :app:lintDebug`) — warnings captured.
     5. Robolectric tests (`./gradlew :app:testDebugUnitTest`) — **hard fail** jika tests gagal.
     6. Debug APK assembly.
+- **Delta OTA release** (`.github/workflows/release_delta.yml`) — dipicu tag `v*`: build APK, buat patch BSDIFF40 + `update.json` dari rilis sebelumnya, publish ke GitHub Release. Detail: `docs/UPDATE_DELTA.md`. Kanal preview (APK debug); produksi tetap butuh release keystore di secrets.
 - **NEVER** push code tanpa verifikasi lokal pertama. CI akan reject non-compliant code.
 - **Concurrency**: Cancel in-progress runs pada new push.
 - **Timeout**: 25 menit per run.

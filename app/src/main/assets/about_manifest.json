@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "2fbfa24",
-    "commit": "2fbfa24",
+    "version": "04d8038",
+    "commit": "04d8038",
     "commitDate": "2026-11-09",
     "generatedBy": "generate_about_manifest.py"
   },
@@ -25,9 +25,9 @@
     "inProgress": 13,
     "planned": 8,
     "modules": 17,
-    "totalSourceFiles": 457,
-    "totalLoc": 32521,
-    "testSuites": 53
+    "totalSourceFiles": 465,
+    "totalLoc": 33200,
+    "testSuites": 55
   },
   "phases": [
     {
@@ -328,8 +328,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 20,
-      "loc": 1567,
+      "files": 22,
+      "loc": 1722,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",

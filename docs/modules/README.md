@@ -32,7 +32,12 @@ Direktori ini berisi dokumentasi teknis mendalam untuk setiap modul arsitektural
    - WebRTC DataChannel, STUN/TURN (Google free), FCM signaling, PendingSyncQueue fallback.
    - Arsitektur self-hosted untuk ojol di jalan tanpa harus kumpul di satu tempat.
 
-8. **[ℹ️ Halaman Tentang & Roadmap Otomatis (`ABOUT.md`)](/ABOUT.md)**
+8. **[🔄 Update Delta OTA (`UPDATE_DELTA.md`)](/docs/UPDATE_DELTA.md)**
+   - Update minor tanpa unduh APK 73 MB: manifest `update.json` (≈1 KB) + patch BSDIFF40.
+   - Engine `core/update/` (bspatch murni JVM, tanpa NDK), UI di Profil → "Pembaruan Aplikasi".
+   - Rilis lewat `.github/workflows/release_delta.yml` (tag `v*`). Kanal preview, bukan produksi.
+
+9. **[ℹ️ Halaman Tentang & Roadmap Otomatis (`ABOUT.md`)](/ABOUT.md)**
    - Tree fitur (tersedia / dibangun / rencana) dan progres pengembangan jujur.
    - Manifest digenerate dari kode sumber oleh `.github/scripts/generate_about_manifest.py`, diverifikasi CI.
    - In-app: `modules/about/` (AboutScreen) dibuka dari Profil → Tentang Aplikasi.

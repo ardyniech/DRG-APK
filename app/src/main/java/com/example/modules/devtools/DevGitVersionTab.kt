@@ -64,7 +64,7 @@ fun DevGitVersionTab() {
                     HorizontalDivider(color = DrgOutline.copy(alpha = 0.3f))
                     Text("• commit origin/main (HEAD)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
                     Text("  Author: Senior AI Architect & ardy.syafii@gmail.com", fontSize = 10.sp, color = DrgTextSecondary)
-                    Text("  Tree: 457 source files (statis per 2026-11-09) strictly compliant (<125 lines)", fontSize = 10.sp, color = DrgTextMuted)
+                    Text("  Tree: 465 source files (statis per 2026-11-09) strictly compliant (<125 lines)", fontSize = 10.sp, color = DrgTextMuted)
                     Text("  Message: feat(devtools): add root cause analysis & real-time symptom detection", fontSize = 10.sp, color = DrgGreenPrimary)
                 }
             }

@@ -1,6 +1,10 @@
 import java.util.Base64
 import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
 
+// URL manifest OTA (update.json). Bisa dioverride saat build: UPDATE_MANIFEST_URL=...
+val updateManifestUrl = System.getenv("UPDATE_MANIFEST_URL")
+  ?: "https://github.com/ardyniech/DRG-APK/releases/latest/download/update.json"
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
@@ -18,11 +22,14 @@ android {
     applicationId = "com.aistudio.drgojol.pkrvw"
     minSdk = 24
     targetSdk = 36
-    versionCode = 1
-    versionName = "1.0"
+    // OTA delta butuh versionCode naik tiap rilis. CI menyuntik lewat env;
+    // fallback 1/1.0 supaya build lokal tetap deterministik.
+    versionCode = (System.getenv("VERSION_CODE") ?: "1").toIntOrNull() ?: 1
+    versionName = System.getenv("VERSION_NAME") ?: "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     manifestPlaceholders["MAPS_API_KEY"] = "YOUR_GOOGLE_MAPS_API_KEY"
+    buildConfigField("String", "UPDATE_MANIFEST_URL", "\"$updateManifestUrl\"")
   }
 
   signingConfigs {
@@ -155,6 +162,7 @@ dependencies {
   implementation(libs.play.services.location)
   implementation(libs.play.services.maps)
   implementation(libs.maps.compose)
+  implementation(libs.commons.compress)
   implementation(libs.retrofit)
   implementation(libs.webrtc)
   testImplementation(libs.androidx.compose.ui.test.junit4)

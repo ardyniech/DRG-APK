@@ -75,6 +75,7 @@ fun ProfileScreen(
         }
 
         item { ProfileSettingsCard(isSosAlarmEnabled = isSosAlarmEnabled, onToggleSosAlarm = onToggleSosAlarm, onOpenSettings = onOpenSettings) }
+        item { ProfileUpdateEntry() }
         item { ProfileAboutEntry(onOpenAbout = onOpenAbout) }
         item { GamificationCard(member = currentMember, badges = badges) }
         item { VehicleInfoCard(member = currentMember, onEditClick = { showEditDialog = true }) }
