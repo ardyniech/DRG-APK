@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "v1.8-3-g31e79e7",
-    "commit": "31e79e7",
+    "version": "v1.8-4-gcac0eb9",
+    "commit": "cac0eb9",
     "commitDate": "2026-11-10",
     "generatedBy": "generate_about_manifest.py"
   },
@@ -26,7 +26,7 @@
     "planned": 8,
     "modules": 17,
     "totalSourceFiles": 472,
-    "totalLoc": 34024,
+    "totalLoc": 33852,
     "testSuites": 59
   },
   "phases": [
@@ -215,7 +215,7 @@
       "status": "IN_PROGRESS",
       "progress": 70,
       "files": 3,
-      "loc": 210,
+      "loc": 176,
       "todos": 0,
       "tests": [
         "CacheAndBatteryTest",
@@ -416,10 +416,10 @@
       "description": "WebRTC DataChannel device-to-device, STUN/TURN Google gratis, self-host server per device.",
       "phase": "phase-2",
       "status": "IN_PROGRESS",
-      "progress": 67,
+      "progress": 70,
       "files": 10,
-      "loc": 618,
-      "todos": 1,
+      "loc": 480,
+      "todos": 0,
       "tests": [
         "P2PConnectionTest",
         "P2PFallbackTest",
@@ -570,13 +570,25 @@
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 8,
-    "blocker": 0,
-    "major": 3,
+    "total": 9,
+    "blocker": 2,
+    "major": 2,
     "minor": 5,
     "note": 0
   },
   "minus": [
+    {
+      "severity": "BLOCKER",
+      "category": "fake-sync",
+      "detail": "BackgroundSyncEngine label \"Tersinkronisasi ke Cloud\" padahal triggerBackgroundSync() cuma delay + removeSyncItem() — TIDAK ada network call (Retrofit/OkHttp/Firestore).",
+      "fix": "Ganti jadi upload sungguhan atau label jujur OFFLINE_SAVED (anti-fabrikasi AGENTS §7)."
+    },
+    {
+      "severity": "BLOCKER",
+      "category": "p2p",
+      "detail": "P2PSignalingManager.broadcastPeerInfo() dan onMessageReceived() hanya Log.d — discovery FCM topic 0%, peer tidak pernah dicatat/dihubungi.",
+      "fix": "Implementasikan FCM signaling sungguhan + WebRTC SDP/ICE exchange."
+    },
     {
       "severity": "MAJOR",
       "category": "multi-user",
@@ -600,12 +612,6 @@
       "category": "docs",
       "detail": "README klaim 55 suite, realita 59 file Test.kt.",
       "fix": "Update README badge + SETUP/DEVTOOLS jumlahnya."
-    },
-    {
-      "severity": "MAJOR",
-      "category": "code",
-      "detail": "1 TODO/FIXME tersisa (mis. P2PSignalingManager.kt: /** TODO: Implementasi offer/answer untuk WebRTC handshake belum diasankan di si).",
-      "fix": "Implementasikan sebelum klaim Selesai."
     },
     {
       "severity": "MINOR",

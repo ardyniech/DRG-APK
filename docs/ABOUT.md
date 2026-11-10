@@ -4,9 +4,9 @@
 
 **Progres pengembangan keseluruhan: 64%** (13 selesai · 12 dikerjakan · 8 direncanakan)
 
-Versi `v1.8-3-g31e79e7` · commit `31e79e7` · 2026-11-10 · 17 modul · 472 file sumber · 34024 baris · 59 test suite
+Versi `v1.8-4-gcac0eb9` · commit `cac0eb9` · 2026-11-10 · 17 modul · 472 file sumber · 33852 baris · 59 test suite
 
-**Kekurangan (Bawel Audit): 8 temuan (0 BLOCKER · 3 MAJOR · 5 MINOR · 0 NOTE)**
+**Kekurangan (Bawel Audit): 9 temuan (2 BLOCKER · 2 MAJOR · 5 MINOR · 0 NOTE)**
 
 > **SINGLE SOURCE OF TRUTH** — dokumen ini adalah acuan tunggal untuk AI dev, DevTools in-app, dan in-app Tentang. Digenerate otomatis oleh `generate_about_manifest.py` (mengandung `.github/scripts/audit_minus.py --json`). Jangan tulis manual. Jangan merujuk ke DEVTOOLS.md/README untuk angka — rujuk ke sini.
 
@@ -46,7 +46,7 @@ WebRTC DataChannel, self-host per device, discovery via FCM, fallback PendingSyn
 |---|---|---|
 | Halaman Tentang & Roadmap Otomatis | Selesai | 100% |
 | Firebase (FCM, Auth, AI) | Sedang Dibangun | 65% |
-| P2P Serverless (WebRTC) | Sedang Dibangun | 67% |
+| P2P Serverless (WebRTC) | Sedang Dibangun | 70% |
 | Layanan Driver (PTT, AI, Proteksi) | Selesai | 100% |
 | Discovery Peer via FCM Topic | Direncanakan | 0% |
 | Adaptive Icon & Branding | Direncanakan | 0% |
@@ -75,11 +75,12 @@ Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan kl
 
 | Severity | Kategori | Detail | Perbaikan |
 |---|---|---|---|
+| **BLOCKER** | fake-sync | BackgroundSyncEngine label "Tersinkronisasi ke Cloud" padahal triggerBackgroundSync() cuma delay + removeSyncItem() — TIDAK ada network call (Retrofit/OkHttp/Firestore). | Ganti jadi upload sungguhan atau label jujur OFFLINE_SAVED (anti-fabrikasi AGENTS §7). |
+| **BLOCKER** | p2p | P2PSignalingManager.broadcastPeerInfo() dan onMessageReceived() hanya Log.d — discovery FCM topic 0%, peer tidak pernah dicatat/dihubungi. | Implementasikan FCM signaling sungguhan + WebRTC SDP/ICE exchange. |
 | **MAJOR** | multi-user | Seed hanya bila members kosong → tiap HP baru punya data dummy sendiri, bukan data komunitas bersama. | Butuh backend + akun server agar komunitas sinkron. |
 | **MINOR** | security | Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB. | Enkripsi database atau minimal jelaskan risiko di docs. |
 | **MAJOR** | database | Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v13 tidak lengkap. | Generate & commit schema hilang via Room export. |
 | **MINOR** | docs | README klaim 55 suite, realita 59 file Test.kt. | Update README badge + SETUP/DEVTOOLS jumlahnya. |
-| **MAJOR** | code | 1 TODO/FIXME tersisa (mis. P2PSignalingManager.kt: /** TODO: Implementasi offer/answer untuk WebRTC handshake belum diasankan di si). | Implementasikan sebelum klaim Selesai. |
 | **MINOR** | code | Hardcode hex Color(0x...) di78 file — melanggar 'No Magic Numbers' AGENTS §1. | Pindah ke DesignTokens/Theme. |
 | **MINOR** | test | androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented. | Tambah UI test untuk login, SOS, kas. |
 | **MINOR** | ci | Detekt/KtLint tidak ada di CI — hanya line-cap + lint. | Tambah static analysis (sudah masuk backlog). |
