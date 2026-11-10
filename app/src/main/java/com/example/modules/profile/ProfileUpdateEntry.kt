@@ -50,7 +50,6 @@ fun ProfileUpdateEntry(modifier: Modifier = Modifier) {
     var hint by remember { mutableStateOf<String?>(null) }
     val available = state as? UpdateUiState.Available
     val ready = state as? UpdateUiState.ReadyToInstall
-
     fun check() {
         if (busy) return
         hint = null
@@ -71,21 +70,16 @@ fun ProfileUpdateEntry(modifier: Modifier = Modifier) {
             busy = false
         }
     }
-
-    fun installReady() {
-        val target = ready ?: return
-        when (ApkInstaller.install(context, target.apk)) {
-            // Cache dibersihkan OS → file hilang, minta cek ulang (bukan crash).
-            ApkInstaller.InstallOutcome.MISSING_FILE -> {
-                hint = null
-                state = UpdateUiState.Failed("File update hilang — ketuk untuk cek ulang")
-            }
-            ApkInstaller.InstallOutcome.NEEDS_PERMISSION ->
-                hint = "Izinkan \"Instal aplikasi tidak dikenal\", lalu ketuk Pasang lagi."
-            ApkInstaller.InstallOutcome.STARTED -> hint = null
-        }
-    }
-
+    ProfileUpdateAutoActions(
+        state = state,
+        context = context,
+        onCheck = { check() },
+        onMissingFile = {
+            hint = null
+            state = UpdateUiState.Failed("File update hilang — ketuk untuk cek ulang")
+        },
+        onPermissionNeeded = { hint = it }
+    )
     DrgGlassCard(modifier = modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp), onClick = { check() }) {
         Row(
             modifier = Modifier.padding(14.dp).fillMaxWidth(),
@@ -106,7 +100,13 @@ fun ProfileUpdateEntry(modifier: Modifier = Modifier) {
             }
             when {
                 ready != null -> Button(
-                    onClick = { installReady() },
+                    onClick = {
+                        handleInstallOutcome(
+                            ApkInstaller.install(context, ready.apk),
+                            setHint = { hint = it },
+                            setFailed = { msg -> state = UpdateUiState.Failed(msg) }
+                        )
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
                     shape = RoundedCornerShape(12.dp)
                 ) { Text("Pasang", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold) }

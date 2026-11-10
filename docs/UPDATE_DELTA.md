@@ -32,15 +32,17 @@ tetap sah dan Android menerima instalasi tanpa re-sign di perangkat.
 
 ## Alur di aplikasi
 
-1. Profil → kartu **"Pembaruan Aplikasi"** → ketuk (cek hanya mengunduh manifest).
+1. Profil → kartu **"Pembaruan Aplikasi"**. Saat Profil dibuka, aplikasi otomatis
+   mengecek `update.json` (hanya ≈1 KB) — driver tidak perlu tap dulu.
 2. `UpdateManager.check()` mengambil `update.json` dari
    `https://github.com/ardyniech/DRG-APK/releases/latest/download/update.json`
    (bisa dioverride saat build via env `UPDATE_MANIFEST_URL`).
 3. Jika `versionCode` manifest > terpasang, cari patch dengan
    `fromVersionCode == terpasang` **dan** `fromSha256 == sha256(APK terpasang)`.
-4. Unduh patch → verifikasi sha256 patch → `DeltaPatchApplier.apply()` →
-   verifikasi sha256 hasil.
-5. `ApkInstaller` membuka dialog instalasi Android (user mengonfirmasi).
+4. Tap **Patch/APK** untuk mengunduh. Progres byte ditampilkan.
+5. Setelah patch/unduhan siap, dialog instalasi Android terbuka **otomatis**
+   (tetap butuh konfirmasi user — batasan OS). Tombol **Pasang** tersedia
+   sebagai fallback (mis. jika dialog tertutup).
 6. Jika patch tidak cocok/tidak ada → fallback unduh APK penuh.
 
 ## Kode terkait

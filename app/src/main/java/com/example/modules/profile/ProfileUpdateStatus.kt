@@ -1,5 +1,9 @@
 package com.example.modules.profile
 
+import android.content.Context
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import com.example.core.update.ApkInstaller
 import com.example.core.update.UpdateUiState
 import java.util.Locale
 
@@ -27,3 +31,46 @@ internal fun updateStatusText(state: UpdateUiState, busy: Boolean): String = whe
 }
 
 internal fun formatMb(bytes: Long): String = String.format(Locale.US, "%.1f MB", bytes / 1048576.0)
+
+internal fun handleInstallOutcome(
+    outcome: ApkInstaller.InstallOutcome,
+    setHint: (String?) -> Unit,
+    setFailed: (String) -> Unit
+) {
+    when (outcome) {
+        // Cache dibersihkan OS → file hilang, minta cek ulang (bukan crash).
+        ApkInstaller.InstallOutcome.MISSING_FILE -> {
+            setHint(null)
+            setFailed("File update hilang — ketuk untuk cek ulang")
+        }
+        ApkInstaller.InstallOutcome.NEEDS_PERMISSION ->
+            setHint("Izinkan \"Instal aplikasi tidak dikenal\", lalu ketuk Pasang lagi.")
+        ApkInstaller.InstallOutcome.STARTED -> setHint(null)
+    }
+}
+
+/**
+ * Aksi otomatis: cek saat Profil dibuka + buka dialog instalasi saat siap.
+ * Dipisah agar ProfileUpdateEntry tetap di bawah batas 125 baris.
+ */
+@Composable
+internal fun ProfileUpdateAutoActions(
+    state: UpdateUiState,
+    context: Context,
+    onCheck: () -> Unit,
+    onMissingFile: () -> Unit,
+    onPermissionNeeded: (String) -> Unit
+) {
+    LaunchedEffect(Unit) {
+        if (state is UpdateUiState.Idle) onCheck()
+    }
+    LaunchedEffect(state) {
+        val ready = state as? UpdateUiState.ReadyToInstall ?: return@LaunchedEffect
+        when (ApkInstaller.install(context, ready.apk)) {
+            ApkInstaller.InstallOutcome.MISSING_FILE -> onMissingFile()
+            ApkInstaller.InstallOutcome.NEEDS_PERMISSION ->
+                onPermissionNeeded("Izinkan \"Instal aplikasi tidak dikenal\", lalu ketuk Pasang lagi.")
+            ApkInstaller.InstallOutcome.STARTED -> Unit
+        }
+    }
+}
