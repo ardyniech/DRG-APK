@@ -33,11 +33,15 @@ class DRGApplication : Application() {
         val request = PeriodicWorkRequestBuilder<UpdateCheckWorker>(12, TimeUnit.HOURS)
             .setConstraints(constraints)
             .build()
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            UpdateCheckWorker.WORK_NAME,
-            ExistingPeriodicWorkPolicy.KEEP,
-            request
-        )
+        try {
+            WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                UpdateCheckWorker.WORK_NAME,
+                ExistingPeriodicWorkPolicy.KEEP,
+                request
+            )
+        } catch (_: IllegalStateException) {
+            // WorkManager belum ter-inisialisasi (mis. environment test) — lewati.
+        }
         applicationScope.launch(Dispatchers.IO) {
             val prefs = getSharedPreferences("drg_prefs", MODE_PRIVATE)
             val hasSeeded = prefs.getBoolean("drg_has_seeded_v6", false)

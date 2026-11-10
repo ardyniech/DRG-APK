@@ -2,7 +2,6 @@ package com.example
 
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,8 +25,10 @@ class MainActivity : ComponentActivity() {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) !=
                 android.content.pm.PackageManager.PERMISSION_GRANTED
             ) {
-                registerForActivityResult(ActivityResultContracts.RequestPermission()) {}.launch(
-                    android.Manifest.permission.POST_NOTIFICATIONS
+                androidx.core.app.ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                    1001
                 )
             }
         }
