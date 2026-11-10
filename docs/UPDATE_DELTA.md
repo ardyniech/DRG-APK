@@ -81,8 +81,12 @@ Tanpa rilis sebelumnya, workflow tetap jalan tetapi hanya menerbitkan APK penuh
 ## Batasan jujur (belum beres)
 
 * **Kanal preview, bukan produksi.** APK debug ditandatangani `debug.keystore`
-  yang ikut di repo. Untuk produksi, `KEYSTORE_PATH` / `STORE_PASSWORD` /
-  `KEY_PASSWORD` harus diisi di secrets dan build memakai `assembleRelease`.
+  yang sekarang **ter-commit (base64) agar konsisten antar rilis** — update delta
+  tidak lagi bentrok signature. Untuk produksi, gunakan release keystore di secrets.
+* **Pemakai v1.1/v1.2 lama wajib instal ulang sekali.** Rilis sebelum perbaikan
+  signing ini ditandatangani kunci acak per rilis, sehingga tidak bisa di-update
+  in-place. Uninstal APK lama → pasang v1.3 (atau lebih baru) yang sudah
+  memakai kunci stabil; setelah itu delta update berfungsi normal.
 * Android **selalu** menampilkan dialog konfirmasi instalasi; silent install
   butuh device owner/root — itu batasan OS, bukan bug aplikasi.
 * Patch hanya valid untuk base dengan sha256 yang sama. Kalau driver memasang

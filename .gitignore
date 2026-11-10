@@ -26,3 +26,4 @@ secrets.properties
 app/google-services.json
 !app/google-services.json.example
 debug.keystore
+!debug.keystore.base64

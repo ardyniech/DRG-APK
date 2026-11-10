@@ -51,10 +51,9 @@ jobs:
           touch .env
           echo "GEMINI_API_KEY=dummy_ci_key" >> .env
           echo "MAPS_API_KEY=dummy_ci_key" >> .env
-          if [ ! -f "debug.keystore" ]; then
-            keytool -genkeypair -keystore debug.keystore -storepass android -keypass android \
-              -alias androiddebugkey -dname "CN=Android Debug,O=Android,C=US" -keyalg RSA -keysize 2048 -validity 10000 || true
-          fi
+          # debug.keystore di-decode dari debug.keystore.base64 (ter-commit) oleh
+          # Gradle; jangan generate baru — harus konsisten antar rilis supaya
+          # update delta tidak bentrok signature.
 
       - name: Resolve Version & Previous Release
         id: ver

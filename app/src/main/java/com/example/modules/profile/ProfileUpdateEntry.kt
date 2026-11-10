@@ -37,7 +37,6 @@ import com.example.ui.theme.DrgGreenPrimary
 import com.example.ui.theme.DrgTextMuted
 import com.example.ui.theme.DrgTextPrimary
 import kotlinx.coroutines.launch
-
 /**
  * Kartu OTA delta: cek update hanya mengunduh `update.json` (KB), lalu patch
  * kecil — bukan APK penuh. Fallback ke APK penuh bila patch tidak tersedia.
@@ -73,7 +72,7 @@ fun ProfileUpdateEntry(modifier: Modifier = Modifier) {
     ProfileUpdateAutoActions(
         state = state,
         context = context,
-        allowAutoCheck = !UpdateChecker.isMetered(context),
+        allowAutoCheck = true,
         onCheck = { check() },
         onMissingFile = {
             hint = null
@@ -98,6 +97,7 @@ fun ProfileUpdateEntry(modifier: Modifier = Modifier) {
                 Text("Pembaruan Aplikasi", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
                 Text(updateStatusText(state, busy), fontSize = 11.sp, color = DrgTextMuted)
                 hint?.let { Text(it, fontSize = 10.sp, color = DrgGreenPrimary) }
+                if (available != null && (UpdateChecker.isMetered(context) || (UpdateChecker.batteryLevel(context) in 1..19 && !UpdateChecker.isCharging(context)))) Text("💡 Saran: update saat WiFi + charging (hemat kuota & baterai). Tetap bisa update sekarang.", fontSize = 10.sp, color = DrgTextMuted)
             }
             when {
                 ready != null -> Button(

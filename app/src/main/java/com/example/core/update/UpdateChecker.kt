@@ -87,5 +87,22 @@ object UpdateChecker {
         val caps = cm.getNetworkCapabilities(network) ?: return true
         !caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
     }.getOrDefault(true)
+
+    /** Persentase baterai (0-100). -1 kalau tidak diketahui. */
+    fun batteryLevel(context: Context): Int = runCatching {
+        val bm = context.getSystemService(Context.BATTERY_SERVICE) as? android.os.BatteryManager
+        bm?.getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY) ?: -1
+    }.getOrDefault(-1)
+
+    /** True kalau perangkat sedang charging. */
+    fun isCharging(context: Context): Boolean = runCatching {
+        val intent = context.registerReceiver(
+            null, android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED)
+        )
+        val status = intent?.getIntExtra(android.os.BatteryManager.EXTRA_STATUS, -1) ?: -1
+        status == android.os.BatteryManager.BATTERY_STATUS_CHARGING ||
+            status == android.os.BatteryManager.BATTERY_STATUS_FULL
+    }.getOrDefault(false)
 }
+
 
