@@ -6,10 +6,8 @@ import org.webrtc.DataChannel
 import org.webrtc.IceCandidate
 import org.webrtc.PeerConnection
 import org.webrtc.PeerConnectionFactory
-import java.net.InetAddress
-import java.net.InterfaceAddress
 import java.net.NetworkInterface
-import java.util.Enumeration
+import java.nio.ByteBuffer
 
 /**
  * P2P Manager menggunakan Tailscale IP untuk ICE candidates.
@@ -41,7 +39,7 @@ class P2PManager(private val context: Context) {
             peerConnectionFactory!!
         )
         dataChannel = connectionManager.dataChannel
-        Log.d(P2PConstants.TAG, "Self-host server dimulai di port ${P2PConstants.SELF_HOST_PORT}")
+        Log.d(P2PConstants.TAG, "Self-host server dimulai di port ${P2PConfig.SELF_HOST_PORT}")
     }
 
     /** Buat ICE candidate Tailscale valid berdasarkan IP aktif.

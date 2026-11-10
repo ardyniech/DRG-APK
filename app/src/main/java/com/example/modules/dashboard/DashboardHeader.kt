@@ -11,7 +11,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.shared.models.DriverMember
-import com.example.shared.models.VerificationStatus
 import com.example.ui.theme.*
 import com.example.modules.dashboard.primitives.StatusChips
 import com.example.modules.dashboard.primitives.GlassCard
@@ -19,14 +18,13 @@ import com.example.modules.dashboard.primitives.GlassCard
 @Composable
 fun DashboardHeader(
     member: DriverMember,
-    onStatusChange: (VerificationStatus) -> Unit,
+    onStatusChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     GlassCard(modifier = modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Placeholder for avatar
             Box(
                 modifier = Modifier.size(64.dp).clip(CircleShape).background(DrgGoldReward),
                 contentAlignment = Alignment.Center
