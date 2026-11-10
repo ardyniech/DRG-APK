@@ -28,8 +28,14 @@ object ApkInstaller {
         Build.VERSION.SDK_INT < Build.VERSION_CODES.O ||
             context.packageManager.canRequestPackageInstalls()
 
+    /** True kalau file APK valid & bisa dibaca Android (bukan korup). */
+    fun isValidApk(context: Context, apk: File): Boolean {
+        if (!apk.exists() || apk.length() < 1024) return false
+        return context.packageManager.getPackageArchiveInfo(apk.absolutePath, 0) != null
+    }
+
     /** Hasil percobaan membuka dialog instalasi. */
-    enum class InstallOutcome { STARTED, NEEDS_PERMISSION, MISSING_FILE }
+    enum class InstallOutcome { STARTED, NEEDS_PERMISSION, MISSING_FILE, INVALID_APK }
 
     /**
      * Buka dialog instalasi. Kalau izin sumber tak dikenal belum ada, buka
@@ -38,6 +44,8 @@ object ApkInstaller {
     fun install(context: Context, apk: File): InstallOutcome {
         // Cache bisa dibersihkan OS: jangan biarkan FileProvider crash.
         if (!apk.exists()) return InstallOutcome.MISSING_FILE
+        // Cegah "ekstrak dr zip error": pastikan APK valid sebelum install.
+        if (!isValidApk(context, apk)) return InstallOutcome.INVALID_APK
         if (!canInstall(context)) {
             openInstallPermissionSettings(context)
             return InstallOutcome.NEEDS_PERMISSION

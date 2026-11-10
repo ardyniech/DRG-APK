@@ -81,7 +81,7 @@ object UpdateManager {
             }
             // Bersihkan aset lama untuk hemat ruang.
             ApkInstaller.cleanupOld(context, version)
-            verifyAndFinish(apk, available.release.apkSha256, available.release.apkSizeBytes)
+            verifyAndFinish(context, apk, available.release.apkSha256, available.release.apkSizeBytes)
         } catch (cancel: kotlinx.coroutines.CancellationException) {
             throw cancel
         } catch (t: Exception) {
@@ -98,12 +98,15 @@ object UpdateManager {
         }
     }
 
-    private fun verifyAndFinish(apk: File, expectedSha256: String, expectedSize: Long): UpdateUiState {
+    private fun verifyAndFinish(context: Context, apk: File, expectedSha256: String, expectedSize: Long): UpdateUiState {
         if (expectedSize > 0 && apk.length() != expectedSize) {
             apk.delete(); return UpdateUiState.Failed("Ukuran hasil tidak cocok manifest")
         }
         if (!UpdateChecker.sha256(apk).equals(expectedSha256, ignoreCase = true)) {
             apk.delete(); return UpdateUiState.Failed("Hasil unduhan tidak cocok sha256")
+        }
+        if (!ApkInstaller.isValidApk(context, apk)) {
+            apk.delete(); return UpdateUiState.Failed("APK tidak bisa dibaca (korup) — ulang unduh")
         }
         return UpdateUiState.ReadyToInstall(apk)
     }

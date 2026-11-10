@@ -104,7 +104,13 @@ Tanpa rilis sebelumnya, workflow tetap jalan tetapi hanya menerbitkan APK penuh
   ukuran output tidak wajar, offtin/offtout) dan `UpdateManifestParserTest`
   (manifest lengkap, field opsional hilang, JSON rusak, pemilihan patch by sha).
 
-## Rollback
+## Catatan distribusi (penting)
+
+* **Unduh dari GitHub Releases**, bukan dari Actions artifact. Actions artifact adalah
+  `.zip` berisi folder `dist/` (untuk CI), bukan APK langsung — ekstraknya sering
+  gagal di HP. Releases menyediakan `app-debug.apk` langsung.
+* URL manifest default:
+  `https://github.com/ardyniech/DRG-APK/releases/latest/download/update.json`.
 
 ```bash
 git revert <commit>

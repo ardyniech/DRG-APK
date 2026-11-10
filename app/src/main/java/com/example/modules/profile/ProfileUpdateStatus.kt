@@ -45,6 +45,10 @@ internal fun handleInstallOutcome(
             setHint(null)
             setFailed("File update hilang — ketuk untuk cek ulang")
         }
+        ApkInstaller.InstallOutcome.INVALID_APK -> {
+            setHint(null)
+            setFailed("File APK tidak bisa dibaca (korup) — ulang unduh")
+        }
         ApkInstaller.InstallOutcome.NEEDS_PERMISSION ->
             setHint("Izinkan \"Instal aplikasi tidak dikenal\", lalu ketuk Pasang lagi.")
         ApkInstaller.InstallOutcome.STARTED -> setHint(null)
@@ -71,6 +75,7 @@ internal fun ProfileUpdateAutoActions(
         val ready = state as? UpdateUiState.ReadyToInstall ?: return@LaunchedEffect
         when (ApkInstaller.install(context, ready.apk)) {
             ApkInstaller.InstallOutcome.MISSING_FILE -> onMissingFile()
+            ApkInstaller.InstallOutcome.INVALID_APK -> onMissingFile()
             ApkInstaller.InstallOutcome.NEEDS_PERMISSION ->
                 onPermissionNeeded("Izinkan \"Instal aplikasi tidak dikenal\", lalu ketuk Pasang lagi.")
             ApkInstaller.InstallOutcome.STARTED -> Unit
