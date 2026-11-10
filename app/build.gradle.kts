@@ -163,6 +163,7 @@ dependencies {
   implementation(libs.play.services.maps)
   implementation(libs.maps.compose)
   implementation(libs.commons.compress)
+  implementation(libs.work.runtime.ktx)
   implementation(libs.retrofit)
   implementation(libs.webrtc)
   testImplementation(libs.androidx.compose.ui.test.junit4)

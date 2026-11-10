@@ -33,6 +33,8 @@ object UpdateManager {
         force: Boolean = false
     ): UpdateUiState = withContext(Dispatchers.IO) {
         val current = UpdateChecker.currentVersionCode(context)
+        // Bersihkan aset update lama (hemat ruang) sebelum cek baru.
+        ApkInstaller.cleanupOld(context, current)
         // Pakai cache kalau masih segar dan bukan paksa refresh.
         if (!force) {
             UpdateCheckCache.cached(current)?.let { r ->

@@ -37,10 +37,6 @@ import com.example.ui.theme.DrgGreenPrimary
 import com.example.ui.theme.DrgTextMuted
 import com.example.ui.theme.DrgTextPrimary
 import kotlinx.coroutines.launch
-/**
- * Kartu OTA delta: cek update hanya mengunduh `update.json` (KB), lalu patch
- * kecil — bukan APK penuh. Fallback ke APK penuh bila patch tidak tersedia.
- */
 @Composable
 fun ProfileUpdateEntry(modifier: Modifier = Modifier) {
     val context = LocalContext.current
@@ -48,8 +44,8 @@ fun ProfileUpdateEntry(modifier: Modifier = Modifier) {
     var state by remember { mutableStateOf<UpdateUiState>(UpdateUiState.Idle) }
     var busy by remember { mutableStateOf(false) }
     var hint by remember { mutableStateOf<String?>(null) }
-    val available = state as? UpdateUiState.Available
-    val ready = state as? UpdateUiState.ReadyToInstall
+    var showChangelog by remember { mutableStateOf(false) }
+    val available = state as? UpdateUiState.Available; val ready = state as? UpdateUiState.ReadyToInstall
     fun check(force: Boolean = false) {
         if (busy) return
         hint = null
@@ -97,17 +93,18 @@ fun ProfileUpdateEntry(modifier: Modifier = Modifier) {
                 Text("Pembaruan Aplikasi", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
                 Text(updateStatusText(state, busy), fontSize = 11.sp, color = DrgTextMuted)
                 hint?.let { Text(it, fontSize = 10.sp, color = DrgGreenPrimary) }
-                if (available != null && (UpdateChecker.isMetered(context) || (UpdateChecker.batteryLevel(context) in 1..19 && !UpdateChecker.isCharging(context)))) Text("💡 Saran: update saat WiFi + charging (hemat kuota & baterai). Tetap bisa update sekarang.", fontSize = 10.sp, color = DrgTextMuted)
+                if (available != null && (UpdateChecker.isMetered(context) || (UpdateChecker.batteryLevel(context) in 1..19 && !UpdateChecker.isCharging(context)))) {
+                    Text("💡 Saran: update saat WiFi + charging. Tetap bisa update sekarang.", fontSize = 10.sp, color = DrgTextMuted)
+                }
+                if (available != null && !available.release.changelog.isNullOrEmpty()) {
+                    androidx.compose.material3.TextButton(onClick = { showChangelog = true }, contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp)) {
+                        Text("Lihat perubahan (${available.release.changelog.size})", fontSize = 10.sp, color = DrgGreenPrimary)
+                    }
+                }
             }
             when {
                 ready != null -> Button(
-                    onClick = {
-                        handleInstallOutcome(
-                            ApkInstaller.install(context, ready.apk),
-                            setHint = { hint = it },
-                            setFailed = { msg -> state = UpdateUiState.Failed(msg) }
-                        )
-                    },
+                    onClick = { handleInstallOutcome(ApkInstaller.install(context, ready.apk), setHint = { hint = it }, setFailed = { msg -> state = UpdateUiState.Failed(msg) }) },
                     colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
                     shape = RoundedCornerShape(12.dp)
                 ) { Text("Pasang", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold) }
@@ -117,9 +114,9 @@ fun ProfileUpdateEntry(modifier: Modifier = Modifier) {
                     colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
                     shape = RoundedCornerShape(12.dp)
                 ) { Text(if (available.usesPatch) "Patch" else "APK", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold) }
-
                 else -> Icon(Icons.Default.SystemUpdate, contentDescription = null, tint = DrgGreenPrimary, modifier = Modifier.size(22.dp))
             }
         }
     }
+    ProfileUpdateChangelogDialog(available?.release ?: return, showChangelog) { showChangelog = false }
 }
