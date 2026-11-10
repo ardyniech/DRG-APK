@@ -19,7 +19,6 @@ object LoginAuthValidator {
             it.motorcyclePlate.replace(" ", "").equals(clean.replace(" ", ""), ignoreCase = true)
         } ?: return Pair(false, "ID, Plat, atau No. HP tidak terdaftar di database DRG Malang.")
 
-        val hashedInput = SecurityUtils.hashPin(inputPin)
         val storedHash = SecurityUtils.getStoredPinHash(context, target.id)
             ?: SecurityUtils.getStoredPinHash(context, target.phone)
             ?: SecurityUtils.getStoredPinHash(context, target.driverId)
@@ -28,7 +27,12 @@ object LoginAuthValidator {
             SecurityUtils.storePinHash(context, target.id, inputPin)
             SecurityUtils.storePinHash(context, target.driverId, inputPin)
             Pair(true, target.id)
-        } else if (hashedInput == storedHash) {
+        } else if (SecurityUtils.verifyPin(context, inputPin, storedHash)) {
+            // Migrasi otomatis: legacy SHA-256 / software-mode → PBKDF2+Keystore.
+            if (SecurityUtils.needsMigration(storedHash)) {
+                SecurityUtils.storePinHash(context, target.id, inputPin)
+                SecurityUtils.storePinHash(context, target.driverId, inputPin)
+            }
             Pair(true, target.id)
         } else {
             Pair(false, "PIN keamanan salah. Silakan coba lagi.")

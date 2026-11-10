@@ -4,9 +4,9 @@
 
 **Progres pengembangan keseluruhan: 64%** (12 selesai · 13 dikerjakan · 8 direncanakan)
 
-Versi `04d8038` · commit `04d8038` · 2026-11-09 · 17 modul · 465 file sumber · 33200 baris · 55 test suite
+Versi `v1.7` · commit `dfda9c6` · 2026-11-10 · 17 modul · 470 file sumber · 33666 baris · 56 test suite
 
-**Kekurangan (Bawel Audit): 22 temuan (6 BLOCKER · 12 MAJOR · 4 MINOR · 0 NOTE)**
+**Kekurangan (Bawel Audit): 20 temuan (5 BLOCKER · 10 MAJOR · 5 MINOR · 0 NOTE)**
 
 > **SINGLE SOURCE OF TRUTH** — dokumen ini adalah acuan tunggal untuk AI dev, DevTools in-app, dan in-app Tentang. Digenerate otomatis oleh `generate_about_manifest.py` (mengandung `.github/scripts/audit_minus.py --json`). Jangan tulis manual. Jangan merujuk ke DEVTOOLS.md/README untuk angka — rujuk ke sini.
 
@@ -79,9 +79,7 @@ Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan kl
 | **BLOCKER** | firebase | firestore dependency dikomentari → multi-user tidak bisa sinkron. | Uncomment firestore + auth + credentials bersama google-services.json asli. |
 | **BLOCKER** | firebase | auth dependency dikomentari → akun server tidak ada, login lokal saja. | Uncomment auth + Credential Manager. |
 | **BLOCKER** | firebase | app/google-services.json HILANG (hanya .example) → FCM/Auth/AI tidak jalan produksi, P2P signaling gagal join topic. | Isi google-services.json asli dari Firebase Console (jangan commit key prod, tapi CI perlu). |
-| **BLOCKER** | auth | Seed super-admin PIN default 1234 di .env.example — kalau tidak diganti, akun pengurus bisa ditebak. | Ganti sebelum rilis; tolak login bila PIN masih default. |
 | **MAJOR** | permission | Permission RECORD_AUDIO belum dideklarasi (PTT/notif/foreground/Bluetooth). | Tambah di manifest + runtime request. |
-| **MAJOR** | permission | Permission POST_NOTIFICATIONS belum dideklarasi (PTT/notif/foreground/Bluetooth). | Tambah di manifest + runtime request. |
 | **MAJOR** | permission | Permission FOREGROUND_SERVICE belum dideklarasi (PTT/notif/foreground/Bluetooth). | Tambah di manifest + runtime request. |
 | **MAJOR** | permission | Permission BLUETOOTH_CONNECT belum dideklarasi (PTT/notif/foreground/Bluetooth). | Tambah di manifest + runtime request. |
 | **BLOCKER** | p2p | P2PSignalingManager.broadcastPeerInfo() dan onMessageReceived() hanya Log.d — discovery FCM topic 0%, peer tidak pernah dicatat/dihubungi. | Implementasikan FCM signaling sungguhan + WebRTC SDP/ICE exchange. |
@@ -89,9 +87,9 @@ Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan kl
 | **MAJOR** | multi-user | Seed hanya bila members kosong → tiap HP baru punya data dummy sendiri, bukan data komunitas bersama. | Butuh backend + akun server agar komunitas sinkron. |
 | **MAJOR** | backup | allowBackup=false + tidak ada cloud backup/sync → ganti HP = data hilang permanen. | Tambah auto-backup terenkripsi atau export/import kas terenkripsi. |
 | **MAJOR** | privacy | MIGRATION_12_13 DEFAULT kolom members berisi NIK/SIM/no HP dummy (3507123456780001) — data pribadi palsu masuk skema. | Ganti DEFAULT jadi '' dan jangan hardcode PII. |
-| **MAJOR** | security | PIN hanya SHA-256(plain) di SharedPrefs, bukan PBKDF2/Keystore — klaim DevTools 'Keystore PIN & PBKDF2' bohong. | Ganti ke PBKDF2 + Android Keystore atau label jujur di DevTools. |
 | **MINOR** | security | Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB. | Enkripsi database atau minimal jelaskan risiko di docs. |
 | **MAJOR** | database | Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v13 tidak lengkap. | Generate & commit schema hilang via Room export. |
+| **MINOR** | docs | README klaim 55 suite, realita 56 file Test.kt. | Update README badge + SETUP/DEVTOOLS jumlahnya. |
 | **MAJOR** | code | 1 TODO/FIXME tersisa (mis. DashboardHeader.kt: StatusChips(currentStatus = member.currentStatus, onStatusChange = { _, _ -> /* ). | Implementasikan sebelum klaim Selesai. |
 | **MINOR** | code | Hardcode hex Color(0x...) di78 file — melanggar 'No Magic Numbers' AGENTS §1. | Pindah ke DesignTokens/Theme. |
 | **MINOR** | test | androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented. | Tambah UI test untuk login, SOS, kas. |

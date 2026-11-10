@@ -13,9 +13,9 @@
     ]
   },
   "build": {
-    "version": "04d8038",
-    "commit": "04d8038",
-    "commitDate": "2026-11-09",
+    "version": "v1.7",
+    "commit": "dfda9c6",
+    "commitDate": "2026-11-10",
     "generatedBy": "generate_about_manifest.py"
   },
   "summary": {
@@ -25,9 +25,9 @@
     "inProgress": 13,
     "planned": 8,
     "modules": 17,
-    "totalSourceFiles": 465,
-    "totalLoc": 33200,
-    "testSuites": 55
+    "totalSourceFiles": 470,
+    "totalLoc": 33666,
+    "testSuites": 56
   },
   "phases": [
     {
@@ -85,7 +85,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 16,
-      "loc": 1287,
+      "loc": 1291,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
@@ -328,8 +328,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 22,
-      "loc": 1722,
+      "files": 23,
+      "loc": 1801,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
@@ -570,10 +570,10 @@
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 22,
-    "blocker": 6,
-    "major": 12,
-    "minor": 4,
+    "total": 20,
+    "blocker": 5,
+    "major": 10,
+    "minor": 5,
     "note": 0
   },
   "minus": [
@@ -602,21 +602,9 @@
       "fix": "Isi google-services.json asli dari Firebase Console (jangan commit key prod, tapi CI perlu)."
     },
     {
-      "severity": "BLOCKER",
-      "category": "auth",
-      "detail": "Seed super-admin PIN default 1234 di .env.example — kalau tidak diganti, akun pengurus bisa ditebak.",
-      "fix": "Ganti sebelum rilis; tolak login bila PIN masih default."
-    },
-    {
       "severity": "MAJOR",
       "category": "permission",
       "detail": "Permission RECORD_AUDIO belum dideklarasi (PTT/notif/foreground/Bluetooth).",
-      "fix": "Tambah di manifest + runtime request."
-    },
-    {
-      "severity": "MAJOR",
-      "category": "permission",
-      "detail": "Permission POST_NOTIFICATIONS belum dideklarasi (PTT/notif/foreground/Bluetooth).",
       "fix": "Tambah di manifest + runtime request."
     },
     {
@@ -662,12 +650,6 @@
       "fix": "Ganti DEFAULT jadi '' dan jangan hardcode PII."
     },
     {
-      "severity": "MAJOR",
-      "category": "security",
-      "detail": "PIN hanya SHA-256(plain) di SharedPrefs, bukan PBKDF2/Keystore — klaim DevTools 'Keystore PIN & PBKDF2' bohong.",
-      "fix": "Ganti ke PBKDF2 + Android Keystore atau label jujur di DevTools."
-    },
-    {
       "severity": "MINOR",
       "category": "security",
       "detail": "Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB.",
@@ -678,6 +660,12 @@
       "category": "database",
       "detail": "Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v13 tidak lengkap.",
       "fix": "Generate & commit schema hilang via Room export."
+    },
+    {
+      "severity": "MINOR",
+      "category": "docs",
+      "detail": "README klaim 55 suite, realita 56 file Test.kt.",
+      "fix": "Update README badge + SETUP/DEVTOOLS jumlahnya."
     },
     {
       "severity": "MAJOR",

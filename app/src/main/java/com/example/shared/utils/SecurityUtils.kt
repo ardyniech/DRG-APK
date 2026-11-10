@@ -2,15 +2,16 @@ package com.example.shared.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import java.security.MessageDigest
+import com.example.core.security.PinHasher
 
 object SecurityUtils {
 
+    fun hashPin(context: Context, pin: String): String = PinHasher.hashPin(context, pin)
+
+    /** Legacy overload tanpa context (fallback software, akan di-migrasi saat login). */
     fun hashPin(pin: String): String {
-        val bytes = pin.toByteArray()
-        val md = MessageDigest.getInstance("SHA-256")
-        val digest = md.digest(bytes)
-        return digest.fold("") { str, it -> str + "%02x".format(it) }
+        val ctx = runCatching { com.example.DRGApplication.instance.applicationContext }.getOrNull()
+        return if (ctx != null) PinHasher.hashPin(ctx, pin) else PinHasher.hashPinSoftware(pin)
     }
 
     fun getStoredPinHash(context: Context, key: String): String? {
@@ -27,7 +28,7 @@ object SecurityUtils {
     }
 
     fun storePinHash(context: Context, key: String, pin: String) {
-        val hashed = hashPin(pin)
+        val hashed = hashPin(context, pin)
         context.getSharedPreferences("drg_security_prefs", Context.MODE_PRIVATE).edit()
             .putString("pin_hash_$key", hashed).apply()
         context.getSharedPreferences("drg_prefs", Context.MODE_PRIVATE).edit()
@@ -35,8 +36,14 @@ object SecurityUtils {
     }
 
     fun storePinHash(prefs: SharedPreferences, key: String, pin: String) {
-        prefs.edit().putString("pin_hash_$key", hashPin(pin)).apply()
+        val hashed = hashPin(pin)
+        prefs.edit().putString("pin_hash_$key", hashed).apply()
     }
+
+    fun verifyPin(context: Context, pin: String, stored: String?): Boolean =
+        PinHasher.verifyPin(context, pin, stored)
+
+    fun needsMigration(stored: String?): Boolean = PinHasher.needsMigration(stored)
 
     fun generateAndStoreSession(prefs: SharedPreferences, memberId: String): String {
         val token = java.util.UUID.randomUUID().toString() + "_" + System.currentTimeMillis()

@@ -2,6 +2,7 @@ package com.example.modules.devtools
 
 import android.content.Context
 import android.os.Build
+import com.example.core.security.PinHasher
 import java.io.File
 
 data class SecurityCheckItem(
@@ -42,9 +43,9 @@ object SecurityAuditEngine {
             SecurityCheckItem(
                 name = "Keystore PIN Hashing & PBKDF2",
                 category = "Credential Security",
-                isSecure = false,
-                statusText = "Kurang Aman (SHA-256 tanpa salt di SharedPrefs — bukan Keystore/PBKDF2)",
-                riskDetail = "SecurityUtils.hashPin = SHA-256(plain) di SharedPrefs. Migrasi ke PBKDF2 + Android Keystore; klaim lama bohong."
+                isSecure = PinHasher.isKeystoreAvailable(),
+                statusText = if (PinHasher.isKeystoreAvailable()) "Aman (PBKDF2WithHmacSHA256 + salt, Android Keystore)" else "Kurang Aman (Keystore tidak tersedia — software mode)",
+                riskDetail = "SecurityUtils/PinHasher: v2 format, salt 16 byte, 120k iterasi, AES-GCM Keystore (hardware-backed bila ada). Legacy SHA-256 terdeteksi & di-migrasi saat login."
             )
         )
 

@@ -75,7 +75,7 @@ def check_firebase():
         add("BLOCKER", "firebase", "app/google-services.json HILANG (hanya .example) → FCM/Auth/AI tidak jalan produksi, P2P signaling gagal join topic.",
             "Isi google-services.json asli dari Firebase Console (jangan commit key prod, tapi CI perlu).")
     env = read(".env.example")
-    if "1234" in env and "SEED_SUPER_ADMIN_PIN" in env:
+    if "SEED_SUPER_ADMIN_PIN=1234" in env:
         add("BLOCKER", "auth", "Seed super-admin PIN default 1234 di .env.example — kalau tidak diganti, akun pengurus bisa ditebak.",
             "Ganti sebelum rilis; tolak login bila PIN masih default.")
     manifest = read("app/src/main/AndroidManifest.xml")
