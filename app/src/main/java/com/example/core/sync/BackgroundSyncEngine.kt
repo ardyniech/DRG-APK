@@ -9,6 +9,13 @@ import com.example.shared.models.PendingSyncEntity
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
+enum class SyncStatus(val label: String, val isOptimisticLocal: Boolean) {
+    IDLE("Semua Data Tersinkron", false),
+    SYNCING("Sinkronisasi Latar Belakang Berjalan...", false),
+    SYNCED("Tersinkronisasi ke Cloud", false),
+    OFFLINE_SAVED("Tersimpan di Lokal (Offline)", true)
+}
+
 /**
  * Engine sinkronisasi background untuk antrean antrean lokal.
  * KEHARUSAN: status yang tampil HANYA boleh berubah jika terjadi network call nyata ke cloud.
