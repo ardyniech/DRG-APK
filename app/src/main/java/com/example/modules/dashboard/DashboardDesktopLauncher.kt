@@ -17,6 +17,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.example.core.viewmodel.MainNavTab
 import com.example.ui.theme.DrgGreenPrimary
+import com.example.ui.theme.DrgShadowGreenAmbientStrong
+import com.example.ui.theme.DrgShadowGreenSpotStrong
 
 /**
  * Desktop-style launcher grid for quick access to app tabs.
@@ -39,7 +41,7 @@ fun DashboardDesktopLauncher(
         color = Color.White.copy(alpha = 0.92f),
         modifier = modifier
             .fillMaxWidth()
-            .shadow(6.dp, RoundedCornerShape(22.dp), ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+            .shadow(6.dp, RoundedCornerShape(22.dp), ambientColor = DrgShadowGreenAmbientStrong, spotColor = DrgShadowGreenSpotStrong)
             .border(1.2.dp, Brush.linearGradient(listOf(Color.White, Color.White.copy(alpha = 0.6f), DrgGreenPrimary.copy(alpha = 0.15f))), RoundedCornerShape(22.dp))
             .testTag("dashboard_desktop_launcher")
     ) {

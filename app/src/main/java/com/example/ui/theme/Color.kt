@@ -24,6 +24,7 @@ val DrgEmeraldDark = Color(0xFF008037)
 
 val DrgRedPanic = Color(0xFFDC2626)
 val DrgRedPanicDark = Color(0xFFB91C1C)
+val DrgRedPanicDarker = Color(0xFF991B1B)
 val DrgRedContainer = Color(0xFFFEE2E2)
 val DrgOnRedContainer = Color(0xFF7F1D1D)
 

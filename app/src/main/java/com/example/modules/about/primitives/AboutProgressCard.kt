@@ -32,7 +32,7 @@ fun AboutProgressCard(summary: AboutSummary) {
         tonalElevation = 0.dp,
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(6.dp, cardShape, ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+            .shadow(6.dp, cardShape, ambientColor = DrgShadowGreenAmbientStrong, spotColor = DrgShadowGreenSpotStrong)
             .border(1.2.dp, highlightBrush, cardShape)
     ) {
         Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {

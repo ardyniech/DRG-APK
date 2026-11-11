@@ -39,7 +39,7 @@ fun SosPulsingCircleButton(onTriggerSos: () -> Unit, modifier: Modifier = Modifi
             .size(150.dp)
             .scale(pulseScale)
             .clip(CircleShape)
-            .background(Brush.radialGradient(listOf(DrgRedDanger, Color(0xFFB91C1C), Color(0xFF991B1B))))
+            .background(Brush.radialGradient(listOf(DrgRedDanger, DrgRedPanicDark, DrgRedPanicDarker)))
             .border(4.dp, Color.White.copy(alpha = 0.8f), CircleShape)
             .clickable { onTriggerSos() }
     ) {
