@@ -199,7 +199,7 @@
     {
       "id": "core-audio",
       "name": "Audio Route & Alarm",
-      "description": "Routing audio (speaker/intercom) dan manajer alarm sirine SOS desibel tinggi.",
+      "description": "Routing audio (speaker/alarm) dan manajer alarm sirine SOS; integrasi intercom helm PENDING DEV.",
       "phase": "phase-1",
       "modulePath": "app/src/main/java/com/example/core/audio",
       "testKeywords": ["AudioRouteManager", "SosHapticTactile"]
@@ -277,7 +277,7 @@
     {
       "id": "insurance",
       "name": "Klaim Asuransi & Santunan",
-      "description": "Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan.",
+      "description": "Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan. (PENDING DEV)",
       "phase": "phase-3"
     },
     {

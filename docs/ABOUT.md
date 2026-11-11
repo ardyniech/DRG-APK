@@ -4,9 +4,9 @@
 
 **Progres pengembangan keseluruhan: 64%** (13 selesai · 12 dikerjakan · 8 direncanakan)
 
-Versi `v1.8-6-gf4342da` · commit `f4342da` · 2026-11-10 · 17 modul · 472 file sumber · 33848 baris · 59 test suite
+Versi `v1.10` · commit `3806278` · 2026-11-11 · 17 modul · 472 file sumber · 33848 baris · 59 test suite
 
-**Kekurangan (Bawel Audit): 9 temuan (2 BLOCKER · 2 MAJOR · 5 MINOR · 0 NOTE)**
+**Kekurangan (Bawel Audit): 10 temuan (2 BLOCKER · 3 MAJOR · 5 MINOR · 0 NOTE)**
 
 > **SINGLE SOURCE OF TRUTH** — dokumen ini adalah acuan tunggal untuk AI dev, DevTools in-app, dan in-app Tentang. Digenerate otomatis oleh `generate_about_manifest.py` (mengandung `.github/scripts/audit_minus.py --json`). Jangan tulis manual. Jangan merujuk ke DEVTOOLS.md/README untuk angka — rujuk ke sini.
 
@@ -84,6 +84,7 @@ Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan kl
 | **MINOR** | code | Hardcode hex Color(0x...) di78 file — melanggar 'No Magic Numbers' AGENTS §1. | Pindah ke DesignTokens/Theme. |
 | **MINOR** | test | androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented. | Tambah UI test untuk login, SOS, kas. |
 | **MINOR** | ci | Detekt/KtLint tidak ada di CI — hanya line-cap + lint. | Tambah static analysis (sudah masuk backlog). |
+| **MAJOR** | ci | CI hanya assembleDebug, tidak ada release/AAB signing & distribusi. | Tambah job release dengan Keystore via Secrets. |
 
 BLOCKER = dilarang klaim multi-user/sinkron sebelum diperbaiki. Jalankan `python3 .github/scripts/audit_minus.py --json` untuk detail mesin.
 
@@ -96,15 +97,16 @@ BLOCKER = dilarang klaim multi-user/sinkron sebelum diperbaiki. Jalankan `python
 - Release signing & distribusi AAB — CI sekarang hanya `assembleDebug` (BAWEL: MAJOR `ci`)
 - [DEFERRED] Fitur Arisan & Dana Talangan Darurat Berbasis Smart Contract / Kas Terverifikasi.
 - [DEFERRED] Marketplace Kebutuhan Operasional (Oli, Ban, Helm, Jas Hujan) langsung dari distributor resmi dengan diskon anggota.
-- [DEFERRED] Integrasi Klaim Asuransi Mandiri & Santunan Cepat bagi driver korban kecelakaan di jalan raya.
+- [DEFERRED / PENDING DEV] **Fitur Asuransi** — Integrasi Klaim Asuransi Mandiri & Santunan Cepat bagi driver korban kecelakaan di jalan raya. (Pengembangan ditunda/pending.)
 - [DEFERRED] Rekonsiliasi CRDT — conflict-free multi-device tanpa locking.
+- [PENDING DEV] **Intercom Helm (Bluetooth/GATT, PTT Radio)** — integrasi pairing & audio intercom helm. Pengembangan ditunda/pending sampai prioritas inti stabil.
 - Discovery Peer via FCM Topic — Device menemukan peer terdekat otomatis lewat FCM topic + broadcast IP/port signaling.
 - Adaptive Icon & Branding — Konversi logo ke adaptive icon (foreground/background) + splash screen production.
 - Play Integrity & Anti-Tamper — Verifikasi integritas aplikasi, R8 aggressive obfuscation, dan stripping simbol sensitif.
 - Release Signing & Distribusi — Keystore rilis aman, signing di CI, dan alur distribusi APK production.
 - Arisan Digital & Dana Talangan — [DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.
 - Marketplace Kebutuhan Operasional — [DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.
-- Klaim Asuransi & Santunan — Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan.
+- Klaim Asuransi & Santunan — Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan. (PENDING DEV)
 - Rekonsiliasi CRDT — Conflict-free replicated data types untuk sinkronisasi multi-device tanpa locking.
 - Instrumented UI Tests — Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).
 - Detekt & KtLint di CI — Static analysis otomatis untuk kualitas kode selain batas 125 baris.

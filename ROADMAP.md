@@ -36,5 +36,8 @@ Kondisi real per 2026-11-09 ada di [README — Kondisi Real](README.md#️-kondi
 > Bukan blocker. Fokus rilis awal tetap **iuran kas saja**. Rincian bawel ada di `audit_minus.py` NOTE `planning`.
 - [ ] [DEFERRED] Fitur Arisan & Dana Talangan Darurat Berbasis Smart Contract / Kas Terverifikasi.
 - [ ] [DEFERRED] Marketplace Kebutuhan Operasional (Oli, Ban, Helm, Jas Hujan) langsung dari distributor resmi dengan diskon anggota.
-- [ ] [DEFERRED] Integrasi Klaim Asuransi Mandiri & Santunan Cepat bagi driver korban kecelakaan di jalan raya.
+- [ ] [DEFERRED / PENDING DEV] **Fitur Asuransi** — Integrasi Klaim Asuransi Mandiri & Santunan Cepat bagi driver korban kecelakaan di jalan raya. (Pengembangan ditunda/pending.)
 - [ ] [DEFERRED] Rekonsiliasi CRDT — conflict-free multi-device tanpa locking.
+
+## ⏸️ Fitur Lain — Pending Development
+- [ ] [PENDING DEV] **Intercom Helm (Bluetooth/GATT, PTT Radio)** — integrasi pairing & audio intercom helm. Pengembangan ditunda/pending sampai prioritas inti stabil.

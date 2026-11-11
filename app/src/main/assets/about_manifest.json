@@ -13,9 +13,9 @@
     ]
   },
   "build": {
-    "version": "v1.8-6-gf4342da",
-    "commit": "f4342da",
-    "commitDate": "2026-11-10",
+    "version": "v1.10",
+    "commit": "3806278",
+    "commitDate": "2026-11-11",
     "generatedBy": "generate_about_manifest.py"
   },
   "summary": {
@@ -107,7 +107,7 @@
     {
       "id": "core-audio",
       "name": "Audio Route & Alarm",
-      "description": "Routing audio (speaker/intercom) dan manajer alarm sirine SOS desibel tinggi.",
+      "description": "Routing audio (speaker/alarm) dan manajer alarm sirine SOS; integrasi intercom helm PENDING DEV.",
       "phase": "phase-1",
       "status": "IN_PROGRESS",
       "progress": 70,
@@ -495,7 +495,7 @@
     {
       "id": "insurance",
       "name": "Klaim Asuransi & Santunan",
-      "description": "Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan.",
+      "description": "Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan. (PENDING DEV)",
       "phase": "phase-3",
       "status": "PLANNED",
       "progress": 0
@@ -554,15 +554,16 @@
     "Release signing & distribusi AAB — CI sekarang hanya `assembleDebug` (BAWEL: MAJOR `ci`)",
     "[DEFERRED] Fitur Arisan & Dana Talangan Darurat Berbasis Smart Contract / Kas Terverifikasi.",
     "[DEFERRED] Marketplace Kebutuhan Operasional (Oli, Ban, Helm, Jas Hujan) langsung dari distributor resmi dengan diskon anggota.",
-    "[DEFERRED] Integrasi Klaim Asuransi Mandiri & Santunan Cepat bagi driver korban kecelakaan di jalan raya.",
+    "[DEFERRED / PENDING DEV] **Fitur Asuransi** — Integrasi Klaim Asuransi Mandiri & Santunan Cepat bagi driver korban kecelakaan di jalan raya. (Pengembangan ditunda/pending.)",
     "[DEFERRED] Rekonsiliasi CRDT — conflict-free multi-device tanpa locking.",
+    "[PENDING DEV] **Intercom Helm (Bluetooth/GATT, PTT Radio)** — integrasi pairing & audio intercom helm. Pengembangan ditunda/pending sampai prioritas inti stabil.",
     "Discovery Peer via FCM Topic — Device menemukan peer terdekat otomatis lewat FCM topic + broadcast IP/port signaling.",
     "Adaptive Icon & Branding — Konversi logo ke adaptive icon (foreground/background) + splash screen production.",
     "Play Integrity & Anti-Tamper — Verifikasi integritas aplikasi, R8 aggressive obfuscation, dan stripping simbol sensitif.",
     "Release Signing & Distribusi — Keystore rilis aman, signing di CI, dan alur distribusi APK production.",
     "Arisan Digital & Dana Talangan — [DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.",
     "Marketplace Kebutuhan Operasional — [DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.",
-    "Klaim Asuransi & Santunan — Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan.",
+    "Klaim Asuransi & Santunan — Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan. (PENDING DEV)",
     "Rekonsiliasi CRDT — Conflict-free replicated data types untuk sinkronisasi multi-device tanpa locking.",
     "Instrumented UI Tests — Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).",
     "Detekt & KtLint di CI — Static analysis otomatis untuk kualitas kode selain batas 125 baris.",
@@ -570,9 +571,9 @@
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 9,
+    "total": 10,
     "blocker": 2,
-    "major": 2,
+    "major": 3,
     "minor": 5,
     "note": 0
   },
@@ -630,6 +631,12 @@
       "category": "ci",
       "detail": "Detekt/KtLint tidak ada di CI — hanya line-cap + lint.",
       "fix": "Tambah static analysis (sudah masuk backlog)."
+    },
+    {
+      "severity": "MAJOR",
+      "category": "ci",
+      "detail": "CI hanya assembleDebug, tidak ada release/AAB signing & distribusi.",
+      "fix": "Tambah job release dengan Keystore via Secrets."
     }
   ]
 }
