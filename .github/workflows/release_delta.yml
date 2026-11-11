@@ -1,16 +1,18 @@
 name: Delta OTA Release
 
-# Kanal preview: APK debug (ditandatangani debug.keystore repo, konsisten antar
-# build) + patch delta. Produksi tetap butuh release keystore di secrets.
+# Produksi: build APK release (signed) + delta patch + update.json jika secrets keystore diset.
+# Preview fallback: jika secrets tidak ada, build APK debug (signed debug.keystore konsisten).
+# Secrets produksi (opsional tapi wajib untuk produksi):
+#   RELEASE_KEYSTORE_BASE64, RELEASE_STORE_PASSWORD, RELEASE_KEY_ALIAS, RELEASE_KEY_PASSWORD
 on:
   push:
     tags: [ 'v*' ]
   workflow_dispatch:
     inputs:
       version_name:
-        description: "versionName rilis (mis. 1.1)"
+        description: "versionName rilis (mis. 1.9)"
         required: true
-        default: "1.1"
+        default: "1.9"
 
 permissions:
   contents: write
@@ -46,17 +48,38 @@ jobs:
       - name: Grant Execute Permission for Gradle Wrapper
         run: chmod +x gradlew || true
 
-      - name: Prepare Local Environment Secrets & Keystore
+      - name: Prepare Environment & Signing
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
         run: |
+          set -euo pipefail
           touch .env
           echo "GEMINI_API_KEY=dummy_ci_key" >> .env
           echo "MAPS_API_KEY=dummy_ci_key" >> .env
-          # debug.keystore di-decode dari debug.keystore.base64 (ter-commit) oleh
-          # Gradle; jangan generate baru — harus konsisten antar rilis supaya
-          # update delta tidak bentrok signature.
+          if [ -n "${RELEASE_KEYSTORE_BASE64:-}" ] && [ -n "${RELEASE_STORE_PASSWORD:-}" ] && [ -n "${RELEASE_KEY_PASSWORD:-}" ]; then
+            echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+            echo "BUILD_VARIANT=release" >> "$GITHUB_ENV"
+            echo "APK_NAME=app-release.apk" >> "$GITHUB_ENV"
+            echo "APK_PATH=app/build/outputs/apk/release/app-release.apk" >> "$GITHUB_ENV"
+            echo "KEYSTORE_PATH=$RUNNER_TEMP/release.keystore" >> "$GITHUB_ENV"
+            echo "STORE_PASSWORD=$RELEASE_STORE_PASSWORD" >> "$GITHUB_ENV"
+            echo "KEY_PASSWORD=$RELEASE_KEY_PASSWORD" >> "$GITHUB_ENV"
+            echo "KEY_ALIAS=${RELEASE_KEY_ALIAS:-upload}" >> "$GITHUB_ENV"
+            echo "CHANNEL=production" >> "$GITHUB_ENV"
+            echo "Mode: PRODUCTION (release signing)"
+          else
+            # Preview/debug: gunakan debug.keystore repo agar signature konsisten antar rilis delta.
+            echo "BUILD_VARIANT=debug" >> "$GITHUB_ENV"
+            echo "APK_NAME=app-debug.apk" >> "$GITHUB_ENV"
+            echo "APK_PATH=app/build/outputs/apk/debug/app-debug.apk" >> "$GITHUB_ENV"
+            echo "CHANNEL=preview" >> "$GITHUB_ENV"
+            echo "Mode: PREVIEW (debug signing). Set RELEASE_* secrets untuk produksi."
+          fi
 
       - name: Resolve Version & Previous Release
-        id: ver
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -69,28 +92,43 @@ jobs:
           fi
           mkdir -p prev dist
           PREV_VC=1
-          # Unduh aset rilis terakhir (APK + manifest) untuk basis patch.
-          if gh release download --pattern 'app-debug.apk' --dir prev --clobber 2>/dev/null; then
-            gh release download --pattern 'update.json' --dir prev --clobber 2>/dev/null || true
-            if [ -f prev/update.json ]; then
-              PREV_VC=$(python3 -c "import json;print(json.load(open('prev/update.json'))['versionCode'])")
-            fi
-            echo "Basis patch: APK rilis sebelumnya (versionCode=$PREV_VC)"
+          APK_NAME="${APK_NAME:-app-debug.apk}"
+          # Coba unduh APK basis patch sesuai channel saat ini, fallback ke app-debug.apk lama.
+          if gh release download --pattern "$APK_NAME" --dir prev --clobber 2>/dev/null; then
+            echo "Basis patch: $APK_NAME dari rilis sebelumnya"
+          elif gh release download --pattern 'app-debug.apk' --dir prev --clobber 2>/dev/null; then
+            APK_NAME="app-debug.apk"
+            echo "Basis patch fallback: app-debug.apk"
           else
-            rm -f prev/app-debug.apk
+            rm -f prev/*.apk || true
             echo "Belum ada rilis sebelumnya — rilis pertama tanpa patch."
           fi
+          gh release download --pattern 'update.json' --dir prev --clobber 2>/dev/null || true
+          if [ -f prev/update.json ]; then
+            PREV_VC=$(python3 -c "import json;print(json.load(open('prev/update.json'))['versionCode'])")
+          fi
           VERSION_CODE=$((PREV_VC + 1))
-          echo "versionName=$VERSION_NAME versionCode=$VERSION_CODE"
+          echo "versionName=$VERSION_NAME versionCode=$VERSION_CODE (prev=$PREV_VC)"
           echo "VERSION_NAME=$VERSION_NAME" >> "$GITHUB_ENV"
           echo "VERSION_CODE=$VERSION_CODE" >> "$GITHUB_ENV"
           echo "PREV_VC=$PREV_VC" >> "$GITHUB_ENV"
+          echo "PREV_APK_NAME=$APK_NAME" >> "$GITHUB_ENV"
 
-      - name: Assemble Debug APK (signed, konsisten)
+      - name: Assemble APK
         env:
           VERSION_CODE: ${{ env.VERSION_CODE }}
           VERSION_NAME: ${{ env.VERSION_NAME }}
-        run: ./gradlew :app:assembleDebug --no-daemon
+          KEYSTORE_PATH: ${{ env.KEYSTORE_PATH }}
+          STORE_PASSWORD: ${{ env.STORE_PASSWORD }}
+          KEY_ALIAS: ${{ env.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ env.KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [ "${BUILD_VARIANT}" = "release" ]; then
+            ./gradlew :app:assembleRelease --no-daemon
+          else
+            ./gradlew :app:assembleDebug --no-daemon
+          fi
 
       - name: Install bsdiff4
         run: python3 -m pip install --quiet --break-system-packages bsdiff4
@@ -100,25 +138,28 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          cp app/build/outputs/apk/debug/app-debug.apk dist/app-debug.apk
+          cp "$APK_PATH" "dist/$APK_NAME"
           BASE_URL="https://github.com/${GH_REPO}/releases/download/${{ github.ref_name }}"
-          ARGS=(--new-apk dist/app-debug.apk
+          ARGS=(--new-apk "dist/$APK_NAME"
+                --apk-name "$APK_NAME"
                 --version-code "$VERSION_CODE" --version-name "$VERSION_NAME"
                 --base-url "$BASE_URL" --out-dir dist)
-          if [ -f prev/app-debug.apk ]; then
-            ARGS+=(--old-apk prev/app-debug.apk --old-version-code "$PREV_VC")
+          PREV_APK="prev/${PREV_APK_NAME}"
+          if [ -f "$PREV_APK" ]; then
+            ARGS+=(--old-apk "$PREV_APK" --old-version-code "$PREV_VC")
           fi
           python3 .github/scripts/gen_delta_update.py "${ARGS[@]}" \
-            --changelog "Rilis $VERSION_NAME (versionCode $VERSION_CODE)"
+            --changelog "Rilis $VERSION_NAME (versionCode $VERSION_CODE, $CHANNEL)"
 
       - name: Publish Release Assets
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          NOTES="Delta OTA preview $VERSION_NAME (versionCode $VERSION_CODE). HP cukup unduh patch kecil; update.json berisi sha256 untuk verifikasi."
+          NOTES="Rilis $VERSION_NAME (versionCode $VERSION_CODE, channel: $CHANNEL). Termasuk APK + delta patch + update.json (sha256 terverifikasi) untuk jalur updater."
           if gh release view "${{ github.ref_name }}" >/dev/null 2>&1; then
             gh release upload "${{ github.ref_name }}" dist/* --clobber
+            gh release edit "${{ github.ref_name }}" --notes "$NOTES" || true
           else
             gh release create "${{ github.ref_name }}" dist/* \
               --title "DRG Driver $VERSION_NAME" --notes "$NOTES"
@@ -131,3 +172,4 @@ jobs:
           name: delta-ota-${{ github.ref_name }}
           path: dist/
           retention-days: 14
+
