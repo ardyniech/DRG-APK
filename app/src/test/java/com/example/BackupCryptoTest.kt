@@ -33,8 +33,8 @@ class BackupCryptoTest {
 
     @Test
     fun isEncrypted_true_for_format() {
-        val iv = UUID.randomUUID().toString().replace("-", "").take(16).toByteArray()
-        val ct = "ciphertext".toByteArray(Charsets.UTF_8)
+        val iv = ByteArray(12) { it.toByte() } // 12 bytes -> base64 length 16
+        val ct = "ciphertext-data".toByteArray(Charsets.UTF_8)
         val formatted = Base64.encodeToString(iv, Base64.NO_WRAP) + ":" +
             Base64.encodeToString(ct, Base64.NO_WRAP)
         val data = formatted.toByteArray(Charsets.UTF_8)
