@@ -20,8 +20,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ui.theme.DrgClusterBtnBg
+import com.example.ui.theme.DrgClusterBtnBorder
+import com.example.ui.theme.DrgClusterBtnTactile
 import com.example.ui.theme.DrgGrabGreenPrimary
 import com.example.ui.theme.DrgSegmentGlow
+import com.example.ui.theme.DrgSlateTextMuted
 
 @Composable
 fun RiderClusterButtons(
@@ -47,7 +51,7 @@ fun RiderClusterButtons(
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(20.dp))
-                .background(Color(0xFF0A1218))
+                .background(DrgClusterBtnBg)
                 .border(1.5.dp, Brush.horizontalGradient(listOf(DrgGrabGreenPrimary, DrgSegmentGlow)), RoundedCornerShape(20.dp))
                 .clickable { onOpenMenu() }
                 .padding(horizontal = 14.dp, vertical = 6.dp)
@@ -92,15 +96,15 @@ private fun TactileClusterButton(
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFF161D24))
-            .border(1.dp, Color(0xFF2E3A46), RoundedCornerShape(8.dp))
+            .background(DrgClusterBtnTactile)
+            .border(1.dp, DrgClusterBtnBorder, RoundedCornerShape(8.dp))
             .clickable { onClick() }
             .padding(horizontal = 10.dp, vertical = 5.dp)
             .testTag(tag),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = label, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color(0xFF94A3B8))
+            Text(text = label, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = DrgSlateTextMuted)
             Text(text = subLabel, fontSize = 7.sp, fontWeight = FontWeight.SemiBold, color = DrgGrabGreenPrimary)
         }
     }

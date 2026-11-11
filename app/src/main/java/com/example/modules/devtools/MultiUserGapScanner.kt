@@ -80,9 +80,9 @@ object MultiUserGapScanner {
             title = "PII Dummy Hardcode di Skema + Hex Magic",
             type = DefectType.PRODUCTION_DEFECT,
             severityLevel = "Sedang (Privacy)",
-            affectedComponent = "AppDatabaseMigrations 12_13 & 79 file Color(0x..)",
-            honestDefectExplanation = "DEFAULT members NIK 3507123456780001/SIM dummy masuk skema; 79 file pakai hex mentah bukan DesignTokens, melanggar No Magic Numbers.",
-            engineeringRoadmapFix = "DEFAULT jadi kosongkan; pindah hex ke DesignTokens/Theme terpusat."
+            affectedComponent = "AppDatabaseMigrations 12_13 & banyak file literal warna hex",
+            honestDefectExplanation = "DEFAULT members NIK 3507123456780001/SIM dummy masuk skema; banyak file pakai literal warna hex bukan DesignTokens, melanggar No Magic Numbers.",
+            engineeringRoadmapFix = "DEFAULT jadi kosongkan; pindah literal warna ke DesignTokens/Theme terpusat."
         )
     )
 }

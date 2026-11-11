@@ -36,7 +36,7 @@ fun RiderDigitalCluster(
                 .fillMaxWidth()
                 .height(height)
                 .clip(RoundedCornerShape(22.dp))
-                .border(2.dp, Color(0xFF222C38), RoundedCornerShape(22.dp))
+                .border(2.dp, DrgClusterBezelBorder, RoundedCornerShape(22.dp))
                 .clickable { onOpenMenu() }
                 .testTag("digital_cluster_screen"),
             contentAlignment = Alignment.Center
@@ -49,9 +49,9 @@ fun RiderDigitalCluster(
                 // High-tech negative display obsidian background
                 drawRoundRect(
                     brush = Brush.verticalGradient(
-                        0f to Color(0xFF060B10),
-                        0.5f to Color(0xFF091016),
-                        1f to Color(0xFF030608)
+                        0f to DrgClusterScreenTop,
+                        0.5f to DrgClusterScreenMid,
+                        1f to DrgClusterScreenBot
                     ),
                     topLeft = faceTopLeft,
                     size = Size(faceW, faceH),

@@ -29,20 +29,20 @@ internal fun DrawScope.drawFairingCowl(cowlTopY: Float, cowlBottomY: Float) {
         path = cowlPath,
         brush = Brush.verticalGradient(
             0f to DrgClusterBezel.copy(alpha = 0.98f),
-            0.5f to Color(0xFF0C1116),
-            1f to Color(0xFF06090D)
+            0.5f to DrgFairingMid,
+            1f to DrgFairingBot
         )
     )
 
     // Cowl crease bevel lines
     drawLine(
-        color = Color(0xFF222B35),
+        color = DrgFairingCrease,
         start = Offset(centerX - halfW * 0.65f, cowlTopY + 4f),
         end = Offset(centerX - halfW * 0.35f, cowlBottomY),
         strokeWidth = 2.5f
     )
     drawLine(
-        color = Color(0xFF222B35),
+        color = DrgFairingCrease,
         start = Offset(centerX + halfW * 0.65f, cowlTopY + 4f),
         end = Offset(centerX + halfW * 0.35f, cowlBottomY),
         strokeWidth = 2.5f

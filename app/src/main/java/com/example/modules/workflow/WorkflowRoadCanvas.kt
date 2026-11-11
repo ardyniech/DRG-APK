@@ -45,7 +45,7 @@ fun WorkflowRoadCanvas(
         // 1. Sky & Atmosphere
         drawRect(
             brush = Brush.verticalGradient(
-                listOf(Color(0xFF0F172A), if (stage.id == 2) Color(0xFF1E293B) else Color(0xFF0D5C35))
+                listOf(DrgTextDark, if (stage.id == 2) DrgSlateDarkBg else DrgSatelliteGrid)
             ),
             size = Size(width, horizonY)
         )
@@ -60,7 +60,7 @@ fun WorkflowRoadCanvas(
         }
         drawPath(
             path = roadPath,
-            brush = Brush.verticalGradient(listOf(Color(0xFF1E293B), Color(0xFF090D14)))
+            brush = Brush.verticalGradient(listOf(DrgSlateDarkBg, DrgRoadDark))
         )
 
         // 3. Moving Lane Dashes
@@ -88,7 +88,7 @@ fun WorkflowRoadCanvas(
             drawPath(
                 path = lightCone,
                 brush = Brush.verticalGradient(
-                    listOf(Color(0x33FFE3A8), Color.Transparent),
+                    listOf(DrgHeadlightWarm.copy(alpha = 0.2f), Color.Transparent),
                     startY = height * 0.62f,
                     endY = horizonY
                 )

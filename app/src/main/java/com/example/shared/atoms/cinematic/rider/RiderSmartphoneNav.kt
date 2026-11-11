@@ -9,6 +9,11 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import com.example.ui.theme.DrgGrabGreenPrimary
+import com.example.ui.theme.DrgPhoneBezel
+import com.example.ui.theme.DrgPhoneMount
+import com.example.ui.theme.DrgPhoneRoad
+import com.example.ui.theme.DrgPhoneScreenBot
+import com.example.ui.theme.DrgPhoneScreenTop
 import com.example.ui.theme.DrgTextDark
 
 internal fun DrawScope.drawSmartphoneNav(centerX: Float, centerY: Float, speed: Int) {
@@ -18,7 +23,7 @@ internal fun DrawScope.drawSmartphoneNav(centerX: Float, centerY: Float, speed: 
 
     // Mount clamp arms
     drawRoundRect(
-        color = Color(0xFF1E242B),
+        color = DrgPhoneMount,
         topLeft = Offset(topLeft.x - 4f, centerY - phoneH * 0.22f),
         size = Size(phoneW + 8f, phoneH * 0.44f),
         cornerRadius = CornerRadius(4f)
@@ -26,7 +31,7 @@ internal fun DrawScope.drawSmartphoneNav(centerX: Float, centerY: Float, speed: 
 
     // Phone casing & bezel
     drawRoundRect(
-        color = Color(0xFF0F1419),
+        color = DrgPhoneBezel,
         topLeft = topLeft,
         size = Size(phoneW, phoneH),
         cornerRadius = CornerRadius(phoneW * 0.12f)
@@ -40,8 +45,8 @@ internal fun DrawScope.drawSmartphoneNav(centerX: Float, centerY: Float, speed: 
 
     drawRoundRect(
         brush = Brush.verticalGradient(
-            0f to Color(0xFF121B22),
-            1f to Color(0xFF0D141A)
+            0f to DrgPhoneScreenTop,
+            1f to DrgPhoneScreenBot
         ),
         topLeft = screenTopLeft,
         size = Size(screenW, screenH),
@@ -50,7 +55,7 @@ internal fun DrawScope.drawSmartphoneNav(centerX: Float, centerY: Float, speed: 
 
     // Subtle map roads
     drawLine(
-        color = Color(0xFF26333D),
+        color = DrgPhoneRoad,
         start = Offset(screenTopLeft.x + screenW * 0.2f, screenTopLeft.y + screenH),
         end = Offset(screenTopLeft.x + screenW * 0.8f, screenTopLeft.y),
         strokeWidth = 2.5f

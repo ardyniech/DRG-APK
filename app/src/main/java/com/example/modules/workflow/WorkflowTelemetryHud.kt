@@ -24,7 +24,7 @@ fun WorkflowTelemetryHud(
 ) {
     Surface(
         shape = RoundedCornerShape(16.dp),
-        color = Color(0xFF0F172A),
+        color = DrgTextDark,
         modifier = modifier.fillMaxWidth().border(1.2.dp, DrgGreenPrimary, RoundedCornerShape(16.dp))
     ) {
         Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -45,22 +45,22 @@ fun WorkflowTelemetryHud(
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Column {
-                    Text("KECEPATAN", fontSize = 9.sp, color = Color(0xFF94A3B8), fontWeight = FontWeight.SemiBold)
+                    Text("KECEPATAN", fontSize = 9.sp, color = DrgSlateTextMuted, fontWeight = FontWeight.SemiBold)
                     Text("${stage.speedKmh} KM/H", fontSize = 22.sp, fontWeight = FontWeight.Black, color = DrgSegmentOn)
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("SENSOR G-FORCE", fontSize = 9.sp, color = Color(0xFF94A3B8), fontWeight = FontWeight.SemiBold)
+                    Text("SENSOR G-FORCE", fontSize = 9.sp, color = DrgSlateTextMuted, fontWeight = FontWeight.SemiBold)
                     Text(stage.gForceText, fontSize = 13.sp, fontWeight = FontWeight.Bold, color = if (stage.id == 3) DrgRedDanger else Color.White)
                 }
                 Column(horizontalAlignment = Alignment.End) {
-                    Text("CUACA JALAN", fontSize = 9.sp, color = Color(0xFF94A3B8), fontWeight = FontWeight.SemiBold)
+                    Text("CUACA JALAN", fontSize = 9.sp, color = DrgSlateTextMuted, fontWeight = FontWeight.SemiBold)
                     Text(stage.weather, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgAmberWarning)
                 }
             }
 
-            Surface(shape = RoundedCornerShape(8.dp), color = Color(0xFF1E293B), modifier = Modifier.fillMaxWidth()) {
+            Surface(shape = RoundedCornerShape(8.dp), color = DrgSlateDarkBg, modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.padding(8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text("Status Sistem DRG:", fontSize = 10.sp, color = Color(0xFF94A3B8))
+                    Text("Status Sistem DRG:", fontSize = 10.sp, color = DrgSlateTextMuted)
                     Text(stage.statusText, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary)
                 }
             }

@@ -6,8 +6,15 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import com.example.ui.theme.DrgDialogDarkBg
 import com.example.ui.theme.DrgHandlebarMetal
 import com.example.ui.theme.DrgMirrorGlass
+import com.example.ui.theme.DrgMirrorHousing
+import com.example.ui.theme.DrgMirrorRoadLine
+import com.example.ui.theme.DrgMirrorSkyBot
+import com.example.ui.theme.DrgMirrorSkyMid
+import com.example.ui.theme.DrgSlateBorder
+import com.example.ui.theme.DrgTrafficRed
 
 internal fun DrawScope.drawMirrorStalk(
     gripX: Float,
@@ -30,7 +37,7 @@ internal fun DrawScope.drawMirrorStalk(
 
     // Mirror housing
     drawRoundRect(
-        color = Color(0xFF13181F),
+        color = DrgMirrorHousing,
         topLeft = topLeft,
         size = Size(mirrorW, mirrorH),
         cornerRadius = CornerRadius(mirrorH * 0.32f)
@@ -43,9 +50,9 @@ internal fun DrawScope.drawMirrorStalk(
 
     drawRoundRect(
         brush = Brush.verticalGradient(
-            0f to Color(0xFF0F1722),
-            0.5f to Color(0xFF1C2733),
-            1f to Color(0xFF0A0F14)
+            0f to DrgDialogDarkBg,
+            0.5f to DrgMirrorSkyMid,
+            1f to DrgMirrorSkyBot
         ),
         topLeft = glassTopLeft,
         size = Size(glassW, glassH),
@@ -54,7 +61,7 @@ internal fun DrawScope.drawMirrorStalk(
 
     // Receding road lines in mirror
     drawLine(
-        color = Color(0xFF556575),
+        color = DrgMirrorRoadLine,
         start = Offset(glassTopLeft.x + glassW * 0.35f, glassTopLeft.y + glassH),
         end = Offset(glassTopLeft.x + glassW * 0.48f, glassTopLeft.y + glassH * 0.45f),
         strokeWidth = 1.2f
@@ -62,12 +69,12 @@ internal fun DrawScope.drawMirrorStalk(
 
     // Distant traffic light reflections in mirror
     drawCircle(
-        color = Color(0xFFE2E8F0).copy(alpha = 0.85f),
+        color = DrgSlateBorder.copy(alpha = 0.85f),
         radius = 2.2f,
         center = Offset(glassTopLeft.x + glassW * 0.52f, glassTopLeft.y + glassH * 0.48f)
     )
     drawCircle(
-        color = Color(0xFFEF4444).copy(alpha = 0.70f),
+        color = DrgTrafficRed.copy(alpha = 0.70f),
         radius = 1.8f,
         center = Offset(glassTopLeft.x + glassW * 0.62f, glassTopLeft.y + glassH * 0.52f)
     )
