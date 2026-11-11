@@ -31,6 +31,8 @@
 
 **Scope finansial sementara: iuran kas saja yang wajib.** Kas Transparan (masuk/keluar/saldo + export) adalah satu-satunya fitur finansial yang harus ada di rilis awal. **Marketplace & arisan = [DEFERRED] di luar scope** — ditandai di `.github/about/features.json`, `ROADMAP.md`, dan `docs/ABOUT.md`. Jangan jadikan blocker. Asuransi & CRDT juga ditunda.
 
+**Risiko data-at-rest:** Room SQLite (`drg_community.db`) saat ini **belum terenkripsi** (SQLCipher belum diintegrasikan). Data sensitif (mis. NIK/SIM/telepon/kas) tersimpan plain di storage app; mitigasi sementara: lindungi perangkat, batasi backup/debug, dan rencanakan enkripsi DB sebelum klaim produksi penuh.
+
 **Sumber kebenaran tunggal:** Hitungan audit terkini **hanya** di [docs/ABOUT.md](docs/ABOUT.md) — bagian **Kekurangan (Bawel Audit)** (digenerate dari `audit_minus.py --json` via `generate_about_manifest.py`, machine: `app/src/main/assets/about_manifest.json`, kunci `minus`/`minusSummary`). Jangan refer ke README/DEVTOOLS untuk angka — rujuk SSOT tersebut. AI dev wajib baca SSOT dulu (`.AGENTS.md` §18).
 
 ---
