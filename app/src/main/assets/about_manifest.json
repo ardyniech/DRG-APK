@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "v1.10-23-g7391ec6",
-    "commit": "7391ec6",
+    "version": "v1.10-26-gb852295",
+    "commit": "b852295",
     "commitDate": "2026-11-11",
     "generatedBy": "generate_about_manifest.py"
   },
@@ -25,8 +25,8 @@
     "inProgress": 12,
     "planned": 8,
     "modules": 17,
-    "totalSourceFiles": 472,
-    "totalLoc": 33948,
+    "totalSourceFiles": 473,
+    "totalLoc": 33974,
     "testSuites": 59
   },
   "phases": [
@@ -344,7 +344,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 33,
-      "loc": 2699,
+      "loc": 2706,
       "todos": 0,
       "tests": [
         "FreeMapAndTrafficTest",
@@ -599,7 +599,7 @@
     {
       "severity": "MINOR",
       "category": "code",
-      "detail": "Hardcode hex Color(0x...) di14 file — melanggar 'No Magic Numbers' AGENTS §1.",
+      "detail": "Hardcode hex Color(0x...) di10 file — melanggar 'No Magic Numbers' AGENTS §1.",
       "fix": "Pindah ke DesignTokens/Theme."
     },
     {
