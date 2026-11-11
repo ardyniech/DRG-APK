@@ -8,6 +8,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import com.example.ui.theme.DrgSatelliteBg
+import com.example.ui.theme.DrgSatelliteGrid
+import com.example.ui.theme.DrgStreetGrid
+import com.example.ui.theme.DrgStreetMapBg
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -41,15 +45,15 @@ fun FreeMapTileLayer(
     }
 
     val baseBackgroundColor = if (mapMode == FreeMapMode.SATELLITE) {
-        Color(0xFF0D1B15) // Deep satellite earth
+        DrgSatelliteBg // Deep satellite earth
     } else {
-        Color(0xFFE8ECE9) // Clean open street road tint
+        DrgStreetMapBg // Clean open street road tint
     }
 
     val gridLineColor = if (mapMode == FreeMapMode.SATELLITE) {
-        Color(0xFF1E3A2F).copy(alpha = 0.35f)
+        DrgSatelliteGrid.copy(alpha = 0.35f)
     } else {
-        Color(0xFFCBD5E1).copy(alpha = 0.45f)
+        DrgStreetGrid.copy(alpha = 0.45f)
     }
 
     Box(

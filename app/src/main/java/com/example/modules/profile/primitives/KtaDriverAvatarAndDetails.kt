@@ -86,9 +86,9 @@ fun KtaDriverAvatarAndDetails(member: DriverMember?, modifier: Modifier = Modifi
                     RoleBadge(role = r)
                     val userRole = RoleManager.getUserRoleForMemberRole(r)
                     val (bgColor, textColor, label) = when (userRole.accessLevel) {
-                        AccessLevel.ADMIN -> Triple(Color(0xFFFFEBEE), Color(0xFFC62828), "🔑 Admin")
-                        AccessLevel.PENGURUS -> Triple(Color(0xFFE0F2F1), Color(0xFF00796B), "⚙️ Pengurus")
-                        AccessLevel.MEMBER -> Triple(Color(0xFFECEFF1), Color(0xFF37474F), "👤 Member")
+                        AccessLevel.ADMIN -> Triple(DrgErrorBgSoft, DrgErrorText, "🔑 Admin")
+                        AccessLevel.PENGURUS -> Triple(DrgTealContainer, DrgTealDark, "⚙️ Pengurus")
+                        AccessLevel.MEMBER -> Triple(DrgSlateContainer, DrgSlateDark, "👤 Member")
                     }
                     Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(bgColor).padding(horizontal = 6.dp, vertical = 2.dp)) {
                         Text(text = label, color = textColor, fontSize = 10.sp, fontWeight = FontWeight.Bold)

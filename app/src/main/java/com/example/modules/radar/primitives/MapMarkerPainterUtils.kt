@@ -10,6 +10,9 @@ import com.example.shared.models.HazardArea
 import com.example.shared.models.PoskoLocation
 import com.example.ui.theme.DrgGreenPrimary
 import com.example.ui.theme.DrgRadarGlow
+import com.example.ui.theme.DrgSkyBlueAccent
+import com.example.ui.theme.DrgStatusNarik
+import com.example.ui.theme.DrgSuspendedText
 
 object MapMarkerPainterUtils {
 
@@ -20,8 +23,8 @@ object MapMarkerPainterUtils {
     }
 
     fun DrawScope.drawPoskoMarker(pt: Offset) {
-        drawCircle(color = Color(0xFF0288D1).copy(alpha = 0.25f), radius = 22f, center = pt)
-        drawCircle(color = Color(0xFF0288D1), radius = 8.5f, center = pt)
+        drawCircle(color = DrgSkyBlueAccent.copy(alpha = 0.25f), radius = 22f, center = pt)
+        drawCircle(color = DrgSkyBlueAccent, radius = 8.5f, center = pt)
         drawCircle(color = Color.White, radius = 3.5f, center = pt)
     }
 
@@ -34,8 +37,8 @@ object MapMarkerPainterUtils {
 
     fun DrawScope.drawDriverMarker(pt: Offset, driver: DriverMember, isTargeted: Boolean, myPt: Offset, pulseRadius: Float) {
         val pinColor = when {
-            driver.role.name == "SATGAS" -> Color(0xFFE53935)
-            driver.currentStatus == "Sedang Narik" -> Color(0xFFFF8F00)
+            driver.role.name == "SATGAS" -> DrgSuspendedText
+            driver.currentStatus == "Sedang Narik" -> DrgStatusNarik
             else -> DrgGreenPrimary
         }
 

@@ -38,7 +38,7 @@ object AppFeatureRepository {
             icon = Icons.Default.Warning,
             drawableResId = R.drawable.img_sos_real_1789127642014,
             badgeText = "Siaga 24/7",
-            accentColor = Color(0xFFDC2626)
+            accentColor = DrgRedPanic
         ),
         AppFeatureThumbnail(
             id = "treasury",
@@ -48,7 +48,7 @@ object AppFeatureRepository {
             icon = Icons.Default.AccountBalanceWallet,
             drawableResId = R.drawable.img_treasury_real_1789127656802,
             badgeText = "Audit Realtime",
-            accentColor = Color(0xFF2563EB)
+            accentColor = DrgIndigoBlueAccent
         ),
         AppFeatureThumbnail(
             id = "forum",
@@ -58,7 +58,7 @@ object AppFeatureRepository {
             icon = Icons.Default.Forum,
             drawableResId = R.drawable.img_kopdar_real_1789127670296,
             badgeText = "Diskusi Driver",
-            accentColor = Color(0xFFD97706)
+            accentColor = DrgWarningText
         ),
         AppFeatureThumbnail(
             id = "gamification",
@@ -68,7 +68,7 @@ object AppFeatureRepository {
             icon = Icons.Default.EmojiEvents,
             drawableResId = R.drawable.img_rewards_real_1789133489569,
             badgeText = "Poin & Diskon",
-            accentColor = Color(0xFF059669)
+            accentColor = DrgEmeraldAccent
         ),
         AppFeatureThumbnail(
             id = "members",
@@ -78,7 +78,7 @@ object AppFeatureRepository {
             icon = Icons.Default.Badge,
             drawableResId = R.drawable.img_kta_member_real_1789133467851,
             badgeText = "Terverifikasi",
-            accentColor = Color(0xFF7C3AED)
+            accentColor = DrgPurpleAccent
         ),
         AppFeatureThumbnail(
             id = "ai_assistant",
@@ -88,7 +88,7 @@ object AppFeatureRepository {
             icon = Icons.Default.SmartToy,
             drawableResId = R.drawable.img_ai_bot_real_1789133505382,
             badgeText = "AI Smart Bot",
-            accentColor = Color(0xFF0284C7)
+            accentColor = DrgBlueAccent
         ),
         AppFeatureThumbnail(
             id = "ptt",
@@ -98,7 +98,7 @@ object AppFeatureRepository {
             icon = Icons.Default.RecordVoiceOver,
             drawableResId = R.drawable.img_ptt_intercom_real_1789133521397,
             badgeText = "Intercom PTT",
-            accentColor = Color(0xFFEA580C)
+            accentColor = DrgOrangeWarning
         ),
         AppFeatureThumbnail(
             id = "about_app",
