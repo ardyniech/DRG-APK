@@ -28,3 +28,5 @@ app/google-services.json
 debug.keystore
 !debug.keystore.base64
 .kotlin/
+release-upload.jks
+*.jks.b64
