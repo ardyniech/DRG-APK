@@ -85,6 +85,7 @@ val DrgWarningText = Color(0xFFD97706)
 val DrgRoseBgSoft = Color(0xFFFFF1F2)
 val DrgRoseBorderSoft = Color(0xFFFFE4E6)
 val DrgSlateBgSoft = Color(0xFFF8FAFC)
+val DrgSlateBgSoftAlt = Color(0xFFF1F5F9)
 val DrgSlateBorder = Color(0xFFE2E8F0)
 
 // Accent & shadow tokens

@@ -32,7 +32,7 @@ fun DevProgressTab(
         item {
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = if (defect > 0) Color(0xFFFFF1F2) else DrgGreenLight,
+                color = if (defect > 0) DrgRoseBgSoft else DrgGreenLight,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {

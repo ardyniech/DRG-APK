@@ -13,13 +13,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.DrgGreenPrimary
 import com.example.ui.theme.DrgRedPanic
+import com.example.ui.theme.DrgSlateBgSoftAlt
 import com.example.ui.theme.DrgTextPrimary
 
 @Composable
 fun DevSubPhaseSection(sub: DevSubPhase) {
     Surface(
         shape = RoundedCornerShape(8.dp),
-        color = Color(0xFFF1F5F9),
+        color = DrgSlateBgSoftAlt,
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(8.dp)) {

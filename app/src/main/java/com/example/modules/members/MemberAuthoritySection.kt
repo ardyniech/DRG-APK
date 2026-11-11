@@ -67,7 +67,7 @@ fun MemberAuthoritySection(
             Button(
                 onClick = { onUpdateVerification(member.id, VerificationStatus.SUSPENDED) },
                 enabled = isAdmin,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFEBEE), disabledContainerColor = DrgOutline.copy(alpha = 0.2f)),
+                colors = ButtonDefaults.buttonColors(containerColor = DrgErrorBgSoft, disabledContainerColor = DrgOutline.copy(alpha = 0.2f)),
                 shape = RoundedCornerShape(6.dp), modifier = Modifier.weight(1f).height(32.dp), contentPadding = PaddingValues(0.dp)
             ) {
                 Text("Suspend", color = if (isAdmin) Color.Red else DrgTextMuted, fontSize = 10.sp, fontWeight = FontWeight.Bold)

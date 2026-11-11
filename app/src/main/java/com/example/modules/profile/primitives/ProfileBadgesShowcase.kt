@@ -42,7 +42,7 @@ fun ProfileBadgesShowcase(
             items(badges) { b ->
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = if (b.isEarned) DrgSurface else Color(0xFFF1F5F9),
+                    color = if (b.isEarned) DrgSurface else DrgSlateBgSoftAlt,
                     modifier = Modifier
                         .clickable { selectedBadge = b }
                         .border(1.2.dp, if (b.isEarned) DrgGoldReward else DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))

@@ -64,7 +64,7 @@ fun ProfileScreen(
                 Button(
                     onClick = onOpenDevTools,
                     modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_superadmin_dev_tools"),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0F172A)),
+                    colors = ButtonDefaults.buttonColors(containerColor = DrgTextDark),
                     shape = RoundedCornerShape(14.dp)
                 ) {
                     Icon(Icons.Default.Code, contentDescription = null, tint = Color.White)

@@ -72,7 +72,7 @@ fun DevCiCdTab(
                             Text("Step ${step.stepNumber}: ${step.name}", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = DrgTextPrimary)
                             Text(step.command, fontSize = 9.sp, color = DrgTextSecondary)
                         }
-                        Surface(shape = RoundedCornerShape(4.dp), color = Color(0xFFE2E8F0)) {
+                        Surface(shape = RoundedCornerShape(4.dp), color = DrgSlateBorder) {
                             Text(step.executionTimeEstimate, fontSize = 8.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary, modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp))
                         }
                     }
