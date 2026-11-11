@@ -47,7 +47,7 @@ fun DevPhaseCard(phase: DevPhase) {
 
                 Surface(
                     shape = RoundedCornerShape(6.dp),
-                    color = if (phase.hasAnyDefect) Color(0xFFFFE4E6) else DrgGreenLight
+                    color = if (phase.hasAnyDefect) DrgRoseBorderSoft else DrgGreenLight
                 ) {
                     Text(
                         phase.overallStatus.label,
@@ -71,7 +71,7 @@ fun DevPhaseCard(phase: DevPhase) {
                 progress = { phase.completionPercentage / 100f },
                 modifier = Modifier.fillMaxWidth().height(5.dp),
                 color = if (phase.hasAnyDefect) DrgAmberWarning else DrgGreenPrimary,
-                trackColor = Color(0xFFE2E8F0)
+                trackColor = DrgSlateBorder
             )
             Spacer(modifier = Modifier.height(4.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {

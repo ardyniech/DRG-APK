@@ -56,10 +56,10 @@ fun DevRootCauseTab(
                             Text(item.severity.label, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color(item.severity.textColorHex), modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
                         }
                     }
-                    Surface(shape = RoundedCornerShape(6.dp), color = Color(0xFFF1F5F9)) {
+                    Surface(shape = RoundedCornerShape(6.dp), color = DrgSlateBgSoftAlt) {
                         Column(modifier = Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text("🚨 Gejala: ${item.preFailureSymptom}", fontSize = 10.sp, color = DrgTextPrimary, fontWeight = FontWeight.SemiBold)
-                            Text("📍 Sumber File: ${item.sourceFile} (${item.sourceFunction})", fontSize = 10.sp, color = Color(0xFF0369A1), fontWeight = FontWeight.Bold)
+                            Text("📍 Sumber File: ${item.sourceFile} (${item.sourceFunction})", fontSize = 10.sp, color = DrgInfoBlue, fontWeight = FontWeight.Bold)
                             Text("⚙️ Akar Masalah: ${item.rootCauseTechnical}", fontSize = 10.sp, color = DrgTextSecondary)
                             HorizontalDivider(color = DrgOutline.copy(alpha = 0.2f))
                             Text("🛠️ Solusi Perbaikan: ${item.actionableFix}", fontSize = 10.sp, color = DrgGreenPrimary, fontWeight = FontWeight.Bold)

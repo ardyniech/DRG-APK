@@ -37,7 +37,7 @@ fun DevDevicePerformanceTab(
         item {
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = if (perf.isOverheating) Color(0xFFFFFBEB) else DrgGreenLight,
+                color = if (perf.isOverheating) DrgWarningBgAmber else DrgGreenLight,
                 modifier = Modifier.fillMaxWidth().border(1.dp, if (perf.isOverheating) DrgAmberWarning.copy(alpha = 0.5f) else DrgGreenPrimary.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
@@ -46,7 +46,7 @@ fun DevDevicePerformanceTab(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("⚡ Real-Time Device Performance Node", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = if (perf.isOverheating) Color(0xFFB45309) else DrgGreenPrimary)
+                        Text("⚡ Real-Time Device Performance Node", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = if (perf.isOverheating) DrgWarningTextDark else DrgGreenPrimary)
                         Icon(Icons.Default.Memory, contentDescription = null, tint = if (perf.isOverheating) DrgAmberWarning else DrgGreenPrimary)
                     }
                     Spacer(modifier = Modifier.height(4.dp))

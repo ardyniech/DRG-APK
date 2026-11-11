@@ -35,10 +35,10 @@ fun DevMemoryTab(
 
         probe.earlySymptomWarning?.let { warning ->
             item {
-                Surface(shape = RoundedCornerShape(10.dp), color = Color(0xFFFFF8E1), modifier = Modifier.fillMaxWidth()) {
+                Surface(shape = RoundedCornerShape(10.dp), color = DrgWarningBgAmberSoft, modifier = Modifier.fillMaxWidth()) {
                     Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         Icon(Icons.Default.Warning, contentDescription = null, tint = DrgAmberWarning, modifier = Modifier.size(16.dp))
-                        Text(warning, fontSize = 10.sp, color = Color(0xFFF57F17), fontWeight = FontWeight.SemiBold)
+                        Text(warning, fontSize = 10.sp, color = DrgWarningTextAmber, fontWeight = FontWeight.SemiBold)
                     }
                 }
             }

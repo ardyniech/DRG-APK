@@ -62,12 +62,12 @@ fun DevNodeTopologyTab(
                             Text(node.nodeName, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
                             Text("Tipe: ${node.nodeType}", fontSize = 10.sp, color = DrgTextSecondary)
                         }
-                        Surface(shape = RoundedCornerShape(6.dp), color = if (node.isConnected) DrgGreenLight else Color(0xFFFFEBEE)) {
+                        Surface(shape = RoundedCornerShape(6.dp), color = if (node.isConnected) DrgGreenLight else DrgErrorBgSoft) {
                             Text(if (node.isConnected) "ONLINE" else "DISCONNECTED", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = if (node.isConnected) DrgGreenPrimary else Color.Red, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
                         }
                     }
                     HorizontalDivider(color = DrgOutline.copy(alpha = 0.2f))
-                    Text("📍 Endpoint: ${node.endpointHost}", fontSize = 10.sp, color = Color(0xFF0369A1))
+                    Text("📍 Endpoint: ${node.endpointHost}", fontSize = 10.sp, color = DrgInfoBlue)
                     Text("⚡ Protokol: ${node.protocol} • Status: ${node.syncState}", fontSize = 10.sp, color = DrgTextSecondary)
                 }
             }
