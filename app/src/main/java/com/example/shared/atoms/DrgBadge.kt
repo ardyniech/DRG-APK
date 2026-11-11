@@ -15,6 +15,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shared.models.MemberRole
 import com.example.shared.models.VerificationStatus
+import com.example.ui.theme.DrgErrorBgSoft
+import com.example.ui.theme.DrgOrangeSoftBg
+import com.example.ui.theme.DrgSlateBgSoftAlt
+import com.example.ui.theme.DrgStatusNarik
+import com.example.ui.theme.DrgSuspendedText
+import com.example.ui.theme.DrgTextMuted
+import com.example.ui.theme.DrgVerifiedBgSoft
+import com.example.ui.theme.DrgVerifiedText
 
 @Composable
 fun RoleBadge(
@@ -46,10 +54,10 @@ fun VerificationBadge(
     modifier: Modifier = Modifier
 ) {
     val (label, bg, fg) = when (status) {
-        VerificationStatus.VERIFIED -> Triple("Terverifikasi DRG", Color(0xFFE8F8F0), Color(0xFF00875A))
-        VerificationStatus.PENDING_SCREENING -> Triple("Screening", Color(0xFFFFF3E0), Color(0xFFFF8F00))
-        VerificationStatus.SUSPENDED -> Triple("Disanksi", Color(0xFFFFEBEE), Color(0xFFE53935))
-        VerificationStatus.REJECTED -> Triple("Ditolak", Color(0xFFF1F5F9), Color(0xFF64748B))
+        VerificationStatus.VERIFIED -> Triple("Terverifikasi DRG", DrgVerifiedBgSoft, DrgVerifiedText)
+        VerificationStatus.PENDING_SCREENING -> Triple("Screening", DrgOrangeSoftBg, DrgStatusNarik)
+        VerificationStatus.SUSPENDED -> Triple("Disanksi", DrgErrorBgSoft, DrgSuspendedText)
+        VerificationStatus.REJECTED -> Triple("Ditolak", DrgSlateBgSoftAlt, DrgTextMuted)
     }
 
     Box(

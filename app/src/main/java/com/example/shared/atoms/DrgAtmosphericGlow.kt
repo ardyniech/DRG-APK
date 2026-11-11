@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import com.example.ui.theme.DrgGlassAuraGold
 import com.example.ui.theme.DrgGlassAuraGreen
 import com.example.ui.theme.DrgGlassAuraTeal
+import com.example.ui.theme.DrgGlowYellow
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -69,7 +70,7 @@ fun DrgAtmosphericGlow(modifier: Modifier = Modifier, cinematic: Boolean = true)
             brush = Brush.radialGradient(
                 colors = listOf(
                     DrgGlassAuraGold.copy(alpha = 0.24f + t * 0.05f),
-                    Color(0xFFFEF08A).copy(alpha = 0.10f + t * 0.03f),
+                    DrgGlowYellow.copy(alpha = 0.10f + t * 0.03f),
                     Color.Transparent
                 ),
                 center = Offset(w * (0.88f - t * 0.04f), h * (0.22f + t * 0.05f)),

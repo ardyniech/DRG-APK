@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.drawscope.rotate
 import com.example.ui.theme.DrgGloveMain
 import com.example.ui.theme.DrgGloveShade
 import com.example.ui.theme.DrgGrabGreenPrimary
+import com.example.ui.theme.DrgKnucklePlate
 
 internal fun DrawScope.drawRiderHands(steer: Float, barY: Float) {
     val centerX = size.width / 2f
@@ -54,7 +55,7 @@ private fun DrawScope.drawGlove(centerX: Float, centerY: Float, side: Float) {
     val plateW = palmW * 0.58f
     val plateH = palmH * 0.26f
     drawRoundRect(
-        color = Color(0xFF15191E),
+        color = DrgKnucklePlate,
         topLeft = Offset(topLeft.x + palmW * 0.08f, topLeft.y + palmH * 0.08f),
         size = Size(plateW, plateH),
         cornerRadius = CornerRadius(plateH * 0.30f)
