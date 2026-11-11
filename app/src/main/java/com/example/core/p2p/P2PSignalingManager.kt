@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 /**
  * P2P Signaling Manager (mode lokal/Tailscale-aware, tanpa ketergantungan FCM topic aktif).
  * API kompatibel dengan P2PDiscovery: joinDiscoveryTopic, broadcastPeerInfo, onMessageReceived.
- * Implementasi sinyal disimpan via antrean lokal; tidak ada Log.d di jalur broadcast.
+ * Implementasi sinyal disimpan via antrean lokal; tanpa debug logging di jalur broadcast.
  */
 class P2PSignalingManager(
     private val db: AppDatabase
@@ -20,7 +20,7 @@ class P2PSignalingManager(
 
     suspend fun broadcastPeerInfo(myIP: String, myPort: Int) = withContext(Dispatchers.IO) {
         val senderId = currentDriverId()
-        // Simpan info peer ke antrean sinkronisasi lokal (tanpa output Log.d).
+        // Simpan info peer ke antrean sinkronisasi lokal (tanpa output debug log).
         db.syncQueueDao().insertSyncItem(
             com.example.shared.models.PendingSyncEntity(
                 id = "p2p_$senderId",

@@ -10,13 +10,13 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
 enum class SyncStatus(val label: String, val isOptimisticLocal: Boolean) {
-    IDLE("Semua Data Tersinkron", false),
-    SYNCING("Sinkronisasi Latar Belakang Berjalan...", false),
-    SYNCED("Tersinkronisasi ke Cloud", false),
+    IDLE("Antrean Lokal Kosong", false),
+    SYNCING("Memproses Antrean Lokal...", false),
+    SYNCED("Antrean Lokal Diproses", true),
     OFFLINE_SAVED("Tersimpan di Lokal (Offline)", true)
 }
 
-/** Engine sinkronisasi antrean lokal. Status SYNCED hanya jika network terdeteksi saat proses. */
+/** Engine antrean lokal: proses batch secara lokal. Belum ada unggah server/cloud. */
 class BackgroundSyncEngine(
     private val db: AppDatabase,
     private val scope: CoroutineScope,
@@ -73,13 +73,11 @@ class BackgroundSyncEngine(
             if (batch.isNotEmpty()) {
                 delay(300L)
                 batch.forEach { db.syncQueueDao().removeSyncItem(it.id) }
-                _syncStatus.value = if (isNetworkConnected()) SyncStatus.SYNCED else SyncStatus.OFFLINE_SAVED
+                _syncStatus.value = SyncStatus.SYNCED
                 delay(300L)
             }
             val remaining = db.syncQueueDao().getNextBatch()
-            _syncStatus.value = if (isNetworkConnected()) {
-                if (remaining.isNotEmpty()) SyncStatus.OFFLINE_SAVED else SyncStatus.IDLE
-            } else SyncStatus.OFFLINE_SAVED
+            _syncStatus.value = if (remaining.isNotEmpty()) SyncStatus.OFFLINE_SAVED else SyncStatus.IDLE
         }
         syncJob = job
         return job
