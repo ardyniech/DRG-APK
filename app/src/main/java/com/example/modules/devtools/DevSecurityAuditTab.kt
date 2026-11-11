@@ -36,12 +36,12 @@ fun DevSecurityAuditTab(
     ) {
 
         item {
-            Surface(shape = RoundedCornerShape(12.dp), color = if (allSecure) Color(0xFFE8F5E9) else Color(0xFFFFEBEE), modifier = Modifier.fillMaxWidth()) {
+            Surface(shape = RoundedCornerShape(12.dp), color = if (allSecure) DrgSuccessBgSoft else DrgErrorBgSoft, modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Icon(if (allSecure) Icons.Default.CheckCircle else Icons.Default.Warning, contentDescription = null, tint = if (allSecure) Color(0xFF2E7D32) else Color.Red, modifier = Modifier.size(24.dp))
+                    Icon(if (allSecure) Icons.Default.CheckCircle else Icons.Default.Warning, contentDescription = null, tint = if (allSecure) DrgSuccessText else Color.Red, modifier = Modifier.size(24.dp))
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(if (allSecure) "Status Keamanan: TINGGI & MEMENUHI STANDAR" else "Status Keamanan: PERINGATAN INTEGRITAS", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = if (allSecure) Color(0xFF1B5E20) else Color(0xFFC62828))
-                        Text(if (allSecure) "Zero cleartext HTTP leaks, sandboxing SQLite Room aktif, PIN hashing salted." else "Ditemukan potensi celah keamanan lingkungan runtime.", fontSize = 10.sp, color = if (allSecure) Color(0xFF2E7D32) else Color(0xFFB71C1C))
+                        Text(if (allSecure) "Status Keamanan: TINGGI & MEMENUHI STANDAR" else "Status Keamanan: PERINGATAN INTEGRITAS", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = if (allSecure) DrgSuccessTextDark else DrgErrorText)
+                        Text(if (allSecure) "Zero cleartext HTTP leaks, sandboxing SQLite Room aktif, PIN hashing salted." else "Ditemukan potensi celah keamanan lingkungan runtime.", fontSize = 10.sp, color = if (allSecure) DrgSuccessText else DrgErrorTextDark)
                     }
                 }
             }
@@ -55,14 +55,14 @@ fun DevSecurityAuditTab(
                             Text(item.name, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
                             Text("Kategori: ${item.category}", fontSize = 10.sp, color = DrgTextSecondary)
                         }
-                        Surface(shape = RoundedCornerShape(6.dp), color = if (item.isSecure) DrgGreenLight else Color(0xFFFFEBEE)) {
+                        Surface(shape = RoundedCornerShape(6.dp), color = if (item.isSecure) DrgGreenLight else DrgErrorBgSoft) {
                             Text(if (item.isSecure) "MEMENUHI" else "PERINGATAN", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = if (item.isSecure) DrgGreenPrimary else Color.Red, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
                         }
                     }
                     Text("🛡️ ${item.statusText}", fontSize = 10.sp, color = if (item.isSecure) DrgTextPrimary else Color.Red, fontWeight = FontWeight.SemiBold)
                     item.riskDetail?.let { risk ->
-                        Surface(shape = RoundedCornerShape(6.dp), color = Color(0xFFFFEBEE)) {
-                            Text("⚠️ Risiko: $risk", fontSize = 10.sp, color = Color(0xFFC62828), modifier = Modifier.padding(6.dp))
+                        Surface(shape = RoundedCornerShape(6.dp), color = DrgErrorBgSoft) {
+                            Text("⚠️ Risiko: $risk", fontSize = 10.sp, color = DrgErrorText, modifier = Modifier.padding(6.dp))
                         }
                     }
                 }

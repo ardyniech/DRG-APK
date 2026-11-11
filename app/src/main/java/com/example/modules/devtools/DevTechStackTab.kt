@@ -47,18 +47,18 @@ fun DevTechStackTab(
         }
 
         item {
-            Surface(shape = RoundedCornerShape(12.dp), color = Color(0xFF0F172A), modifier = Modifier.fillMaxWidth()) {
+            Surface(shape = RoundedCornerShape(12.dp), color = DrgTextDark, modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         Icon(Icons.Default.Terminal, contentDescription = null, tint = DrgGreenPrimary, modifier = Modifier.size(16.dp))
                         Text("git cli status & branch tracker", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
                     }
                     HorizontalDivider(color = Color.White.copy(alpha = 0.2f))
-                    Text("$ git branch --show-current", fontSize = 10.sp, color = Color(0xFF94A3B8))
+                    Text("$ git branch --show-current", fontSize = 10.sp, color = DrgSlateTextMuted)
                     Text("main (Enterprise Release Track)", fontSize = 10.sp, color = DrgGreenLight, fontWeight = FontWeight.Bold)
-                    Text("$ git status --short", fontSize = 10.sp, color = Color(0xFF94A3B8))
-                    Text("M  DEVTOOLS.md (Master QA Manual updated)\n?? modules/devtools/ (Security, Nodes & Defects)", fontSize = 10.sp, color = Color(0xFFFDE047))
-                    Text("$ git log -1 --oneline", fontSize = 10.sp, color = Color(0xFF94A3B8))
+                    Text("$ git status --short", fontSize = 10.sp, color = DrgSlateTextMuted)
+                    Text("M  DEVTOOLS.md (Master QA Manual updated)\n?? modules/devtools/ (Security, Nodes & Defects)", fontSize = 10.sp, color = DrgYellowBadge)
+                    Text("$ git log -1 --oneline", fontSize = 10.sp, color = DrgSlateTextMuted)
                     Text("406a1f8 feat(devtools): next-level audit security, defects & device advisor", fontSize = 10.sp, color = Color.White)
                 }
             }

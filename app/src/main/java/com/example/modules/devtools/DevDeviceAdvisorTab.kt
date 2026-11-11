@@ -35,9 +35,9 @@ fun DevDeviceAdvisorTab(
 
         if (adviceList.isEmpty()) {
             item {
-                Surface(shape = RoundedCornerShape(12.dp), color = Color(0xFFE8F5E9), modifier = Modifier.fillMaxWidth()) {
+                Surface(shape = RoundedCornerShape(12.dp), color = DrgSuccessBgSoft, modifier = Modifier.fillMaxWidth()) {
                     Row(modifier = Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Text("✅ Perangkat pengemudi dalam kondisi optimal (RAM lapang, baterai aman, background siap).", fontSize = 11.sp, color = Color(0xFF1B5E20), fontWeight = FontWeight.SemiBold)
+                        Text("✅ Perangkat pengemudi dalam kondisi optimal (RAM lapang, baterai aman, background siap).", fontSize = 11.sp, color = DrgSuccessTextDark, fontWeight = FontWeight.SemiBold)
                     }
                 }
             }
@@ -46,13 +46,13 @@ fun DevDeviceAdvisorTab(
                 Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))) {
                     Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                            Text(item.title, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = if (item.isCritical) Color(0xFFC62828) else DrgTextPrimary, modifier = Modifier.weight(1f))
-                            Surface(shape = RoundedCornerShape(6.dp), color = if (item.isCritical) Color(0xFFFFEBEE) else Color(0xFFFFF8E1)) {
-                                Text(item.priority, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = if (item.isCritical) Color(0xFFC62828) else Color(0xFFF57F17), modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
+                            Text(item.title, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = if (item.isCritical) DrgErrorText else DrgTextPrimary, modifier = Modifier.weight(1f))
+                            Surface(shape = RoundedCornerShape(6.dp), color = if (item.isCritical) DrgErrorBgSoft else DrgWarningBgAmberSoft) {
+                                Text(item.priority, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = if (item.isCritical) DrgErrorText else DrgWarningTextAmber, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
                             }
                         }
-                        Text("📊 Kondisi Riil: ${item.currentDeviceMetric}", fontSize = 10.sp, color = Color(0xFF0369A1), fontWeight = FontWeight.SemiBold)
-                        Surface(shape = RoundedCornerShape(6.dp), color = Color(0xFFF0FDF4)) {
+                        Text("📊 Kondisi Riil: ${item.currentDeviceMetric}", fontSize = 10.sp, color = DrgInfoBlue, fontWeight = FontWeight.SemiBold)
+                        Surface(shape = RoundedCornerShape(6.dp), color = DrgSuccessBgSoftAlt) {
                             Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.Top) {
                                 Icon(Icons.Default.TipsAndUpdates, contentDescription = null, tint = DrgGreenPrimary, modifier = Modifier.size(16.dp).padding(top = 1.dp))
                                 Spacer(modifier = Modifier.width(6.dp))

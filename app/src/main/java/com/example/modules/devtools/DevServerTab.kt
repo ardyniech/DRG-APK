@@ -52,11 +52,11 @@ fun DevServerTab(
 
         item {
             val isOnline = probeResult?.isOnline == true
-            Surface(shape = RoundedCornerShape(12.dp), color = if (isOnline) Color(0xFFE8F5E9) else Color(0xFFFFEBEE), modifier = Modifier.fillMaxWidth()) {
+            Surface(shape = RoundedCornerShape(12.dp), color = if (isOnline) DrgSuccessBgSoft else DrgErrorBgSoft, modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(if (isOnline) "Server Status: ONLINE (${probeResult?.networkType})" else "Server Status: OFFLINE / Gangguan", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = if (isOnline) Color(0xFF1B5E20) else Color(0xFFC62828))
-                        Text(if (isOnline) "Ping Firestore: ${probeResult?.firestoreLatencyMs} ms • AI Gateway: ${probeResult?.aiGatewayLatencyMs} ms" else "Koneksi terputus. Fallback lokal Room v13 aktif otomatis.", fontSize = 10.sp, color = if (isOnline) Color(0xFF2E7D32) else Color(0xFFB71C1C))
+                        Text(if (isOnline) "Server Status: ONLINE (${probeResult?.networkType})" else "Server Status: OFFLINE / Gangguan", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = if (isOnline) DrgSuccessTextDark else DrgErrorText)
+                        Text(if (isOnline) "Ping Firestore: ${probeResult?.firestoreLatencyMs} ms • AI Gateway: ${probeResult?.aiGatewayLatencyMs} ms" else "Koneksi terputus. Fallback lokal Room v13 aktif otomatis.", fontSize = 10.sp, color = if (isOnline) DrgSuccessText else DrgErrorTextDark)
                     }
                 }
             }
@@ -64,10 +64,10 @@ fun DevServerTab(
 
         probeResult?.preFailureWarning?.let { warning ->
             item {
-                Surface(shape = RoundedCornerShape(10.dp), color = Color(0xFFFFF8E1), modifier = Modifier.fillMaxWidth()) {
+                Surface(shape = RoundedCornerShape(10.dp), color = DrgWarningBgAmberSoft, modifier = Modifier.fillMaxWidth()) {
                     Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         Icon(Icons.Default.Warning, contentDescription = null, tint = DrgAmberWarning, modifier = Modifier.size(16.dp))
-                        Text(warning, fontSize = 10.sp, color = Color(0xFFF57F17), fontWeight = FontWeight.SemiBold)
+                        Text(warning, fontSize = 10.sp, color = DrgWarningTextAmber, fontWeight = FontWeight.SemiBold)
                     }
                 }
             }
