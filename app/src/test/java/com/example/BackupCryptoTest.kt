@@ -15,7 +15,7 @@ import java.util.UUID
 @Config(sdk = [34])
 class BackupCryptoTest {
 
-    private val ctx = ApplicationProvider.getApplicationContext()
+    private val ctx = ApplicationProvider.getApplicationContext<android.content.Context>()
 
     @Test
     fun encrypt_decrypt_roundtrip_plaintext() {
