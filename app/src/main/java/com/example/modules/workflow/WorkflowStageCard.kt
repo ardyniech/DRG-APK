@@ -48,13 +48,13 @@ fun WorkflowStageCard(
             HorizontalDivider(color = DrgOutline.copy(alpha = 0.5f))
 
             // 1. Tantangan Lapangan Nyata
-            Surface(shape = RoundedCornerShape(10.dp), color = Color(0xFFFEF2F2), modifier = Modifier.fillMaxWidth()) {
+            Surface(shape = RoundedCornerShape(10.dp), color = DrgRedBgSoft, modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.Top) {
                     Icon(Icons.Default.Warning, contentDescription = null, tint = DrgRedPanic, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(8.dp))
                     Column {
                         Text("Kondisi Nyata Lapangan (Off-App):", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = DrgRedPanic)
-                        Text(stage.realChallenge, fontSize = 11.sp, color = Color(0xFF991B1B), lineHeight = 15.sp)
+                        Text(stage.realChallenge, fontSize = 11.sp, color = DrgRedPanicDarker, lineHeight = 15.sp)
                     }
                 }
             }

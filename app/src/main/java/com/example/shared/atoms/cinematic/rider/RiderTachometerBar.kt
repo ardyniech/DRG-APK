@@ -8,6 +8,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import com.example.ui.theme.DrgSegmentGlow
 import com.example.ui.theme.DrgSegmentOff
 import com.example.ui.theme.DrgSegmentOn
+import com.example.ui.theme.DrgTrafficOrange
+import com.example.ui.theme.DrgTrafficRed
 
 internal fun DrawScope.drawTachometerBar(
     topLeft: Offset,
@@ -31,8 +33,8 @@ internal fun DrawScope.drawTachometerBar(
         val isRedline = i >= (totalSegments - 3)
         val segColor = when {
             !isLit -> DrgSegmentOff
-            isRedline -> Color(0xFFEF4444)
-            i >= (totalSegments - 6) -> Color(0xFFF59E0B)
+            isRedline -> DrgTrafficRed
+            i >= (totalSegments - 6) -> DrgTrafficOrange
             else -> DrgSegmentOn
         }
 

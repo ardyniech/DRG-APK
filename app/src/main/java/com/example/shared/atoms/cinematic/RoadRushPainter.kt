@@ -14,6 +14,9 @@ import com.example.ui.theme.DrgLaneMarker
 import com.example.ui.theme.DrgNightSkyMid
 import com.example.ui.theme.DrgNightSkyTop
 import com.example.ui.theme.DrgRainStreak
+import com.example.ui.theme.DrgRoadReflectWarm
+import com.example.ui.theme.DrgRoadReflectWhite
+import com.example.ui.theme.DrgSkyGreenGlow
 import com.example.ui.theme.DrgSkylineFar
 import com.example.ui.theme.DrgSkylineNear
 import com.example.ui.theme.DrgWindowGlow
@@ -34,7 +37,7 @@ internal fun DrawScope.drawNightSky(horizonY: Float) {
         brush = Brush.verticalGradient(
             0f to Color.Transparent,
             0.65f to Color.Transparent,
-            1f to Color(0x3800FF99),
+            1f to DrgSkyGreenGlow,
             startY = 0f,
             endY = horizonY
         ),
@@ -74,8 +77,8 @@ internal fun DrawScope.drawAsphalt(horizonY: Float, bottomY: Float, steer: Float
     drawPath(
         path = reflection,
         brush = Brush.verticalGradient(
-            0f to Color(0x22FFFFFF),
-            0.6f to Color(0x14FFE3A8),
+            0f to DrgRoadReflectWhite,
+            0.6f to DrgRoadReflectWarm,
             1f to Color.Transparent,
             startY = horizonY,
             endY = bottomY

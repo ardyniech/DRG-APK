@@ -7,6 +7,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import com.example.ui.theme.DrgHeadlightWarm
+import com.example.ui.theme.DrgPoleMetal
+import com.example.ui.theme.DrgSlateAccent
 
 internal fun DrawScope.drawStreetLightPoles(
     phase: Float,
@@ -50,7 +52,7 @@ private fun DrawScope.drawPoleWithLamp(
 
     // Vertical pole
     drawRect(
-        color = Color(0xFF333E48).copy(alpha = 0.55f + depth * 0.45f),
+        color = DrgPoleMetal.copy(alpha = 0.55f + depth * 0.45f),
         topLeft = Offset(baseX - poleW / 2f, topY),
         size = Size(poleW, poleH)
     )
@@ -62,7 +64,7 @@ private fun DrawScope.drawPoleWithLamp(
     }
     drawPath(
         path = armPath,
-        color = Color(0xFF475569).copy(alpha = 0.75f),
+        color = DrgSlateAccent.copy(alpha = 0.75f),
         style = androidx.compose.ui.graphics.drawscope.Stroke(width = poleW * 0.85f)
     )
 

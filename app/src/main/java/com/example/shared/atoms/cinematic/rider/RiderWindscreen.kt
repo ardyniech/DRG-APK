@@ -8,6 +8,10 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 
+import com.example.ui.theme.DrgWindscreenTintBot
+import com.example.ui.theme.DrgWindscreenTintMid
+import com.example.ui.theme.DrgWindscreenTintTop
+
 internal fun DrawScope.drawWindscreen(topY: Float, bottomY: Float, steer: Float) {
     val centerX = size.width / 2f
     val halfW = size.width * 0.38f
@@ -32,9 +36,9 @@ internal fun DrawScope.drawWindscreen(topY: Float, bottomY: Float, steer: Float)
     drawPath(
         path = shieldPath,
         brush = Brush.verticalGradient(
-            0f to Color(0x1A284055),
-            0.65f to Color(0x281B2B38),
-            1f to Color(0x550E1720)
+            0f to DrgWindscreenTintTop,
+            0.65f to DrgWindscreenTintMid,
+            1f to DrgWindscreenTintBot
         )
     )
 

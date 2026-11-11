@@ -7,8 +7,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.rotate
+import com.example.ui.theme.DrgBarEndMetal
 import com.example.ui.theme.DrgGripRubber
 import com.example.ui.theme.DrgHandlebarMetal
+import com.example.ui.theme.DrgLeverMetal
 
 internal fun DrawScope.drawHandlebar(steer: Float, barY: Float, speed: Int = 45) {
     val centerX = size.width / 2f
@@ -72,14 +74,14 @@ private fun DrawScope.drawGrip(x: Float, barY: Float, side: Float) {
     }
     // Bar end weight
     drawCircle(
-        color = Color(0xFF1E252D),
+        color = DrgBarEndMetal,
         radius = size.width * 0.020f,
         center = Offset(x + side * width * 0.52f, barY - height * 0.34f)
     )
 }
 
 private fun DrawScope.drawBrakeLevers(centerX: Float, barY: Float, gripSpread: Float) {
-    val leverColor = Color(0xFF3B444E)
+    val leverColor = DrgLeverMetal
     // Left lever (clutch / rear brake)
     val leftLever = Path().apply {
         moveTo(centerX - gripSpread * 0.82f, barY - size.height * 0.022f)

@@ -30,7 +30,7 @@ fun KtaHolographicWatermark(member: DriverMember?, modifier: Modifier = Modifier
 
     Surface(
         shape = RoundedCornerShape(8.dp),
-        color = if (isVerified) DrgGreenContainer.copy(alpha = 0.6f) else Color(0xFFFFF3E0),
+        color = if (isVerified) DrgGreenContainer.copy(alpha = 0.6f) else DrgOrangeSoftBg,
         modifier = modifier
             .fillMaxWidth()
             .border(
@@ -56,7 +56,7 @@ fun KtaHolographicWatermark(member: DriverMember?, modifier: Modifier = Modifier
                     text = if (isVerified) "ORIGINAL DIGITAL KTA" else "SCREENING IN REVIEW",
                     fontSize = 9.sp,
                     fontWeight = FontWeight.Black,
-                    color = if (isVerified) DrgGreenDark else Color(0xFFE65100),
+                    color = if (isVerified) DrgGreenDark else DrgOrangeDeep,
                     letterSpacing = 0.5.sp
                 )
             }
