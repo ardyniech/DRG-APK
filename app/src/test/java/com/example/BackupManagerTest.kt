@@ -2,40 +2,34 @@ package com.example
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.rules.TemporaryFolder
-import com.example.core.backup.BackupCrypto
+import com.example.core.backup.BackupManager
 import com.example.core.database.AppDatabase
+import com.example.core.database.dao.MemberDao
 import com.example.shared.models.DriverMember
 import com.example.shared.models.MemberRole
 import kotlinx.coroutines.runBlocking
-import org.junit.Rule
+import org.junit.After
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import com.example.core.database.driverMemberDao
 import java.io.File
-import java.io.IOException
-import java.nio.charset.Charsets
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
 class BackupManagerTest {
 
-    @get:Rule
-    val tmpDir = TemporaryFolder()
-
     private val context: Context = ApplicationProvider.getApplicationContext()
-
-    // Use in-memory Room DB per test to avoid Robolectric shadow FS issues
     private lateinit var db: AppDatabase
-    private lateinit var dao: AppDatabase.DriverMemberDao
+    private lateinit var dao: MemberDao
 
     @Before
     fun setupDb() {
-        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
-            .fallbackToDestructiveMigration()
-            .build()
+        AppDatabase.closeInstance()
+        db = AppDatabase.getInstance(context)
         dao = db.memberDao()
         runBlocking { dao.deleteAllMembers() }
     }
@@ -43,7 +37,6 @@ class BackupManagerTest {
     @After
     fun cleanupDb() {
         AppDatabase.closeInstance()
-        db.close()
     }
 
     private fun sampleMember(id: String = "B1") = DriverMember(
@@ -70,19 +63,14 @@ class BackupManagerTest {
         target.delete()
         BackupManager.export(context, target)
 
-        // Hapus member dari DB (simulasi data hilang)
         runBlocking { dao.deleteMember(sampleMember("IMP1")) }
-
-        // Verifikasi member sudah terhapus dari DB
-        val before = runBlocking { dao.getMemberById("IMP1") }
+        val before = runBlocking { AppDatabase.getInstance(context).memberDao().getMemberById("IMP1") }
         assertTrue("terhapus dari DB sebelum import", before == null)
 
-        // Import kembalikan member ke DB
         val imp = BackupManager.import(context, target)
         assertTrue("import sukses: ${imp.exceptionOrNull()}", imp.isSuccess)
 
-        // Verifikasi member kembali ke DB
-        val after = runBlocking { dao.getMemberById("IMP1") }
+        val after = runBlocking { AppDatabase.getInstance(context).memberDao().getMemberById("IMP1") }
         assertTrue("ter-restore ke DB", after != null)
         target.delete()
     }

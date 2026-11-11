@@ -4,7 +4,7 @@
 
 **Progres pengembangan keseluruhan: 64%** (13 selesai · 12 dikerjakan · 8 direncanakan)
 
-Versi `v1.8-5-g11d4e2e` · commit `11d4e2e` · 2026-11-10 · 17 modul · 472 file sumber · 33848 baris · 59 test suite
+Versi `v1.8-6-gf4342da` · commit `f4342da` · 2026-11-10 · 17 modul · 472 file sumber · 33848 baris · 59 test suite
 
 **Kekurangan (Bawel Audit): 9 temuan (2 BLOCKER · 2 MAJOR · 5 MINOR · 0 NOTE)**
 

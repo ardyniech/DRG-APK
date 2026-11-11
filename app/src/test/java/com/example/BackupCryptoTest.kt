@@ -1,13 +1,15 @@
 package com.example
 
+import android.util.Base64
 import androidx.test.core.app.ApplicationProvider
 import com.example.core.backup.BackupCrypto
-import org.junit.Assert.assertTrue
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.util.UUID
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
@@ -17,7 +19,6 @@ class BackupCryptoTest {
 
     @Test
     fun encrypt_decrypt_roundtrip_plaintext() {
-        // Test that when keystore is unavailable, encryption returns plaintext
         val original = "Hello DRG Backup".toByteArray(Charsets.UTF_8)
         val encrypted = BackupCrypto.encrypt(ctx, original)
         val decrypted = BackupCrypto.decrypt(ctx, encrypted)
@@ -32,10 +33,10 @@ class BackupCryptoTest {
 
     @Test
     fun isEncrypted_true_for_format() {
-        // Create data that looks like the iv:ciphertext format
-        val iv = java.util.UUID.randomUUID().toString().replace("-", "").take(16).toByteArray()
+        val iv = UUID.randomUUID().toString().replace("-", "").take(16).toByteArray()
         val ct = "ciphertext".toByteArray(Charsets.UTF_8)
-        val formatted = Base64.encodeToString(iv, Base64.NO_WRAP) + ":" + Base64.encodeToString(ct, Base64.NO_WRAP)
+        val formatted = Base64.encodeToString(iv, Base64.NO_WRAP) + ":" +
+            Base64.encodeToString(ct, Base64.NO_WRAP)
         val data = formatted.toByteArray(Charsets.UTF_8)
         assertTrue("formatted data should be recognized as encrypted", BackupCrypto.isEncrypted(data))
     }
