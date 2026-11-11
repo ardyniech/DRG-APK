@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.sp
 import com.example.ui.theme.DrgGreenPrimary
 import com.example.ui.theme.DrgRedDanger
 import com.example.ui.theme.DrgTextSecondary
+import com.example.ui.theme.DrgShadowGreenAmbientStrong
+import com.example.ui.theme.DrgShadowGreenSpotStrong
 
 @Composable
 fun EmergencyTabSelectorRow(
@@ -29,7 +31,7 @@ fun EmergencyTabSelectorRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .shadow(4.dp, RoundedCornerShape(16.dp), ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+            .shadow(4.dp, RoundedCornerShape(16.dp), ambientColor = DrgShadowGreenAmbientStrong, spotColor = DrgShadowGreenSpotStrong)
             .clip(RoundedCornerShape(16.dp))
             .background(Color.White.copy(alpha = 0.85f))
             .border(1.dp, Color.White.copy(alpha = 0.9f), RoundedCornerShape(16.dp))

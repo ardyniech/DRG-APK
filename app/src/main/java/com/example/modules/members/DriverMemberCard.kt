@@ -34,7 +34,7 @@ fun DriverMemberCard(
         tonalElevation = 0.dp,
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(4.dp, cardShape, ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+            .shadow(4.dp, cardShape, ambientColor = DrgShadowGreenAmbientStrong, spotColor = DrgShadowGreenSpotStrong)
             .border(1.2.dp, highlightBrush, cardShape)
     ) {
         Row(

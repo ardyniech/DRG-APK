@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import com.example.ui.theme.DrgSegmentGlow
 import com.example.ui.theme.DrgSegmentOn
+import com.example.ui.theme.DrgIndicatorWarn
 
 internal fun DrawScope.drawUnitLabel(
     topLeft: Offset,
@@ -90,7 +91,7 @@ internal fun DrawScope.drawEcoBar(
         cornerRadius = CornerRadius(barH * 0.5f)
     )
     val fill = (state.speed / 90f).coerceIn(0.05f, 1f)
-    val ecoColor = if (fill > 0.78f) Color(0xFFF5B301) else DrgSegmentOn
+    val ecoColor = if (fill > 0.78f) DrgIndicatorWarn else DrgSegmentOn
     drawRoundRect(
         color = ecoColor.copy(alpha = 0.86f),
         topLeft = Offset(topLeft.x + faceW * 0.085f, originY),

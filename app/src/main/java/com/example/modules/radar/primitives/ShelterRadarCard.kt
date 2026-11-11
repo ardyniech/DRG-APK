@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.DrgGrabGreenPrimary
 import com.example.ui.theme.DrgGreenPrimary
+import com.example.ui.theme.DrgShadowGreenAmbientStrong
+import com.example.ui.theme.DrgShadowGreenSpotStrong
 
 @Composable
 fun ShelterRadarCard(
@@ -42,7 +44,7 @@ fun ShelterRadarCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 6.dp)
-            .shadow(4.dp, cardShape, ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+            .shadow(4.dp, cardShape, ambientColor = DrgShadowGreenAmbientStrong, spotColor = DrgShadowGreenSpotStrong)
             .border(1.2.dp, highlightBrush, cardShape)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {

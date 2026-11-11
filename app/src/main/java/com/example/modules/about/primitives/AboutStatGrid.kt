@@ -43,7 +43,7 @@ private fun StatTile(label: String, value: String, modifier: Modifier = Modifier
         color = Color.White.copy(alpha = 0.85f),
         tonalElevation = 0.dp,
         modifier = modifier
-            .shadow(3.dp, cardShape, ambientColor = Color(0x12003617), spotColor = Color(0x0A003617))
+            .shadow(3.dp, cardShape, ambientColor = DrgShadowGreenAmbient, spotColor = DrgShadowGreenSpot)
             .border(1.2.dp, highlightBrush, cardShape)
     ) {
         Column(

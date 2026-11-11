@@ -35,7 +35,7 @@ fun ProfileAboutEntry(onOpenAbout: () -> Unit, modifier: Modifier = Modifier) {
         tonalElevation = 0.dp,
         modifier = modifier
             .fillMaxWidth()
-            .shadow(4.dp, cardShape, ambientColor = Color(0x14003617), spotColor = Color(0x0E003617))
+            .shadow(4.dp, cardShape, ambientColor = DrgShadowGreenAmbientStrong, spotColor = DrgShadowGreenSpotStrong)
             .border(1.2.dp, highlightBrush, cardShape)
             .clickable(onClick = onOpenAbout)
     ) {
