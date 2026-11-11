@@ -17,10 +17,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.core.viewmodel.MainNavTab
 import com.example.ui.theme.DrgAmberWarning
+import com.example.ui.theme.DrgBlueAccent
+import com.example.ui.theme.DrgEmeraldAccent
 import com.example.ui.theme.DrgGoldReward
 import com.example.ui.theme.DrgGrabGreenPrimary
 import com.example.ui.theme.DrgGreenPrimary
+import com.example.ui.theme.DrgIndigoBlueAccent
+import com.example.ui.theme.DrgPurpleAccent
 import com.example.ui.theme.DrgRedPanic
+import com.example.ui.theme.DrgSlateAccent
+import com.example.ui.theme.DrgTealAccent
+import com.example.ui.theme.DrgWarningText
 
 /**
  * Immutable model for a single launcher shortcut.
@@ -51,12 +58,12 @@ fun defaultLauncherApps(): List<DesktopAppItem> = listOf(
     DesktopAppItem("sos", "SOS Panic", Icons.Default.Warning, DrgRedPanic, MainNavTab.EMERGENCY, true),
     DesktopAppItem("posko", "Anggota", Icons.Default.Groups, DrgGrabGreenPrimary, MainNavTab.MEMBERS),
     DesktopAppItem("kas", "Kas Wallet", Icons.Default.AccountBalanceWallet, DrgAmberWarning, MainNavTab.KAS),
-    DesktopAppItem("bengkel", "Forum Mitra", Icons.Default.Build, Color(0xFF0284C7), MainNavTab.FORUM),
-    DesktopAppItem("intercom", "PTT Radio", Icons.Default.CellTower, Color(0xFF7C3AED), MainNavTab.COMMUNITY),
-    DesktopAppItem("ai", "AI Assistant", Icons.Default.SmartToy, Color(0xFF2563EB), MainNavTab.COMMUNITY),
-    DesktopAppItem("workflow", "Alur Lapangan", Icons.Default.ElectricBike, Color(0xFFD97706), MainNavTab.FIELD_WORKFLOW),
-    DesktopAppItem("devtools", "Dev Tools", Icons.Default.Terminal, Color(0xFF059669), MainNavTab.DEV_TOOLS),
+    DesktopAppItem("bengkel", "Forum Mitra", Icons.Default.Build, DrgBlueAccent, MainNavTab.FORUM),
+    DesktopAppItem("intercom", "PTT Radio", Icons.Default.CellTower, DrgPurpleAccent, MainNavTab.COMMUNITY),
+    DesktopAppItem("ai", "AI Assistant", Icons.Default.SmartToy, DrgIndigoBlueAccent, MainNavTab.COMMUNITY),
+    DesktopAppItem("workflow", "Alur Lapangan", Icons.Default.ElectricBike, DrgWarningText, MainNavTab.FIELD_WORKFLOW),
+    DesktopAppItem("devtools", "Dev Tools", Icons.Default.Terminal, DrgEmeraldAccent, MainNavTab.DEV_TOOLS),
     DesktopAppItem("loyalty", "Rewards", Icons.Default.EmojiEvents, DrgGoldReward, MainNavTab.GAMIFICATION),
-    DesktopAppItem("profile", "Profil KTA", Icons.Default.Badge, Color(0xFF0D9488), MainNavTab.PROFILE),
-    DesktopAppItem("settings", "Tentang", Icons.Default.Info, Color(0xFF475569), MainNavTab.ABOUT)
+    DesktopAppItem("profile", "Profil KTA", Icons.Default.Badge, DrgTealAccent, MainNavTab.PROFILE),
+    DesktopAppItem("settings", "Tentang", Icons.Default.Info, DrgSlateAccent, MainNavTab.ABOUT)
 )

@@ -45,7 +45,7 @@ fun KasTransactionCard(
         tonalElevation = 0.dp,
         modifier = modifier
             .fillMaxWidth()
-            .shadow(3.dp, cardShape, ambientColor = Color(0x12003617), spotColor = Color(0x0A003617))
+            .shadow(3.dp, cardShape, ambientColor = DrgShadowGreenAmbient, spotColor = DrgShadowGreenSpot)
             .border(1.2.dp, highlightBrush, cardShape)
             .testTag("kas_transaction_card")
     ) {
