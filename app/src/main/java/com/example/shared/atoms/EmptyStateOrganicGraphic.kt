@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.DrgGrabGreenPrimary
+import com.example.ui.theme.DrgSkyBlueAccent
 import com.example.ui.theme.DrgTextMuted
 import com.example.ui.theme.DrgTextPrimary
 import kotlin.math.sin
@@ -51,7 +52,7 @@ fun EmptyStateOrganicGraphic(
                     size = size
                 )
                 drawRoundRect(
-                    brush = Brush.radialGradient(listOf(Color(0xFF0288D1).copy(alpha = 0.1f), Color.Transparent), center = Offset(size.width * 0.6f, size.height * 0.6f - waveOffset2), radius = size.width * 0.5f),
+                    brush = Brush.radialGradient(listOf(DrgSkyBlueAccent.copy(alpha = 0.1f), Color.Transparent), center = Offset(size.width * 0.6f, size.height * 0.6f - waveOffset2), radius = size.width * 0.5f),
                     size = size
                 )
 

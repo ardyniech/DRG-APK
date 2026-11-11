@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.ui.theme.DrgGlassBorderBrush
+import com.example.ui.theme.DrgShadowGreenGlass
 
 @Composable
 fun DrgGlassCard(
@@ -26,7 +27,7 @@ fun DrgGlassCard(
     borderBrush: Brush = DrgGlassBorderBrush,
     borderWidth: Dp = 1.2.dp,
     elevation: Dp = 6.dp,
-    shadowColor: Color = Color(0x18004B22),
+    shadowColor: Color = DrgShadowGreenGlass,
     onClick: (() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit
 ) {

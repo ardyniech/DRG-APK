@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shared.atoms.DrgGlassCard
+import com.example.ui.theme.DrgDialogDarkBg
 import com.example.ui.theme.DrgGlassBorderBrush
 import com.example.ui.theme.DrgGrabGreenPrimary
 
@@ -57,7 +58,7 @@ fun LandingAuthMenuDialog(
                     .clickable(enabled = false) {}
                     .testTag("landing_auth_menu_dialog"),
                 shape = RoundedCornerShape(26.dp),
-                backgroundColor = Color(0xFF0F1722).copy(alpha = 0.95f),
+                backgroundColor = DrgDialogDarkBg.copy(alpha = 0.95f),
                 borderBrush = DrgGlassBorderBrush,
                 elevation = 16.dp
             ) {

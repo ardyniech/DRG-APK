@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.example.ui.theme.DrgGreenPrimary
 import com.example.ui.theme.DrgTextPrimary
 import com.example.ui.theme.DrgTextSecondary
+import com.example.ui.theme.DrgWarningTextDark
 import org.json.JSONObject
 
 /** Baca minus dari SSOT asset (tanpa cross-module import AboutManifest). */
@@ -65,7 +66,7 @@ fun DevSsotTab(headerContent: (@Composable () -> Unit)? = null) {
         }
     }) {
         items(shown) { (sev, cat, text) ->
-            val chipColor = if (sev == "BLOCKER") Color.Red else if (sev == "MAJOR") Color(0xFFB45309) else Color.Gray
+            val chipColor = if (sev == "BLOCKER") Color.Red else if (sev == "MAJOR") DrgWarningTextDark else Color.Gray
             Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, chipColor.copy(0.35f), RoundedCornerShape(12.dp))) {
                 Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {

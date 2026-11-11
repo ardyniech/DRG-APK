@@ -23,7 +23,7 @@ fun DrawScope.drawLiveMapGrid(gridStep: Float = 80f) {
 fun DrawScope.drawDriverMarker(pt: Offset, driver: DriverMember, isFocused: Boolean, pulseScale: Float) {
     val markerColor = when {
         driver.role.name == "SATGAS" -> DrgRedDanger
-        driver.currentStatus == "Sedang Narik" -> Color(0xFFFF8F00)
+        driver.currentStatus == "Sedang Narik" -> DrgStatusNarik
         else -> DrgGreenPrimary
     }
     if (isFocused) {

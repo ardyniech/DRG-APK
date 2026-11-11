@@ -99,3 +99,10 @@ val DrgShadowGreenAmbient = Color(0x12003617)
 val DrgShadowGreenSpot = Color(0x0A003617)
 val DrgShadowGreenAmbientStrong = Color(0x14003617)
 val DrgShadowGreenSpotStrong = Color(0x0E003617)
+val DrgShadowGreenGlass = Color(0x18004B22)
+
+// Misc tokens
+val DrgWarningTextDark = Color(0xFFB45309)
+val DrgDialogDarkBg = Color(0xFF0F1722)
+val DrgSkyBlueAccent = Color(0xFF0288D1)
+val DrgStatusNarik = Color(0xFFFF8F00)
