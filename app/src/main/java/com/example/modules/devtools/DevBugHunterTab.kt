@@ -30,12 +30,12 @@ fun DevBugHunterTab(
     ) {
 
         item {
-            Surface(shape = RoundedCornerShape(12.dp), color = Color(0xFFFFEBEE), modifier = Modifier.fillMaxWidth()) {
+            Surface(shape = RoundedCornerShape(12.dp), color = DrgErrorBgSoft, modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Icon(Icons.Default.Warning, contentDescription = null, tint = DrgRedDanger, modifier = Modifier.size(24.dp))
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("6 Masalah Terdeteksi (Akumulasi Penalti: -20.0%)", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color(0xFFC62828))
-                        Text("Skor Proyek turun dari 95.0% ke 75.0% (Grade B: Perlu Penguatan).", fontSize = 10.sp, color = Color(0xFFB71C1C))
+                        Text("6 Masalah Terdeteksi (Akumulasi Penalti: -20.0%)", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgErrorText)
+                        Text("Skor Proyek turun dari 95.0% ke 75.0% (Grade B: Perlu Penguatan).", fontSize = 10.sp, color = DrgErrorTextDark)
                     }
                 }
             }
@@ -52,10 +52,10 @@ fun DevBugHunterTab(
                     Text("2. [DEAD-BUTTON] Pairing Bluetooth Helm GATT (Penalti: -4.0%)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgRedDanger)
                     Text("   Tombol interkom helm hanya listener mock tanpa socket RFCOMM.", fontSize = 10.sp, color = DrgTextSecondary)
                     Spacer(modifier = Modifier.height(2.dp))
-                    Text("3. [SHALLOW] Modul Klaim Asuransi Instan (Penalti: -3.0%)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFFF57C00))
+                    Text("3. [SHALLOW] Modul Klaim Asuransi Instan (Penalti: -3.0%)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgOrangeText)
                     Text("   Hanya form lokal tanpa verifikasi API polis asuransi riil.", fontSize = 10.sp, color = DrgTextSecondary)
                     Spacer(modifier = Modifier.height(2.dp))
-                    Text("4. [SHALLOW] Interkom Helm Bluetooth GATT (Penalti: -3.0%)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFFF57C00))
+                    Text("4. [SHALLOW] Interkom Helm Bluetooth GATT (Penalti: -3.0%)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgOrangeText)
                     Text("   Status fitur masih konsep/benih belum production hardware.", fontSize = 10.sp, color = DrgTextSecondary)
                     Spacer(modifier = Modifier.height(2.dp))
                     Text("5. [BUG] Minor Recomposition di KasTransparan (Penalti: -2.0%)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgRedDanger)

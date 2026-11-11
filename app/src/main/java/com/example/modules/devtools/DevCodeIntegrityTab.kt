@@ -37,11 +37,11 @@ fun DevCodeIntegrityTab(
         item {
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = if (totalSmells > 0) Color(0xFFFFFBEB) else DrgGreenLight,
+                color = if (totalSmells > 0) DrgWarningBgAmber else DrgGreenLight,
                 modifier = Modifier.fillMaxWidth().border(1.dp, if (totalSmells > 0) DrgAmberWarning.copy(alpha = 0.5f) else DrgGreenPrimary.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
-                    Text("🛡️ Code Integrity Dependency Tree & Smell Audit", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = if (totalSmells > 0) Color(0xFFB45309) else DrgGreenPrimary)
+                    Text("🛡️ Code Integrity Dependency Tree & Smell Audit", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = if (totalSmells > 0) DrgWarningTextDark else DrgGreenPrimary)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text("Ditemukan $totalSmells pending code smell / deprecation pattern dalam struktur pohon modul.", fontSize = 11.sp, color = DrgTextPrimary)
                 }
@@ -63,13 +63,13 @@ fun DevCodeIntegrityTab(
                         Text("📁 Feature: ${feature.featureName}", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
                         Surface(
                             shape = RoundedCornerShape(4.dp),
-                            color = if (feature.totalPendingIssues > 0) Color(0xFFFEF3C7) else DrgGreenLight
+                            color = if (feature.totalPendingIssues > 0) DrgWarningBgSoft else DrgGreenLight
                         ) {
                             Text(
                                 if (feature.totalPendingIssues > 0) "${feature.totalPendingIssues} Issues" else "Clean",
                                 fontSize = 9.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = if (feature.totalPendingIssues > 0) Color(0xFFD97706) else DrgGreenPrimary,
+                                color = if (feature.totalPendingIssues > 0) DrgWarningText else DrgGreenPrimary,
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                             )
                         }
@@ -79,7 +79,7 @@ fun DevCodeIntegrityTab(
                     feature.subFeatures.forEach { sub ->
                         Surface(
                             shape = RoundedCornerShape(8.dp),
-                            color = Color(0xFFF8FAFC),
+                            color = DrgSlateBgSoft,
                             modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp)
                         ) {
                             Column(modifier = Modifier.padding(8.dp)) {

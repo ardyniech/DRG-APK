@@ -24,7 +24,7 @@ fun DevApkSkewCard(
 ) {
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = if (apkInfo.isOutdatedApk) Color(0xFFFFFBEB) else DrgGreenLight,
+        color = if (apkInfo.isOutdatedApk) DrgWarningBgAmber else DrgGreenLight,
         modifier = Modifier
             .fillMaxWidth()
             .border(
@@ -50,19 +50,19 @@ fun DevApkSkewCard(
                         if (apkInfo.isOutdatedApk) "⚡ Adaptasi APK Belum Di-update" else "🛡️ Binary APK Sinkron Penuh",
                         fontWeight = FontWeight.Bold,
                         fontSize = 11.sp,
-                        color = if (apkInfo.isOutdatedApk) Color(0xFFB45309) else DrgGreenPrimary
+                        color = if (apkInfo.isOutdatedApk) DrgWarningTextDark else DrgGreenPrimary
                     )
                 }
 
                 Surface(
                     shape = RoundedCornerShape(4.dp),
-                    color = if (apkInfo.isOutdatedApk) Color(0xFFFEF3C7) else DrgGreenPrimary
+                    color = if (apkInfo.isOutdatedApk) DrgWarningBgSoft else DrgGreenPrimary
                 ) {
                     Text(
                         if (apkInfo.isOutdatedApk) "LEGACY APK" else "LATEST BUILD",
                         fontSize = 8.sp,
                         fontWeight = FontWeight.Bold,
-                        color = if (apkInfo.isOutdatedApk) Color(0xFFB45309) else Color.White,
+                        color = if (apkInfo.isOutdatedApk) DrgWarningTextDark else Color.White,
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                     )
                 }

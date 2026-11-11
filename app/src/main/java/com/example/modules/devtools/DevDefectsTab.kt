@@ -47,13 +47,13 @@ fun DevDefectsTab(
             Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))) {
                 Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Text(item.title, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color(0xFFC62828), modifier = Modifier.weight(1f))
-                        Surface(shape = RoundedCornerShape(6.dp), color = Color(0xFFFFEBEE)) {
-                            Text(item.severityLevel, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color(0xFFC62828), modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
+                        Text(item.title, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgErrorText, modifier = Modifier.weight(1f))
+                        Surface(shape = RoundedCornerShape(6.dp), color = DrgErrorBgSoft) {
+                            Text(item.severityLevel, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = DrgErrorText, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
                         }
                     }
-                    Text("Komponen Terkena: ${item.affectedComponent}", fontSize = 10.sp, color = Color(0xFF0369A1), fontWeight = FontWeight.SemiBold)
-                    Surface(shape = RoundedCornerShape(6.dp), color = Color(0xFFFFF1F2)) {
+                    Text("Komponen Terkena: ${item.affectedComponent}", fontSize = 10.sp, color = DrgInfoBlue, fontWeight = FontWeight.SemiBold)
+                    Surface(shape = RoundedCornerShape(6.dp), color = DrgRoseBgSoft) {
                         Column(modifier = Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                             Text("🚨 Fakta Cacat: ${item.honestDefectExplanation}", fontSize = 10.sp, color = DrgTextPrimary)
                             HorizontalDivider(color = DrgOutline.copy(alpha = 0.2f))

@@ -60,20 +60,20 @@ fun DevMaturityTab(
                         }
                     }
                     if (item.hasDeadButtons && item.deadButtonDetails != null) {
-                        Surface(shape = RoundedCornerShape(6.dp), color = Color(0xFFFFEBEE)) {
+                        Surface(shape = RoundedCornerShape(6.dp), color = DrgErrorBgSoft) {
                             Row(modifier = Modifier.padding(6.dp), verticalAlignment = Alignment.CenterVertically) {
                                 Icon(Icons.Default.Warning, contentDescription = null, tint = DrgRedDanger, modifier = Modifier.size(14.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("Dead Button: ${item.deadButtonDetails}", fontSize = 10.sp, color = Color(0xFFC62828))
+                                Text("Dead Button: ${item.deadButtonDetails}", fontSize = 10.sp, color = DrgErrorText)
                             }
                         }
                     }
                     if (item.isShallow && item.shallowReason != null) {
-                        Surface(shape = RoundedCornerShape(6.dp), color = Color(0xFFFFF8E1)) {
+                        Surface(shape = RoundedCornerShape(6.dp), color = DrgWarningBgAmberSoft) {
                             Row(modifier = Modifier.padding(6.dp), verticalAlignment = Alignment.CenterVertically) {
                                 Icon(Icons.Default.Warning, contentDescription = null, tint = DrgAmberWarning, modifier = Modifier.size(14.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("Fitur Dangkal: ${item.shallowReason}", fontSize = 10.sp, color = Color(0xFFF57F17))
+                                Text("Fitur Dangkal: ${item.shallowReason}", fontSize = 10.sp, color = DrgWarningTextAmber)
                             }
                         }
                     }

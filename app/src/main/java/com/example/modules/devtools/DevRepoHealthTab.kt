@@ -29,12 +29,12 @@ fun DevRepoHealthTab(
     ) {
 
         item {
-            Surface(shape = RoundedCornerShape(12.dp), color = Color(0xFFE8F5E9), modifier = Modifier.fillMaxWidth()) {
+            Surface(shape = RoundedCornerShape(12.dp), color = DrgSuccessBgSoft, modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Icon(Icons.Default.CheckCircle, contentDescription = null, tint = Color(0xFF2E7D32), modifier = Modifier.size(24.dp))
+                    Icon(Icons.Default.CheckCircle, contentDescription = null, tint = DrgSuccessText, modifier = Modifier.size(24.dp))
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("Architecture Quality Audit: PASSED", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color(0xFF1B5E20))
-                        Text("Total source files audited: 465 files (statis per 2026-11-09, recheck via check_file_length.py CI). 100% compliant with < 125 lines per file cap.", fontSize = 10.sp, color = Color(0xFF2E7D32))
+                        Text("Architecture Quality Audit: PASSED", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgSuccessTextDark)
+                        Text("Total source files audited: 465 files (statis per 2026-11-09, recheck via check_file_length.py CI). 100% compliant with < 125 lines per file cap.", fontSize = 10.sp, color = DrgSuccessText)
                     }
                 }
             }
