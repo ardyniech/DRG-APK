@@ -66,8 +66,8 @@ fun KasFinancialChartCard(
                     .fillMaxWidth()
                     .height(130.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFF8FAFC))
-                    .border(1.dp, Color(0xFFE2E8F0), RoundedCornerShape(12.dp))
+                    .background(DrgSlateBgSoft)
+                    .border(1.dp, DrgSlateBorder, RoundedCornerShape(12.dp))
                     .padding(8.dp)
             ) {
                 Canvas(modifier = Modifier.fillMaxSize()) {

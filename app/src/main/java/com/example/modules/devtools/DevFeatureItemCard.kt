@@ -23,7 +23,7 @@ fun DevFeatureItemCard(feature: DevFeatureLeaf) {
 
     Surface(
         shape = RoundedCornerShape(8.dp),
-        color = if (feature.hasDefect) Color(0xFFFFF1F2) else Color(0xFFF8FAFC),
+        color = if (feature.hasDefect) DrgRoseBgSoft else DrgSlateBgSoft,
         modifier = Modifier
             .fillMaxWidth()
             .border(
@@ -62,8 +62,8 @@ fun DevFeatureItemCard(feature: DevFeatureLeaf) {
                     shape = RoundedCornerShape(4.dp),
                     color = when (feature.status) {
                         PhaseTreeStatus.LULUS_SEMPURNA -> DrgGreenLight
-                        PhaseTreeStatus.TERKENDALA_CACAT -> Color(0xFFFFE4E6)
-                        else -> Color(0xFFFEF3C7)
+                        PhaseTreeStatus.TERKENDALA_CACAT -> DrgRoseBorderSoft
+                        else -> DrgWarningBgSoft
                     }
                 ) {
                     Text(
@@ -73,7 +73,7 @@ fun DevFeatureItemCard(feature: DevFeatureLeaf) {
                         color = when (feature.status) {
                             PhaseTreeStatus.LULUS_SEMPURNA -> DrgGreenPrimary
                             PhaseTreeStatus.TERKENDALA_CACAT -> DrgRedPanic
-                            else -> Color(0xFFD97706)
+                            else -> DrgWarningText
                         },
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                     )

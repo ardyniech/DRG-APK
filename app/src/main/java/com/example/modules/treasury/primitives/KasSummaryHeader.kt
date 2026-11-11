@@ -96,7 +96,7 @@ fun KasSummaryHeader(
                 )
                 Text(
                     text = "↘ Keluar: Rp ${NumberFormat.getInstance().format(totalExpense)}",
-                    color = Color(0xFFFFEBEE),
+                    color = DrgErrorBgSoft,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold
                 )

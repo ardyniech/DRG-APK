@@ -78,13 +78,13 @@ fun DevUiUxAuditTab(
                         }
                         Surface(
                             shape = RoundedCornerShape(4.dp),
-                            color = if (pillar.isCompliant) DrgGreenLight else Color(0xFFFEF3C7)
+                            color = if (pillar.isCompliant) DrgGreenLight else DrgWarningBgSoft
                         ) {
                             Text(
                                 "${pillar.scoreOutOf100.toInt()}%",
                                 fontSize = 9.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = if (pillar.isCompliant) DrgGreenPrimary else Color(0xFFD97706),
+                                color = if (pillar.isCompliant) DrgGreenPrimary else DrgWarningText,
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                             )
                         }

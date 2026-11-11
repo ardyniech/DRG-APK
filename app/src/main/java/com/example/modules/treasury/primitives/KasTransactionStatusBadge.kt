@@ -24,7 +24,7 @@ fun KasTransactionStatusBadge(
     modifier: Modifier = Modifier
 ) {
     val isIncome = type == TransactionType.INCOME
-    val badgeBg = if (isIncome) DrgGreenContainer else Color(0xFFFFEBEE)
+    val badgeBg = if (isIncome) DrgGreenContainer else DrgErrorBgSoft
     val badgeFg = if (isIncome) DrgGreenPrimary else DrgRedDanger
     val icon = if (isIncome) Icons.Default.TrendingUp else Icons.Default.TrendingDown
     val label = if (isIncome) "PEMASUKAN" else "PENGELUARAN"

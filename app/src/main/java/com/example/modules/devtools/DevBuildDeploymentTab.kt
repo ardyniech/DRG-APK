@@ -83,13 +83,13 @@ fun DevBuildDeploymentTab(
             item {
                 Surface(
                     shape = RoundedCornerShape(10.dp),
-                    color = Color(0xFFFFEBEE),
+                    color = DrgErrorBgSoft,
                     modifier = Modifier.fillMaxWidth().border(1.dp, Color.Red.copy(alpha = 0.4f), RoundedCornerShape(10.dp))
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("⚠️ Log Kegagalan Commit Terakhir", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color(0xFFC62828))
+                        Text("⚠️ Log Kegagalan Commit Terakhir", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgErrorText)
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text(info.lastFailureLog, fontSize = 10.sp, color = Color(0xFFB71C1C))
+                        Text(info.lastFailureLog, fontSize = 10.sp, color = DrgErrorTextDark)
                     }
                 }
             }

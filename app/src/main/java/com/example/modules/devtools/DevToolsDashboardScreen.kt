@@ -66,10 +66,10 @@ fun DevToolsDashboardScreen(
 
         if (!isSuperAdmin) {
             Box(modifier = Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
-                Surface(shape = RoundedCornerShape(16.dp), color = Color(0xFFFFEBEE), modifier = Modifier.fillMaxWidth()) {
+                Surface(shape = RoundedCornerShape(16.dp), color = DrgErrorBgSoft, modifier = Modifier.fillMaxWidth()) {
                     Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Icon(Icons.Default.Lock, contentDescription = null, tint = Color.Red, modifier = Modifier.size(36.dp))
-                        Text("Akses Dibatasi Khusus Super Admin", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = Color(0xFFC62828))
+                        Text("Akses Dibatasi Khusus Super Admin", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = DrgErrorText)
                         Text("Fitur Dev Tools AI hanya dapat diakses oleh Super Admin sistem DRG.", fontSize = 12.sp, color = DrgTextSecondary)
                     }
                 }
