@@ -205,10 +205,13 @@ def check_hygiene_small():
         add("MINOR", "test", "androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented.",
             "Tambah UI test untuk login, SOS, kas.")
     ci = read(".github/workflows/android_ci.yml")
+    rel_ci = read(".github/workflows/release_delta.yml")
     if "detekt" not in ci.lower() and "ktlint" not in ci.lower():
         add("MINOR", "ci", "Detekt/KtLint tidak ada di CI — hanya line-cap + lint.",
             "Tambah static analysis (sudah masuk backlog).")
-    if "assembleRelease" not in ci and "bundle" not in ci.lower():
+    has_release = ("assembleRelease" in ci or "bundle" in ci.lower() or
+                   "assembleRelease" in rel_ci or "Publish Release" in rel_ci)
+    if not has_release:
         add("MAJOR", "ci", "CI hanya assembleDebug, tidak ada release/AAB signing & distribusi.",
             "Tambah job release dengan Keystore via Secrets.")
     if "audit_minus" not in ci:

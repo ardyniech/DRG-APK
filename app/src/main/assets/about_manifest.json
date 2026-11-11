@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "v1.10",
-    "commit": "3806278",
+    "version": "v1.10-1-g23f48e3",
+    "commit": "23f48e3",
     "commitDate": "2026-11-11",
     "generatedBy": "generate_about_manifest.py"
   },
@@ -26,7 +26,7 @@
     "planned": 8,
     "modules": 17,
     "totalSourceFiles": 472,
-    "totalLoc": 33848,
+    "totalLoc": 33846,
     "testSuites": 59
   },
   "phases": [
@@ -215,7 +215,7 @@
       "status": "IN_PROGRESS",
       "progress": 70,
       "files": 3,
-      "loc": 176,
+      "loc": 174,
       "todos": 0,
       "tests": [
         "CacheAndBatteryTest",
@@ -571,25 +571,13 @@
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 10,
-    "blocker": 2,
-    "major": 3,
-    "minor": 5,
+    "total": 6,
+    "blocker": 0,
+    "major": 2,
+    "minor": 4,
     "note": 0
   },
   "minus": [
-    {
-      "severity": "BLOCKER",
-      "category": "fake-sync",
-      "detail": "BackgroundSyncEngine label \"Tersinkronisasi ke Cloud\" padahal triggerBackgroundSync() cuma delay + removeSyncItem() — TIDAK ada network call (Retrofit/OkHttp/Firestore).",
-      "fix": "Ganti jadi upload sungguhan atau label jujur OFFLINE_SAVED (anti-fabrikasi AGENTS §7)."
-    },
-    {
-      "severity": "BLOCKER",
-      "category": "p2p",
-      "detail": "P2PSignalingManager.broadcastPeerInfo() dan onMessageReceived() hanya Log.d — discovery FCM topic 0%, peer tidak pernah dicatat/dihubungi.",
-      "fix": "Implementasikan FCM signaling sungguhan + WebRTC SDP/ICE exchange."
-    },
     {
       "severity": "MAJOR",
       "category": "multi-user",
@@ -610,12 +598,6 @@
     },
     {
       "severity": "MINOR",
-      "category": "docs",
-      "detail": "README klaim 55 suite, realita 59 file Test.kt.",
-      "fix": "Update README badge + SETUP/DEVTOOLS jumlahnya."
-    },
-    {
-      "severity": "MINOR",
       "category": "code",
       "detail": "Hardcode hex Color(0x...) di78 file — melanggar 'No Magic Numbers' AGENTS §1.",
       "fix": "Pindah ke DesignTokens/Theme."
@@ -631,12 +613,6 @@
       "category": "ci",
       "detail": "Detekt/KtLint tidak ada di CI — hanya line-cap + lint.",
       "fix": "Tambah static analysis (sudah masuk backlog)."
-    },
-    {
-      "severity": "MAJOR",
-      "category": "ci",
-      "detail": "CI hanya assembleDebug, tidak ada release/AAB signing & distribusi.",
-      "fix": "Tambah job release dengan Keystore via Secrets."
     }
   ]
 }
