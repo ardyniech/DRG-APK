@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "v1.10-15-g71d0d76",
-    "commit": "71d0d76",
+    "version": "v1.10-17-ga8c205f",
+    "commit": "a8c205f",
     "commitDate": "2026-11-11",
     "generatedBy": "generate_about_manifest.py"
   },
@@ -26,7 +26,7 @@
     "planned": 8,
     "modules": 17,
     "totalSourceFiles": 472,
-    "totalLoc": 33901,
+    "totalLoc": 33926,
     "testSuites": 59
   },
   "phases": [
@@ -599,7 +599,7 @@
     {
       "severity": "MINOR",
       "category": "code",
-      "detail": "Hardcode hex Color(0x...) di34 file — melanggar 'No Magic Numbers' AGENTS §1.",
+      "detail": "Hardcode hex Color(0x...) di27 file — melanggar 'No Magic Numbers' AGENTS §1.",
       "fix": "Pindah ke DesignTokens/Theme."
     },
     {
