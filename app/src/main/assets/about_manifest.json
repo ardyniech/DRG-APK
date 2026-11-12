@@ -13,9 +13,9 @@
     ]
   },
   "build": {
-    "version": "v1.10-28-gbe1bb58",
-    "commit": "be1bb58",
-    "commitDate": "2026-11-11",
+    "version": "v1.10-30-g9a47730",
+    "commit": "9a47730",
+    "commitDate": "2026-11-12",
     "generatedBy": "generate_about_manifest.py"
   },
   "summary": {
@@ -26,7 +26,7 @@
     "planned": 8,
     "modules": 17,
     "totalSourceFiles": 473,
-    "totalLoc": 34013,
+    "totalLoc": 34016,
     "testSuites": 59
   },
   "phases": [
@@ -571,10 +571,10 @@
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 6,
+    "total": 5,
     "blocker": 0,
     "major": 2,
-    "minor": 4,
+    "minor": 3,
     "note": 0
   },
   "minus": [
@@ -595,12 +595,6 @@
       "category": "database",
       "detail": "Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v13 tidak lengkap.",
       "fix": "Generate & commit schema hilang via Room export."
-    },
-    {
-      "severity": "MINOR",
-      "category": "code",
-      "detail": "Hardcode hex Color(0x...) di2 file — melanggar 'No Magic Numbers' AGENTS §1.",
-      "fix": "Pindah ke DesignTokens/Theme."
     },
     {
       "severity": "MINOR",
