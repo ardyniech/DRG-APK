@@ -5,7 +5,7 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-12
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** pending this batch commit (base: `7ae3cc5`)
+- **HEAD (pushed):** `36b3290` (PTT walkie-talkie honesty)
 - **Working tree:** to be clean after commit/push
 - **Latest CI:** deprioritized per owner (preview via aigoogle.studio); last known issues fixed in `ab0b581`/`a4f7032`. Confirm if needed: `gh run list -R ardyniech/DRG-APK --limit 5`.
 
@@ -30,11 +30,10 @@
 
 ## Next steps (ordered, toward production)
 1. **DevTools menyeluruh (lanjutkan):** tinjau sisa temuan (DEFECT-01..02 narasi vs aktual, teks tab/engine lain, konsistensi Progress/Maturity/Defects/SSOT) — perbaiki feasible in-app; fakta/probe nyata atau UNKNOWN/heuristik.
-
-3. **[MINOR test]** coverage feasible login/PIN, SOS, kas (CI-runnable/Robolectric bila memungkinkan).
-4. **[MINOR security]** evaluasi/rencana SQLCipher (keputusan/L2 owner).
-5. **Static analysis bertahap:** rapikan/tegakkan ktlint atau tambah Detekt tanpa memecah CI.
-6. **Release/OTA:** validasi Delta OTA (`v1.10` release not found) saat aset tersedia.
+2. **[MINOR test]** coverage feasible login/PIN, SOS, kas (CI-runnable/Robolectric bila memungkinkan).
+3. **[MINOR security]** evaluasi/rencana SQLCipher (keputusan/L2 owner).
+4. **Static analysis bertahap:** rapikan/tegakkan ktlint atau tambah Detekt tanpa memecah CI.
+5. **Release/OTA:** validasi Delta OTA (`v1.10` release not found) saat aset tersedia.
 
 ## Blocked / needs decision (L2 or external)
 - **[MAJOR][multi-user]** backend + akun server. *No fake sync.*
