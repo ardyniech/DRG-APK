@@ -5,51 +5,51 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-12
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** pending this batch commit (base: `5c10408` ci ktlint warn-only + handoff)
+- **HEAD (pushed):** pending this batch commit (base: `fe139e7` devtools honesty part 1)
 - **Working tree:** to be clean after commit/push
-- **Latest CI (known):** `43131829544` **success** (`a744c01`, 2026-11-12T01:03:48Z). Runs for `f35aca3`/`5c10408` may be in progress/completed — confirm with `gh run list -R ardyniech/DRG-APK --limit 5`.
+- **Latest CI (known):** `43131829544` **success** (`a744c01`). Runs for recent pushes — confirm with `gh run list -R ardyniech/DRG-APK --limit 5`.
 
 ## Audit snapshot
 - **Command:** `python3 .github/scripts/audit_minus.py`
 - **Result:** **0 BLOCKER, 2 MAJOR, 2 MINOR** (total 4)
-  - **MAJOR [multi-user]:** Seed hanya bila members kosong → tiap HP baru punya data dummy sendiri, bukan data komunitas bersama. (Fix: backend + akun server, sinkron nyata.)
-  - **MAJOR [database]:** Schema Room hilang `1.json,2.json,3.json,4.json,8.json,9.json` (exportSchema=true tapi tidak commit) → verifikasi migrasi v1→v13 tidak lengkap. (Fix: generate & commit schema hilang via Room export valid; **jangan difabrikasi**.)
-  - **MINOR [security]:** Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB. Risiko data-at-rest sudah terdokumentasi di `README.md`; keputusan/implementasi enkripsi masih terbuka.
+  - **MAJOR [multi-user]:** Seed lokal-only → tiap HP data dummy sendiri, bukan data komunitas bersama. (Butuh backend + akun server, sinkron nyata.)
+  - **MAJOR [database]:** Schema Room hilang `1,2,3,4,8,9.json` (exportSchema=true tapi tidak commit). (Generate & commit schema valid; **jangan difabrikasi**.)
+  - **MINOR [security]:** Room SQLite belum terenkripsi (SQLCipher) — NIK/SIM/kas plain; risiko data-at-rest terdokumentasi di `README.md`.
   - **MINOR [test]:** `androidTest` cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented.
 - **Line cap:** `python3 .github/scripts/check_file_length.py` → PASS (473 files, all < 125 lines).
 
 ## Done (recent batches)
-- **OTA/CI/release foundations (earlier):** delta OTA (BSDIFF40, `release_delta.yml`), signing consistency, honest sync/P2P local-only, README/test count & SSOT refreshes.
-- **Hex-token refactor batches (pushed):** auth/profile/treasury/dashboard/about/emergency/radar/workflow/cinematic rider tokenized; splits for <125 lines; SSOT refreshed.
-- **`9a47730` + `a744c01`:** fixed CI compile break (`RiderFairingCowl`) and excluded `ui/theme/` from hex audit; CI green.
-- **`f35aca3`:** added `docs/CONTINUATION.md` handoff trail.
-- **`5c10408`:** added **ktlint (CLI, warn-only/non-blocking)** in `.github/workflows/android_ci.yml`; cleared audit MINOR `[ci]`.
-- **This batch (DevTools honesty — part 1):**
-  - `modules/devtools/MultiUserGapScanner.kt`: updated extra defects (DEFECT-05/06/07/08/09/10/11) to reflect current reality (sync/signaling now honest/local-only but no real server upload/discovery; schema missing 1-4,8,9; Asuransi/Intercom marked pending/deferred per scope; removed stale "fake SYNCED"/log-only/hex-count claims).
-  - `modules/devtools/DevBugHunterTab.kt`: replaced hardcoded fake summary/findings with **dynamic** rendering from `ProjectHealthScore`, `DeadButtonShallowScanner`, and `ProductionDefectScanner`.
-  - `modules/devtools/DevScoreBanner.kt`: removed hardcoded "Penalti -20%" badge; shows actual computed penalty/score breakdown.
-  - SSOT regenerated. (No audit_minus finding count change.)
+- **OTA/CI/release & refactors (earlier):** delta OTA, signing consistency, honest sync/P2P local-only, audit BLOCKERs cleared, hex-token refactors, SSOT refreshes.
+- **`9a47730`+`a744c01`:** fixed `RiderFairingCowl` compile/imports; audit hex excludes `ui/theme/`. CI green.
+- **`f35aca3`:** `docs/CONTINUATION.md` handoff trail. Skills: `auto-continue-workflow`, `drg-apk-to-production` (with mandatory trail).
+- **`5c10408`:** ktlint (CLI, warn-only/non-blocking) step in `.github/workflows/android_ci.yml`; cleared audit MINOR `[ci]`.
+- **`fe139e7` (DevTools honesty part 1):** `MultiUserGapScanner` defects refreshed to reality (sync/signaling honest/local-only gaps, schema missing, Asuransi/Intercom pending/deferred); `DevBugHunterTab` dynamic from scanners/score; `DevScoreBanner` shows actual computed penalty.
+- **This batch (DevTools honesty part 2 — scope/progress/scoring):**
+  - `DeadButtonShallowScanner`: Asuransi & Intercom Helm ditandai **PENDING/DEFERRED** (out-of-scope rilis awal) — tidak lagi dihitung sebagai dead button/shallow.
+  - `PhaseTreePhase1And2/3And4`: F-2.2.2 (Klaim Asuransi) & F-3.2.1 (Intercom Helm GATT) diubah ke **PENDING, hasDefect=false** (deferred, bukan cacat in-scope). F-3.1.1 PTT/P2P tetap TERKENDALA_CACAT (limitasi nyata).
+  - `DevScoringEngine`: `progressPenaltiesCount` kini dihitung dari PhaseTree (defect + in-progress) alih-alih hardcode 1.
+  - SSOT diregenerasi. Progres/skor DevTools sekarang lebih jujur & scope-aware (deferred tidak menurunkan progres in-scope secara menyesatkan).
 
 ## Next steps (ordered, toward production)
-1. **Monitor CI** for pushed commits; keep `main` green. Fix regressions first.
-2. **DevTools menyeluruh (lanjutkan):** audit semua scanner/tab/engine agar jujur & selaras SSOT/scope (banyak masih hardcoded/stale):
-   - `DevScoringEngine` (`progressPenaltiesCount` hardcoded=1, formula/grade), `DeadButtonShallowScanner` (daftar fitur/stage/dead/shallow termasuk Asuransi/Intercom harus ditandai PENDING/DEFERRED sesuai roadmap), `PhaseTreePhase1-5` & metrik/progres ("64%" dsb) agar tidak menandai fitur deferred out-of-scope sebagai cacat menyesatkan.
-   - `ProductionDefectScanner` DEFECT-01..04: validasi terhadap kondisi aktual (P2P/SMS/GPS/RBAC) dan perbarui jika stale.
-   - Scanner/engine lain: `BuildDeploymentEngine`, `CiCdStatusScanner`, `CodeIntegrityAuditor`, `NodeTopologyScanner`, `SecurityAuditEngine`, `ServerOverloadMonitor`, `UiUxAuditEngine`, `Device*`, `Realtime*`, `RootCause*` — hilangkan data hardcode/fake, tampilkan status "unknown/unavailable" jika tidak bisa diprobe.
-   - `DevSsotTab` sudah baca `about_manifest.json` minus (bagus) — pastikan konsisten; `DevProgress/Defects/Maturity/BugHunter` saling konsisten.
-3. **[MINOR test]** tambah coverage feasible untuk alur kritis login/PIN, SOS, kas (CI-runnable/Robolectric bila memungkinkan).
-4. **[MINOR security]** evaluasi/rencana SQLCipher atau enkripsi DB (keputusan/L2 owner) dengan risiko tetap terdokumentasi.
+1. **Monitor CI** untuk commit ter-push; jaga `main` hijau. Perbaiki regresi dulu.
+2. **DevTools menyeluruh (lanjutkan — masih banyak):** buat semua scanner/tab/engine jujur & selaras SSOT/scope (hapus hardcode/fake, tampilkan "unknown/unavailable/tidak terprobe" bila tidak bisa diverifikasi):
+   - Validasi & perbarui `ProductionDefectScanner` DEFECT-01..04 (RBAC client-side, P2P Walkie subnet, SMS fallback pulsa, GPS polling baterai) vs kondisi aktual.
+   - Tinjau `PhaseTreePhase5` (F-5.2.2 sync worker local-only/honest tapi belum cloud upload — status/deskripsi) dan metrik progres agar konsisten.
+   - Audit scanner/engine: `BuildDeploymentEngine`, `CiCdStatusScanner`, `CodeIntegrityAuditor`, `NodeTopologyScanner`, `SecurityAuditEngine`, `ServerOverloadMonitor`, `UiUxAuditEngine`, `DeviceAdvisorEngine`, `DevicePerformanceEngine`, `DynamicApkInspector`, `DynamicDbIntrospector`, `RuntimeCapabilityProber`, `RealtimeMemoryProbe`, `RealtimeNetworkProbe`, `EarlySymptomDetector`, `RootCause*` — ganti nilai bohong/hardcode dengan probe nyata atau label jujur.
+   - Pastikan tab UI (Maturity/Progress/Defects/BugHunter/SSOT/RCA/Memory/Server/CI-CD/Build/Security/Node/dll.) menampilkan data konsisten & tidak menyesatkan.
+3. **[MINOR test]** coverage feasible alur kritis login/PIN, SOS, kas (CI-runnable/Robolectric bila memungkinkan).
+4. **[MINOR security]** evaluasi/rencana SQLCipher/enkripsi DB (keputusan/L2 owner) dengan risiko terdokumentasi.
 5. **Static analysis bertahap:** rapikan/tegakkan ktlint atau tambah Detekt tanpa memecah CI.
-6. **Release/OTA:** validasi Delta OTA (`v1.10` release not found saat ini) saat aset tersedia.
+6. **Release/OTA:** validasi Delta OTA (`v1.10` release not found) saat aset tersedia.
 
 ## Blocked / needs decision (L2 or external)
-- **[MAJOR][multi-user]** butuh backend + akun server untuk sinkron nyata. *No fake sync.*
+- **[MAJOR][multi-user]** backend + akun server untuk sinkron nyata. *No fake sync.*
 - **[MAJOR][database]** schema Room `1,2,3,4,8,9.json` hilang — export/commit valid saja, **jangan difabrikasi**.
 - **Release `v1.10`:** `release not found`.
 - **Keputusan owner (potensial L2):** strategi SQLCipher/migrasi enkripsi DB; production signing secrets. Aksi L2 = ask-first.
 
 ## Scope reminders (production)
-- Finansial rilis awal = **iuran Kas saja**. **Marketplace/Arisan = DEFERRED**. **Asuransi & Intercom Helm = PENDING DEV** (tandai pending/deferred, bukan "cacat in-scope" yang menyesatkan).
+- Finansial rilis awal = **iuran Kas saja**. **Marketplace/Arisan = DEFERRED**. **Asuransi & Intercom Helm = PENDING DEV** (tandai pending/deferred, bukan cacat in-scope menyesatkan).
 - Jangan klaim production-ready jika ada gap kritis/CI gagal/perilaku belum terverifikasi.
 
 ## How to resume (for next AI/model)

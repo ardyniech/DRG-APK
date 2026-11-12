@@ -95,12 +95,12 @@ object PhaseTreePhase1And2 {
                     ),
                     DevFeatureLeaf(
                         id = "F-2.2.2",
-                        name = "Klaim Dokumen Asuransi Laka Driver",
-                        status = PhaseTreeStatus.TERKENDALA_CACAT,
-                        hasDefect = true,
-                        whatIsIt = "Unggah dokumen klaim santunan laka lantas driver.",
-                        whyRequired = "Bantuan finansial cepat saat driver mengalami kecelakaan kerja.",
-                        defectExplanation = "Tombol kirim dokumen masih berupa dialog lokal tanpa upload worker."
+                        name = "Klaim Dokumen Asuransi Laka Driver (PENDING DEV)",
+                        status = PhaseTreeStatus.PENDING,
+                        hasDefect = false,
+                        whatIsIt = "Unggah dokumen klaim santunan laka lantas driver (ditunda).",
+                        whyRequired = "Di luar scope rilis awal (finansial awal: iuran Kas saja).",
+                        defectExplanation = "DEFERRED/PENDING DEV per roadmap — bukan cacat in-scope."
                     )
                 )
             )

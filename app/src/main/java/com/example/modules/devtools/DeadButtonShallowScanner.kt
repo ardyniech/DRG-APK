@@ -40,23 +40,21 @@ object DeadButtonShallowScanner {
             codeLineCount = 112
         ),
         FeatureAuditItem(
-            name = "Insurance Claim Instant Settlement",
+            name = "Insurance Claim (Asuransi) — PENDING DEV",
             module = "Services",
-            stage = FeatureStage.ANAK,
-            hasDeadButtons = true,
-            isShallow = true,
-            deadButtonDetails = "Tombol 'Upload Berkas RS' belum terhubung ke storage backend multipart",
-            shallowReason = "Hanya dialog konfirmasi snackbar, belum integrasi ke API asuransi pihak ketiga",
+            stage = FeatureStage.BENIH,
+            hasDeadButtons = false,
+            isShallow = false,
+            shallowReason = "DEFERRED/PENDING DEV di luar scope rilis awal (iuran Kas saja) — belum diimplementasikan.",
             codeLineCount = 98
         ),
         FeatureAuditItem(
-            name = "Helmet GATT Bluetooth Intercom",
+            name = "Helmet GATT Bluetooth Intercom — PENDING DEV",
             module = "Hardware",
             stage = FeatureStage.BENIH,
-            hasDeadButtons = true,
-            isShallow = true,
-            deadButtonDetails = "Tombol 'Pairing Sena 50S' masih mock listener",
-            shallowReason = "Baru berupa interface GATT, belum terkoneksi ke BluetoothAdapter fisik",
+            hasDeadButtons = false,
+            isShallow = false,
+            shallowReason = "DEFERRED/PENDING DEV di luar scope rilis awal — integrasi helm/intercom ditunda.",
             codeLineCount = 85
         )
     )
