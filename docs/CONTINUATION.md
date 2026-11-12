@@ -5,7 +5,7 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-12
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** pending this batch commit (base: `b354424` security/topology)
+- **HEAD (pushed):** pending this batch commit (base: `d3f4d56` APK/DB/module info)
 - **Working tree:** to be clean after commit/push
 - **Latest CI (known):** confirm with `gh run list -R ardyniech/DRG-APK --limit 5`.
 
@@ -19,20 +19,15 @@
 - **Line cap:** PASS (473 files, <125 lines).
 
 ## Done (recent batches)
-- Foundations/refactors, honest sync/P2P local-only, hex-token, CI fixes, handoff trail, ktlint warn-only CI.
-- **`fe139e7`..`be373d9`:** DevTools honesty (defects/bug hunter/score dynamic, scope-aware progress Asuransi/Intercom PENDING, Build/CI UNKNOWN, CodeIntegrity/mesh honest, UI/UX heuristik, PhaseTree/DEFECT-04 selaras, CPU%/repo/git tanpa fabrikasi).
-- **`b354424`:** SecurityAuditEngine tidak klaim aman tanpa probe kuat (DB encryption/SOS privacy); NodeTopology konseptual (bukan live probe).
-- **This batch (DevTools honesty part 7 — APK/DB/module info):**
-  - `DynamicApkInspector`: hapus target "latest" hardcode (10/5.0.0) & klaim outdated/sinkron → info APK terpasang runtime saja; update cek via manifest rilis/GitHub Releases (tidak diprobe).
-  - `DevApkSkewCard`: UI netral/jujur (tanpa badge LEGACY/LATEST palsu). `DynamicDbIntrospector` & `RuntimeCapabilityProber` tetap probe runtime nyata (SQLite PRAGMA/tabel, Class.forName).
-  - SSOT regenerated.
+- Foundations/refactors, honest sync/P2P local-only, hex-token refactors, CI fixes, handoff trail, ktlint warn-only CI.
+- DevTools honesty across: defects/bug hunter/score dynamic, scope-aware progress (Asuransi/Intercom PENDING/DEFERRED), Build/CI UNKNOWN no fabricasi, CodeIntegrity/mesh honest, UI/UX heuristik, PhaseTree/DEFECT-04 selaras, CPU%/repo/git tanpa fabrikasi, security probe limits, topologi konseptual, APK info tanpa skew fabrikasi, DB/RAM/network probes nyata.
+- **`b354424`:** Security & topologi diperjelas.  
+- **`d3f4d56`:** Hapus klaim APK "latest/outdated" fabrikasi.  
+- **This batch (DevTools honesty part 8 — RCA scope):** `EarlySymptomDetector` mengubah RCA dead-button Asuransi/Intercom menjadi **PENDING/DEFERRED** (preventive) alih-alih CRITICAL/WARNING, selaras scope rilis awal (iuran Kas saja). SSOT regenerated.
 
 ## Next steps (ordered, toward production)
 1. **Monitor CI** commit ter-push; jaga `main` hijau.
-2. **DevTools menyeluruh (lanjutkan):** audit & jujurkan sisa scanner/tab/engine:
-   - `ProductionDefectScanner` DEFECT-01..03: tinjau keakuratan narasi vs kondisi aktual.
-   - `RealtimeMemoryProbe`/`DevMemoryTab`, `RealtimeNetworkProbe`/`DevServerTab`: pastikan probe nyata & label jujur (tidak klaim "server" riil tanpa backend).
-   - `DeviceAdvisorEngine`/`DevDeviceAdvisorTab`, `DynamicDbIntrospector` deskripsi, `RuntimeCapabilityProber` presentasi, `EarlySymptomDetector`/`RootCause*`/`DevRootCauseTab`, `DevSecurityAuditTab` teks, `DevCodeIntegrityTab`, `DevMaturityTab`/`DevProgressTab`/`DevDefectsTab` konsistensi.
+2. **DevTools menyeluruh (lanjutkan):** tinjau & jujurkan sisa bila ada (probe nyata atau UNKNOWN/heuristik), pastikan konsistensi tab/engine & scope-aware.
 3. **[MINOR test]** coverage feasible login/PIN, SOS, kas (CI-runnable/Robolectric bila memungkinkan).
 4. **[MINOR security]** evaluasi/rencana SQLCipher (keputusan/L2 owner).
 5. **Static analysis bertahap:** rapikan/tegakkan ktlint atau tambah Detekt tanpa memecah CI.

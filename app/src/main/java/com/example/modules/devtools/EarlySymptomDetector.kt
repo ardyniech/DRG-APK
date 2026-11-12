@@ -24,27 +24,27 @@ object EarlySymptomDetector {
 
         findings.add(
             RootCauseFinding(
-                id = "RCA-DEAD-01",
-                title = "Dead Button: Upload Berkas Klaim Asuransi",
-                preFailureSymptom = "Pengemudi menekan 'Klaim Asuransi' namun bukti foto laka/kuitansi RS tidak terkirim ke storage.",
-                sourceFile = "modules/services/DriverServicesScreen.kt",
-                sourceFunction = "onClaimInsurance()",
-                rootCauseTechnical = "Handler tombol hanya memanggil snackbar lokal tanpa multipart OkHttp/Retrofit upload pipeline ke cloud storage.",
-                severity = SymptomSeverity.CRITICAL,
-                actionableFix = "Hubungkan URI hasil PhotoPicker ke Repository upload worker dengan retry policy saat offline."
+                id = "RCA-PEND-01",
+                title = "Pending/Deferred: Klaim Asuransi",
+                preFailureSymptom = "Fitur asuransi belum diimplementasikan end-to-end (sesuai roadmap: PENDING/DEFERRED).",
+                sourceFile = "modules/services/* (roadmap)",
+                sourceFunction = "N/A (scope rilis awal: iuran Kas saja)",
+                rootCauseTechnical = "Integrasi upload klaim & API asuransi ditunda; bukan defect in-scope rilis awal.",
+                severity = SymptomSeverity.PREVENTIVE,
+                actionableFix = "Tandai jelas sebagai PENDING/DEFERRED; kerjakan setelah prioritas inti produksi stabil."
             )
         )
 
         findings.add(
             RootCauseFinding(
-                id = "RCA-DEAD-02",
-                title = "Dead Button: Pairing Intercom Helm GATT",
-                preFailureSymptom = "Klik 'Hubungkan Helm Sena' di dashboard tidak merespons pada Bluetooth headset fisik driver.",
-                sourceFile = "modules/hardware/HelmetIntercomMonitor.kt",
-                sourceFunction = "connectGattDevice()",
-                rootCauseTechnical = "UUID service GATT masih menggunakan dummy loopback tanpa BluetoothAdapter.getRemoteDevice() binding.",
-                severity = SymptomSeverity.WARNING,
-                actionableFix = "Inject Android BluetoothSocket RFCOMM channel untuk profile HSP/HFP sebelum pairing dialog ditutup."
+                id = "RCA-PEND-02",
+                title = "Pending/Deferred: Intercom Helm (Bluetooth/GATT)",
+                preFailureSymptom = "Integrasi pairing/audio intercom helm belum diimplementasikan (PENDING DEV).",
+                sourceFile = "modules/hardware/* (roadmap)",
+                sourceFunction = "N/A (scope rilis awal: iuran Kas saja)",
+                rootCauseTechnical = "Koneksi GATT/RFCOMM & PTT helm ditunda sesuai roadmap.",
+                severity = SymptomSeverity.PREVENTIVE,
+                actionableFix = "Tandai jelas sebagai PENDING/DEFERRED; implementasi saat prioritas inti stabil."
             )
         )
 
