@@ -5,7 +5,7 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-12
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** `80f7601` (treasury phase wording)
+- **HEAD (pushed):** pending this batch commit (base: `45581f1`)
 - **Working tree:** to be clean after commit/push
 - **Latest CI:** deprioritized per owner (preview via aigoogle.studio); last known issues fixed in `ab0b581`/`a4f7032`. Confirm if needed: `gh run list -R ardyniech/DRG-APK --limit 5`.
 
@@ -30,7 +30,8 @@
 - **`5a0bcd5`/`48318d2`:** `TreasuryHealthCard` dijujurkan dari klaim statis/absolut menjadi ringkasan netral + catatan sinkronisasi (lokal-first).
 - **`226074e`/`3fb8bd0`:** `NodeTopologyScanner` NODE-MESH-01 dijujurkan (mesh/signaling & audio belum end-to-end). DEFECT-11 dipisahkan dari isu PTT radio. SSOT regenerated.
 - **`b430076`/`ec9aef6`:** `RuntimeCapabilityProber` label modul diperjelas (PTT simulasi, audit/topologi heuristik/konseptual). `DevServerTab` membedakan ping host sebagai konektivitas, bukan status backend app.
-- **This batch (devtools honesty):** F-2.1.1 (Kas) dijujurkan — hapus klaim "Realtime" berlebihan, tekankan pencatatan di aplikasi (lokal-first). SSOT regenerated.
+- **`80f7601`/`45581f1`:** F-2.1.1 (Kas) dijujurkan — hapus klaim "Realtime" berlebihan, tekankan pencatatan di aplikasi (lokal-first). SSOT regenerated.
+- **This batch (minor test, SOS):** tambah kasus `EmergencySmsFallbackHelperTest` untuk fallback hotline default saat nomor kosong/tidak valid (Robolectric).
 
 ## Next steps (ordered, toward production)
 1. **DevTools menyeluruh (lanjutkan):** tinjau sisa temuan (DEFECT-01..02 narasi vs aktual, teks tab/engine lain, konsistensi Progress/Maturity/Defects/SSOT) — perbaiki feasible in-app; fakta/probe nyata atau UNKNOWN/heuristik.

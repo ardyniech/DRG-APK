@@ -54,4 +54,13 @@ class EmergencySmsFallbackHelperTest {
         assertEquals("smsto:081234567890", intent.dataString)
         assertEquals("Test SOS message", intent.getStringExtra("sms_body"))
     }
+
+    @Test
+    fun testCreateSmsIntentUsesDefaultHotlineWhenBlank() {
+        val intent = EmergencySmsFallbackHelper.createSmsIntent(
+            phoneNumber = "  -- ",
+            message = "SOS"
+        )
+        assertEquals("smsto:${EmergencySmsFallbackHelper.DEFAULT_HOTLINE_TRC}", intent.dataString)
+    }
 }
