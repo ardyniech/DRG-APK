@@ -50,13 +50,13 @@ object NodeTopologyScanner {
         ),
         TopologyNode(
             nodeId = "NODE-MESH-01",
-            nodeName = "P2P Posko Local Mesh Radio Node",
-            nodeType = "Offline Ad-Hoc Intercom Node",
-            endpointHost = "224.0.0.1:multicast_udp / WiFi Direct",
-            protocol = "UDP Multicast & WebRTC DataChannel",
-            isConnected = true,
+            nodeName = "P2P/Mesh Radio Node (Konseptual)",
+            nodeType = "Offline Ad-Hoc Intercom (belum end-to-end)",
+            endpointHost = "Konseptual: multicast/WiFi Direct (belum aktif)",
+            protocol = "Rencana: UDP multicast / WebRTC (belum terimplementasi)",
+            isConnected = false,
             activeConnectionsCount = 0,
-            syncState = "Kerangka lokal/antrean ada; signaling/discovery end-to-end belum fungsional lintas perangkat."
+            syncState = "Kerangka lokal/antrean ada; signaling/discovery & transmisi audio mesh belum fungsional lintas perangkat."
         ),
         TopologyNode(
             nodeId = "NODE-AUTH-01",

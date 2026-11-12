@@ -5,7 +5,7 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-12
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** `5a0bcd5` (treasury health copy honesty)
+- **HEAD (pushed):** pending this batch commit (base: `48318d2`)
 - **Working tree:** to be clean after commit/push
 - **Latest CI:** deprioritized per owner (preview via aigoogle.studio); last known issues fixed in `ab0b581`/`a4f7032`. Confirm if needed: `gh run list -R ardyniech/DRG-APK --limit 5`.
 
@@ -27,7 +27,8 @@
 - **`d16a22c`/`f255aaa`:** SMS fallback honesty (selaras implementasi composer/intent, bukan kirim otomatis) — F-4.2.1, DEFECT-03, probe/tab/UX/knowledge diperbarui; `FeatureMaturity.LULUS` diperjelas. SSOT regenerated.
 - **`dd7bda2`/`7ae3cc5`:** tambah `LoginAuthValidatorTest` (login via driverId/plat/No.HP ternormalisasi & penolakan user tak terdaftar, Robolectric).
 - **`36b3290`/`b62af35`:** PTT/Walkie-Talkie dijujurkan sebagai simulasi UI (bukan transmisi audio nyata) — dialog/DEFECT-02/F-3.1.1/thumbnail/card/capability probe diperbarui. SSOT regenerated.
-- **This batch (honesty UX):** `TreasuryHealthCard` diubah dari klaim statis/absolut ("arus kas sangat sehat", "transparansi 100% real-time") menjadi ringkasan netral berbasis data tercatat & catatan keterbatasan sinkronisasi (lokal-first).
+- **`5a0bcd5`/`48318d2`:** `TreasuryHealthCard` dijujurkan dari klaim statis/absolut menjadi ringkasan netral + catatan sinkronisasi (lokal-first).
+- **This batch (devtools consistency):** `NodeTopologyScanner` NODE-MESH-01 dijujurkan (tidak "connected"/protokol konkret; mesh/signaling & audio belum end-to-end). DEFECT-11 dipisahkan dari isu PTT radio (dilacak terpisah). SSOT regenerated.
 
 ## Next steps (ordered, toward production)
 1. **DevTools menyeluruh (lanjutkan):** tinjau sisa temuan (DEFECT-01..02 narasi vs aktual, teks tab/engine lain, konsistensi Progress/Maturity/Defects/SSOT) — perbaiki feasible in-app; fakta/probe nyata atau UNKNOWN/heuristik.

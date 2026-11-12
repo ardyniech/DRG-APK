@@ -64,12 +64,12 @@ object MultiUserGapScanner {
         ),
         SystemDefectItem(
             defectId = "DEFECT-11",
-            title = "Fitur Asuransi/Intercom Helm Masih Pending (Di Luar Scope Rilis Awal)",
+            title = "Fitur Asuransi & Intercom Helm Masih Pending (Di Luar Scope Rilis Awal)",
             type = DefectType.PRODUCTION_DEFECT,
             severityLevel = "Sedang (Scope/Pending)",
-            affectedComponent = "modules/services & roadmap (Asuransi/Intercom)",
-            honestDefectExplanation = "Integrasi upload klaim asuransi & intercom helm (Bluetooth/GATT, PTT) masih pending/deferred sesuai roadmap, bukan bagian scope iuran Kas rilis awal.",
-            engineeringRoadmapFix = "Tandai jelas sebagai PENDING/DEFERRED di UI/devtools dan kerjakan setelah prioritas inti produksi stabil."
+            affectedComponent = "roadmap (Asuransi/Intercom Helm) — lihat juga PTT radio (DEFECT-02/F-3.1.1)",
+            honestDefectExplanation = "Integrasi klaim asuransi & intercom helm (Bluetooth/GATT/headset) masih pending/deferred sesuai roadmap, bukan bagian scope iuran Kas rilis awal. (PTT walkie-talkie di app saat ini simulasi UI, dilacak terpisah.)",
+            engineeringRoadmapFix = "Tandai jelas sebagai PENDING/DEFERRED dan kerjakan setelah prioritas inti produksi stabil; pisahkan dari isu PTT radio."
         )
     )
 }
