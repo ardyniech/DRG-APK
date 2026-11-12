@@ -69,12 +69,12 @@ fun TreasuryHealthCard(modifier: Modifier = Modifier) {
                 }
             }
             Text(
-                text = "Arus kas bulan ini sangat sehat. Alokasi terbesar disalurkan untuk Santunan Duka & Bantuan Darurat Laka Lantas.",
+                text = "Ringkasan kas ditampilkan dari data transaksi yang tercatat di aplikasi. Gunakan rincian mutasi untuk verifikasi.",
                 fontSize = 11.sp,
                 color = DrgTextSecondary
             )
             Text(
-                text = "Transparansi 100%: Seluruh mutasi kas diaudit real-time oleh anggota resmi.",
+                text = "Catatan: transparansi/sinkronisasi antar-anggota bergantung pada ketersediaan backend & data komunitas (saat ini lokal-first).",
                 fontSize = 10.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = DrgTextMuted
