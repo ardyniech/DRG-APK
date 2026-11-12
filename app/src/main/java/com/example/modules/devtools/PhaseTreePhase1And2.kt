@@ -65,11 +65,11 @@ object PhaseTreePhase1And2 {
                 features = listOf(
                     DevFeatureLeaf(
                         id = "F-2.1.1",
-                        name = "Pencatatan Pemasukan & Pengeluaran Realtime",
+                        name = "Pencatatan Pemasukan & Pengeluaran Kas",
                         status = PhaseTreeStatus.LULUS_SEMPURNA,
                         hasDefect = false,
-                        whatIsIt = "Buku kas terbuka dengan saldo berjalan dan badge kategori.",
-                        whyRequired = "Menghilangkan kecurigaan korupsi dana kas paguyuban ojol."
+                        whatIsIt = "Buku kas dengan saldo berjalan dan kategori (data tercatat di aplikasi).",
+                        whyRequired = "Membantu transparansi pencatatan dana kas paguyuban ojol."
                     ),
                     DevFeatureLeaf(
                         id = "F-2.1.2",

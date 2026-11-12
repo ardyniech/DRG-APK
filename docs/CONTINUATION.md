@@ -5,7 +5,7 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-12
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** `b430076` (capability & network probe labels)
+- **HEAD (pushed):** pending this batch commit (base: `ec9aef6`)
 - **Working tree:** to be clean after commit/push
 - **Latest CI:** deprioritized per owner (preview via aigoogle.studio); last known issues fixed in `ab0b581`/`a4f7032`. Confirm if needed: `gh run list -R ardyniech/DRG-APK --limit 5`.
 
@@ -29,7 +29,8 @@
 - **`36b3290`/`b62af35`:** PTT/Walkie-Talkie dijujurkan sebagai simulasi UI (bukan transmisi audio nyata) — dialog/DEFECT-02/F-3.1.1/thumbnail/card/capability probe diperbarui. SSOT regenerated.
 - **`5a0bcd5`/`48318d2`:** `TreasuryHealthCard` dijujurkan dari klaim statis/absolut menjadi ringkasan netral + catatan sinkronisasi (lokal-first).
 - **`226074e`/`3fb8bd0`:** `NodeTopologyScanner` NODE-MESH-01 dijujurkan (mesh/signaling & audio belum end-to-end). DEFECT-11 dipisahkan dari isu PTT radio. SSOT regenerated.
-- **This batch (devtools honesty):** `RuntimeCapabilityProber` label modul (PTT simulasi, audit/topologi heuristik/konseptual) diperjelas. `DevServerTab` membedakan ping host (firestore/AI) sebagai konektivitas, bukan status backend app; pesan offline jujur.
+- **`b430076`/`ec9aef6`:** `RuntimeCapabilityProber` label modul diperjelas (PTT simulasi, audit/topologi heuristik/konseptual). `DevServerTab` membedakan ping host sebagai konektivitas, bukan status backend app.
+- **This batch (devtools honesty):** F-2.1.1 (Kas) dijujurkan — hapus klaim "Realtime" berlebihan, tekankan pencatatan di aplikasi (lokal-first). SSOT regenerated.
 
 ## Next steps (ordered, toward production)
 1. **DevTools menyeluruh (lanjutkan):** tinjau sisa temuan (DEFECT-01..02 narasi vs aktual, teks tab/engine lain, konsistensi Progress/Maturity/Defects/SSOT) — perbaiki feasible in-app; fakta/probe nyata atau UNKNOWN/heuristik.
