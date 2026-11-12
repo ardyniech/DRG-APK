@@ -74,11 +74,11 @@ object PhaseTreePhase3And4 {
                     DevFeatureLeaf(
                         id = "F-4.2.2",
                         name = "Adaptive GPS Lock Power Management",
-                        status = PhaseTreeStatus.TERKENDALA_CACAT,
-                        hasDefect = true,
-                        whatIsIt = "Manajemen frekuensi lock GPS saat pelacakan armada.",
-                        whyRequired = "Mencegah HP driver kehabisan baterai sebelum bantuan tiba.",
-                        defectExplanation = "Polling 1 detik menguras 12%/jam; butuh adaptive geofence."
+                        status = PhaseTreeStatus.DALAM_PENGERJAAN,
+                        hasDefect = false,
+                        whatIsIt = "Manajemen frekuensi/prioritas GPS adaptif (motion, baterai, profil hemat daya).",
+                        whyRequired = "Mengurangi konsumsi baterai saat pelacakan armada/darurat.",
+                        defectExplanation = "Sinkron lokasi adaptif/battery-aware sudah ada; geofencing/optimasi lanjutan & pengukuran dampak nyata masih bisa ditingkatkan."
                     )
                 )
             )

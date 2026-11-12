@@ -46,12 +46,12 @@ object ProductionDefectScanner {
         ),
         SystemDefectItem(
             defectId = "DEFECT-04",
-            title = "GPS Polling Presisi Tinggi Berpotensi Boros Baterai",
+            title = "GPS Presisi Tinggi Berpotensi Boros Baterai (Perlu Optimasi Lanjutan)",
             type = DefectType.PRODUCTION_DEFECT,
             severityLevel = "Sedang (Battery Risk)",
-            affectedComponent = "core/location/DriverLocationTracker.kt",
-            honestDefectExplanation = "Mode pelacakan/darurat dapat menggunakan lock GPS presisi tinggi dengan interval rapat, berpotensi meningkatkan konsumsi baterai (tergantung perangkat/kondisi).",
-            engineeringRoadmapFix = "Evaluasi interval adaptif/geofencing (mis. turunkan frekuensi saat diam) dan ukur dampak nyata."
+            affectedComponent = "core/location/BatteryAwareLocationSyncer.kt",
+            honestDefectExplanation = "Sinkron lokasi sudah adaptif (profil hemat, interval berbasis gerak, downgrade saat baterai rendah), namun mode presisi tinggi/darurat tetap berpotensi boros baterai; geofencing & pengukuran dampak nyata belum lengkap.",
+            engineeringRoadmapFix = "Tambah geofencing/adaptive interval saat diam, uji konsumsi baterai nyata, dan tuning profil per skenario."
         )
     ) + MultiUserGapScanner.extraDefects()
 }
