@@ -2,33 +2,29 @@ package com.example.modules.devtools
 
 /**
  * Bawel scanner: cacat multi-user, sync, dan keamanan.
- *
- * Sumber: .github/scripts/audit_minus.py (23 temuan, 6 BLOCKER per 2026-11-09).
- * Finansial komunitas sementara hanya iuran kas — marketplace/arisan DEFERRED,
- * jadi tidak dimasukkan sebagai defect blocker di sini.
+ * Sumber: temuan bawel/devtools (sejalan audit_minus.py & kondisi repo). Perbarui saat fakta berubah.
+ * Finansial rilis awal: iuran Kas saja — marketplace/arisan DEFERRED (bukan defect blocker di sini).
  */
 object MultiUserGapScanner {
-    /**
-     * @return 8 cacat tambahan (DEFECT-05 s/d 12) di luar 4 awal.
-     */
+    /** @return cacat tambahan (DEFECT-05 s/d 11) di luar 4 awal, jujur & non-fabricated. */
     fun extraDefects(): List<SystemDefectItem> = listOf(
         SystemDefectItem(
             defectId = "DEFECT-05",
-            title = "Fake SYNCED ke Cloud Tanpa Network Call",
+            title = "Sinkronisasi Cloud/Server Belum Nyata (Antrean Lokal Saja)",
             type = DefectType.CONCEPT_FLAW,
-            severityLevel = "Tinggi (Anti-Fabrikasi)",
+            severityLevel = "Tinggi (Blocker Multi-User)",
             affectedComponent = "core/sync/BackgroundSyncEngine.kt",
-            honestDefectExplanation = "Label Tersinkronisasi ke Cloud tampil padahal triggerBackgroundSync cuma delay lalu removeSyncItem antrean lokal. Tidak ada Retrofit/OkHttp/Firestore upload.",
-            engineeringRoadmapFix = "Ganti jadi upload Retrofit/Firestore sungguhan atau label jujur OFFLINE_SAVED; sinkron via Worker + retry."
+            honestDefectExplanation = "Engine sinkron kini jujur memproses antrean lokal (bukan klaim upload cloud palsu), namun belum ada unggah server/Firestore/Retrofit nyata. Data belum tersinkron lintas perangkat.",
+            engineeringRoadmapFix = "Implementasikan upload server sungguhan (Worker + retry) saat backend/akun tersedia; pertahankan status jujur."
         ),
         SystemDefectItem(
             defectId = "DEFECT-06",
-            title = "Firestore/Auth Disabled + google-services.json Hilang",
+            title = "Backend Firebase/Auth/FCM Belum Aktif Penuh",
             type = DefectType.CONCEPT_FLAW,
             severityLevel = "Tinggi (Blocker Multi-User)",
             affectedComponent = "app/build.gradle.kts & app/google-services.json",
-            honestDefectExplanation = "firestore/auth dikomentari dan google-services.json hanya .example, sehingga FCM/Auth/AI tidak jalan produksi dan setiap HP terisolasi.",
-            engineeringRoadmapFix = "Uncomment firestore+auth+credentials, isi google-services.json asli, migrasi Room lokal ke Firestore sinkron."
+            honestDefectExplanation = "Layanan cloud (Firestore/Auth/FCM) bergantung konfigurasi & kredensial server yang belum aktif end-to-end untuk produksi multi-user, sehingga perangkat bisa terisolasi.",
+            engineeringRoadmapFix = "Aktifkan kredensial & dependensi cloud terverifikasi, lalu migrasikan sinkron Room→server secara bertahap."
         ),
         SystemDefectItem(
             defectId = "DEFECT-07",
@@ -36,8 +32,8 @@ object MultiUserGapScanner {
             type = DefectType.CONCEPT_FLAW,
             severityLevel = "Tinggi (Security)",
             affectedComponent = "modules/auth/LoginAuthValidator.kt & .env.example",
-            honestDefectExplanation = "Login cari user di daftar lokal HP itu dan PIN SHA-256 tanpa salt di SharedPrefs. Seed super-admin default DRG-001/1234 bila tidak diganti.",
-            engineeringRoadmapFix = "Pindah ke akun server (Firebase Auth Phone), PIN ke PBKDF2+Keystore, tolak PIN default sebelum rilis."
+            honestDefectExplanation = "Login masih berbasis data lokal perangkat dan PIN dengan proteksi lokal; seed default berisiko bila tidak diganti sebelum rilis.",
+            engineeringRoadmapFix = "Pindah ke akun server (mis. Firebase Auth Phone), perkuat penyimpanan PIN, dan tolak kredensial default sebelum produksi."
         ),
         SystemDefectItem(
             defectId = "DEFECT-08",
@@ -45,44 +41,35 @@ object MultiUserGapScanner {
             type = DefectType.PRODUCTION_DEFECT,
             severityLevel = "Tinggi (Data Loss)",
             affectedComponent = "AndroidManifest allowBackup=false & Room v13",
-            honestDefectExplanation = "allowBackup=false tanpa cloud backup/sync. Ganti HP/reset/uninstal menghapus kas/forum/kontak permanen; SQLite juga belum SQLCipher.",
-            engineeringRoadmapFix = "Tambah export/import kas terenkripsi + cloud backup, pertimbangkan SQLCipher untuk NIK/SIM."
+            honestDefectExplanation = "allowBackup=false tanpa cloud backup/sync. Ganti HP/reset/uninstal menghapus kas/forum/kontak lokal; SQLite belum terenkripsi (risiko data-at-rest).",
+            engineeringRoadmapFix = "Tambah export/import kas terenkripsi + cloud backup, dan evaluasi SQLCipher untuk data sensitif."
         ),
         SystemDefectItem(
             defectId = "DEFECT-09",
-            title = "P2P Signaling Log-Only — Discovery 0%",
+            title = "Signaling/Discovery P2P Belum Fungsional Lintas Perangkat",
             type = DefectType.CONCEPT_FLAW,
             severityLevel = "Tinggi (Blocker Multi-User)",
             affectedComponent = "core/p2p/P2PSignalingManager.kt & P2PManager.kt",
-            honestDefectExplanation = "broadcastPeerInfo/onMessageReceived cuma Log.d dan ICE candidate string palsu candidate:1 — peer tidak pernah dicatat atau dibentuk SDP.",
-            engineeringRoadmapFix = "Implementasikan FCM signaling SDP/ICE penuh + STUN/TURN relay lintas seluler."
+            honestDefectExplanation = "Signaling kini berbasis antrean lokal (bukan broadcast debug palsu), namun SDP/ICE/discovery FCM/STUN-TURN nyata belum terbentuk end-to-end.",
+            engineeringRoadmapFix = "Implementasikan signaling FCM + pertukaran SDP/ICE penuh dan relay STUN/TURN saat siap."
         ),
         SystemDefectItem(
             defectId = "DEFECT-10",
-            title = "Schema Room Hilang + Drift Docs",
+            title = "Schema Room Historis Hilang (Migrasi Belum Tervalidasi Penuh)",
             type = DefectType.PRODUCTION_DEFECT,
             severityLevel = "Sedang (Data Risk)",
-            affectedComponent = "app/schemas/ & README.md",
-            honestDefectExplanation = "exportSchema=true tapi 1-4,8,9.json belum dicommit; README masih v12/32 padahal v13/51. Migrasi v1 ke v13 tidak tervalidasi penuh.",
-            engineeringRoadmapFix = "Generate schema via Room export, commit, dan sinkronkan badge README ke v13/51."
+            affectedComponent = "app/schemas/ & Room export",
+            honestDefectExplanation = "exportSchema=true namun schema historis 1,2,3,4,8,9.json belum tersedia di repo, sehingga verifikasi migrasi v1→v13 tidak lengkap.",
+            engineeringRoadmapFix = "Generate & commit schema hilang via Room export valid (tanpa fabrikasi) dan verifikasi migrasi."
         ),
         SystemDefectItem(
             defectId = "DEFECT-11",
-            title = "Dead Button Upload Asuransi + TODO Status",
+            title = "Fitur Asuransi/Intercom Helm Masih Pending (Di Luar Scope Rilis Awal)",
             type = DefectType.PRODUCTION_DEFECT,
-            severityLevel = "Sedang (Dead-End)",
-            affectedComponent = "services/DriverServicesScreen & dashboard/DashboardHeader",
-            honestDefectExplanation = "Upload berkas RS hanya snackbar lokal tanpa pipeline upload; onStatusChange DashboardHeader masih TODO sehingga status shift mati.",
-            engineeringRoadmapFix = "Hubungkan PhotoPicker ke upload worker retry offline; implementasikan update status shift."
-        ),
-        SystemDefectItem(
-            defectId = "DEFECT-12",
-            title = "PII Dummy Hardcode di Skema + Hex Magic",
-            type = DefectType.PRODUCTION_DEFECT,
-            severityLevel = "Sedang (Privacy)",
-            affectedComponent = "AppDatabaseMigrations 12_13 & banyak file literal warna hex",
-            honestDefectExplanation = "DEFAULT members NIK 3507123456780001/SIM dummy masuk skema; banyak file pakai literal warna hex bukan DesignTokens, melanggar No Magic Numbers.",
-            engineeringRoadmapFix = "DEFAULT jadi kosongkan; pindah literal warna ke DesignTokens/Theme terpusat."
+            severityLevel = "Sedang (Scope/Pending)",
+            affectedComponent = "modules/services & roadmap (Asuransi/Intercom)",
+            honestDefectExplanation = "Integrasi upload klaim asuransi & intercom helm (Bluetooth/GATT, PTT) masih pending/deferred sesuai roadmap, bukan bagian scope iuran Kas rilis awal.",
+            engineeringRoadmapFix = "Tandai jelas sebagai PENDING/DEFERRED di UI/devtools dan kerjakan setelah prioritas inti produksi stabil."
         )
     )
 }

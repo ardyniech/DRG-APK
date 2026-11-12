@@ -26,15 +26,24 @@ fun DevScoreBanner(score: ProjectHealthScore) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text("🎯 Skor Proyek: ${score.finalScore}% (${score.grade})", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgOnAmberContainer)
                 Text(
-                    "Penalti: Dead (-${score.deadButtonsCount * score.penaltyPerDeadButton}%), Dangkal (-${score.shallowFeaturesCount * score.penaltyPerShallow}%), Bug (-${score.bugPenaltiesCount * score.penaltyPerBug}%), Progres (-${score.progressPenaltiesCount * score.penaltyPerProgressGap}%)",
-                    fontSize = 10.sp,
-                    color = DrgTextSecondary
+                    "🎯 Skor Proyek: ${String.format("%.1f", score.finalScore)}% (${score.grade})",
+                    fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgOnAmberContainer
+                )
+                Text(
+                    "Penalti: Dead (-${String.format("%.1f", score.deadButtonsCount * score.penaltyPerDeadButton)}%), " +
+                        "Dangkal (-${String.format("%.1f", score.shallowFeaturesCount * score.penaltyPerShallow}%), " +
+                        "Cacat (-${String.format("%.1f", score.bugPenaltiesCount * score.penaltyPerBug}%), " +
+                        "Progres (-${String.format("%.1f", score.progressPenaltiesCount * score.penaltyPerProgressGap)}%)",
+                    fontSize = 10.sp, color = DrgTextSecondary
                 )
             }
             Surface(shape = RoundedCornerShape(6.dp), color = DrgRedDanger) {
-                Text("Penalti -20%", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color.White, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
+                Text(
+                    "Penalti -${String.format("%.1f", score.totalPenalty)}%",
+                    fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color.White,
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                )
             }
         }
     }

@@ -22,44 +22,46 @@ import com.example.ui.theme.*
 fun DevBugHunterTab(
     headerContent: (@Composable () -> Unit)? = null
 ) {
+    val score = remember { ProjectHealthScore() }
+    val features = remember { DeadButtonShallowScanner.getAuditedFeatures() }
+    val dead = features.filter { it.hasDeadButtons }
+    val shallow = features.filter { it.isShallow }
+    val defects = remember { ProductionDefectScanner.scanKnownDefects() }
+    val totalIssues = dead.size + shallow.size + defects.size + score.progressPenaltiesCount
+
     DevTabShell(
         headerContent = headerContent,
         headerIcon = Icons.Default.BugReport,
         headerTitle = "Bug, Dead Buttons & Shallow Features Hunter",
-        headerDesc = "Deteksi tanpa kompromi: Dead Button (-4%), Fitur Dangkal (-3%), Bug (-2%), Progres Gap (-2%)."
+        headerDesc = "Deteksi jujur dari scanner: Dead Button (-4%), Dangkal (-3%), Cacat (-2%), Gap Progres (-2%)."
     ) {
-
         item {
             Surface(shape = RoundedCornerShape(12.dp), color = DrgErrorBgSoft, modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Icon(Icons.Default.Warning, contentDescription = null, tint = DrgRedDanger, modifier = Modifier.size(24.dp))
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("6 Masalah Terdeteksi (Akumulasi Penalti: -20.0%)", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgErrorText)
-                        Text("Skor Proyek turun dari 95.0% ke 75.0% (Grade B: Perlu Penguatan).", fontSize = 10.sp, color = DrgErrorTextDark)
+                        Text(
+                            "$totalIssues temuan (Penalti: -${String.format("%.1f", score.totalPenalty)}%)",
+                            fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgErrorText
+                        )
+                        Text(
+                            "Skor ${String.format("%.1f", score.baseScore)}% → ${String.format("%.1f", score.finalScore)}% (${score.grade})",
+                            fontSize = 10.sp, color = DrgErrorTextDark
+                        )
                     }
                 }
             }
         }
-
         item {
             Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))) {
                 Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("⚠️ Rincian Temuan & Penalti Ketat", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
-                    Divider(color = DrgOutline.copy(alpha = 0.3f))
-                    Text("1. [DEAD-BUTTON] Upload Berkas RS di Asuransi (Penalti: -4.0%)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgRedDanger)
-                    Text("   Tombol belum memiliki backend receiver / multipart upload.", fontSize = 10.sp, color = DrgTextSecondary)
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text("2. [DEAD-BUTTON] Pairing Bluetooth Helm GATT (Penalti: -4.0%)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgRedDanger)
-                    Text("   Tombol interkom helm hanya listener mock tanpa socket RFCOMM.", fontSize = 10.sp, color = DrgTextSecondary)
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text("3. [SHALLOW] Modul Klaim Asuransi Instan (Penalti: -3.0%)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgOrangeText)
-                    Text("   Hanya form lokal tanpa verifikasi API polis asuransi riil.", fontSize = 10.sp, color = DrgTextSecondary)
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text("4. [SHALLOW] Interkom Helm Bluetooth GATT (Penalti: -3.0%)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgOrangeText)
-                    Text("   Status fitur masih konsep/benih belum production hardware.", fontSize = 10.sp, color = DrgTextSecondary)
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text("5. [BUG] Minor Recomposition di KasTransparan (Penalti: -2.0%)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgRedDanger)
-                    Text("6. [BUG] Background Sync Timeout Warning (Penalti: -2.0%)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgRedDanger)
+                    Text("⚠️ Rincian Temuan (dari scanner nyata)", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
+                    HorizontalDivider(color = DrgOutline.copy(alpha = 0.3f))
+                    dead.forEach { Text("• [DEAD-BUTTON] ${it.name}: ${it.deadButtonDetails ?: "-"}", fontSize = 10.sp, color = DrgRedDanger) }
+                    shallow.filter { !it.hasDeadButtons }.forEach { Text("• [SHALLOW] ${it.name}: ${it.shallowReason ?: "-"}", fontSize = 10.sp, color = DrgOrangeText) }
+                    defects.forEach { Text("• [${it.type.label}] ${it.defectId} ${it.title}", fontSize = 10.sp, color = DrgRedDanger) }
+                    if (score.progressPenaltiesCount > 0) Text("• [PROGRES] ${score.progressPenaltiesCount} gap progres terhitung", fontSize = 10.sp, color = DrgWarningTextDark)
+                    Text("Catatan: fitur PENDING/DEFERRED (Asuransi, Intercom Helm) mengikuti scope roadmap.", fontSize = 9.sp, color = DrgTextSecondary)
                 }
             }
         }
