@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "v1.10-44-gdc641c6",
-    "commit": "dc641c6",
+    "version": "v1.10-46-ga542cb9",
+    "commit": "a542cb9",
     "commitDate": "2026-11-12",
     "generatedBy": "generate_about_manifest.py"
   },

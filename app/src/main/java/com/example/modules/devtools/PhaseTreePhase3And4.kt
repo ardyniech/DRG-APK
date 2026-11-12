@@ -64,12 +64,12 @@ object PhaseTreePhase3And4 {
                 features = listOf(
                     DevFeatureLeaf(
                         id = "F-4.2.1",
-                        name = "Fallback SMS Otomatis Saat Blank Spot",
+                        name = "Fallback SMS Darurat (Intent/Composer) Saat Offline",
                         status = PhaseTreeStatus.TERKENDALA_CACAT,
                         hasDefect = true,
-                        whatIsIt = "SMS darurat berisi koordinat GPS ke Satgas TRC terdekat.",
-                        whyRequired = "Tetap terhubung saat sinyal paket data seluler drop 0 bar.",
-                        defectExplanation = "Gagal bila saldo pulsa prabayar driver Rp 0; butuh gateway WA."
+                        whatIsIt = "Menyusun & membuka SMS darurat berisi koordinat GPS ke Satgas TRC (bukan kirim otomatis).",
+                        whyRequired = "Membantu pelaporan saat sinyal data drop, jika SMS dapat dikirim.",
+                        defectExplanation = "Tidak otomatis terkirim (membuka composer), butuh aksi user & pulsa/SMS aktif; gateway alternatif belum ada (DEFECT-03)."
                     ),
                     DevFeatureLeaf(
                         id = "F-4.2.2",

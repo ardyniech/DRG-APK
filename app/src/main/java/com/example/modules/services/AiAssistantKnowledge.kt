@@ -48,7 +48,7 @@ object AiAssistantKnowledge {
             q.contains("sos") || q.contains("darurat") || q.contains("begal") || q.contains("kecelakaan") -> {
                 "🚨 Protokol Darurat SOS DRG:\n" +
                 "• Tahan tombol merah SOS selama 3 detik untuk menyiarkan sinyal ke Satgas terdekat.\n" +
-                "• Jika offline, sistem otomatis mengalihkan ke SMS Darurat berformat koordinat GPS."
+                "• Jika offline, tersedia opsi buka SMS Darurat berisi koordinat GPS (tidak otomatis; butuh pulsa & aksi kirim)."
             }
             q.contains("poin") || q.contains("badge") || q.contains("hadiah") || q.contains("kupon") -> {
                 "🏆 Program Poin & Gamifikasi DRG:\n" +

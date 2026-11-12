@@ -37,12 +37,12 @@ object ProductionDefectScanner {
         ),
         SystemDefectItem(
             defectId = "DEFECT-03",
-            title = "Fallback SMS Darurat Tergantung Pulsa Seluler",
+            title = "Fallback SMS Darurat Tidak Otomatis & Tergantung Pulsa/SMS",
             type = DefectType.PRODUCTION_DEFECT,
             severityLevel = "Tinggi (Reliability Flaw)",
-            affectedComponent = "EmergencySmsFallbackHelper.kt",
-            honestDefectExplanation = "Saat kuota data habis, sistem mencoba kirim SMS reguler. Jika saldo pulsa prabayar driver Rp 0, SMS darurat gagal terkirim.",
-            engineeringRoadmapFix = "Tambahkan integrasi webhook reverse-billing atau WhatsApp Cloud Business API gateway."
+            affectedComponent = "core/sync/EmergencySmsFallbackHelper.kt",
+            honestDefectExplanation = "Fallback membuka SMS composer (ACTION_SENDTO) berisi info/lokasi; tidak mengirim otomatis. Keberhasilan bergantung pada aksi user, ketersediaan layanan SMS, dan pulsa/saldo (Rp 0 dapat menggagalkan).",
+            engineeringRoadmapFix = "Pertimbangkan pengiriman terotomasi yang aman/terotorisasi (dengan consent) atau gateway alternatif (reverse-billing/WA API) bila tersedia."
         ),
         SystemDefectItem(
             defectId = "DEFECT-04",

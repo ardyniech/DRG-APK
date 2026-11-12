@@ -32,7 +32,7 @@ object RealtimeNetworkProbe {
         if (!hasInternet) {
             return@withContext NetworkProbeResult(
                 isOnline = false, networkType = netType, firestoreLatencyMs = -1, aiGatewayLatencyMs = -1,
-                preFailureWarning = "Gejala: Koneksi data terputus. Fallback lokal Room v13 & SMS TRC otomatis aktif."
+                preFailureWarning = "Gejala: Koneksi data terputus. Data lokal Room aktif; opsi SMS darurat (buka composer, butuh pulsa/aksi user) tersedia di fitur SOS."
             )
         }
 

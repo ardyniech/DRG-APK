@@ -65,7 +65,7 @@ object SecurityAuditEngine {
                 category = "Privacy & Telemetry",
                 isSecure = false,
                 statusText = "Belum diverifikasi penuh (tidak ada probe runtime komprehensif)",
-                riskDetail = "Fallback SMS dapat memuat link lokasi & butuh pulsa (DEFECT-03). Pastikan tidak ada logging koordinat sensitif."
+                riskDetail = "Fallback SMS (buka composer, tidak otomatis) dapat memuat link lokasi & butuh pulsa/aksi user (DEFECT-03). Pastikan tidak ada logging koordinat sensitif."
             )
         )
 

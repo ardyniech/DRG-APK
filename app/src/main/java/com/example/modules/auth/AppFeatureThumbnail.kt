@@ -34,7 +34,7 @@ object AppFeatureRepository {
             id = "sos",
             title = "Tombol SOS & Tim Reaksi Cepat",
             category = "Keamanan Jalan",
-            description = "Sinyal darurat 3 detik langsung terhubung ke Satgas TRC & SMS fallback GPS.",
+            description = "Sinyal darurat dengan countdown; siarkan alert & opsi SMS darurat berisi lokasi (composer, butuh pulsa/aksi user).",
             icon = Icons.Default.Warning,
             drawableResId = R.drawable.img_sos_real_1789127642014,
             badgeText = "Siaga 24/7",

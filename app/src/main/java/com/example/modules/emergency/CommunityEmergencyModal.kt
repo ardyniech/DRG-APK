@@ -106,7 +106,7 @@ fun CommunityEmergencyModal(
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = DrgAmberSecondary),
                     modifier = Modifier.fillMaxWidth().height(42.dp)
                 ) {
-                    Text("Kirim via SMS Darurat (Offline / Tanpa Kuota)", fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Buka SMS Darurat (butuh pulsa & kirim manual)", fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
                 }
             }
         }

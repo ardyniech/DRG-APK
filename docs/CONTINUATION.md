@@ -5,9 +5,9 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-12
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** pending this batch commit (base: `a4f7032` test fix for honest APK inspector)
+- **HEAD (pushed):** pending this batch commit (base: `a542cb9` docs/continuation)
 - **Working tree:** to be clean after commit/push
-- **Latest CI (known):** `43216338139` **failure** (`ab0b581`, test compile ref to removed `LATEST_TARGET_VERSION_CODE`) → fixed by `a4f7032`; confirm latest run: `gh run list -R ardyniech/DRG-APK --limit 5`.
+- **Latest CI:** deprioritized per owner (preview via aigoogle.studio); last known issues fixed in `ab0b581`/`a4f7032`. Confirm if needed: `gh run list -R ardyniech/DRG-APK --limit 5`.
 
 ## Audit snapshot
 - **Command:** `python3 .github/scripts/audit_minus.py`
@@ -21,13 +21,14 @@
 ## Done (recent batches)
 - Foundations/refactors, honest sync/P2P local-only, hex-token, CI fixes, handoff trail, ktlint warn-only CI.
 - DevTools honesty: defects/bug hunter/score dynamic & scope-aware, Build/CI/CodeIntegrity/mesh/topology/APK/CPU/repo/git/UI-UX/phase/RCA/security probe limits dijujurkan.
-- **`ab0b581`:** fix syntax `DevScoreBanner.kt`. **`a4f7032`:** update `DevToolsOutdatedApkCompatibilityTest` agar selaras perilaku `DynamicApkInspector` yang jujur (hapus ref `LATEST_TARGET_VERSION_CODE`).
+- **`ab0b581`:** fix syntax `DevScoreBanner.kt`. **`a4f7032`:** update `DevToolsOutdatedApkCompatibilityTest` agar selaras `DynamicApkInspector` jujur (hapus ref `LATEST_TARGET_VERSION_CODE`).
 - **`dc641c6`:** `DevMaturityTab` & `DevProgressTab` — label/teks diperjelas (audit terkurasi, progres jujur & scope-aware).
-- **`bc835b6` (temuan devtools→fix):** F-4.2.2 & DEFECT-04 diselaraskan dengan implementasi aktual (`BatteryAwareLocationSyncer` adaptif gerak/baterai/profil) — bukan cacat "polling 1s" usang; optimasi lanjutan (geofencing/pengukuran nyata) tetap dicatat. SSOT regenerated.
+- **`bc835b6`/`a542cb9`:** F-4.2.2 & DEFECT-04 selaras implementasi aktual (`BatteryAwareLocationSyncer` adaptif gerak/baterai/profil). SSOT/CONTINUATION updated.
+- **This batch (temuan devtools→fix, SMS fallback honesty):** selaraskan klaim SMS darurat dengan implementasi aktual (`EmergencySmsFallbackHelper` membuka SMS composer/intent, bukan kirim otomatis). Diperbarui: F-4.2.1 (PhaseTree), DEFECT-03, `RealtimeNetworkProbe`, `SecurityAuditEngine`, `AppFeatureThumbnail`, `AiAssistantKnowledge`, `CommunityEmergencyModal`; `FeatureMaturity.LULUS` deskripsi diperjelas. SSOT regenerated.
 
 ## Next steps (ordered, toward production)
-1. **Monitor CI** commit terbaru; jaga `main` hijau (prioritas).
-2. **DevTools menyeluruh (lanjutkan):** tinjau sisa (DEFECT-01..03 narasi, teks tab/engine lain) untuk konsistensi fakta/probe atau UNKNOWN/heuristik.
+1. **DevTools menyeluruh (lanjutkan):** tinjau sisa temuan (DEFECT-01..02 narasi vs aktual, teks tab/engine lain, konsistensi Progress/Maturity/Defects/SSOT) — perbaiki feasible in-app; fakta/probe nyata atau UNKNOWN/heuristik.
+
 3. **[MINOR test]** coverage feasible login/PIN, SOS, kas (CI-runnable/Robolectric bila memungkinkan).
 4. **[MINOR security]** evaluasi/rencana SQLCipher (keputusan/L2 owner).
 5. **Static analysis bertahap:** rapikan/tegakkan ktlint atau tambah Detekt tanpa memecah CI.

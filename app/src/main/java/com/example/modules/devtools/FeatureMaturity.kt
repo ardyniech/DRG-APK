@@ -9,7 +9,7 @@ enum class FeatureStage(
     BENIH("Benih (Seed)", "Konsep/Schema saja, belum ada controller", 0xFFE0E7FF, 0xFF3730A3),
     ANAK("Anak (Incubating)", "UI ada, logic parsial, rentan dead button", 0xFFFEF3C7, 0xFF92400E),
     MATURE("Mature (Remaja)", "ViewModel + Room DAO + Flow aktif", 0xFFE0F2FE, 0xFF075985),
-    LULUS("Lulus (Graduated)", "100% Production-ready, zero dead button", 0xFFDCFCE7, 0xFF166534)
+    LULUS("Lulus (Graduated)", "Siap rilis: tidak ada dead button/cacat kritis teridentifikasi", 0xFFDCFCE7, 0xFF166534)
 }
 
 data class FeatureAuditItem(
