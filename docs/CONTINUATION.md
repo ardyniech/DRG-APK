@@ -5,7 +5,7 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-12
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** pending this batch commit (base: `ec9aef6`)
+- **HEAD (pushed):** `80f7601` (treasury phase wording)
 - **Working tree:** to be clean after commit/push
 - **Latest CI:** deprioritized per owner (preview via aigoogle.studio); last known issues fixed in `ab0b581`/`a4f7032`. Confirm if needed: `gh run list -R ardyniech/DRG-APK --limit 5`.
 
