@@ -56,7 +56,7 @@ object NodeTopologyScanner {
             protocol = "UDP Multicast & WebRTC DataChannel",
             isConnected = true,
             activeConnectionsCount = 0,
-            syncState = "Terbatas 1 subnet WiFi posko (DEFECT-02/09, P2P log-only)"
+            syncState = "Kerangka lokal/antrean ada; signaling/discovery end-to-end belum fungsional lintas perangkat."
         ),
         TopologyNode(
             nodeId = "NODE-AUTH-01",

@@ -25,25 +25,23 @@ data class CodeIntegrityFeatureTree(
 }
 
 object CodeIntegrityAuditor {
+    /** Audit statis heuristik; untuk bukti faktual lihat check_file_length.py & audit_minus.py. */
     fun auditCodebase(): List<CodeIntegrityFeatureTree> = listOf(
         CodeIntegrityFeatureTree(
             featureName = "Core Architecture & State",
             subFeatures = listOf(
-                CodeIntegritySubFeature(
-                    subFeatureName = "Room v13 Persistence",
-                    smells = emptyList()
-                ),
+                CodeIntegritySubFeature("Room v13 Persistence", emptyList()),
                 CodeIntegritySubFeature(
                     subFeatureName = "MVI StateFlow Dispatchers",
                     smells = listOf(
                         CodeSmellItem(
                             smellId = "SMELL-01",
-                            title = "GlobalScope usage detected",
+                            title = "Risiko orphan coroutine (heuristik)",
                             category = "Coroutine Management",
-                            severity = "Sedang",
-                            affectedModule = "core/sync/BackgroundSyncEngine.kt",
-                            smellDescription = "Penggunaan GlobalScope tanpa supervisor job berisiko orphan coroutine.",
-                            recommendedFix = "Ganti dengan viewModelScope atau CoroutineScope terikat lifecycle."
+                            severity = "Info",
+                            affectedModule = "core/sync/* (periksa penggunaan scope)",
+                            smellDescription = "Pastikan coroutine terikat lifecycle/scope terkelola; hindari GlobalScope untuk pekerjaan UI/fitur.",
+                            recommendedFix = "Gunakan viewModelScope/CoroutineScope terikat lifecycle + SupervisorJob bila perlu."
                         )
                     )
                 )
@@ -57,29 +55,18 @@ object CodeIntegrityAuditor {
                     smells = listOf(
                         CodeSmellItem(
                             smellId = "SMELL-02",
-                            title = "Deprecated Divider API",
+                            title = "Migrasi API M3 (heuristik)",
                             category = "UI Deprecation",
-                            severity = "Rendah",
-                            affectedModule = "modules/devtools/DevBugHunterTab.kt",
-                            smellDescription = "Pemanggilan Divider lama di Compose Material 3.",
-                            recommendedFix = "Gunakan HorizontalDivider sesuai rekomendasi M3."
+                            severity = "Info",
+                            affectedModule = "modules/** (cek saat refactor)",
+                            smellDescription = "Gunakan komponen Material 3 terkini (mis. HorizontalDivider) saat menyentuh file terkait.",
+                            recommendedFix = "Ganti API deprecated secara bertahap saat perubahan terverifikasi."
                         )
                     )
                 ),
-                CodeIntegritySubFeature(
-                    subFeatureName = "Touch Target & Accessibility",
-                    smells = emptyList()
-                )
+                CodeIntegritySubFeature("Touch Target & Accessibility", emptyList())
             )
         ),
-        CodeIntegrityFeatureTree(
-            featureName = "Emergency & SOS Engine",
-            subFeatures = listOf(
-                CodeIntegritySubFeature(
-                    subFeatureName = "Haptic & SMS Fallback",
-                    smells = emptyList()
-                )
-            )
-        )
+        CodeIntegrityFeatureTree("Emergency & SOS Engine", listOf(CodeIntegritySubFeature("Haptic & SMS Fallback", emptyList())))
     )
 }
