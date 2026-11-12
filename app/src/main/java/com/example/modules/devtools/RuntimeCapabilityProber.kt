@@ -22,12 +22,12 @@ object RuntimeCapabilityProber {
         Pair("Rating Bengkel & Forum Komunitas", "com.example.modules.forum_workshop.WorkshopScreenKt") to "v2.0+",
         Pair("Gamifikasi & Badge Loyalitas", "com.example.modules.gamification.GamificationLeaderboardScreenKt") to "v2.5+",
         Pair("Simulasi Lapangan Dedicated Workflow", "com.example.modules.workflow.FieldWorkflowScreenKt") to "v3.0+",
-        Pair("P2P Walkie Talkie & Audio Intercom", "com.example.modules.services.PttWalkieTalkieDialogKt") to "v3.5+",
-        Pair("Audit Keamanan Ketat & Root Engine", "com.example.modules.devtools.SecurityAuditEngine") to "v4.0+",
-        Pair("Topologi Kluster 5 Node Server", "com.example.modules.devtools.NodeTopologyScanner") to "v4.5+",
+        Pair("Walkie-Talkie PTT (UI/simulasi)", "com.example.modules.services.PttWalkieTalkieDialogKt") to "v3.5+",
+        Pair("Audit Keamanan & Probe (DevTools)", "com.example.modules.devtools.SecurityAuditEngine") to "v4.0+",
+        Pair("Topologi Node (konseptual, DevTools)", "com.example.modules.devtools.NodeTopologyScanner") to "v4.5+",
         Pair("Device Android Optimizer Advisor", "com.example.modules.devtools.DeviceAdvisorEngine") to "v4.8+",
         Pair("Hierarki Pohon Fase Pengembangan", "com.example.modules.devtools.PhaseTreeScanner") to "v5.0+",
-        Pair("Audit UI/UX Real Experience Driver", "com.example.modules.devtools.UiUxAuditEngine") to "v5.0+"
+        Pair("Audit UI/UX (heuristik, DevTools)", "com.example.modules.devtools.UiUxAuditEngine") to "v5.0+"
     )
 
     fun probeRunningCapabilities(): RuntimeCapabilitiesReport {

@@ -56,7 +56,7 @@ fun DevServerTab(
                 Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(if (isOnline) "Server Status: ONLINE (${probeResult?.networkType})" else "Server Status: OFFLINE / Gangguan", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = if (isOnline) DrgSuccessTextDark else DrgErrorText)
-                        Text(if (isOnline) "Ping Firestore: ${probeResult?.firestoreLatencyMs} ms • AI Gateway: ${probeResult?.aiGatewayLatencyMs} ms" else "Koneksi terputus. Fallback lokal Room v13 aktif otomatis.", fontSize = 10.sp, color = if (isOnline) DrgSuccessText else DrgErrorTextDark)
+                        Text(if (isOnline) "Ping host: firestore.googleapis.com ${probeResult?.firestoreLatencyMs} ms • generativelanguage.googleapis.com ${probeResult?.aiGatewayLatencyMs} ms (konektivitas, bukan status backend app)" else "Koneksi terputus. Data lokal Room tetap tersedia; sinkron cloud bergantung backend.", fontSize = 10.sp, color = if (isOnline) DrgSuccessText else DrgErrorTextDark)
                     }
                 }
             }
@@ -79,7 +79,7 @@ fun DevServerTab(
                     Text("🌐 Endpoint & Latensi Pengukuran Langsung", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
                     HorizontalDivider(color = DrgOutline.copy(alpha = 0.3f))
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("firestore.googleapis.com:443", fontSize = 11.sp, color = DrgTextSecondary)
+                        Text("firestore.googleapis.com:443 (host probe)", fontSize = 11.sp, color = DrgTextSecondary)
                         Text(if (isProbing) "Probing..." else "${probeResult?.firestoreLatencyMs ?: 0} ms", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = if ((probeResult?.firestoreLatencyMs ?: 0) < 300) DrgGreenPrimary else Color.Red)
                     }
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
