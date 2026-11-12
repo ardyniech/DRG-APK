@@ -5,9 +5,9 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-12
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** pending this batch commit (base: `4207fa3` devtools UI/UX/phase/defect)
+- **HEAD (pushed):** pending this batch commit (base: `be373d9` devtools perf/repo/git)
 - **Working tree:** to be clean after commit/push
-- **Latest CI (known):** `43131829544` **success** (`a744c01`). Confirm recent: `gh run list -R ardyniech/DRG-APK --limit 5`.
+- **Latest CI (known):** confirm with `gh run list -R ardyniech/DRG-APK --limit 5`.
 
 ## Audit snapshot
 - **Command:** `python3 .github/scripts/audit_minus.py`
@@ -19,27 +19,24 @@
 - **Line cap:** PASS (473 files, <125 lines).
 
 ## Done (recent batches)
-- Foundations/refactors/CI fixes, hex-token refactors, handoff trail, ktlint warn-only in CI.
+- Foundations/refactors, honest sync/P2P local-only, hex-token refactors, CI fixes, handoff trail, ktlint warn-only CI.
 - **`fe139e7`:** MultiUserGapScanner defects refreshed; DevBugHunterTab dynamic; DevScoreBanner actual penalty.
-- **`d9dc51a`:** Asuransi/Intercom **PENDING/DEFERRED** (scope-aware) in scanner & PhaseTree; scoring progress penalty derived from PhaseTree.
-- **`1ac9ac0`:** Build/CiCd engines & tabs no fabricated runtime metrics (UNKNOWN); CodeIntegrity stale smells fixed; NodeTopology mesh text honest.
-- **`4207fa3`:** UiUxAuditEngine/tab → heuristik/estimasi (bukan probe runtime); PhaseTreePhase5 F-5.2.1/2 diselaraskan (DevTools audit & sync queue in-progress/jujur); DEFECT-04 dihedging (risiko baterai, tanpa angka fabrikasi).
-- **This batch (DevTools honesty part 5 — perf/repo/git):**
-  - `DevicePerformanceEngine` + `DevDevicePerformanceTab`: hapus CPU% fabrikasi (→ UNKNOWN/tidak diprobe); overheating/saran berbasis sinyal nyata (suhu/termal OS, thread count).
-  - `DevRepoHealthTab`: hapus klaim statis "PASSED/465 files/100%/tests passing" → instruksi cek script/CI & info jujur.
-  - `DevGitVersionTab`: hapus log commit/tree statis palsu → tampilkan BuildConfig riil + catatan cek git log/GitHub untuk riwayat.
+- **`d9dc51a`:** Asuransi/Intercom **PENDING/DEFERRED** (scope-aware) in scanner & PhaseTree; scoring progress from PhaseTree.
+- **`1ac9ac0`:** Build/CiCd engines & tabs UNKNOWN (no fabricated metrics/PASS); CodeIntegrity stale smells fixed; NodeTopology mesh text honest.
+- **`4207fa3`:** UiUxAudit heuristik/estimasi; PhaseTreePhase5 F-5.2.1/2 selaras; DEFECT-04 dihedging.
+- **`be373d9`:** DevicePerformance CPU% UNKNOWN (probe suhu/termal/thread nyata); DevRepoHealth/DevGitVersion hapus klaim statis palsu.
+- **This batch (DevTools honesty part 6 — security & topology):**
+  - `SecurityAuditEngine`: item sandbox DB & privasi SOS tidak lagi `isSecure=true` tanpa probe kuat — ditandai risiko/belum terverifikasi penuh (selaras MINOR SQLCipher & DEFECT-03); root/cleartext/keystore tetap probe nyata.
+  - `NodeTopologyScanner` + `DevNodeTopologyTab`: status node dilabeli **konseptual/konfigurasi** (bukan koneksi live terprobe), badge "AKTIF LOKAL"/"TIDAK AKTIF" dengan penjelasan jujur.
   - SSOT regenerated.
 
 ## Next steps (ordered, toward production)
 1. **Monitor CI** commit ter-push; jaga `main` hijau.
-2. **DevTools menyeluruh (lanjutkan):** masih ada scanner/tab/engine yang perlu diaudit & dijujurkan (probe nyata atau UNKNOWN/heuristik):
-   - `ProductionDefectScanner` DEFECT-01..03: tinjau keakuratan vs kondisi aktual.
-   - `SecurityAuditEngine`: `isSecure=true` pada beberapa cek (sandbox/telemetri SOS) bersifat naratif — pastikan tidak mengklaim keamanan melebihi probe.
-   - `NodeTopologyScanner`/`DevNodeTopologyTab`: `isConnected` hardcode per-node (bukan koneksi live terprobe); pertimbangkan label status lebih jujur.
-   - `DeviceAdvisorEngine`/`DevDeviceAdvisorTab`, `DynamicApkInspector`/`DynamicDbIntrospector`/`RuntimeCapabilityProber` + kartu terkait, `RealtimeMemoryProbe`/`DevMemoryTab`, `RealtimeNetworkProbe`/`DevServerTab`, `EarlySymptomDetector`/`RootCause*`/`DevRootCauseTab`, `DevCodeIntegrityTab`, `DevSecurityAuditTab`, `DevMaturityTab`/`DevProgressTab` konsistensi teks — audit nilai statis/fabrikasi.
-   - Pastikan seluruh tab konsisten & scope-aware (Asuransi/Intercom PENDING/DEFERRED, tanpa fake).
+2. **DevTools menyeluruh (lanjutkan):** audit & jujurkan sisa scanner/tab/engine (probe nyata atau UNKNOWN/heuristik):
+   - `ProductionDefectScanner` DEFECT-01..03: tinjau keakuratan narasi vs kondisi aktual.
+   - `DeviceAdvisorEngine`/`DevDeviceAdvisorTab` (sebagian probe nyata: RAM/baterai/suhu/optimasi — verifikasi), `DynamicApkInspector`, `DynamicDbIntrospector`, `RuntimeCapabilityProber` (+ `DevApkSkewCard`), `RealtimeMemoryProbe`/`DevMemoryTab`, `RealtimeNetworkProbe`/`DevServerTab`, `EarlySymptomDetector`/`RootCause*`/`DevRootCauseTab`, `DevSecurityAuditTab` teks konsisten, `DevCodeIntegrityTab`, `DevMaturityTab`/`DevProgressTab` konsistensi & scope-aware.
 3. **[MINOR test]** coverage feasible login/PIN, SOS, kas (CI-runnable/Robolectric bila memungkinkan).
-4. **[MINOR security]** evaluasi/rencana SQLCipher (keputusan/L2 owner); risiko terdokumentasi.
+4. **[MINOR security]** evaluasi/rencana SQLCipher (keputusan/L2 owner).
 5. **Static analysis bertahap:** rapikan/tegakkan ktlint atau tambah Detekt tanpa memecah CI.
 6. **Release/OTA:** validasi Delta OTA (`v1.10` release not found) saat aset tersedia.
 

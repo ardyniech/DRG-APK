@@ -51,21 +51,21 @@ object SecurityAuditEngine {
 
         list.add(
             SecurityCheckItem(
-                name = "Isolasi Sandbox Database Room v13",
+                name = "Isolasi & Enkripsi Data Lokal (Room v13)",
                 category = "Storage Security",
-                isSecure = true,
-                statusText = "Terisolasi (allowBackup=false) — namun SQLite belum terenkripsi SQLCipher",
-                riskDetail = "NIK/SIM/kas plain di file DB. Enkripsi atau jelaskan risiko."
+                isSecure = false,
+                statusText = "Isolasi app sandbox + allowBackup=false; SQLite BELUM terenkripsi (SQLCipher)",
+                riskDetail = "Data sensitif (NIK/SIM/kas) berpotensi plain di DB lokal. Risiko terdokumentasi; enkripsi butuh evaluasi/keputusan."
             )
         )
 
         list.add(
             SecurityCheckItem(
-                name = "Proteksi Kebocoran Titik Koordinat SOS",
+                name = "Privasi Koordinat SOS/Telemetri",
                 category = "Privacy & Telemetry",
-                isSecure = true,
-                statusText = "Aman (Koordinat GPS Darurat Tidak Di-log ke Logcat)",
-                riskDetail = "Perhatian: fallback SMS membawa link peta — butuh pulsa (DEFECT-03)."
+                isSecure = false,
+                statusText = "Belum diverifikasi penuh (tidak ada probe runtime komprehensif)",
+                riskDetail = "Fallback SMS dapat memuat link lokasi & butuh pulsa (DEFECT-03). Pastikan tidak ada logging koordinat sensitif."
             )
         )
 

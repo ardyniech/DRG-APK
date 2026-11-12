@@ -12,8 +12,8 @@ data class TopologyNode(
 )
 
 /**
- * Topologi kluster 5 node — jujur per audit_minus.py (2026-11-09).
- * Cloud node tidak boleh klaim Synced sebelum Firestore di-enable.
+ * Topologi node (status konseptual/konfigurasi, bukan probe koneksi live end-to-end).
+ * isConnected di sini = aktif/tersedia secara konsep lokal, bukan jaminan link jaringan realtime.
  */
 object NodeTopologyScanner {
     @Suppress("UNUSED_PARAMETER")

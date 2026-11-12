@@ -36,19 +36,16 @@ fun DevNodeTopologyTab(
     DevTabShell(
         headerContent = headerContent,
         headerIcon = Icons.Default.Hub,
-        headerTitle = "Topologi Multi-Node & Arsitektur Cluster",
-        headerDesc = "Auto-detect status $connectedCount dari ${nodes.size} node terhubung dengan total $totalConnections koneksi aktif."
+        headerTitle = "Topologi Node & Arsitektur (Konseptual)",
+        headerDesc = "Status konseptual/konfigurasi (bukan probe koneksi live). Aktif lokal: $connectedCount/${nodes.size}. Cek SSOT/audit untuk fakta."
     ) {
 
         item {
-            Surface(shape = RoundedCornerShape(12.dp), color = DrgGreenLight, modifier = Modifier.fillMaxWidth()) {
+            Surface(shape = RoundedCornerShape(12.dp), color = DrgSurfaceVariant, modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.padding(12.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     Column {
-                        Text("Total Node Terhubung: $connectedCount / ${nodes.size}", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgGreenPrimary)
-                        Text("Mencakup Local SQLite, Cloud Firestore, AI Gateway, & Mesh Radio.", fontSize = 10.sp, color = DrgTextSecondary)
-                    }
-                    Surface(shape = RoundedCornerShape(6.dp), color = DrgGreenPrimary) {
-                        Text("$totalConnections Links", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.White, modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp))
+                        Text("Node aktif lokal (konsep): $connectedCount / ${nodes.size}", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
+                        Text("Cloud/AI/Auth/Mesh bergantung konfigurasi & implementasi; bukan status live terprobe.", fontSize = 10.sp, color = DrgTextSecondary)
                     }
                 }
             }
@@ -62,8 +59,8 @@ fun DevNodeTopologyTab(
                             Text(node.nodeName, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
                             Text("Tipe: ${node.nodeType}", fontSize = 10.sp, color = DrgTextSecondary)
                         }
-                        Surface(shape = RoundedCornerShape(6.dp), color = if (node.isConnected) DrgGreenLight else DrgErrorBgSoft) {
-                            Text(if (node.isConnected) "ONLINE" else "DISCONNECTED", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = if (node.isConnected) DrgGreenPrimary else Color.Red, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
+                        Surface(shape = RoundedCornerShape(6.dp), color = if (node.isConnected) DrgGreenLight else DrgSlateBorder) {
+                            Text(if (node.isConnected) "AKTIF LOKAL" else "TIDAK AKTIF", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = if (node.isConnected) DrgGreenPrimary else DrgTextSecondary, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
                         }
                     }
                     HorizontalDivider(color = DrgOutline.copy(alpha = 0.2f))
