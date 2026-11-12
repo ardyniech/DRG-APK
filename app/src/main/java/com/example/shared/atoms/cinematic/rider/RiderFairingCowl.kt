@@ -7,6 +7,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import com.example.ui.theme.DrgClusterBezel
+import com.example.ui.theme.DrgFairingBot
+import com.example.ui.theme.DrgFairingCrease
+import com.example.ui.theme.DrgFairingMid
 
 internal fun DrawScope.drawFairingCowl(cowlTopY: Float, cowlBottomY: Float) {
     val centerX = size.width / 2f

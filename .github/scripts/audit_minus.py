@@ -150,7 +150,8 @@ def check_code_hygiene():
     dead = []
     hexes = []
     for p in kts:
-        txt = read(os.path.relpath(p, REPO))
+        rel = os.path.relpath(p, REPO)
+        txt = read(rel)
         for ln in txt.splitlines():
             s = ln.strip()
             if "TODO(" in s or "TODO:" in s or "FIXME" in s:
@@ -159,7 +160,8 @@ def check_code_hygiene():
                     todos.append(os.path.basename(p) + ": " + s[:80])
             if "onClick = {}" in s or "onClick={}" in s.replace(" ", ""):
                 dead.append(p)
-            if re.search(r"Color\(0x", s):
+            # Token definitions in ui/theme are the canonical source, not "magic numbers".
+            if re.search(r"Color\(0x", s) and "ui/theme/" not in rel.replace("\\", "/"):
                 hexes.append(os.path.basename(p))
     if todos:
         add("MAJOR", "code", f"{len(todos)} TODO/FIXME tersisa (mis. {todos[0]}).", "Implementasikan sebelum klaim Selesai.")
