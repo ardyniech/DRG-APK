@@ -46,12 +46,12 @@ object ProductionDefectScanner {
         ),
         SystemDefectItem(
             defectId = "DEFECT-04",
-            title = "GPS Polling 1 Detik Memakan Baterai 12%/jam",
+            title = "GPS Polling Presisi Tinggi Berpotensi Boros Baterai",
             type = DefectType.PRODUCTION_DEFECT,
-            severityLevel = "Sedang (Battery Flaw)",
+            severityLevel = "Sedang (Battery Risk)",
             affectedComponent = "core/location/DriverLocationTracker.kt",
-            honestDefectExplanation = "Mode gacor/darurat melakukan lock GPS presisi tinggi setiap 1 detik. Menyedot 12-15% baterai per jam jika tidak di-cas di holder motor.",
-            engineeringRoadmapFix = "Gunakan geofencing adaptif: turunkan interval ke 5s bila driver diam/stagnan di lampu merah."
+            honestDefectExplanation = "Mode pelacakan/darurat dapat menggunakan lock GPS presisi tinggi dengan interval rapat, berpotensi meningkatkan konsumsi baterai (tergantung perangkat/kondisi).",
+            engineeringRoadmapFix = "Evaluasi interval adaptif/geofencing (mis. turunkan frekuensi saat diam) dan ukur dampak nyata."
         )
     ) + MultiUserGapScanner.extraDefects()
 }

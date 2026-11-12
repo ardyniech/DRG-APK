@@ -5,42 +5,41 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-12
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** pending this batch commit (base: `d9dc51a` devtools scope/progress/scoring)
+- **HEAD (pushed):** pending this batch commit (base: `1ac9ac0` devtools build/CI/integrity/topology)
 - **Working tree:** to be clean after commit/push
-- **Latest CI (known):** `43131829544` **success** (`a744c01`). Confirm recent runs: `gh run list -R ardyniech/DRG-APK --limit 5`.
+- **Latest CI (known):** `43131829544` **success** (`a744c01`). Confirm recent: `gh run list -R ardyniech/DRG-APK --limit 5`.
 
 ## Audit snapshot
 - **Command:** `python3 .github/scripts/audit_minus.py`
 - **Result:** **0 BLOCKER, 2 MAJOR, 2 MINOR** (total 4)
-  - **MAJOR [multi-user]:** Seed lokal-only → data dummy per-HP, bukan komunitas bersama. (Butuh backend + akun server.)
-  - **MAJOR [database]:** Schema Room hilang `1,2,3,4,8,9.json`. (Export/commit valid; **jangan difabrikasi**.)
+  - **MAJOR [multi-user]:** Seed lokal-only (butuh backend + akun server). *No fake sync.*
+  - **MAJOR [database]:** Schema Room hilang `1,2,3,4,8,9.json` (export/commit valid saja; **jangan difabrikasi**).
   - **MINOR [security]:** SQLite belum terenkripsi/SQLCipher (risiko data-at-rest terdokumentasi di `README.md`).
-  - **MINOR [test]:** `androidTest` minim (alur kritis login/SOS/kas belum ter-cover instrumented).
+  - **MINOR [test]:** `androidTest` minim (alur kritis login/SOS/kas).
 - **Line cap:** `check_file_length.py` → PASS (473 files, <125 lines).
 
 ## Done (recent batches)
-- **Foundations/refactors (earlier):** delta OTA, signing, honest sync/P2P local-only, audit BLOCKERs cleared, hex-token refactors, CI compile fixes, SSOT refreshes.
-- **`f35aca3`:** `docs/CONTINUATION.md` trail. Skills: `auto-continue-workflow`, `drg-apk-to-production`.
-- **`5c10408`:** ktlint CLI warn-only/non-blocking in CI (cleared MINOR `[ci]`).
-- **`fe139e7` (DevTools honesty part 1):** `MultiUserGapScanner` defects refreshed; `DevBugHunterTab` dynamic; `DevScoreBanner` actual penalty.
-- **`d9dc51a` (DevTools honesty part 2):** Asuransi/Intercom Helm marked **PENDING/DEFERRED** (out-of-scope) in `DeadButtonShallowScanner` & PhaseTree (F-2.2.2, F-3.2.1); `DevScoringEngine` progress penalty derived from PhaseTree (defect+in-progress).
-- **This batch (DevTools honesty part 3 — build/CI/integrity/topology):**
-  - `BuildDeploymentEngine`: removed fabricated metrics (hash/coverage/suites/duration/failures) → returns UNKNOWN/-1, `isPipelineHealthy=false` (unknown≠healthy).
-  - `CiCdStatusScanner`: pipeline definition only with UNKNOWN runtime statuses; steps updated to reflect actual workflow (incl. audit/manifest/ktlint); no fake PASS claims.
-  - `DevBuildDeploymentTab` / `DevCiCdTab`: UI handles UNKNOWN (no HEALTHY/PASS green lies).
-  - `CodeIntegrityAuditor`: replaced stale SMELL-01/02 (GlobalScope in BackgroundSyncEngine, Divider in BugHunterTab) with honest heuristic/info items.
-  - `NodeTopologyScanner`: NODE-MESH-01 text updated (local queue/kerangka ada, signaling/discovery end-to-end belum fungsional).
+- Foundations/refactors: delta OTA, honest sync/P2P local-only, audit BLOCKERs cleared, hex-token refactors, CI compile fixes, SSOT refreshes.
+- `f35aca3`: handoff trail. Skills: `auto-continue-workflow`, `drg-apk-to-production`.
+- `5c10408`: ktlint CLI warn-only in CI (cleared MINOR `[ci]`).
+- `fe139e7`: DevTools defects refreshed (MultiUserGapScanner), BugHunter dynamic, ScoreBanner actual penalty.
+- `d9dc51a`: scope-aware progress/scoring (Asuransi/Intercom PENDING/DEFERRED in scanner & PhaseTree; progress penalty derived from PhaseTree).
+- `1ac9ac0`: BuildDeploymentEngine/CiCdStatusScanner no fabricated runtime metrics (UNKNOWN), DevBuild/CI tabs honest, CodeIntegrityAuditor stale smells fixed, NodeTopology mesh text updated.
+- **This batch (DevTools honesty part 4 — UI/UX, defects, phase):**
+  - `UiUxAuditEngine` + `DevUiUxAuditTab`: converted from fabricated "real score/audit" to **heuristik/checklist** with estimasi scores and disclaimer (bukan probe runtime).
+  - `PhaseTreePhase5`: F-5.2.1 set to DALAM_PENGERJAAN (DevTools audit makin jujur, belum "lulus sempurna"); F-5.2.2 deskripsi/status diselaraskan (queue lokal jujur, cloud upload belum).
+  - `ProductionDefectScanner`: DEFECT-04 diubah jadi klaim risiko baterai yang jujur/terukur (bukan angka spesifik tanpa verifikasi).
   - SSOT regenerated.
 
 ## Next steps (ordered, toward production)
-1. **Monitor CI** untuk commit ter-push; jaga `main` hijau. Perbaiki regresi dulu.
-2. **DevTools menyeluruh (lanjutkan):** jujurkan & selaraskan sisa scanner/tab/engine (hapus hardcode/fake, label "unknown/tidak terprobe" bila perlu):
-   - `ProductionDefectScanner` DEFECT-01..04: validasi vs kondisi aktual dan perbarui jika stale.
-   - `PhaseTreePhase5` (F-5.2.2 sync worker: honest local-only queue, cloud upload belum) — pastikan deskripsi/status konsisten.
-   - `UiUxAuditEngine`, `SecurityAuditEngine` (isSecure hardcode/probe?), `ServerOverloadMonitor` (sudah mostly honest), `DeviceAdvisorEngine`, `DevicePerformanceEngine`, `DynamicApkInspector`, `DynamicDbIntrospector`, `RuntimeCapabilityProber`, `RealtimeMemoryProbe`, `RealtimeNetworkProbe`, `EarlySymptomDetector`, `RootCause*`, `Dev*Tab` terkait — hilangkan skor/data fabrikasi, tampilkan fakta/probe nyata atau UNKNOWN.
-   - Pastikan Progress/Maturity/Defects/BugHunter/SSOT/RCA konsisten dan tidak menyesatkan (progres scope-aware).
+1. **Monitor CI** commit ter-push; jaga `main` hijau. Perbaiki regresi dulu.
+2. **DevTools menyeluruh (lanjutkan):** jujurkan sisa scanner/tab/engine (hapus hardcode/fake, gunakan probe nyata atau label UNKNOWN/heuristik):
+   - `ProductionDefectScanner` DEFECT-01..03: tinjau keakuratan vs kondisi aktual; perjelas bila asumsi.
+   - `SecurityAuditEngine`: beberapa cek `isSecure=true` dengan narasi risiko — pastikan tidak mengklaim "aman" melebihi probe nyata.
+   - Scanner/engine lain: `DeviceAdvisorEngine`, `DevicePerformanceEngine`, `DynamicApkInspector`, `DynamicDbIntrospector`, `RuntimeCapabilityProber`, `RealtimeMemoryProbe`, `RealtimeNetworkProbe`, `EarlySymptomDetector`, `RootCause*`, `DevDevice*/DevMemory*/DevServer*/DevNodeTopology*/DevSecurityAudit*/DevRootCause*` tabs — audit & perbaiki nilai statis/fabrikasi.
+   - Pastikan konsistensi Progress/Maturity/Defects/BugHunter/SSOT/RCA (progres scope-aware, tanpa fake).
 3. **[MINOR test]** coverage feasible login/PIN, SOS, kas (CI-runnable/Robolectric bila memungkinkan).
-4. **[MINOR security]** evaluasi/rencana SQLCipher (keputusan/L2 owner); risiko tetap terdokumentasi.
+4. **[MINOR security]** evaluasi/rencana SQLCipher (keputusan/L2 owner); risiko terdokumentasi.
 5. **Static analysis bertahap:** rapikan/tegakkan ktlint atau tambah Detekt tanpa memecah CI.
 6. **Release/OTA:** validasi Delta OTA (`v1.10` release not found) saat aset tersedia.
 

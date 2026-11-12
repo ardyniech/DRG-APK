@@ -34,20 +34,20 @@ object PhaseTreePhase5 {
                 features = listOf(
                     DevFeatureLeaf(
                         id = "F-5.2.1",
-                        name = "Audit DevTools Mandiri Tanpa Mocking Data",
-                        status = PhaseTreeStatus.LULUS_SEMPURNA,
+                        name = "Audit DevTools Mandiri (Jujur/Non-Mocking)",
+                        status = PhaseTreeStatus.DALAM_PENGERJAAN,
                         hasDefect = false,
-                        whatIsIt = "Dashboard diagnosa lengkap untuk inspeksi bug, RAM, & node.",
-                        whyRequired = "AI & human developer dapat mengawasi status riil aplikasi."
+                        whatIsIt = "Dashboard diagnosa (bug, RAM, node, CI/SSOT) yang makin selaras fakta riil.",
+                        whyRequired = "AI & developer butuh visibilitas jujur atas status aplikasi."
                     ),
                     DevFeatureLeaf(
                         id = "F-5.2.2",
-                        name = "Background Sync Cloud Worker Queue",
+                        name = "Background Sync Queue (Local-Only, Jujur)",
                         status = PhaseTreeStatus.DALAM_PENGERJAAN,
                         hasDefect = false,
-                        whatIsIt = "Worker background penampung queue sinkronisasi offline ke cloud.",
-                        whyRequired = "Menjamin transaksi kas & postingan forum tidak hilang.",
-                        defectExplanation = "Saat ini status pending penalti -2% dalam antrean roadmap."
+                        whatIsIt = "Antrean sinkronisasi lokal diproses secara jujur; unggah cloud/server nyata belum ada.",
+                        whyRequired = "Fondasi untuk sinkron multi-user saat backend tersedia.",
+                        defectExplanation = "Belum ada upload server/Firestore; status tetap jujur (no fake sync)."
                     )
                 )
             )

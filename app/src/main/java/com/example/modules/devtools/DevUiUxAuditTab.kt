@@ -36,8 +36,8 @@ fun DevUiUxAuditTab(
         item {
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = DrgGreenLight,
-                modifier = Modifier.fillMaxWidth().border(1.dp, DrgGreenPrimary.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
+                color = DrgSurfaceVariant,
+                modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Row(
@@ -45,12 +45,12 @@ fun DevUiUxAuditTab(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("🎯 UI/UX Real Experience Score", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgGreenPrimary)
-                        Text("${String.format("%.1f", audit.overallScore)}/100", fontWeight = FontWeight.ExtraBold, fontSize = 16.sp, color = DrgGreenPrimary)
+                        Text("🎯 UI/UX Checklist (Heuristik)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
+                        Text("~${String.format("%.1f", audit.overallScore)}/100", fontWeight = FontWeight.ExtraBold, fontSize = 16.sp, color = DrgTextSecondary)
                     }
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text("Predikat: ${audit.grade}", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
-                    Text("Kepatuhan: ${audit.passedPillarsCount}/${audit.totalPillarsCount} Pilar Pengalaman Ojol Berkendara Terpenuhi.", fontSize = 10.sp, color = DrgTextSecondary)
+                    Text("Catatan: ${audit.grade}", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
+                    Text("Checklist: ${audit.passedPillarsCount}/${audit.totalPillarsCount} pilar (estimasi, bukan probe runtime).", fontSize = 10.sp, color = DrgTextSecondary)
                 }
             }
         }
