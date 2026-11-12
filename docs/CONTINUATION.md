@@ -5,34 +5,34 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-12
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** `a744c01` — `chore(ssot): refresh manifest after audit fix` (also `9a47730 fix: resolve RiderFairingCowl token imports and exclude theme defs from hex audit`)
-- **Working tree:** clean at time of this handoff
-- **Latest CI:** `43131829544` **success** (DRG Driver Android CI/CD, `a744c01`, 8m2s, 2026-11-12T01:03:48Z). Prior failures (`43077741682` etc.) were due to compile error in `RiderFairingCowl` (unresolved token imports), fixed in `9a47730`.
+- **HEAD (pushed):** pending this batch commit (base: `f35aca3` docs CONTINUATION trail)
+- **Working tree:** to be clean after commit/push
+- **Latest CI (known):** `43131829544` **success** (DRG Driver Android CI/CD, `a744c01`, 2026-11-12T01:03:48Z). `43143272186` was **in_progress** for `f35aca3` (docs-only) at last check — confirm latest with `gh run list -R ardyniech/DRG-APK --limit 5`.
 
 ## Audit snapshot
 - **Command:** `python3 .github/scripts/audit_minus.py`
-- **Result:** **0 BLOCKER, 2 MAJOR, 3 MINOR** (total 5)
+- **Result:** **0 BLOCKER, 2 MAJOR, 2 MINOR** (total 4)
   - **MAJOR [multi-user]:** Seed hanya bila members kosong → tiap HP baru punya data dummy sendiri, bukan data komunitas bersama. (Fix: backend + akun server, sinkron nyata.)
   - **MAJOR [database]:** Schema Room hilang `1.json,2.json,3.json,4.json,8.json,9.json` (exportSchema=true tapi tidak commit) → verifikasi migrasi v1→v13 tidak lengkap. (Fix: generate & commit schema hilang via Room export valid; **jangan difabrikasi**.)
   - **MINOR [security]:** Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB. Risiko data-at-rest sudah terdokumentasi di `README.md`; keputusan/implementasi enkripsi masih terbuka.
   - **MINOR [test]:** `androidTest` cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented.
-  - **MINOR [ci]:** Detekt/KtLint tidak ada di CI — hanya line-cap + lint.
 - **Line cap:** `python3 .github/scripts/check_file_length.py` → PASS (473 files, all < 125 lines).
 
 ## Done (recent batches)
-- **OTA/CI/release foundations (earlier):** delta OTA (BSDIFF40, `release_delta.yml` tag `v*`, APK+patch+`update.json` sha256), signing consistency work (debug-signed fallback/prod-capable workflow), audit BLOCKERs cleared (honest sync/P2P/local-only behavior), README/test count & SSOT refreshes.
+- **OTA/CI/release foundations (earlier):** delta OTA (BSDIFF40, `release_delta.yml` tag `v*`, APK+patch+`update.json` sha256), signing consistency work, audit BLOCKERs cleared (honest sync/P2P/local-only), README/test count & SSOT refreshes.
 - **Hex-token refactor batches (pushed):** `b28d9d1`..`0a181a5`, `7391ec6`..`b852295`/`1a8b55f` (devtools/profile/treasury/dashboard/about/emergency/auth/radar/shared/cinematic/workflow); `DrgAtmosphericGlow` split (<125 lines).
 - **`b852295` + `1a8b55f`:** tokenized auth/profile/radar hex colors + SSOT refresh.
-- **`be1bb58` + `3712f68`:** tokenized workflow & cinematic rider hex colors; `MultiUserGapScanner` text adjusted (avoid hex heuristic) + SSOT refresh.
-- **`9a47730` + `a744c01`:** fixed CI compile break (missing `RiderFairingCowl` token imports) and updated `audit_minus.py` to exclude `ui/theme/` token definitions from hex hardcode check; SSOT refreshed. CI green.
-- **Skills (host-level, global):** created/updated `~/.config/opencode/skills/auto-continue-workflow/SKILL.md` and `~/.config/opencode/skills/drg-apk-to-production/SKILL.md` (continuous dev to production + mandatory trail/handoff).
+- **`be1bb58` + `3712f68`:** tokenized workflow & cinematic rider hex colors; `MultiUserGapScanner` text adjusted + SSOT refresh.
+- **`9a47730` + `a744c01`:** fixed CI compile break (`RiderFairingCowl` token imports) and updated `audit_minus.py` to exclude `ui/theme/` token definitions from hex hardcode check; SSOT refreshed. CI green (`43131829544`).
+- **`f35aca3`:** added `docs/CONTINUATION.md` handoff trail.
+- **This batch (CI static analysis):** added **ktlint (CLI, warn-only / non-blocking)** step to `.github/workflows/android_ci.yml` to provide static analysis in CI (addresses prior MINOR `[ci]` "Detekt/KtLint tidak ada di CI"). SSOT + CONTINUATION updated.
 
 ## Next steps (ordered, toward production)
-1. **Monitor CI** for any new pushes; keep `main` green. Fix regressions/compile breaks first.
-2. **Static analysis gate (MINOR [ci]):** integrate Detekt/KtLint into Gradle/CI in a safe, incremental/non-breaking way (assess existing violations, add config, consider warn/report-only first step then tighten) — verify line-cap/audit/tests still pass.
-3. **Instrumented/UI tests (MINOR [test]):** add feasible coverage for critical flows (login/PIN, SOS, kas) — note: emulator/device may not be available on host; prefer CI-runnable or clearly scoped additions.
-4. **Security hardening (MINOR [security]):** evaluate/plan SQLCipher or equivalent DB encryption for NIK/SIM/kas (design/impact decision; may be L2 if it affects dependencies/migration/signing) while keeping risk honestly documented.
-5. **Release/OTA validation:** when available, verify `v1.10` (and future) Delta OTA release assets/status/signature consistency (`gh run list/view`, `gh release view v1.10 -R ardyniech/DRG-APK`), `APK+patch+update.json` sha256, and updater path.
+1. **Monitor CI** for pushed commits; keep `main` green. Fix regressions/compile breaks first.
+2. **Instrumented/UI tests (MINOR [test]):** add feasible coverage for critical flows (login/PIN, SOS, kas). Note: emulator/device may not be available on host; prefer CI-runnable/Robolectric or clearly scoped additions and honest reporting.
+3. **Security hardening (MINOR [security]):** evaluate/plan SQLCipher or equivalent DB encryption for NIK/SIM/kas (design/migration/dependency impact; may need owner decision/L2) while keeping data-at-rest risk honestly documented.
+4. **Strengthen static analysis incrementally:** evolve ktlint from warn-only to enforced/tuned config (or add Detekt) once violations are triaged, without breaking CI unexpectedly.
+5. **Release/OTA validation:** when available, verify Delta OTA release assets/status/signature consistency (`gh run list/view`, `gh release view v1.10 -R ardyniech/DRG-APK`), `APK+patch+update.json` sha256, and updater path.
 6. **Continue audit-driven hygiene/refactors** in batches (no fake states, <125 lines, no cross-module imports), regenerating SSOT when audit-visible facts change.
 
 ## Blocked / needs decision (L2 or external)
