@@ -83,6 +83,31 @@ class LoginAuthValidatorTest {
         assertTrue("tetap legacy", still.startsWith("v1:"))
     }
 
+    @Test
+    fun loginByDriverIdPlateOrPhoneNormalized() {
+        val m = member(id = "M2", driverId = "DRV-77", phone = "+6281234567").copy(
+            motorcyclePlate = "N 1234 AB"
+        )
+        val members = listOf(m)
+
+        val byDriverId = LoginAuthValidator.authenticate(context, members, "drv-77", "1111")
+        assertTrue(byDriverId.first)
+
+        val byPlate = LoginAuthValidator.authenticate(context, members, "n1234ab", "1111")
+        assertTrue(byPlate.first)
+
+        val byPhone = LoginAuthValidator.authenticate(context, members, "081234567", "1111")
+        assertTrue(byPhone.first)
+    }
+
+    @Test
+    fun loginUnknownUserDitolak() {
+        val m = member()
+        val res = LoginAuthValidator.authenticate(context, listOf(m), "TIDAK_ADA", "1234")
+        assertFalse(res.first)
+        assertTrue(res.second?.contains("tidak terdaftar", ignoreCase = true) == true)
+    }
+
     private fun sha256Hex(input: String): String {
         val md = java.security.MessageDigest.getInstance("SHA-256")
         return md.digest(input.toByteArray()).joinToString("") { "%02x".format(it) }
