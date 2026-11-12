@@ -12,12 +12,12 @@ object PhaseTreePhase3And4 {
                 features = listOf(
                     DevFeatureLeaf(
                         id = "F-3.1.1",
-                        name = "Audio Multicast & PTT Voice Stream",
+                        name = "PTT Walkie-Talkie (Audio Stream)",
                         status = PhaseTreeStatus.TERKENDALA_CACAT,
                         hasDefect = true,
-                        whatIsIt = "Transmisi suara push-to-talk ad-hoc antar-driver.",
-                        whyRequired = "Peringatan bahaya jalanan seketika saat konvoi malam hari.",
-                        defectExplanation = "Terbatas satu subnet WiFi posko; butuh STUN/TURN relay publik."
+                        whatIsIt = "Komunikasi push-to-talk antar-driver (saat ini simulasi UI).",
+                        whyRequired = "Peringatan bahaya jalanan seketika saat konvoi.",
+                        defectExplanation = "Belum ada transmisi audio nyata (capture/streaming/jaringan). Implementasi saat ini simulasi UI; butuh pipeline audio + transport/signaling."
                     )
                 )
             ),

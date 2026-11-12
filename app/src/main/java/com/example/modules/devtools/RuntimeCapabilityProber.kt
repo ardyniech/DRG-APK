@@ -47,7 +47,7 @@ object RuntimeCapabilityProber {
                 targetClass = className,
                 isPresentInRunningApk = isPresent,
                 introductionVersion = intro,
-                operationalStatus = if (isPresent) "Aktif di Binary APK Ini" else "Belum Di-compile (Versi APK Lama)"
+                operationalStatus = if (isPresent) "Terkompilasi di APK (cek operasionalitas di fase/devtools)" else "Belum terkompilasi di APK ini"
             )
         }
 
@@ -55,9 +55,9 @@ object RuntimeCapabilityProber {
         val total = list.size
         val pct = if (total > 0) (present.toFloat() / total) * 100f else 0f
         val note = if (present == total) {
-            "Semua modul ($present/$total) terkompilasi penuh di binary APK yang sedang berjalan."
+            "Semua modul target ($present/$total) terdeteksi/terkompilasi di APK ini (bukan jaminan fitur beroperasi penuh)."
         } else {
-            "APK Anda menjalankan versi parsial ($present/$total modul ada). DevTools otomatis menyesuaikan status."
+            "Modul terdeteksi $present/$total di APK ini (probe class-presence)."
         }
 
         return RuntimeCapabilitiesReport(

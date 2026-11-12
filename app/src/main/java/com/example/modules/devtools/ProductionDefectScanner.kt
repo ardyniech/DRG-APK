@@ -28,12 +28,12 @@ object ProductionDefectScanner {
         ),
         SystemDefectItem(
             defectId = "DEFECT-02",
-            title = "P2P Walkie Talkie Terbatas Subnet WiFi Posko",
-            type = DefectType.CONCEPT_FLAW,
-            severityLevel = "Sedang (Architecture Flaw)",
+            title = "PTT Walkie-Talkie Masih Simulasi UI (Audio P2P Belum Nyata)",
+            type = DefectType.PRODUCTION_DEFECT,
+            severityLevel = "Sedang (Feature Gap)",
             affectedComponent = "modules/services/PttWalkieTalkieDialog.kt",
-            honestDefectExplanation = "Komunikasi suara P2P menggunakan UDP multicast & WiFi Direct lokal. Bila pengemudi beda base tower atau jarak >150m tanpa posko, suara terputus.",
-            engineeringRoadmapFix = "Implementasikan WebRTC STUN/TURN public relay server untuk lintas jaringan seluler."
+            honestDefectExplanation = "Dialog PTT saat ini simulasi UI (haptic/waveform/teks) tanpa capture, streaming, atau transmisi audio antar-driver. Belum ada implementasi UDP multicast/WiFi Direct/WebRTC nyata.",
+            engineeringRoadmapFix = "Implementasikan pipeline audio nyata (capture/encode/transport) + signaling/discovery (mis. mesh lokal atau relay) dengan fallback & pengujian lapangan."
         ),
         SystemDefectItem(
             defectId = "DEFECT-03",

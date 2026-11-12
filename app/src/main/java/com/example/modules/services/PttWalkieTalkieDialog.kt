@@ -36,7 +36,7 @@ fun PttWalkieTalkieDialog(onDismiss: () -> Unit) {
 
     LaunchedEffect(isTransmitting) {
         if (isTransmitting) {
-            lastTransmittedText = "Sedang Memancarkan... (Suara Anda tersalurkan ke 142 Driver terdekat)"
+            lastTransmittedText = "Simulasi UI: tombol PTT aktif (transmisi audio/jaringan nyata belum diimplementasikan)."
             while (isTransmitting) {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 delay(600)
@@ -75,7 +75,7 @@ fun PttWalkieTalkieDialog(onDismiss: () -> Unit) {
                     modifier = Modifier.fillMaxWidth().clickable {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         channelIndex = (channelIndex + 1) % malangChannels.size
-                        lastTransmittedText = "Beralih ke ${malangChannels[channelIndex]}. Menunggu transmisi..."
+                        lastTransmittedText = "Beralih ke ${malangChannels[channelIndex]} (simulasi UI)."
                     },
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(containerColor = DrgBackground)
@@ -104,7 +104,7 @@ fun PttWalkieTalkieDialog(onDismiss: () -> Unit) {
                     onToggleTransmitting = {
                         isTransmitting = !isTransmitting
                         if (!isTransmitting) {
-                            lastTransmittedText = "Transmisi Selesai. Terkirim ke Satgas."
+                            lastTransmittedText = "Simulasi selesai. Belum ada pengiriman audio ke driver/Satgas."
                         }
                     }
                 )
