@@ -52,13 +52,13 @@ class DevToolsOutdatedApkCompatibilityTest {
     }
 
     @Test
-    fun testAdversarialSimulatedLegacyApkDelta() {
-        val currentTarget = DynamicApkInspector.LATEST_TARGET_VERSION_CODE
-        val legacySimulatedCode = 1L
-        val isOutdated = legacySimulatedCode < currentTarget
+    fun testInspectorDoesNotFabricateLatestTarget() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val apkInfo = DynamicApkInspector.inspectRunningApk(context)
 
-        assertTrue("Simulated code 1 must be flagged as outdated", isOutdated)
-        val delta = currentTarget - legacySimulatedCode
-        assertEquals(9L, delta)
+        // Runtime inspector must not claim a fake "latest target" or fabricated outdated status.
+        assertEquals(-1L, apkInfo.latestTargetVersionCode)
+        assertFalse("Outdated status must not be fabricated without a real release probe", apkInfo.isOutdatedApk)
+        assertTrue(apkInfo.versionSkewDescription.contains("tidak diprobe", ignoreCase = true) || apkInfo.versionSkewDescription.isNotBlank())
     }
 }

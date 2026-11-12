@@ -5,9 +5,9 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-12
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** pending this batch commit (base: `d3f4d56` APK/DB/module info)
+- **HEAD (pushed):** pending this batch commit (base: `ab0b581` fix DevScoreBanner syntax)
 - **Working tree:** to be clean after commit/push
-- **Latest CI (known):** confirm with `gh run list -R ardyniech/DRG-APK --limit 5`.
+- **Latest CI (known):** `43216338139` **failure** (`ab0b581`) — unit test compile error: `DevToolsOutdatedApkCompatibilityTest.kt` referenced removed `DynamicApkInspector.LATEST_TARGET_VERSION_CODE`. Fixed in this batch. Confirm new run: `gh run list -R ardyniech/DRG-APK --limit 5`.
 
 ## Audit snapshot
 - **Command:** `python3 .github/scripts/audit_minus.py`
@@ -20,14 +20,13 @@
 
 ## Done (recent batches)
 - Foundations/refactors, honest sync/P2P local-only, hex-token refactors, CI fixes, handoff trail, ktlint warn-only CI.
-- DevTools honesty across: defects/bug hunter/score dynamic, scope-aware progress (Asuransi/Intercom PENDING/DEFERRED), Build/CI UNKNOWN no fabricasi, CodeIntegrity/mesh honest, UI/UX heuristik, PhaseTree/DEFECT-04 selaras, CPU%/repo/git tanpa fabrikasi, security probe limits, topologi konseptual, APK info tanpa skew fabrikasi, DB/RAM/network probes nyata.
-- **`b354424`:** Security & topologi diperjelas.  
-- **`d3f4d56`:** Hapus klaim APK "latest/outdated" fabrikasi.  
-- **This batch (DevTools honesty part 8 — RCA scope):** `EarlySymptomDetector` mengubah RCA dead-button Asuransi/Intercom menjadi **PENDING/DEFERRED** (preventive) alih-alih CRITICAL/WARNING, selaras scope rilis awal (iuran Kas saja). SSOT regenerated.
+- DevTools honesty batches: defects/bug hunter/score dynamic, scope-aware progress (Asuransi/Intercom PENDING/DEFERRED), Build/CI/CodeIntegrity/mesh/topology/APK info/CPU/repo/git/UI-UX/phase/RCA/security probe limits dijujurkan.
+- **`ab0b581`:** fixed syntax error in `DevScoreBanner.kt` (string formatting) that broke compile in CI for earlier commits.
+- **This batch (CI fix):** updated `app/src/test/java/com/example/DevToolsOutdatedApkCompatibilityTest.kt` to match honest `DynamicApkInspector` behavior (no fabricated latest target/outdated skew; removed reference to deleted `LATEST_TARGET_VERSION_CODE`).
 
 ## Next steps (ordered, toward production)
-1. **Monitor CI** commit ter-push; jaga `main` hijau.
-2. **DevTools menyeluruh (lanjutkan):** tinjau & jujurkan sisa bila ada (probe nyata atau UNKNOWN/heuristik), pastikan konsistensi tab/engine & scope-aware.
+1. **Monitor CI** untuk commit ini; jaga `main` hijau (prioritas). Jika gagal, diagnosa & perbaiki root cause.
+2. **DevTools menyeluruh (lanjutkan):** tinjau & jujurkan sisa (DEFECT-01..03 narasi, `DevSecurityAuditTab` teks, `DevCodeIntegrityTab`, konsistensi Progress/Maturity/Defects/SSOT, probe/engine lain) — fakta/probe nyata atau UNKNOWN/heuristik.
 3. **[MINOR test]** coverage feasible login/PIN, SOS, kas (CI-runnable/Robolectric bila memungkinkan).
 4. **[MINOR security]** evaluasi/rencana SQLCipher (keputusan/L2 owner).
 5. **Static analysis bertahap:** rapikan/tegakkan ktlint atau tambah Detekt tanpa memecah CI.
