@@ -37,21 +37,21 @@ fun DevProgressTab(
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Text(
-                        "🌳 Hierarki Fase Dev & Sub-Fitur (Zero Fake Progress)",
+                        "🌳 Hierarki Fase Dev & Sub-Fitur (Progres Jujur)",
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp,
                         color = if (defect > 0) DrgRedPanic else DrgGreenPrimary
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        "Total: $total Sub-Fitur | Lulus Sempurna: $completed | Terkendala Cacat: $defect (${String.format("%.1f", progressPct)}% Selesai)",
+                        "Total: $total Sub-Fitur | Lulus: $completed | Cacat: $defect | ${String.format("%.1f", progressPct)}% (dari fitur lulus). PENDING/DEFERRED tidak dihitung cacat in-scope.",
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
                         color = DrgTextPrimary
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        "Prinsip Kejujuran: Jika dalam satu sub-fase terdapat cacat atau tombol mati, fase tersebut TIDAK BOLEH dinyatakan lulus.",
+                        "Catatan: status selaras roadmap/scope; fitur deferred (Asuransi/Intercom) ditandai PENDING, bukan cacat menyesatkan.",
                         fontSize = 9.sp,
                         color = DrgTextSecondary
                     )

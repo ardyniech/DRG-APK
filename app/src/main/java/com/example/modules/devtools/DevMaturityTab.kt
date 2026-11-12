@@ -30,8 +30,8 @@ fun DevMaturityTab(
     DevTabShell(
         headerContent = headerContent,
         headerIcon = null,
-        headerTitle = "🌱 Matriks Kematangan Modul (Auto-Detect)",
-        headerDesc = "Klasifikasi ketat: Benih (Konsep), Anak (Incubating), Mature (Stabil), Lulus (Production-grade).",
+        headerTitle = "🌱 Matriks Kematangan Modul (Audit Terkurasi)",
+        headerDesc = "Klasifikasi: Benih (Konsep), Anak (Incubating), Mature (Stabil), Lulus (Production-grade). Status diselaraskan scope roadmap.",
         headerExtra = {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         FilterChip(selected = selectedFilter == null, onClick = { selectedFilter = null }, label = { Text("Semua (${features.size})", fontSize = 10.sp) })
