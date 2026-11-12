@@ -30,11 +30,12 @@ fun DevScoreBanner(score: ProjectHealthScore) {
                     "🎯 Skor Proyek: ${String.format("%.1f", score.finalScore)}% (${score.grade})",
                     fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgOnAmberContainer
                 )
+                val pDead = String.format("%.1f", score.deadButtonsCount * score.penaltyPerDeadButton)
+                val pShallow = String.format("%.1f", score.shallowFeaturesCount * score.penaltyPerShallow)
+                val pBug = String.format("%.1f", score.bugPenaltiesCount * score.penaltyPerBug)
+                val pProg = String.format("%.1f", score.progressPenaltiesCount * score.penaltyPerProgressGap)
                 Text(
-                    "Penalti: Dead (-${String.format("%.1f", score.deadButtonsCount * score.penaltyPerDeadButton)}%), " +
-                        "Dangkal (-${String.format("%.1f", score.shallowFeaturesCount * score.penaltyPerShallow}%), " +
-                        "Cacat (-${String.format("%.1f", score.bugPenaltiesCount * score.penaltyPerBug}%), " +
-                        "Progres (-${String.format("%.1f", score.progressPenaltiesCount * score.penaltyPerProgressGap)}%)",
+                    "Penalti: Dead (-${pDead}%), Dangkal (-${pShallow}%), Cacat (-${pBug}%), Progres (-${pProg}%)",
                     fontSize = 10.sp, color = DrgTextSecondary
                 )
             }
