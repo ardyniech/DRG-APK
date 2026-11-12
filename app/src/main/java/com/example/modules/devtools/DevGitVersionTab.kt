@@ -60,12 +60,10 @@ fun DevGitVersionTab() {
         item {
             Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))) {
                 Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("📜 Log Commit Terakhir (Git Status)", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
+                    Text("📜 Riwayat Commit", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
                     HorizontalDivider(color = DrgOutline.copy(alpha = 0.3f))
-                    Text("• commit origin/main (HEAD)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
-                    Text("  Author: Senior AI Architect & ardy.syafii@gmail.com", fontSize = 10.sp, color = DrgTextSecondary)
-                    Text("  Tree: 465 source files (statis per 2026-11-09) strictly compliant (<125 lines)", fontSize = 10.sp, color = DrgTextMuted)
-                    Text("  Message: feat(devtools): add root cause analysis & real-time symptom detection", fontSize = 10.sp, color = DrgGreenPrimary)
+                    Text("Runtime app tidak membaca riwayat git. Cek: git log / GitHub commits untuk HEAD & pesan commit terbaru.", fontSize = 10.sp, color = DrgTextSecondary)
+                    Text("Build info di atas berasal dari BuildConfig (kompilasi).", fontSize = 10.sp, color = DrgTextMuted)
                 }
             }
         }

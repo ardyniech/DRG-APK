@@ -29,12 +29,12 @@ fun DevRepoHealthTab(
     ) {
 
         item {
-            Surface(shape = RoundedCornerShape(12.dp), color = DrgSuccessBgSoft, modifier = Modifier.fillMaxWidth()) {
+            Surface(shape = RoundedCornerShape(12.dp), color = DrgSurfaceVariant, modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Icon(Icons.Default.CheckCircle, contentDescription = null, tint = DrgSuccessText, modifier = Modifier.size(24.dp))
+                    Icon(Icons.Default.CheckCircle, contentDescription = null, tint = DrgTextSecondary, modifier = Modifier.size(24.dp))
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("Architecture Quality Audit: PASSED", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgSuccessTextDark)
-                        Text("Total source files audited: 465 files (statis per 2026-11-09, recheck via check_file_length.py CI). 100% compliant with < 125 lines per file cap.", fontSize = 10.sp, color = DrgSuccessText)
+                        Text("Architecture Quality Audit: cek CI / script", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
+                        Text("Runtime app tidak menjalankan audit repo. Jalankan: python3 .github/scripts/check_file_length.py & audit_minus.py (atau lihat GitHub Actions).", fontSize = 10.sp, color = DrgTextSecondary)
                     }
                 }
             }
@@ -43,23 +43,23 @@ fun DevRepoHealthTab(
         item {
             Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))) {
                 Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("📦 Metrik Detail Repository", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
+                    Text("📦 Info Repo (statis/cek sumber)", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
                     HorizontalDivider(color = DrgOutline.copy(alpha = 0.3f))
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Total Files Audited:", fontSize = 11.sp, color = DrgTextSecondary)
-                        Text("465 Files (statis)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
+                        Text("UNKNOWN (jalankan check_file_length.py)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
                     }
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Max Line Cap Violation:", fontSize = 11.sp, color = DrgTextSecondary)
-                        Text("0 Files (Clean)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary)
+                        Text("Cek CI / script", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
                     }
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Room DB Entities:", fontSize = 11.sp, color = DrgTextSecondary)
-                        Text("23 Tables Active (v13)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
+                        Text("23 Tables (v13, per skema)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
                     }
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Test Suite Status:", fontSize = 11.sp, color = DrgTextSecondary)
-                        Text("Passing (Robolectric SDK 34)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary)
+                        Text("Cek GitHub Actions / test report", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
                     }
                 }
             }

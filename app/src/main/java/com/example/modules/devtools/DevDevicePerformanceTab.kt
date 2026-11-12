@@ -65,8 +65,9 @@ fun DevDevicePerformanceTab(
                     Text("📈 Telemetri Hardware & Termal OS", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
                     HorizontalDivider(color = DrgOutline.copy(alpha = 0.3f))
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("Estimasi Utilisasi CPU:", fontSize = 11.sp, color = DrgTextSecondary)
-                        Text("${String.format("%.1f", perf.cpuUtilizationPercent)}%", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary)
+                        Text("Utilisasi CPU:", fontSize = 11.sp, color = DrgTextSecondary)
+                        val cpu = if (perf.cpuUtilizationPercent < 0f) "UNKNOWN (tidak diprobe)" else "${String.format("%.1f", perf.cpuUtilizationPercent)}%"
+                        Text(cpu, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = if (perf.cpuUtilizationPercent < 0f) DrgTextSecondary else DrgGreenPrimary)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),

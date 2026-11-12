@@ -22,8 +22,8 @@ object DevicePerformanceEngine {
         val tempCelsius = tempTenth / 10.0
 
         val thermalStatus = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val powerManager = context.getSystemService(Context.POWER_SERVICE) as? android.os.PowerManager
-            when (powerManager?.currentThermalStatus) {
+            val pm = context.getSystemService(Context.POWER_SERVICE) as? android.os.PowerManager
+            when (pm?.currentThermalStatus) {
                 android.os.PowerManager.THERMAL_STATUS_NONE -> "Normal (0)"
                 android.os.PowerManager.THERMAL_STATUS_LIGHT -> "Light Throttling (1)"
                 android.os.PowerManager.THERMAL_STATUS_MODERATE -> "Moderate Throttling (2)"
@@ -36,20 +36,18 @@ object DevicePerformanceEngine {
         }
 
         val activeThreads = Thread.activeCount()
-        val cpuUsage = minOf(95f, 15f + (activeThreads * 0.8f))
-        val isOverheating = tempCelsius >= 39.0 || cpuUsage > 80f
-
-        val suggestion = if (isOverheating) {
-            "Suhu atau utilisasi CPU tinggi! Turunkan refresh rate peta posko atau tutup aplikasi latar belakang."
+        val thermalHot = tempCelsius >= 39.0 || thermalStatus.contains("Severe") || thermalStatus.contains("Critical")
+        val suggestion = if (thermalHot) {
+            "Suhu/termal tinggi terdeteksi. Kurangi beban (peta/latar belakang) dan dinginkan perangkat."
         } else {
-            "Performa CPU & Termal perangkat stabil. Optimal untuk operasi ojol seharian."
+            "CPU % tidak diprobe runtime (UNKNOWN). Suhu/termal & thread count berbasis sinyal tersedia."
         }
 
         return DevicePerformanceMetrics(
-            cpuUtilizationPercent = cpuUsage,
+            cpuUtilizationPercent = -1f, // tidak diprobe; hindari fabrikasi
             batteryTemperatureCelsius = tempCelsius,
             thermalStatusString = thermalStatus,
-            isOverheating = isOverheating,
+            isOverheating = thermalHot,
             cpuThreadCount = activeThreads,
             optimizationSuggestion = suggestion
         )
