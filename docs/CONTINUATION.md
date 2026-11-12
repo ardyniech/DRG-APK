@@ -5,7 +5,7 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-12
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** pending this batch commit (base: `be373d9` devtools perf/repo/git)
+- **HEAD (pushed):** pending this batch commit (base: `b354424` security/topology)
 - **Working tree:** to be clean after commit/push
 - **Latest CI (known):** confirm with `gh run list -R ardyniech/DRG-APK --limit 5`.
 
@@ -19,22 +19,20 @@
 - **Line cap:** PASS (473 files, <125 lines).
 
 ## Done (recent batches)
-- Foundations/refactors, honest sync/P2P local-only, hex-token refactors, CI fixes, handoff trail, ktlint warn-only CI.
-- **`fe139e7`:** MultiUserGapScanner defects refreshed; DevBugHunterTab dynamic; DevScoreBanner actual penalty.
-- **`d9dc51a`:** Asuransi/Intercom **PENDING/DEFERRED** (scope-aware) in scanner & PhaseTree; scoring progress from PhaseTree.
-- **`1ac9ac0`:** Build/CiCd engines & tabs UNKNOWN (no fabricated metrics/PASS); CodeIntegrity stale smells fixed; NodeTopology mesh text honest.
-- **`4207fa3`:** UiUxAudit heuristik/estimasi; PhaseTreePhase5 F-5.2.1/2 selaras; DEFECT-04 dihedging.
-- **`be373d9`:** DevicePerformance CPU% UNKNOWN (probe suhu/termal/thread nyata); DevRepoHealth/DevGitVersion hapus klaim statis palsu.
-- **This batch (DevTools honesty part 6 — security & topology):**
-  - `SecurityAuditEngine`: item sandbox DB & privasi SOS tidak lagi `isSecure=true` tanpa probe kuat — ditandai risiko/belum terverifikasi penuh (selaras MINOR SQLCipher & DEFECT-03); root/cleartext/keystore tetap probe nyata.
-  - `NodeTopologyScanner` + `DevNodeTopologyTab`: status node dilabeli **konseptual/konfigurasi** (bukan koneksi live terprobe), badge "AKTIF LOKAL"/"TIDAK AKTIF" dengan penjelasan jujur.
+- Foundations/refactors, honest sync/P2P local-only, hex-token, CI fixes, handoff trail, ktlint warn-only CI.
+- **`fe139e7`..`be373d9`:** DevTools honesty (defects/bug hunter/score dynamic, scope-aware progress Asuransi/Intercom PENDING, Build/CI UNKNOWN, CodeIntegrity/mesh honest, UI/UX heuristik, PhaseTree/DEFECT-04 selaras, CPU%/repo/git tanpa fabrikasi).
+- **`b354424`:** SecurityAuditEngine tidak klaim aman tanpa probe kuat (DB encryption/SOS privacy); NodeTopology konseptual (bukan live probe).
+- **This batch (DevTools honesty part 7 — APK/DB/module info):**
+  - `DynamicApkInspector`: hapus target "latest" hardcode (10/5.0.0) & klaim outdated/sinkron → info APK terpasang runtime saja; update cek via manifest rilis/GitHub Releases (tidak diprobe).
+  - `DevApkSkewCard`: UI netral/jujur (tanpa badge LEGACY/LATEST palsu). `DynamicDbIntrospector` & `RuntimeCapabilityProber` tetap probe runtime nyata (SQLite PRAGMA/tabel, Class.forName).
   - SSOT regenerated.
 
 ## Next steps (ordered, toward production)
 1. **Monitor CI** commit ter-push; jaga `main` hijau.
-2. **DevTools menyeluruh (lanjutkan):** audit & jujurkan sisa scanner/tab/engine (probe nyata atau UNKNOWN/heuristik):
+2. **DevTools menyeluruh (lanjutkan):** audit & jujurkan sisa scanner/tab/engine:
    - `ProductionDefectScanner` DEFECT-01..03: tinjau keakuratan narasi vs kondisi aktual.
-   - `DeviceAdvisorEngine`/`DevDeviceAdvisorTab` (sebagian probe nyata: RAM/baterai/suhu/optimasi — verifikasi), `DynamicApkInspector`, `DynamicDbIntrospector`, `RuntimeCapabilityProber` (+ `DevApkSkewCard`), `RealtimeMemoryProbe`/`DevMemoryTab`, `RealtimeNetworkProbe`/`DevServerTab`, `EarlySymptomDetector`/`RootCause*`/`DevRootCauseTab`, `DevSecurityAuditTab` teks konsisten, `DevCodeIntegrityTab`, `DevMaturityTab`/`DevProgressTab` konsistensi & scope-aware.
+   - `RealtimeMemoryProbe`/`DevMemoryTab`, `RealtimeNetworkProbe`/`DevServerTab`: pastikan probe nyata & label jujur (tidak klaim "server" riil tanpa backend).
+   - `DeviceAdvisorEngine`/`DevDeviceAdvisorTab`, `DynamicDbIntrospector` deskripsi, `RuntimeCapabilityProber` presentasi, `EarlySymptomDetector`/`RootCause*`/`DevRootCauseTab`, `DevSecurityAuditTab` teks, `DevCodeIntegrityTab`, `DevMaturityTab`/`DevProgressTab`/`DevDefectsTab` konsistensi.
 3. **[MINOR test]** coverage feasible login/PIN, SOS, kas (CI-runnable/Robolectric bila memungkinkan).
 4. **[MINOR security]** evaluasi/rencana SQLCipher (keputusan/L2 owner).
 5. **Static analysis bertahap:** rapikan/tegakkan ktlint atau tambah Detekt tanpa memecah CI.
@@ -43,8 +41,7 @@
 ## Blocked / needs decision (L2 or external)
 - **[MAJOR][multi-user]** backend + akun server. *No fake sync.*
 - **[MAJOR][database]** schema Room `1,2,3,4,8,9.json` hilang — export/commit valid saja.
-- **Release `v1.10`:** `release not found`.
-- **Keputusan owner (L2):** SQLCipher/migrasi enkripsi DB; production signing secrets.
+- **Release `v1.10`:** `release not found`. **Keputusan owner (L2):** SQLCipher; production signing secrets.
 
 ## Scope reminders (production)
 - Finansial rilis awal = **iuran Kas saja**. **Marketplace/Arisan = DEFERRED**. **Asuransi & Intercom Helm = PENDING DEV**.
