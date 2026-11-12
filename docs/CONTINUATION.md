@@ -5,7 +5,7 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-12
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** `e0efb4b` (SOS SMS test)
+- **HEAD (pushed):** pending this batch commit (base: `dda617c`)
 - **Working tree:** to be clean after commit/push
 - **Latest CI:** deprioritized per owner (preview via aigoogle.studio); last known issues fixed in `ab0b581`/`a4f7032`. Confirm if needed: `gh run list -R ardyniech/DRG-APK --limit 5`.
 
@@ -16,7 +16,7 @@
   - **MAJOR [database]:** Schema Room hilang `1,2,3,4,8,9.json` (export/commit valid saja; **jangan difabrikasi**).
   - **MINOR [security]:** SQLite belum terenkripsi/SQLCipher (risiko terdokumentasi di `README.md`).
   - **MINOR [test]:** `androidTest` minim (alur kritis login/SOS/kas).
-- **Line cap:** PASS (473 files, <125 lines).
+- **Line cap:** PASS (489 files audited, <125 lines).
 
 ## Done (recent batches)
 - Foundations/refactors, honest sync/P2P local-only, hex-token, CI fixes, handoff trail, ktlint warn-only CI.
@@ -31,7 +31,8 @@
 - **`226074e`/`3fb8bd0`:** `NodeTopologyScanner` NODE-MESH-01 dijujurkan (mesh/signaling & audio belum end-to-end). DEFECT-11 dipisahkan dari isu PTT radio. SSOT regenerated.
 - **`b430076`/`ec9aef6`:** `RuntimeCapabilityProber` label modul diperjelas (PTT simulasi, audit/topologi heuristik/konseptual). `DevServerTab` membedakan ping host sebagai konektivitas, bukan status backend app.
 - **`80f7601`/`45581f1`:** F-2.1.1 (Kas) dijujurkan — hapus klaim "Realtime" berlebihan, tekankan pencatatan di aplikasi (lokal-first). SSOT regenerated.
-- **This batch (minor test, SOS):** tambah kasus `EmergencySmsFallbackHelperTest` untuk fallback hotline default saat nomor kosong/tidak valid (Robolectric).
+- **`e0efb4b`/`dda617c`:** tambah kasus `EmergencySmsFallbackHelperTest` (fallback hotline default saat nomor kosong/tidak valid, Robolectric).
+- **This batch (fitur Event komunitas, lokal-first):** tambah manajemen event (Kopdar rutin tiap 3 bulan, Anniversary, dll) dengan panitia sendiri per event: **susunan panitia, dana sumber, dana keluar, LPJ, dan pihak terkait/terlibat** (jelas & transparan). Implementasi: Room **v13→v14** (migrasi 13_14) + entitas/tabel `community_events`, `event_committee_members`, `event_funding`, `event_lpj_reports`, `event_stakeholders`; DAO, repository, coordinator, ViewModel/extension; UI tab **Event** di Komunitas (list, detail, form tambah/edit/hapus per bagian). DevTools DB introspector & topologi diselaraskan (target v14). README/SSOT diperbarui (v14, 28 entitas). *Catatan: data lokal-first; tidak ada sinkron cloud.*
 
 ## Next steps (ordered, toward production)
 1. **DevTools menyeluruh (lanjutkan):** tinjau sisa temuan (DEFECT-01..02 narasi vs aktual, teks tab/engine lain, konsistensi Progress/Maturity/Defects/SSOT) — perbaiki feasible in-app; fakta/probe nyata atau UNKNOWN/heuristik.

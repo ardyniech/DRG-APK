@@ -14,6 +14,7 @@ class DRGRepository(val db: AppDatabase) {
     val gamificationRepo = GamificationRepository(db)
     val radarHazardRepo = RadarHazardRepository(db)
     val adminLogRepo = AdminLogRepository(db)
+    val eventRepo = EventManagementRepository(db)
 
     // Flow Delegations
     val allMembers: Flow<List<DriverMember>> get() = memberRepo.allMembers
@@ -35,6 +36,22 @@ class DRGRepository(val db: AppDatabase) {
     val totalTileSizeBytes: Flow<Long?> get() = radarHazardRepo.totalTileSizeBytes
     val allAppSettings: Flow<List<AppStateSetting>> get() = radarHazardRepo.allAppSettings
     val allAdminLogs: Flow<List<AdminLog>> get() = adminLogRepo.allLogs
+    val allCommunityEvents: Flow<List<CommunityEvent>> get() = eventRepo.allEvents
+
+    fun observeCommunityEvent(eventId: String) = eventRepo.observeEvent(eventId)
+    fun eventCommittee(eventId: String) = eventRepo.committee(eventId)
+    fun eventFunding(eventId: String) = eventRepo.funding(eventId)
+    fun eventLpj(eventId: String) = eventRepo.lpj(eventId)
+    fun eventStakeholders(eventId: String) = eventRepo.stakeholders(eventId)
+    suspend fun upsertCommunityEvent(e: CommunityEvent) = eventRepo.upsertEvent(e)
+    suspend fun deleteCommunityEvent(e: CommunityEvent) = eventRepo.deleteEvent(e)
+    suspend fun upsertEventCommittee(m: EventCommitteeMember) = eventRepo.upsertCommittee(m)
+    suspend fun deleteEventCommittee(m: EventCommitteeMember) = eventRepo.deleteCommittee(m)
+    suspend fun upsertEventFunding(f: EventFunding) = eventRepo.upsertFunding(f)
+    suspend fun deleteEventFunding(f: EventFunding) = eventRepo.deleteFunding(f)
+    suspend fun upsertEventLpj(r: EventLpjReport) = eventRepo.upsertLpj(r)
+    suspend fun upsertEventStakeholder(s: EventStakeholder) = eventRepo.upsertStakeholder(s)
+    suspend fun deleteEventStakeholder(s: EventStakeholder) = eventRepo.deleteStakeholder(s)
 
     fun getPrefForMember(memberId: String) = communityRepo.getPrefForMember(memberId)
     fun getReviewsForDriver(driverId: String) = memberRepo.getReviewsForDriver(driverId)

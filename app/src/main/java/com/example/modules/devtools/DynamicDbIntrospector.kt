@@ -13,14 +13,15 @@ data class DatabaseRuntimeReport(
 )
 
 object DynamicDbIntrospector {
-    const val TARGET_SCHEMA_VERSION = 13
-    val EXPECTED_TABLES_V13 = listOf(
+    const val TARGET_SCHEMA_VERSION = 14
+    val EXPECTED_TABLES_V14 = listOf(
         "driver_members", "emergency_alerts", "posko_locations", "kas_transactions",
         "forum_posts", "workshop_partners", "attendance_events", "driver_reviews",
         "community_notifications", "badge_items", "community_tasks", "reward_items",
         "hazard_areas", "point_transactions", "notification_preferences",
         "map_tile_metadata", "app_state_settings", "pending_sync", "admin_logs",
-        "forum_comments", "member_role_permissions", "role_audit_logs", "posko_check_ins"
+        "forum_comments", "member_role_permissions", "role_audit_logs", "posko_check_ins",
+        "community_events", "event_committee_members", "event_funding", "event_lpj_reports", "event_stakeholders"
     )
 
     fun introspectDatabase(context: Context): DatabaseRuntimeReport {
@@ -43,11 +44,11 @@ object DynamicDbIntrospector {
             }
             cursorTables.close()
 
-            val missing = EXPECTED_TABLES_V13.filter { it !in tables }
+            val missing = EXPECTED_TABLES_V14.filter { it !in tables }
             val isUpToDate = userVersion >= TARGET_SCHEMA_VERSION && missing.isEmpty()
 
             val desc = if (isUpToDate) {
-                "Skema SQLite riil v$userVersion (${tables.size} tabel aktif). Sinkron sempurna."
+                "Skema SQLite riil v$userVersion (${tables.size} tabel aktif). Sinkron dengan target."
             } else {
                 "APK menjalankan skema v$userVersion (${tables.size} tabel, ${missing.size} tabel belum ada). Adaptasi aktif."
             }
@@ -66,7 +67,7 @@ object DynamicDbIntrospector {
                 actualTableCount = 0,
                 tableNames = emptyList(),
                 isSchemaUpToDate = false,
-                missingTablesFromLatest = EXPECTED_TABLES_V13,
+                missingTablesFromLatest = EXPECTED_TABLES_V14,
                 statusDescription = "Database belum diinisialisasi atau berjalan pada APK versi lawas tanpa Room."
             )
         }

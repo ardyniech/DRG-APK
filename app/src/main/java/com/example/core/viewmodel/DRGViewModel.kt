@@ -31,6 +31,7 @@ class DRGViewModel(
     internal val profileCoord = ProfileSessionCoordinator(repository, sharedPrefs, viewModelScope) { showToast(it) }
     internal val emergencyCoord = EmergencyCoordinator(repository, sharedPrefs, application, viewModelScope, syncEngine) { showToast(it) }
     internal val communityCoord = CommunityCoordinator(repository, viewModelScope, syncEngine) { showToast(it) }
+    internal val eventCoord = EventCoordinator(repository, viewModelScope) { showToast(it) }
 
     val members = repository.allMembers.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
     val allMembers: StateFlow<List<DriverMember>> get() = members
@@ -63,6 +64,7 @@ class DRGViewModel(
     val pointTransactions = repository.allPointTransactions.stateIn(viewModelScope, whileSubscribed, emptyList())
     val posts = repository.allPosts.stateIn(viewModelScope, whileSubscribed, emptyList())
     val workshops = repository.allWorkshops.stateIn(viewModelScope, whileSubscribed, emptyList())
+    val communityEvents = repository.allCommunityEvents.stateIn(viewModelScope, whileSubscribed, emptyList())
     val adminLogs = governanceCoord.adminLogs
     val isSosAlarmSoundEnabled = emergencyCoord.isSosAlarmSoundEnabled
     val isSosAlarmEnabled get() = isSosAlarmSoundEnabled

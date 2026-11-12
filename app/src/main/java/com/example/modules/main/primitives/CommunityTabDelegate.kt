@@ -2,6 +2,8 @@ package com.example.modules.main.primitives
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import com.example.core.viewmodel.DRGViewModel
@@ -36,6 +38,7 @@ fun CommunityTabDelegate(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val communityEvents by viewModel.communityEvents.collectAsState()
     val subTabIndex = when (tab) {
         MainNavTab.FORUM -> 1
         MainNavTab.GAMIFICATION -> 2
@@ -59,6 +62,8 @@ fun CommunityTabDelegate(
         pointTransactions = pointTransactions,
         adminLogs = adminLogs,
         initialSubTab = subTabIndex,
+        communityEvents = communityEvents,
+        viewModel = viewModel,
         onAddTransactionClick = onShowAddKasDialog,
         onCreatePost = { title, content, cat, postType ->
             viewModel.addPost(title, content, cat, postType)

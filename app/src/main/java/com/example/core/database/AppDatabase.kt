@@ -19,12 +19,14 @@ import com.example.shared.models.*
         HazardArea::class, PointTransaction::class, NotificationPreference::class,
         MapTileMetadata::class, AppStateSetting::class, PendingSyncEntity::class,
         AdminLog::class, ForumComment::class, MemberRolePermissionEntity::class,
-        RoleAuditLogEntity::class, PoskoCheckInEntity::class
+        RoleAuditLogEntity::class, PoskoCheckInEntity::class,
+        CommunityEvent::class, EventCommitteeMember::class, EventFunding::class,
+        EventLpjReport::class, EventStakeholder::class
     ],
-    version = 13,
+    version = 14,
     exportSchema = true
 )
-@TypeConverters(Converters::class)
+@TypeConverters(Converters::class, EventConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun memberDao(): MemberDao
     abstract fun emergencyDao(): EmergencyDao
@@ -45,6 +47,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun memberRolePermissionDao(): MemberRolePermissionDao
     abstract fun roleAuditLogDao(): RoleAuditLogDao
     abstract fun poskoCheckInDao(): PoskoCheckInDao
+    abstract fun communityEventDao(): CommunityEventDao
 
     companion object {
         @Volatile

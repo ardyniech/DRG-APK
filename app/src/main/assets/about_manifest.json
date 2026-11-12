@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "v1.10-58-gec9aef6",
-    "commit": "ec9aef6",
+    "version": "v1.10-62-gdda617c",
+    "commit": "dda617c",
     "commitDate": "2026-11-12",
     "generatedBy": "generate_about_manifest.py"
   },
@@ -25,8 +25,8 @@
     "inProgress": 12,
     "planned": 8,
     "modules": 17,
-    "totalSourceFiles": 473,
-    "totalLoc": 33856,
+    "totalSourceFiles": 489,
+    "totalLoc": 34681,
     "testSuites": 59
   },
   "phases": [
@@ -99,8 +99,8 @@
       "phase": "phase-1",
       "status": "IN_PROGRESS",
       "progress": 75,
-      "files": 2,
-      "loc": 165,
+      "files": 8,
+      "loc": 623,
       "todos": 0,
       "tests": []
     },
@@ -155,8 +155,8 @@
       "phase": "phase-1",
       "status": "IN_PROGRESS",
       "progress": 70,
-      "files": 22,
-      "loc": 796,
+      "files": 24,
+      "loc": 887,
       "todos": 0,
       "tests": [
         "AppDatabaseMigrationTest",
@@ -361,7 +361,7 @@
       "status": "IN_PROGRESS",
       "progress": 70,
       "files": 9,
-      "loc": 803,
+      "loc": 808,
       "todos": 0,
       "tests": [
         "ViewModelRefactorAuditTest"

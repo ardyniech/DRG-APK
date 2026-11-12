@@ -26,7 +26,7 @@ object NodeTopologyScanner {
             protocol = "IPC / In-Memory SQLite Bridge",
             isConnected = true,
             activeConnectionsCount = 1,
-            syncState = "Persisted (23 Tables Active)"
+            syncState = "Persisted (Room v14 target: 28 tabel termasuk event/panitia/LPJ/dana/stakeholder)"
         ),
         TopologyNode(
             nodeId = "NODE-CLOUD-01",

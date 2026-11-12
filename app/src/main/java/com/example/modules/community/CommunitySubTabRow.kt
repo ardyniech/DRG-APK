@@ -28,6 +28,7 @@ fun CommunitySubTabRow(
         "Forum" to Icons.Default.Forum,
         "Misi & Poin" to Icons.Default.EmojiEvents,
         "Anggota" to Icons.Default.People,
+        "Event" to Icons.Default.Event,
         "Layanan & Koperasi" to Icons.Default.ShoppingBag
     )
 

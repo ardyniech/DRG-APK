@@ -92,9 +92,26 @@ object AppDatabaseMigrations {
         }
     }
 
+    val MIGRATION_13_14 = object : Migration(13, 14) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            listOf(
+                "CREATE TABLE IF NOT EXISTS `community_events` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `type` TEXT NOT NULL, `status` TEXT NOT NULL, `scheduleNote` TEXT NOT NULL, `dateText` TEXT NOT NULL, `timeText` TEXT NOT NULL, `location` TEXT NOT NULL, `description` TEXT NOT NULL, `createdBy` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+                "CREATE TABLE IF NOT EXISTS `event_committee_members` (`id` TEXT NOT NULL, `eventId` TEXT NOT NULL, `memberId` TEXT NOT NULL, `name` TEXT NOT NULL, `role` TEXT NOT NULL, `phone` TEXT NOT NULL, `responsibility` TEXT NOT NULL, `notes` TEXT NOT NULL, PRIMARY KEY(`id`))",
+                "CREATE INDEX IF NOT EXISTS `index_event_committee_members_eventId` ON `event_committee_members` (`eventId`)",
+                "CREATE TABLE IF NOT EXISTS `event_funding` (`id` TEXT NOT NULL, `eventId` TEXT NOT NULL, `type` TEXT NOT NULL, `amount` INTEGER NOT NULL, `category` TEXT NOT NULL, `sourceOrRecipient` TEXT NOT NULL, `description` TEXT NOT NULL, `dateText` TEXT NOT NULL, `proofNote` TEXT NOT NULL, `recordedBy` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+                "CREATE INDEX IF NOT EXISTS `index_event_funding_eventId` ON `event_funding` (`eventId`)",
+                "CREATE INDEX IF NOT EXISTS `index_event_funding_type` ON `event_funding` (`type`)",
+                "CREATE TABLE IF NOT EXISTS `event_lpj_reports` (`id` TEXT NOT NULL, `eventId` TEXT NOT NULL, `status` TEXT NOT NULL, `summary` TEXT NOT NULL, `incomeTotal` INTEGER NOT NULL, `expenseTotal` INTEGER NOT NULL, `balance` INTEGER NOT NULL, `notes` TEXT NOT NULL, `submittedBy` TEXT NOT NULL, `submittedAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+                "CREATE UNIQUE INDEX IF NOT EXISTS `index_event_lpj_reports_eventId` ON `event_lpj_reports` (`eventId`)",
+                "CREATE TABLE IF NOT EXISTS `event_stakeholders` (`id` TEXT NOT NULL, `eventId` TEXT NOT NULL, `name` TEXT NOT NULL, `role` TEXT NOT NULL, `organization` TEXT NOT NULL, `contact` TEXT NOT NULL, `contribution` TEXT NOT NULL, `notes` TEXT NOT NULL, PRIMARY KEY(`id`))",
+                "CREATE INDEX IF NOT EXISTS `index_event_stakeholders_eventId` ON `event_stakeholders` (`eventId`)"
+            ).forEach { db.execSQL(it) }
+        }
+    }
+
     val ALL_MIGRATIONS = arrayOf(
         MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5,
         MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9,
-        MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13
+        MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14
     )
 }

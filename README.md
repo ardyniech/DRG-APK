@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android_15-green.svg)](https://developer.android.com)
 [![Compose](https://img.shields.io/badge/Jetpack_Compose-Material_3-emerald.svg)](https://developer.android.com/jetpack/compose)
-[![Database](https://img.shields.io/badge/Room_Database-v13_Posko_RBAC_Local_First-teal.svg)](docs/DATABASE_MIGRATIONS.md)
+[![Database](https://img.shields.io/badge/Room_Database-v14_Event_Panitia_LPJ_Local_First-teal.svg)](docs/DATABASE_MIGRATIONS.md)
 [![Architecture Gating](https://img.shields.io/badge/Architecture-125_Lines_Cap_Enforced-success.svg)](.github/scripts/check_file_length.py)
 [![Tests](https://img.shields.io/badge/Unit_Tests-59_Suites_Passed-brightgreen.svg)](#-strategi-pengujian-testing-suite)
 
@@ -22,7 +22,7 @@
 
 **Bisa dipakai banyak HP:** APK bisa di-install di banyak HP, **tapi data tidak saling berbagi**. Tiap HP punya database lokal sendiri — kas, forum, anggota, SOS di HP A tidak terlihat di HP B.
 
-**Data tersimpan:** Ya, tapi **hanya lokal** di Room SQLite (`drg_community.db`, v13, 23 entitas). Persist setelah restart, tapi:
+**Data tersimpan:** Ya, tapi **hanya lokal** di Room SQLite (`drg_community.db`, v14, 28 entitas). Persist setelah restart, tapi:
 * `allowBackup = false` + tidak ada cloud sync/backup → ganti HP / reset / uninstal = data hilang.
 * `BackgroundSyncEngine` berlabel "Tersinkronisasi ke Cloud" padahal cuma hapus antrean lokal (`removeSyncItem()`) tanpa network call — **belum sinkron**.
 * Login PIN lokal (`SharedPreferences` + SHA-256 app-in-tanpa-salt, bukan Keystore/PBKDF2) + seed dummy per HP (`DRG-001` / PIN `1234` di `.env.example`).
@@ -42,7 +42,7 @@
 | Area | Plan (target) | Dev sekarang (realita) | Status |
 |---|---|---|---|
 | Arsitektur | Clean MVI + Compose M3, <125 baris/file | 465 file audit, 0 pelanggaran via `check_file_length.py` | ✅ Selesai |
-| Database | Room v13 lokal + migrasi eksplisit | 23 entitas, migrasi 1→13 di kode, tapi schema `1-4,8,9.json` belum dicommit | ⚠️ Sebagian |
+| Database | Room v14 lokal + migrasi eksplisit | 28 entitas, migrasi 1→14 di kode, tapi schema `1-4,8,9.json` belum dicommit | ⚠️ Sebagian |
 | **Iuran Kas (finansial)** | **Kas masuk/keluar/saldo + export (wajib rilis awal)** | Kas Transparan Selesai 100%, grafik + periode + export | ✅ Selesai (lokal) |
 | Marketplace / Arisan | Oli/ban/helm distributor, arisan/talangan | Belum ada modul | ⏸️ **DEFERRED** — bukan blocker |
 | Multi-user sinkron | Firestore/Auth + FCM, data bersama antar driver | Lokal saja, Firestore/Auth off, `google-services.json` hilang | ❌ BLOCKER |
@@ -110,7 +110,7 @@ Aplikasi ini dibangun menggunakan arsitektur **Clean Architecture + MVI/UDF (Uni
 ```
 app/src/main/java/com/example/
 ├── core/
-│   ├── database/                 # Room Database (AppDatabase v13, TypeConverters, DAOs)
+│   ├── database/                 # Room Database (AppDatabase v14, TypeConverters, DAOs)
 │   ├── repository/               # DRGRepository & CommunityRepository (Single source of truth)
 │   └── viewmodel/                # DRGViewModel & Coordinator Delegates (Centralized state management)
 ├── shared/
@@ -133,7 +133,7 @@ app/src/main/java/com/example/
 
 ---
 
-## 🗄️ Skema Database Lokal (Room v13)
+## 🗄️ Skema Database Lokal (Room v14)
 
 Detail skema dan panduan migrasi dapat dibaca di **[Dokumentasi Migrasi Database (docs/DATABASE_MIGRATIONS.md)](docs/DATABASE_MIGRATIONS.md)**.
 
@@ -162,11 +162,11 @@ Proyek ini dilengkapi dengan 59 suite pengujian unit & integrasi otomatis berbas
 - `LandingFeatureAutoScrollTest.kt`: Pengujian kelengkapan data & properti thumbnail fitur unggulan aplikasi pada landing screen.
 - `EmergencySmsFallbackHelperTest.kt`: Pengujian fallback SMS darurat saat jaringan data offline.
 - `HelmetIntercomMonitorTest.kt`: Pengujian listener koneksi audio headset/intercom helm bluetooth.
-- `AppDatabaseMigrationTest.kt`: Verifikasi menyeluruh migrasi Room berantai dari v1 hingga v13 tanpa data loss.
+- `AppDatabaseMigrationTest.kt`: Verifikasi menyeluruh migrasi Room berantai dari v1 hingga v14 tanpa data loss.
 - `AiAssistantKnowledgeTest.kt`: Validasi basis pengetahuan AI Assistant rekomendasi rute dan posko.
 - `PoskoCheckInRepositoryTest.kt`: Pengujian pencatatan check-in posko dan pemberian poin loyalitas.
 - `RolePermissionRepositoryTest.kt`: Pengujian granular access control (kas, SOS, dashboard, promosi role).
-- `MemberRolePermissionDatabaseTest.kt`: Pengujian persistensi Room v11 RBAC & audit logging.
+- `MemberRolePermissionDatabaseTest.kt`: Pengujian persistensi Room v11 RBAC & audit logging (evolusi hingga v14).
 - `PoskoProximityAndWatermarkTest.kt`: Validasi geofencing Haversine posko dan anti-forgery KTA.
 - `AuthAndProfileSecurityTest.kt`: Validasi PIN 6-digit, normalisasi nopol, enkripsi payload KTA QR, dan RBAC pengurus.
 - `TreasuryAuditComputationTest.kt`: Verifikasi matematika kas masuk/keluar, saldo bersih, dan kalkulasi kategori.
