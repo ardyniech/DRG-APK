@@ -22,7 +22,8 @@
 - Foundations/refactors, honest sync/P2P local-only, hex-token, CI fixes, handoff trail, ktlint warn-only CI.
 - DevTools honesty: defects/bug hunter/score dynamic & scope-aware, Build/CI/CodeIntegrity/mesh/topology/APK/CPU/repo/git/UI-UX/phase/RCA/security probe limits dijujurkan.
 - **`ab0b581`:** fix syntax `DevScoreBanner.kt`. **`a4f7032`:** update `DevToolsOutdatedApkCompatibilityTest` agar selaras perilaku `DynamicApkInspector` yang jujur (hapus ref `LATEST_TARGET_VERSION_CODE`).
-- **This batch:** `DevMaturityTab` & `DevProgressTab` — label/teks diperjelas (audit terkurasi, progres jujur & scope-aware, PENDING/DEFERRED bukan cacat in-scope). SSOT regenerated.
+- **`dc641c6`:** `DevMaturityTab` & `DevProgressTab` — label/teks diperjelas (audit terkurasi, progres jujur & scope-aware).
+- **`bc835b6` (temuan devtools→fix):** F-4.2.2 & DEFECT-04 diselaraskan dengan implementasi aktual (`BatteryAwareLocationSyncer` adaptif gerak/baterai/profil) — bukan cacat "polling 1s" usang; optimasi lanjutan (geofencing/pengukuran nyata) tetap dicatat. SSOT regenerated.
 
 ## Next steps (ordered, toward production)
 1. **Monitor CI** commit terbaru; jaga `main` hijau (prioritas).
