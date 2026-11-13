@@ -5,7 +5,8 @@ data class ProjectHealthScore(
     val deadButtonsCount: Int = DeadButtonShallowScanner.countDeadButtons(),
     val shallowFeaturesCount: Int = DeadButtonShallowScanner.countShallowFeatures(),
     val bugPenaltiesCount: Int = ProductionDefectScanner.scanKnownDefects().count { it.type == DefectType.PRODUCTION_DEFECT },
-    val progressPenaltiesCount: Int = 1,
+    /** Gap progres = fitur DALAM_PENGERJAAN non-deferred (defect dihitung terpisah, deferred dikecualikan). */
+    val progressPenaltiesCount: Int = PhaseTreeScanner.getMetrics().progressGapCount,
     val penaltyPerDeadButton: Float = 4.0f,
     val penaltyPerShallow: Float = 3.0f,
     val penaltyPerBug: Float = 2.0f,

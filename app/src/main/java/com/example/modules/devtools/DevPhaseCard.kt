@@ -75,10 +75,13 @@ fun DevPhaseCard(phase: DevPhase) {
             )
             Spacer(modifier = Modifier.height(4.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Tuntas: ${phase.completedFeatures}/${phase.totalFeatures} Sub-Fitur (${String.format("%.1f", phase.completionPercentage)}%)", fontSize = 9.sp, color = DrgTextSecondary)
+                Text("Tuntas: ${phase.completedFeatures}/${phase.inScopeFeatures} in-scope (${String.format("%.1f", phase.completionPercentage)}%)", fontSize = 9.sp, color = DrgTextSecondary)
                 if (phase.defectFeatures > 0) {
                     Text("⚠️ ${phase.defectFeatures} Cacat Terdeteksi", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = DrgRedPanic)
                 }
+            }
+            if (phase.deferredFeatures > 0) {
+                Text("⏸️ ${phase.deferredFeatures} fitur deferred (di luar scope, tidak dihitung)", fontSize = 9.sp, color = DrgTextSecondary)
             }
 
             if (isExpanded) {

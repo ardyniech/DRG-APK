@@ -13,9 +13,9 @@
     ]
   },
   "build": {
-    "version": "v1.10-65-g450a061",
-    "commit": "450a061",
-    "commitDate": "2026-11-14",
+    "version": "v1.10-67-gc1b3512",
+    "commit": "c1b3512",
+    "commitDate": "2026-11-13",
     "generatedBy": "generate_about_manifest.py"
   },
   "summary": {
@@ -25,8 +25,8 @@
     "inProgress": 12,
     "planned": 8,
     "modules": 18,
-    "totalSourceFiles": 532,
-    "totalLoc": 37794,
+    "totalSourceFiles": 533,
+    "totalLoc": 37861,
     "testSuites": 65
   },
   "phases": [
@@ -150,13 +150,13 @@
     },
     {
       "id": "core-database",
-      "name": "Database Local-First (Room v13)",
-      "description": "Room v13 dengan 23 entitas, DAO reaktif, dan migrasi eksplisit v1→v13.",
+      "name": "Database Local-First (Room v14)",
+      "description": "Room v14 dengan 26 tabel, DAO reaktif, dan migrasi eksplisit v1→v14.",
       "phase": "phase-1",
       "status": "IN_PROGRESS",
       "progress": 70,
       "files": 24,
-      "loc": 914,
+      "loc": 897,
       "todos": 0,
       "tests": [
         "AppDatabaseMigrationTest",
@@ -532,11 +532,11 @@
       "state": "in-progress"
     },
     {
-      "id": "room-v13-verified",
-      "title": "Verifikasi Migrasi Room v1→v13",
-      "detail": "Uji migrasi tiap versi + commit semua schema JSON.",
+      "id": "room-v14-verified",
+      "title": "Verifikasi Migrasi Room v1→v14",
+      "detail": "Uji migrasi tiap versi + commit semua schema JSON (schema 1-4,8,9 masih hilang → belum selesai).",
       "phase": "phase-2",
-      "state": "done"
+      "state": "pending"
     },
     {
       "id": "docs-site",
@@ -568,13 +568,14 @@
     "Instrumented UI Tests — Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).",
     "Detekt & KtLint di CI — Static analysis otomatis untuk kualitas kode selain batas 125 baris.",
     "Gemini Live & AI Assistant Production — Ganti placeholder AI dengan integrasi Gemini API production + rate limiting.",
+    "Verifikasi Migrasi Room v1→v14 — Uji migrasi tiap versi + commit semua schema JSON (schema 1-4,8,9 masih hilang → belum selesai).",
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 7,
+    "total": 5,
     "blocker": 0,
     "major": 2,
-    "minor": 5,
+    "minor": 3,
     "note": 0
   },
   "minus": [
@@ -593,26 +594,14 @@
     {
       "severity": "MAJOR",
       "category": "database",
-      "detail": "Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v13 tidak lengkap.",
+      "detail": "Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v14 tidak lengkap.",
       "fix": "Generate & commit schema hilang via Room export."
-    },
-    {
-      "severity": "MINOR",
-      "category": "docs",
-      "detail": "README klaim 59 suite, realita 65 file Test.kt.",
-      "fix": "Update README badge + SETUP/DEVTOOLS jumlahnya."
     },
     {
       "severity": "MINOR",
       "category": "code",
       "detail": "Hardcode hex Color(0x...) di44 file — melanggar 'No Magic Numbers' AGENTS §1.",
       "fix": "Pindah ke DesignTokens/Theme."
-    },
-    {
-      "severity": "MINOR",
-      "category": "hygiene",
-      "detail": "gradlew tidak executable (mode 644) → ./gradlew lokal gagal tanpa chmod.",
-      "fix": "chmod +x atau commit mode 755."
     },
     {
       "severity": "MINOR",

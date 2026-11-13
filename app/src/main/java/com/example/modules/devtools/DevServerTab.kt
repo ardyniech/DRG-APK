@@ -88,7 +88,7 @@ fun DevServerTab(
                     }
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Local-First SQLite Database", fontSize = 11.sp, color = DrgTextSecondary)
-                        Text("Room v13 (Zero Latency)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary)
+                        Text("Room v14 (local-first)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary)
                     }
                 }
             }

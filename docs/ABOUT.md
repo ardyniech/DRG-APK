@@ -4,9 +4,9 @@
 
 **Progres pengembangan keseluruhan: 64%** (13 selesai · 12 dikerjakan · 8 direncanakan)
 
-Versi `v1.10-65-g450a061` · commit `450a061` · 2026-11-14 · 18 modul · 532 file sumber · 37794 baris · 65 test suite
+Versi `v1.10-67-gc1b3512` · commit `c1b3512` · 2026-11-13 · 18 modul · 533 file sumber · 37861 baris · 65 test suite
 
-**Kekurangan (Bawel Audit): 7 temuan (0 BLOCKER · 2 MAJOR · 5 MINOR · 0 NOTE)**
+**Kekurangan (Bawel Audit): 5 temuan (0 BLOCKER · 2 MAJOR · 3 MINOR · 0 NOTE)**
 
 > **SINGLE SOURCE OF TRUTH** — dokumen ini adalah acuan tunggal untuk AI dev, DevTools in-app, dan in-app Tentang. Digenerate otomatis oleh `generate_about_manifest.py` (mengandung `.github/scripts/audit_minus.py --json`). Jangan tulis manual. Jangan merujuk ke DEVTOOLS.md/README untuk angka — rujuk ke sini.
 
@@ -23,7 +23,7 @@ Arsitektur Clean MVI + Compose M3, Room local-first, SOS/CrashGuard, Radar OSM, 
 | Audio Route & Alarm | Sedang Dibangun | 70% |
 | Hemat Baterai & Data | Sedang Dibangun | 65% |
 | Map Tile LRU Cache | Sedang Dibangun | 70% |
-| Database Local-First (Room v13) | Sedang Dibangun | 70% |
+| Database Local-First (Room v14) | Sedang Dibangun | 70% |
 | GPS & Location Sharing | Sedang Dibangun | 70% |
 | RBAC & Role Audit Trail | Sedang Dibangun | 65% |
 | Deteksi Tabrakan | Sedang Dibangun | 65% |
@@ -68,7 +68,7 @@ Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan kl
 - **Instrumented UI Tests** (pending) — Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).
 - **Detekt & KtLint di CI** (pending) — Static analysis otomatis untuk kualitas kode selain batas 125 baris.
 - **Gemini Live & AI Assistant Production** (in-progress) — Ganti placeholder AI dengan integrasi Gemini API production + rate limiting.
-- **Verifikasi Migrasi Room v1→v13** (done) — Uji migrasi tiap versi + commit semua schema JSON.
+- **Verifikasi Migrasi Room v1→v14** (pending) — Uji migrasi tiap versi + commit semua schema JSON (schema 1-4,8,9 masih hilang → belum selesai).
 - **Dokumentasi Publik** (pending) — Situs dokumentasi (GitHub Pages) untuk pengurus & developer.
 
 ## Kekurangan (Bawel Audit) — WAJIB dibaca AI dev sebelum klaim
@@ -77,10 +77,8 @@ Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan kl
 |---|---|---|---|
 | **MAJOR** | multi-user | Seed hanya bila members kosong → tiap HP baru punya data dummy sendiri, bukan data komunitas bersama. | Butuh backend + akun server agar komunitas sinkron. |
 | **MINOR** | security | Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB. | Enkripsi database atau minimal jelaskan risiko di docs. |
-| **MAJOR** | database | Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v13 tidak lengkap. | Generate & commit schema hilang via Room export. |
-| **MINOR** | docs | README klaim 59 suite, realita 65 file Test.kt. | Update README badge + SETUP/DEVTOOLS jumlahnya. |
+| **MAJOR** | database | Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v14 tidak lengkap. | Generate & commit schema hilang via Room export. |
 | **MINOR** | code | Hardcode hex Color(0x...) di44 file — melanggar 'No Magic Numbers' AGENTS §1. | Pindah ke DesignTokens/Theme. |
-| **MINOR** | hygiene | gradlew tidak executable (mode 644) → ./gradlew lokal gagal tanpa chmod. | chmod +x atau commit mode 755. |
 | **MINOR** | test | androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented. | Tambah UI test untuk login, SOS, kas. |
 
 BLOCKER = dilarang klaim multi-user/sinkron sebelum diperbaiki. Jalankan `python3 .github/scripts/audit_minus.py --json` untuk detail mesin.
@@ -108,6 +106,7 @@ BLOCKER = dilarang klaim multi-user/sinkron sebelum diperbaiki. Jalankan `python
 - Instrumented UI Tests — Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).
 - Detekt & KtLint di CI — Static analysis otomatis untuk kualitas kode selain batas 125 baris.
 - Gemini Live & AI Assistant Production — Ganti placeholder AI dengan integrasi Gemini API production + rate limiting.
+- Verifikasi Migrasi Room v1→v14 — Uji migrasi tiap versi + commit semua schema JSON (schema 1-4,8,9 masih hilang → belum selesai).
 - Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer.
 
 *Total fitur: 33 · 64% selesai.*

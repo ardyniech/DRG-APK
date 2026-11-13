@@ -30,7 +30,7 @@ object CodeIntegrityAuditor {
         CodeIntegrityFeatureTree(
             featureName = "Core Architecture & State",
             subFeatures = listOf(
-                CodeIntegritySubFeature("Room v13 Persistence", emptyList()),
+                CodeIntegritySubFeature("Room v14 Persistence", emptyList()),
                 CodeIntegritySubFeature(
                     subFeatureName = "MVI StateFlow Dispatchers",
                     smells = listOf(

@@ -55,7 +55,7 @@ fun DevRepoHealthTab(
                     }
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Room DB Entities:", fontSize = 11.sp, color = DrgTextSecondary)
-                        Text("23 Tables (v13, per skema)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
+                        Text("26 Tabel (v14, schema 14.json)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
                     }
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Test Suite Status:", fontSize = 11.sp, color = DrgTextSecondary)

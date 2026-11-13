@@ -33,7 +33,7 @@ fun DevBugHunterTab(
         headerContent = headerContent,
         headerIcon = Icons.Default.BugReport,
         headerTitle = "Bug, Dead Buttons & Shallow Features Hunter",
-        headerDesc = "Deteksi jujur dari scanner: Dead Button (-4%), Dangkal (-3%), Cacat (-2%), Gap Progres (-2%)."
+        headerDesc = "Deteksi jujur dari scanner: Dead Button (-4%), Dangkal (-3%), Cacat (-2%), Gap progres fitur DALAM_PENGERJAAN non-deferred (-2%)."
     ) {
         item {
             Surface(shape = RoundedCornerShape(12.dp), color = DrgErrorBgSoft, modifier = Modifier.fillMaxWidth()) {
@@ -45,7 +45,7 @@ fun DevBugHunterTab(
                             fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgErrorText
                         )
                         Text(
-                            "Skor ${String.format("%.1f", score.baseScore)}% → ${String.format("%.1f", score.finalScore)}% (${score.grade})",
+                            "Skor kesehatan ${String.format("%.1f", score.baseScore)}% → ${String.format("%.1f", score.finalScore)}% (${score.grade}) — heuristik, bukan progres fitur",
                             fontSize = 10.sp, color = DrgErrorTextDark
                         )
                     }
@@ -60,8 +60,8 @@ fun DevBugHunterTab(
                     dead.forEach { Text("• [DEAD-BUTTON] ${it.name}: ${it.deadButtonDetails ?: "-"}", fontSize = 10.sp, color = DrgRedDanger) }
                     shallow.filter { !it.hasDeadButtons }.forEach { Text("• [SHALLOW] ${it.name}: ${it.shallowReason ?: "-"}", fontSize = 10.sp, color = DrgOrangeText) }
                     defects.forEach { Text("• [${it.type.label}] ${it.defectId} ${it.title}", fontSize = 10.sp, color = DrgRedDanger) }
-                    if (score.progressPenaltiesCount > 0) Text("• [PROGRES] ${score.progressPenaltiesCount} gap progres terhitung", fontSize = 10.sp, color = DrgWarningTextDark)
-                    Text("Catatan: fitur PENDING/DEFERRED (Asuransi, Intercom Helm) mengikuti scope roadmap.", fontSize = 9.sp, color = DrgTextSecondary)
+                    if (score.progressPenaltiesCount > 0) Text("• [PROGRES] ${score.progressPenaltiesCount} fitur DALAM_PENGERJAAN non-deferred", fontSize = 10.sp, color = DrgWarningTextDark)
+                    Text("Catatan: fitur DEFERRED (Asuransi, Intercom Helm) dikecualikan dari gap progres & tidak dianggap cacat in-scope.", fontSize = 9.sp, color = DrgTextSecondary)
                 }
             }
         }

@@ -150,8 +150,8 @@
     },
     {
       "id": "core-database",
-      "name": "Database Local-First (Room v13)",
-      "description": "Room v13 dengan 23 entitas, DAO reaktif, dan migrasi eksplisit v1→v13.",
+      "name": "Database Local-First (Room v14)",
+      "description": "Room v14 dengan 26 tabel, DAO reaktif, dan migrasi eksplisit v1→v14.",
       "phase": "phase-1",
       "modulePath": "app/src/main/java/com/example/core/database",
       "testKeywords": ["AppDatabaseMigration", "MemberDaoCrud"]
@@ -310,11 +310,11 @@
       "state": "in-progress"
     },
     {
-      "id": "room-v13-verified",
-      "title": "Verifikasi Migrasi Room v1→v13",
-      "detail": "Uji migrasi tiap versi + commit semua schema JSON.",
+      "id": "room-v14-verified",
+      "title": "Verifikasi Migrasi Room v1→v14",
+      "detail": "Uji migrasi tiap versi + commit semua schema JSON (schema 1-4,8,9 masih hilang → belum selesai).",
       "phase": "phase-2",
-      "state": "done"
+      "state": "pending"
     },
     {
       "id": "docs-site",

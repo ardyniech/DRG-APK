@@ -51,7 +51,7 @@ object SecurityAuditEngine {
 
         list.add(
             SecurityCheckItem(
-                name = "Isolasi Sandbox & Enkripsi Data Lokal (Room v13)",
+                name = "Isolasi Sandbox & Enkripsi Data Lokal (Room v14)",
                 category = "Storage Security",
                 isSecure = false,
                 statusText = "Isolasi app sandbox + allowBackup=false; SQLite BELUM terenkripsi (SQLCipher)",

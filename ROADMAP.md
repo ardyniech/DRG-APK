@@ -9,7 +9,7 @@ Kondisi real per 2026-11-09 ada di [README — Kondisi Real](README.md#️-kondi
 
 ## 🎯 Fase 1 — Fondasi Komunitas & Darurat (Selesai - v1.0.0)
 - [x] Arsitektur Clean MVI + Jetpack Compose Material 3 (< 125 baris per file).
-- [x] Persistensi Local-First dengan Room Database v13 (Flow reaktif, 23 entitas).
+- [x] Persistensi Local-First dengan Room Database v14 (Flow reaktif, 26 tabel).
 - [x] Tombol Darurat Panic SOS & Sensor Deteksi Tabrakan Akselerometer.
 - [x] Radar Pantauan Peta OpenStreetMap (OSM) dengan LRU Tile Caching.
 - [x] **Iuran Kas (finansial wajib rilis awal):** Laporan Keuangan Kas Transparan (Kas Masuk, Kas Keluar, Saldo Bersih).

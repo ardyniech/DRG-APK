@@ -1,6 +1,6 @@
 # Dokumentasi Migrasi Database Room — DRG Driver 🗄️
 
-Dokumen ini menjelaskan evolusi skema Room Database internal aplikasi **DRG Driver** (`drg_community.db`), strategi migrasi, dan riwayat versi dari `v1` hingga `v13`.
+Dokumen ini menjelaskan evolusi skema Room Database internal aplikasi **DRG Driver** (`drg_community.db`), strategi migrasi, dan riwayat versi dari `v1` hingga `v14`.
 
 ---
 
@@ -80,3 +80,18 @@ Aplikasi menggunakan **Room Database** dengan `exportSchema = true` (disimpan di
   - `ALTER TABLE members ADD COLUMN simNumber TEXT NOT NULL DEFAULT '...'`
   - `ALTER TABLE members ADD COLUMN nik TEXT NOT NULL DEFAULT '...'`
   - Pengujian tervalidasi via unit test & migrasi skema Room.
+
+---
+
+### Migrasi Database Room Versi 13 ke Versi 14 (v13 -> v14)
+- **Tujuan**: Event komunitas dengan tugas panitia, anggaran, progres, dan feedback anggota (top-level `EVENTS`).
+- **Entitas baru**:
+  - `community_events` — agenda, stage/readiness, estimasi & dana terkumpul, koordinator.
+  - `event_committee_tasks` — divisi, PIC, deadline, progres, status, blocker, alokasi anggaran.
+  - `event_member_feedback` — kategori, severity, pesan, respons panitia, status resolusi.
+- **Strategi Migrasi DDL (v13 -> v14)**:
+  - `CREATE TABLE IF NOT EXISTS community_events (...)` + indeks `stage`, `eventTimestamp`.
+  - `CREATE TABLE IF NOT EXISTS event_committee_tasks (...)` + indeks `eventId`, `status`.
+  - `CREATE TABLE IF NOT EXISTS event_member_feedback (...)` + indeks `eventId`, `createdAt`.
+  - Schema acuan: `app/schemas/com.example.core.database.AppDatabase/14.json` (26 tabel).
+- **Catatan jujur**: schema historis `1-4,8,9.json` belum tersedia, sehingga verifikasi rantai migrasi v1→v14 belum lengkap.

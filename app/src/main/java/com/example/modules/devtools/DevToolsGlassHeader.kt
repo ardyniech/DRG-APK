@@ -78,7 +78,13 @@ fun DevToolsGlassHeader(
                         Text(if (isSuperAdmin) "SUPER ADMIN" else "TERKUNCI", fontFamily = SpaceGroteskFontFamily, fontSize = 9.sp, fontWeight = FontWeight.ExtraBold, color = if (isSuperAdmin) accent else DrgRedPanic)
                     }
                     if (isSuperAdmin) {
-                        Text("${String.format("%.1f", score.finalScore)}% • ${score.grade}", fontFamily = SpaceGroteskFontFamily, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextDark)
+                        Text(
+                            "Kesehatan ${String.format("%.0f", score.finalScore)}% • ${score.grade.substringBefore(" (")}",
+                            fontFamily = SpaceGroteskFontFamily,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = DrgTextDark
+                        )
                     }
                 }
             }

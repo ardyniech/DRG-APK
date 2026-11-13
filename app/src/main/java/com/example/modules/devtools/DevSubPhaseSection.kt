@@ -36,7 +36,8 @@ fun DevSubPhaseSection(sub: DevSubPhase) {
                     color = DrgTextPrimary
                 )
                 Text(
-                    "${sub.completedCount}/${sub.totalCount} Selesai",
+                    "${sub.completedCount}/${sub.inScopeCount} selesai" +
+                        if (sub.deferredCount > 0) " · ${sub.deferredCount} ditunda" else "",
                     fontSize = 9.sp,
                     color = if (sub.hasAnyDefect) DrgRedPanic else DrgGreenPrimary,
                     fontWeight = FontWeight.Bold

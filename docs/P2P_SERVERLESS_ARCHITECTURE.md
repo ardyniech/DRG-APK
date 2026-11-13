@@ -28,7 +28,7 @@ Membangun komunikasi antar device ojol (driver) **tanpa server tengah**. Setiap 
 │  │                                                               │ │
 │  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐          │ │
 │  │  │ Room DB     │  │ OkHttp      │  │ PendingSync │          │ │
-│  │  │ v13 (local) │  │ HTTP Client │  │ Queue       │          │ │
+│  │  │ v14 (local) │  │ HTTP Client │  │ Queue       │          │ │
 │  │  └─────────────┘  └─────────────┘  └─────────────┘          │ │
 │  └─────────────────────────────────────────────────────────────┘ │
 └──────────────────────────┬──────────────────────────────────────┘
@@ -48,7 +48,7 @@ Membangun komunikasi antar device ojol (driver) **tanpa server tengah**. Setiap 
 │  │                                                               │ │
 │  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐          │ │
 │  │  │ Room DB     │  │ OkHttp      │  │ PendingSync │          │ │
-│  │  │ v13 (local) │  │ HTTP Client │  │ Queue       │          │ │
+│  │  │ v14 (local) │  │ HTTP Client │  │ Queue       │          │ │
 │  │  └─────────────┘  └─────────────┘  └─────────────┘          │ │
 │  └─────────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────┘
@@ -567,7 +567,7 @@ TIDAK PERLU TAMBAH:
   ✅ Firebase Messaging — SUDAH ada
   ✅ OkHttp — SUDAH ada
   ✅ Retrofit — SUDAH ada
-  ✅ Room Database — SUDAH ada (v13)
+  ✅ Room Database — SUDAH ada (v14)
   ✅ PendingSyncEntity + SyncQueueDao — SUDAH ada
 ```
 
@@ -611,7 +611,7 @@ TIDAK PERLU TAMBAH:
 
 ## 🔗 Related Documents
 
-- [DATABASE_MIGRATIONS.md](DATABASE_MIGRATIONS.md) — Room DB v13 migrations
+- [DATABASE_MIGRATIONS.md](DATABASE_MIGRATIONS.md) — Room DB v14 migrations
 - [AGENTS.md](AGENTS.md) — Operational SOP v3.0
 - [modules/README.md](modules/README.md) — Module documentation
 - [SECURITY.md](SECURITY.md) — Security guidelines

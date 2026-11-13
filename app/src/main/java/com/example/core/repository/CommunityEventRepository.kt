@@ -46,7 +46,7 @@ class CommunityEventRepository(private val db: AppDatabase) {
     ) = withContext(Dispatchers.IO) {
         dao.updateTaskProgress(
             taskId = taskId,
-            progressPercent = progressPercent.coerceIn(0, 100),
+            progress = progressPercent.coerceIn(0, 100),
             status = status,
             blockerNote = blockerNote,
             updatedAt = System.currentTimeMillis()
@@ -58,6 +58,6 @@ class CommunityEventRepository(private val db: AppDatabase) {
     }
 
     suspend fun resolveFeedback(feedbackId: String, response: String) = withContext(Dispatchers.IO) {
-        dao.resolveFeedback(feedbackId, response, isResolved = true)
+        dao.resolveFeedback(feedbackId, response)
     }
 }

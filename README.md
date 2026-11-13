@@ -4,9 +4,9 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android_15-green.svg)](https://developer.android.com)
 [![Compose](https://img.shields.io/badge/Jetpack_Compose-Material_3-emerald.svg)](https://developer.android.com/jetpack/compose)
-[![Database](https://img.shields.io/badge/Room_Database-v14_Event_Panitia_LPJ_Local_First-teal.svg)](docs/DATABASE_MIGRATIONS.md)
+[![Database](https://img.shields.io/badge/Room_Database-v14_26_Tabel_Local_First-teal.svg)](docs/DATABASE_MIGRATIONS.md)
 [![Architecture Gating](https://img.shields.io/badge/Architecture-125_Lines_Cap_Enforced-success.svg)](.github/scripts/check_file_length.py)
-[![Tests](https://img.shields.io/badge/Unit_Tests-59_Suites_Passed-brightgreen.svg)](#-strategi-pengujian-testing-suite)
+[![Tests](https://img.shields.io/badge/Unit_Tests-65_Suites-brightgreen.svg)](#-strategi-pengujian-testing-suite)
 
 ---
 
@@ -41,7 +41,7 @@
 
 | Area | Plan (target) | Dev sekarang (realita) | Status |
 |---|---|---|---|
-| Arsitektur | Clean MVI + Compose M3, <125 baris/file | 465 file audit, 0 pelanggaran via `check_file_length.py` | ✅ Selesai |
+| Arsitektur | Clean MVI + Compose M3, <125 baris/file | 532 file audit, 0 pelanggaran via `check_file_length.py` | ✅ Selesai |
 | Database | Room v14 lokal + migrasi eksplisit | 26 tabel, migrasi 1→14 di kode, tapi schema `1-4,8,9.json` belum dicommit | ⚠️ Sebagian |
 | **Iuran Kas (finansial)** | **Kas masuk/keluar/saldo + export (wajib rilis awal)** | Kas Transparan Selesai 100%, grafik + periode + export | ✅ Selesai (lokal) |
 | Marketplace / Arisan | Oli/ban/helm distributor, arisan/talangan | Belum ada modul | ⏸️ **DEFERRED** — bukan blocker |
@@ -157,7 +157,7 @@ Detail skema dan panduan migrasi dapat dibaca di **[Dokumentasi Migrasi Database
 
 ## 🧪 Strategi Pengujian (Testing Suite)
 
-Proyek ini dilengkapi dengan 59 suite pengujian unit & integrasi otomatis berbasis **Robolectric** dan **Roborazzi**:
+Proyek ini dilengkapi dengan 65 suite pengujian unit & integrasi otomatis berbasis **Robolectric** dan **Roborazzi**:
 
 - `LandingFeatureAutoScrollTest.kt`: Pengujian kelengkapan data & properti thumbnail fitur unggulan aplikasi pada landing screen.
 - `EmergencySmsFallbackHelperTest.kt`: Pengujian fallback SMS darurat saat jaringan data offline.

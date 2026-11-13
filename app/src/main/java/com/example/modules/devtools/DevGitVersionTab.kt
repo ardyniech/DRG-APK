@@ -51,7 +51,7 @@ fun DevGitVersionTab() {
                     }
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Kotlin / Toolchain:", fontSize = 11.sp, color = DrgTextSecondary)
-                        Text("2.2.10 (KSP Room v13)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
+                        Text("2.2.10 (KSP Room v14)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
                     }
                 }
             }

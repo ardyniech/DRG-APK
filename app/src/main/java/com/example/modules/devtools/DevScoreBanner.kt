@@ -36,16 +36,22 @@ fun DevScoreBanner(score: ProjectHealthScore) {
         ) {
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                 Text(
-                    text = "Skor Proyek: ${String.format("%.1f", score.finalScore)}% (${score.grade})",
+                    text = "Skor Kesehatan: ${String.format("%.1f", score.finalScore)}% (${score.grade})",
                     fontFamily = SpaceGroteskFontFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     color = DrgTextDark
                 )
                 Text(
-                    text = "Penalti: Dead (-${pDead}%), Dangkal (-${pShallow}%), Cacat (-${pBug}%), Progres (-${pProg}%)",
+                    text = "Penalti: Dead (-${pDead}%), Dangkal (-${pShallow}%), Cacat (-${pBug}%), Gap progres (-${pProg}%)",
                     fontSize = 10.sp,
                     color = DrgTextSecondary
+                )
+                Text(
+                    text = "Heuristik penalti — BUKAN progres fitur. Progres fitur ada di tab Tree Progress.",
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = DrgWarningTextDark
                 )
             }
             Box(

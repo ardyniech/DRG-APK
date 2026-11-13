@@ -125,10 +125,10 @@ def check_local_only():
 def check_schema_docs():
     sdir = os.path.join(REPO, "app/schemas/com.example.core.database.AppDatabase")
     have = sorted([f for f in os.listdir(sdir) if f.endswith(".json")]) if os.path.isdir(sdir) else []
-    want = [f"{i}.json" for i in range(1, 14)]
+    want = [f"{i}.json" for i in range(1, 15)]
     missing = [w for w in want if w not in have]
     if missing:
-        add("MAJOR", "database", f"Schema Room hilang {missing} (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v13 tidak lengkap.",
+        add("MAJOR", "database", f"Schema Room hilang {missing} (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v14 tidak lengkap.",
             "Generate & commit schema hilang via Room export.")
     readme = read("README.md")
     appdb = read("app/src/main/java/com/example/core/database/AppDatabase.kt")
@@ -140,7 +140,7 @@ def check_schema_docs():
     if m and int(m.group(1)) != suites:
         add("MINOR", "docs", f"README klaim {m.group(1)} suite, realita {suites} file Test.kt.",
             "Update README badge + SETUP/DEVTOOLS jumlahnya.")
-    if "32" in readme and suites >= 50:
+    if "32 Suites Passed" in readme and suites >= 50:
         add("MINOR", "docs", "README badge masih '32 Suites Passed' — basi, harusnya " + str(suites) + ".", "Naikkan badge test (auto dari manifest lebih baik).")
 
 def check_code_hygiene():

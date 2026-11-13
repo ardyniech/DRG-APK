@@ -37,10 +37,10 @@ fun DevTechStackTab(
                     TechRow("Bahasa Pemrograman:", "Kotlin 2.2.10 (KSP Enabled)")
                     TechRow("UI Framework:", "Jetpack Compose 1.7+ (Material 3)")
                     TechRow("Arsitektur Inti:", "Clean Architecture + MVI/UDF (<125 baris)")
-                    TechRow("Penyimpanan Lokal:", "Room v13 SQLite (23 Entity, Zero Loss)")
+                    TechRow("Penyimpanan Lokal:", "Room v14 SQLite (26 tabel, local-first)")
                     TechRow("Asinkron & Reaktif:", "Kotlin Coroutines & StateFlow / SharedFlow")
                     TechRow("Image Rendering:", "Coil 3 (LRU Disk & Memory Cache)")
-                    TechRow("Cloud Backend:", "Firebase Firestore & AI Logic Gateway")
+                    TechRow("Cloud Backend:", "Firebase (belum aktif penuh; data local-first)")
                     TechRow("Pengujian JVM Lokal:", "Robolectric 4.14 (Android SDK 34)")
                 }
             }

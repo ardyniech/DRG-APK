@@ -44,6 +44,7 @@ fun DevFeatureItemCard(feature: DevFeatureLeaf) {
                         PhaseTreeStatus.TERKENDALA_CACAT -> Icons.Default.Warning
                         PhaseTreeStatus.DALAM_PENGERJAAN -> Icons.Default.HourglassEmpty
                         PhaseTreeStatus.PENDING -> Icons.Default.Schedule
+                        PhaseTreeStatus.DEFERRED -> Icons.Default.Block
                     },
                     contentDescription = null,
                     tint = when (feature.status) {
@@ -51,6 +52,7 @@ fun DevFeatureItemCard(feature: DevFeatureLeaf) {
                         PhaseTreeStatus.TERKENDALA_CACAT -> DrgRedPanic
                         PhaseTreeStatus.DALAM_PENGERJAAN -> DrgAmberWarning
                         PhaseTreeStatus.PENDING -> Color.Gray
+                        PhaseTreeStatus.DEFERRED -> Color.Gray
                     },
                     modifier = Modifier.size(16.dp)
                 )

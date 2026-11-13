@@ -21,7 +21,7 @@ object NodeTopologyScanner {
         TopologyNode(
             nodeId = "NODE-LOCAL-01",
             nodeName = "Local SQLite Embedded Engine",
-            nodeType = "Primary Local Store (Room v13)",
+            nodeType = "Primary Local Store (Room v14)",
             endpointHost = "localhost:internal_sqlite/app_database",
             protocol = "IPC / In-Memory SQLite Bridge",
             isConnected = true,

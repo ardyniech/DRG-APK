@@ -18,8 +18,7 @@ fun DevProgressTab(
     headerContent: (@Composable () -> Unit)? = null
 ) {
     val phases = remember { PhaseTreeScanner.scanFullTree() }
-    val (total, completed, defect) = remember { PhaseTreeScanner.getTotalMetrics() }
-    val progressPct = if (total > 0) (completed.toFloat() / total) * 100f else 0f
+    val metrics = remember { PhaseTreeScanner.getMetrics() }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -32,27 +31,34 @@ fun DevProgressTab(
         item {
             com.example.shared.atoms.DrgLuminousGlassCard(
                 shape = RoundedCornerShape(22.dp),
-                backgroundColor = if (defect > 0) Color(0xDDFEE2E2) else Color(0xDCFFFFFF),
-                borderHighlightColor = if (defect > 0) DrgRedPanic else DrgGreenPrimary,
+                backgroundColor = if (metrics.defectFeatures > 0) Color(0xDDFEE2E2) else Color(0xDCFFFFFF),
+                borderHighlightColor = if (metrics.defectFeatures > 0) DrgRedPanic else DrgGreenPrimary,
                 contentPadding = 14.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
-                        "Hierarki Fase Dev & Sub-Fitur (Progres Jujur)",
+                        "Hierarki Fase Dev & Sub-Fitur (Progres Kurasi)",
                         fontWeight = FontWeight.Bold,
                         fontSize = 13.sp,
-                        color = if (defect > 0) DrgRedPanic else DrgGreenPrimary
+                        color = if (metrics.defectFeatures > 0) DrgRedPanic else DrgGreenPrimary
                     )
                     Text(
-                        "Total: $total Sub-Fitur | Lulus: $completed | Cacat: $defect | ${String.format("%.1f", progressPct)}%",
+                        "Total: ${metrics.totalFeatures} Sub-Fitur | In-scope: ${metrics.inScopeFeatures} | Lulus: ${metrics.completedFeatures} | Cacat: ${metrics.defectFeatures}",
                         fontFamily = SpaceGroteskFontFamily,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         color = DrgTextDark
                     )
                     Text(
-                        "Catatan: status selaras roadmap/scope; fitur deferred (Asuransi/Intercom) ditandai PENDING, bukan cacat.",
+                        "Dikerjakan: ${metrics.inProgressFeatures} | Deferred: ${metrics.deferredFeatures} | Progres in-scope: ${String.format("%.1f", metrics.progressPercentage)}%",
+                        fontFamily = SpaceGroteskFontFamily,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = DrgTextDark
+                    )
+                    Text(
+                        "Progres = Lulus ÷ fitur in-scope (deferred dikecualikan). Ini metrik kurasi status PhaseTree — bukan runtime/build/produksi, dan bukan skor kesehatan di banner.",
                         fontSize = 10.sp,
                         color = DrgTextSecondary
                     )

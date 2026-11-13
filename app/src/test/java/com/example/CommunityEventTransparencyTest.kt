@@ -146,7 +146,7 @@ class CommunityEventTransparencyTest {
         dao.insertFeedbackList(EventSeedData.defaultFeedback())
 
         dao.updateTaskProgress("EVTK-01", 100, CommitteeTaskStatus.SELESAI, "Izin RW terbit", 999L)
-        dao.resolveFeedback("EVFB-01", "Parkir cadangan dialihkan ke halaman masjid.", true)
+        dao.resolveFeedback("EVFB-01", "Parkir cadangan dialihkan ke halaman masjid.")
 
         val updatedTask = dao.getAllCommitteeTasks().first().first { it.id == "EVTK-01" }
         val updatedFeedback = dao.getAllEventFeedback().first().first { it.id == "EVFB-01" }

@@ -40,7 +40,7 @@ object MultiUserGapScanner {
             title = "Data Lokal Saja — Ganti HP = Hilang",
             type = DefectType.PRODUCTION_DEFECT,
             severityLevel = "Tinggi (Data Loss)",
-            affectedComponent = "AndroidManifest allowBackup=false & Room v13",
+            affectedComponent = "AndroidManifest allowBackup=false & Room v14",
             honestDefectExplanation = "allowBackup=false tanpa cloud backup/sync. Ganti HP/reset/uninstal menghapus kas/forum/kontak lokal; SQLite belum terenkripsi (risiko data-at-rest).",
             engineeringRoadmapFix = "Tambah export/import kas terenkripsi + cloud backup, dan evaluasi SQLCipher untuk data sensitif."
         ),
@@ -59,7 +59,7 @@ object MultiUserGapScanner {
             type = DefectType.PRODUCTION_DEFECT,
             severityLevel = "Sedang (Data Risk)",
             affectedComponent = "app/schemas/ & Room export",
-            honestDefectExplanation = "exportSchema=true namun schema historis 1,2,3,4,8,9.json belum tersedia di repo, sehingga verifikasi migrasi v1→v13 tidak lengkap.",
+            honestDefectExplanation = "exportSchema=true namun schema historis 1,2,3,4,8,9.json belum tersedia di repo, sehingga verifikasi migrasi v1→v14 tidak lengkap.",
             engineeringRoadmapFix = "Generate & commit schema hilang via Room export valid (tanpa fabrikasi) dan verifikasi migrasi."
         ),
         SystemDefectItem(

@@ -27,12 +27,12 @@ object PhaseTreePhase3And4 {
                 features = listOf(
                     DevFeatureLeaf(
                         id = "F-3.2.1",
-                        name = "Koneksi GATT Bluetooth Headset Helm (PENDING DEV)",
-                        status = PhaseTreeStatus.PENDING,
+                        name = "Koneksi GATT Bluetooth Headset Helm (DEFERRED)",
+                        status = PhaseTreeStatus.DEFERRED,
                         hasDefect = false,
                         whatIsIt = "Tombol pairing PTT fisik pada tombol stang / helm (ditunda).",
-                        whyRequired = "Di luar scope rilis awal; intercom helm pending sesuai roadmap.",
-                        defectExplanation = "DEFERRED/PENDING DEV per roadmap — bukan cacat in-scope."
+                        whyRequired = "Di luar scope rilis awal; intercom helm deferred sesuai roadmap.",
+                        defectExplanation = "DEFERRED per roadmap — bukan cacat in-scope, tidak dihitung di progres."
                     )
                 )
             )

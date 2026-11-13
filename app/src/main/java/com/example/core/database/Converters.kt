@@ -104,23 +104,6 @@ class Converters {
         PostType.UPDATE
     }
 
-    @TypeConverter
-    fun fromEventPhaseStage(value: EventPhaseStage): String = value.name
-
-    @TypeConverter
-    fun toEventPhaseStage(value: String): EventPhaseStage = try {
-        EventPhaseStage.valueOf(value)
-    } catch (_: Exception) {
-        EventPhaseStage.PERENCANAAN
-    }
-
-    @TypeConverter
-    fun fromCommitteeTaskStatus(value: CommitteeTaskStatus): String = value.name
-
-    @TypeConverter
-    fun toCommitteeTaskStatus(value: String): CommitteeTaskStatus = try {
-        CommitteeTaskStatus.valueOf(value)
-    } catch (_: Exception) {
-        CommitteeTaskStatus.BELUM_MULAI
-    }
+    // Event domain converters (EventPhaseStage, CommitteeTaskStatus) live in
+    // EventConverters.kt — keep exactly one conversion per type to satisfy Room/KSP.
 }

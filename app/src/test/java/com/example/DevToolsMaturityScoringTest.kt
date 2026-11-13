@@ -5,6 +5,7 @@ import android.content.Context
 import com.example.modules.devtools.DeadButtonShallowScanner
 import com.example.modules.devtools.EarlySymptomDetector
 import com.example.modules.devtools.FeatureStage
+import com.example.modules.devtools.PhaseTreeScanner
 import com.example.modules.devtools.ProjectHealthScore
 import com.example.modules.devtools.RealtimeMemoryProbe
 import org.junit.Assert.*
@@ -45,12 +46,13 @@ class DevToolsMaturityScoringTest {
         assertEquals(0, score.deadButtonsCount)
         assertEquals(0, score.shallowFeaturesCount)
         assertTrue("Bawel: production defects >=0", score.bugPenaltiesCount >= 0)
-        assertEquals(1, score.progressPenaltiesCount)
+        val expectedGaps = PhaseTreeScanner.getMetrics().progressGapCount
+        assertEquals("Progress penalty must be derived from PhaseTree gaps", expectedGaps, score.progressPenaltiesCount)
 
-        val expectedPenalty = (0 * 4f) + (0 * 3f) + (score.bugPenaltiesCount * 2f) + (1 * 2f)
+        val expectedPenalty = (0 * 4f) + (0 * 3f) + (score.bugPenaltiesCount * 2f) + (expectedGaps * 2f)
         assertEquals(expectedPenalty, score.totalPenalty, 0.01f)
         assertEquals(95.0f - expectedPenalty, score.finalScore, 0.01f)
-        assertTrue(score.finalScore > 70f)
+        assertTrue(score.finalScore > 60f)
         assertTrue(score.grade.contains("Grade"))
     }
 
