@@ -5,8 +5,8 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-13
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** `450a061` + pending sync commit (rekonsiliasi engine event & UI paths)
-- **Working tree:** to be clean after commit/push
+- **HEAD (pushed):** `ea5ffca` (engine sync: event contract/schema 14, hapus duplikasi path)
+- **Working tree:** clean
 - **Latest CI:** deprioritized per owner (preview via aigoogle.studio); last known issues fixed in `ab0b581`/`a4f7032`. Confirm if needed: `gh run list -R ardyniech/DRG-APK --limit 5`.
 
 ## Audit snapshot
