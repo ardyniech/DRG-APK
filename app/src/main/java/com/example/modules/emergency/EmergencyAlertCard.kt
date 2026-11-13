@@ -1,6 +1,5 @@
 package com.example.modules.emergency
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -10,12 +9,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.models.DriverMember
 import com.example.shared.models.EmergencyAlert
 import com.example.ui.theme.*
@@ -28,90 +26,56 @@ fun EmergencyAlertCard(
     onRespond: () -> Unit,
     onCall: () -> Unit
 ) {
+    val theme = LocalAppVisualTheme.current
     val isLeaderOrSatgas = currentMember?.role?.name in listOf("SATGAS", "KETUA", "WAKIL_KETUA")
-    val cardShape = RoundedCornerShape(20.dp)
-    val highlightBrush = Brush.linearGradient(
-        colors = listOf(
-            Color.White,
-            Color.White.copy(alpha = 0.5f),
-            if (alert.isActive) DrgRedDanger.copy(alpha = 0.3f) else DrgGreenPrimary.copy(alpha = 0.2f)
-        )
-    )
 
-    Surface(
-        shape = cardShape,
-        color = if (alert.isActive) DrgRedContainer.copy(alpha = 0.88f) else Color.White.copy(alpha = 0.85f),
-        tonalElevation = 0.dp,
-        modifier = Modifier
-            .fillMaxWidth()
-            .shadow(4.dp, cardShape, ambientColor = DrgShadowGreenAmbientStrong, spotColor = DrgShadowGreenSpotStrong)
-            .border(1.2.dp, highlightBrush, cardShape)
+    DrgLuminousGlassCard(
+        shape = RoundedCornerShape(22.dp),
+        backgroundColor = if (alert.isActive) DrgRedContainer.copy(alpha = 0.88f) else theme.glassBg,
+        borderHighlightColor = if (alert.isActive) DrgRedDanger.copy(alpha = 0.65f) else theme.glassBorderColor,
+        contentPadding = 14.dp,
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Warning,
-                        contentDescription = alert.type.label,
-                        tint = if (alert.isActive) DrgRedDanger else DrgTextMuted,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = alert.type.label,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp,
-                        color = if (alert.isActive) DrgRedDanger else DrgTextSecondary
-                    )
+                    Icon(Icons.Default.Warning, contentDescription = alert.type.label, tint = if (alert.isActive) DrgRedDanger else DrgTextMuted, modifier = Modifier.size(18.dp))
+                    Spacer(Modifier.width(6.dp))
+                    Text(alert.type.label, fontWeight = FontWeight.Bold, fontSize = 13.sp, color = if (alert.isActive) DrgRedDanger else DrgTextSecondary)
                 }
                 Text(
-                    text = if (alert.isActive) "🚨 AKTIF" else "✅ SELESAI",
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = if (alert.isActive) DrgRedDanger else DrgGreenPrimary
+                    if (alert.isActive) "🚨 AKTIF" else "✅ SELESAI",
+                    fontSize = 10.sp, fontWeight = FontWeight.Bold,
+                    color = if (alert.isActive) DrgRedDanger else theme.primaryColor
                 )
             }
-
-            Text(text = "${alert.driverName} (${alert.plateNumber})", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
-            Text(text = "📍 ${alert.locationName}", fontSize = 11.sp, color = DrgTextSecondary)
-            Text(text = "💬 \"${alert.message}\"", fontSize = 12.sp, color = DrgTextPrimary)
-
+            Text("${alert.driverName} (${alert.plateNumber})", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
+            Text("📍 ${alert.locationName}", fontSize = 11.sp, color = DrgTextSecondary)
+            Text("💬 \"${alert.message}\"", fontSize = 12.sp, color = DrgTextPrimary)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedButton(
-                    onClick = onCall,
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.weight(1f),
-                    contentPadding = PaddingValues(vertical = 6.dp)
+                    onClick = onCall, shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.weight(1f), contentPadding = PaddingValues(vertical = 6.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.Phone, contentDescription = "Hubungi", modifier = Modifier.size(14.dp))
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(Icons.Default.Phone, contentDescription = "Hubungi", modifier = Modifier.size(14.dp))
+                    Spacer(Modifier.width(4.dp))
                     Text("Telepon", fontSize = 11.sp)
                 }
-
                 if (alert.isActive) {
                     Button(
                         onClick = onRespond,
-                        colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
+                        colors = ButtonDefaults.buttonColors(containerColor = theme.primaryColor),
                         shape = RoundedCornerShape(10.dp),
                         modifier = Modifier.weight(1f),
                         contentPadding = PaddingValues(vertical = 6.dp)
-                    ) {
-                        Text("Bantu (${alert.responderCount})", fontSize = 11.sp)
-                    }
-
+                    ) { Text("Bantu (${alert.responderCount})", fontFamily = SpaceGroteskFontFamily, fontSize = 11.sp) }
                     if (isLeaderOrSatgas) {
                         Button(
                             onClick = onResolve,
                             colors = ButtonDefaults.buttonColors(containerColor = DrgGreenDark),
                             shape = RoundedCornerShape(10.dp),
                             contentPadding = PaddingValues(vertical = 6.dp)
-                        ) {
-                            Text("Selesai", fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                        }
+                        ) { Text("Selesai", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
                     }
                 }
             }

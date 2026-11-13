@@ -7,6 +7,7 @@ import com.example.core.repository.DRGRepository
 import com.example.core.viewmodel.DRGViewModel
 import com.example.core.viewmodel.MainNavTab
 import com.example.core.viewmodel.login
+import com.example.core.viewmodel.logout
 import com.example.core.viewmodel.coordinators.AdminLogUtils
 import com.example.shared.models.*
 import kotlinx.coroutines.runBlocking
@@ -106,6 +107,7 @@ class ViewModelRefactorAuditTest {
         vm.clearSnackBar()
         assertNull(vm.snackBarMessage.value)
 
+        vm.logout()
         assertFalse(vm.isLoggedIn.value)
         vm.login("DRG-001")
         assertTrue(vm.isLoggedIn.value)

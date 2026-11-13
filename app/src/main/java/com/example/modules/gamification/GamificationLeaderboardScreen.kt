@@ -1,16 +1,28 @@
 package com.example.modules.gamification
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.models.*
-import com.example.ui.theme.*
+import com.example.shared.utils.bouncyClick
+import com.example.ui.theme.DrgTextDark
 
 @Composable
 fun GamificationLeaderboardScreen(
@@ -26,51 +38,43 @@ fun GamificationLeaderboardScreen(
     onRedeemReward: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val theme = LocalAppVisualTheme.current
+    val accent = theme.primaryColor
     var selectedTab by remember { mutableIntStateOf(0) }
+    val tabs = listOf(
+        "Peringkat" to Icons.Default.Leaderboard,
+        "Lencana (${badges.size})" to Icons.Default.MilitaryTech,
+        "Misi (${tasks.size})" to Icons.Default.Assignment,
+        "Tukar Poin" to Icons.Default.CardGiftcard,
+        "Riwayat" to Icons.Default.History
+    )
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(DrgBackground)
-            .padding(horizontal = 16.dp)
-    ) {
-        ScrollableTabRow(
-            selectedTabIndex = selectedTab,
-            containerColor = DrgBackground,
-            contentColor = DrgAmberSecondary,
-            edgePadding = 0.dp,
-            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+    Column(modifier = modifier.fillMaxSize().padding(horizontal = 14.dp)) {
+        DrgLuminousGlassCard(
+            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+            shape = RoundedCornerShape(18.dp),
+            backgroundColor = theme.glassBg,
+            borderHighlightColor = theme.glassBorderColor,
+            contentPadding = 4.dp
         ) {
-            Tab(
-                selected = selectedTab == 0,
-                onClick = { selectedTab = 0 },
-                text = { Text("Peringkat", fontSize = 11.sp) },
-                icon = { Icon(Icons.Default.Leaderboard, contentDescription = "Peringkat", modifier = Modifier.size(16.dp)) }
-            )
-            Tab(
-                selected = selectedTab == 1,
-                onClick = { selectedTab = 1 },
-                text = { Text("Lencana (${badges.size})", fontSize = 11.sp) },
-                icon = { Icon(Icons.Default.MilitaryTech, contentDescription = "Lencana", modifier = Modifier.size(16.dp)) }
-            )
-            Tab(
-                selected = selectedTab == 2,
-                onClick = { selectedTab = 2 },
-                text = { Text("Misi (${tasks.size})", fontSize = 11.sp) },
-                icon = { Icon(Icons.Default.Assignment, contentDescription = "Misi", modifier = Modifier.size(16.dp)) }
-            )
-            Tab(
-                selected = selectedTab == 3,
-                onClick = { selectedTab = 3 },
-                text = { Text("Tukar Poin", fontSize = 11.sp) },
-                icon = { Icon(Icons.Default.CardGiftcard, contentDescription = "Tukar", modifier = Modifier.size(16.dp)) }
-            )
-            Tab(
-                selected = selectedTab == 4,
-                onClick = { selectedTab = 4 },
-                text = { Text("Riwayat", fontSize = 11.sp) },
-                icon = { Icon(Icons.Default.History, contentDescription = "Riwayat", modifier = Modifier.size(16.dp)) }
-            )
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(5.dp), contentPadding = PaddingValues(horizontal = 2.dp)) {
+                itemsIndexed(tabs) { idx, (label, icon) ->
+                    val active = selectedTab == idx
+                    Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(if (active) accent else Color.White.copy(alpha = 0.65f))
+                            .border(1.dp, if (active) accent else Color.White, RoundedCornerShape(14.dp))
+                            .bouncyClick { selectedTab = idx }
+                            .padding(horizontal = 10.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(icon, contentDescription = label, tint = if (active) Color.White else DrgTextDark, modifier = Modifier.size(14.dp))
+                        Text(label, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = if (active) Color.White else DrgTextDark)
+                    }
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(10.dp))

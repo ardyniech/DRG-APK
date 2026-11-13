@@ -1,11 +1,6 @@
 package com.example.modules.about.primitives
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -16,10 +11,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.modules.about.AboutRefinement
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.ui.theme.DrgAmberWarning
-import com.example.ui.theme.DrgGreenPrimary
-import com.example.ui.theme.DrgOutline
-import com.example.ui.theme.DrgSurface
 import com.example.ui.theme.DrgTextMuted
 import com.example.ui.theme.DrgTextPrimary
 import com.example.ui.theme.DrgTextSecondary
@@ -27,12 +21,15 @@ import com.example.ui.theme.DrgTextSecondary
 @Composable
 fun AboutRefinementCard(refinements: List<AboutRefinement>) {
     if (refinements.isEmpty()) return
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = DrgSurface,
-        modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(20.dp))
+    val theme = LocalAppVisualTheme.current
+    DrgLuminousGlassCard(
+        shape = RoundedCornerShape(22.dp),
+        backgroundColor = theme.glassBg,
+        borderHighlightColor = theme.glassBorderColor,
+        contentPadding = 16.dp,
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text("Rencana Penyempurnaan", fontSize = 14.sp, fontWeight = FontWeight.ExtraBold, color = DrgTextPrimary)
             refinements.forEach { item ->
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -49,8 +46,9 @@ fun AboutRefinementCard(refinements: List<AboutRefinement>) {
 
 @Composable
 private fun RefinementStateBadge(state: String) {
+    val theme = LocalAppVisualTheme.current
     val color = when (state) {
-        "done" -> DrgGreenPrimary
+        "done" -> theme.primaryColor
         "in-progress" -> DrgAmberWarning
         else -> DrgTextMuted
     }

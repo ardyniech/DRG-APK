@@ -5,10 +5,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.shared.models.DriverMember
-import com.example.ui.theme.DrgGlassBorderBrush
 
 @Composable
 fun DrgHeader(
@@ -18,19 +16,18 @@ fun DrgHeader(
     onSettingsClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    DrgGlassCard(
+    val theme = LocalAppVisualTheme.current
+    DrgLuminousGlassCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 6.dp),
         shape = RoundedCornerShape(22.dp),
-        backgroundColor = Color.White.copy(alpha = 0.88f),
-        borderBrush = DrgGlassBorderBrush,
-        elevation = 8.dp
+        backgroundColor = theme.glassBg,
+        borderHighlightColor = theme.glassBorderColor,
+        contentPadding = 12.dp
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 14.dp, vertical = 10.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {

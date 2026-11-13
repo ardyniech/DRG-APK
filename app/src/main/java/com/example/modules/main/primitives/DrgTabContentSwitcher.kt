@@ -2,16 +2,25 @@ package com.example.modules.main.primitives
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.core.cache.LocationSyncPowerProfile
+import com.example.core.cache.MapCachePolicy
 import com.example.core.viewmodel.*
 import com.example.modules.about.AboutScreen
-import com.example.modules.dashboard.DashboardScreen
+import com.example.modules.dashboard.theme.DashboardFocusMode
+import com.example.modules.dashboard.theme.DashboardVisualTheme
 import com.example.modules.devtools.DevToolsDashboardScreen
 import com.example.modules.emergency.EmergencyScreen
-import com.example.modules.profile.ProfileScreen
 import com.example.modules.radar.RadarScreen
 import com.example.modules.workflow.FieldWorkflowScreen
 import com.example.shared.models.*
@@ -27,90 +36,78 @@ fun DrgTabContentSwitcher(
     members: List<DriverMember>,
     activeAlerts: List<EmergencyAlert>,
     cashTransactions: List<KasTransaction>,
-    totalIncome: Long,
-    totalExpense: Long,
-    netBalance: Long,
-    posts: List<ForumPost>,
-    workshops: List<WorkshopPartner>,
-    poskoList: List<PoskoLocation>,
-    notifications: List<CommunityNotification>,
-    badges: List<BadgeItem>,
-    tasks: List<CommunityTask>,
-    rewards: List<RewardItem>,
-    hazards: List<HazardArea>,
-    pointTransactions: List<PointTransaction>,
-    adminLogs: List<AdminLog>,
-    isSosAlarmEnabled: Boolean,
-    isCrashGuardEnabled: Boolean,
-    crashSensitivity: CrashSensitivity,
-    isPowerSaverMode: Boolean,
+    totalIncome: Long, totalExpense: Long, netBalance: Long,
+    posts: List<ForumPost>, workshops: List<WorkshopPartner>, poskoList: List<PoskoLocation>,
+    notifications: List<CommunityNotification>, badges: List<BadgeItem>, tasks: List<CommunityTask>,
+    rewards: List<RewardItem>, hazards: List<HazardArea>, pointTransactions: List<PointTransaction>, adminLogs: List<AdminLog>,
+    isSosAlarmEnabled: Boolean, isCrashGuardEnabled: Boolean, crashSensitivity: CrashSensitivity,
+    isPowerSaverMode: Boolean, isDataSaverMode: Boolean, mapCachePolicy: MapCachePolicy, locationSyncProfile: LocationSyncPowerProfile,
     snackbarHostState: SnackbarHostState,
     onShowEmergencyTrigger: () -> Unit, onShowAddKasDialog: () -> Unit,
     onShowAddHazardDialog: () -> Unit, onShowSettingsDialog: () -> Unit,
-    onShowAwardPointDialog: (DriverMember) -> Unit
+    onShowAwardPointDialog: (DriverMember) -> Unit,
+    dashboardTheme: DashboardVisualTheme = DashboardVisualTheme.EMERALD_AURORA,
+    onSelectDashboardTheme: (DashboardVisualTheme) -> Unit = {},
+    dashboardFocusMode: DashboardFocusMode = DashboardFocusMode.SATGAS_TRC,
+    onSelectDashboardFocusMode: (DashboardFocusMode) -> Unit = {},
+    scaffoldPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val fullBleedTabs = remember {
+        setOf(
+            MainNavTab.DASHBOARD, MainNavTab.PROFILE, MainNavTab.SETTINGS, MainNavTab.EVENTS,
+            MainNavTab.DEV_TOOLS, MainNavTab.EMERGENCY, MainNavTab.FIELD_WORKFLOW, MainNavTab.ABOUT, MainNavTab.ROLES
+        )
+    }
+    val events = viewModel.communityEvents.collectAsStateWithLifecycle().value
+    val feedback = viewModel.eventFeedback.collectAsStateWithLifecycle().value
+    val eventUpdatesCount = computeEventActivityCount(events, feedback)
+    val forumActivityCount = computeForumActivityCount(posts)
+    val openTasksCount = computeOpenTasksCount(tasks)
 
     Crossfade(targetState = currentTab, animationSpec = tween(durationMillis = 200), label = "tabTransition") { tab ->
-        when (tab) {
-            MainNavTab.DASHBOARD -> DashboardScreen(
-                currentMember = currentMember, members = members, activeAlerts = activeAlerts,
-                hazards = hazards, announcements = notifications, cashTransactions = cashTransactions,
-                poskoCount = poskoList.size, totalKasFormatted = String.format("%,d", netBalance),
-                onNavigateTab = { viewModel.selectTab(it) }, onTriggerEmergency = onShowEmergencyTrigger,
-                onUpdateDutyStatus = { status, online -> viewModel.updateDutyStatus(status, online) }
-            )
-            MainNavTab.RADAR -> RadarScreen(
-                members = members, alerts = activeAlerts, poskoList = poskoList, hazards = hazards,
-                currentMember = currentMember, onToggleConsent = { viewModel.toggleLocationSharingConsent(it) },
-                onAddHazardClick = onShowAddHazardDialog, onConfirmHazard = { viewModel.confirmHazard(it) },
-                onTriggerEmergency = onShowEmergencyTrigger,
-                onCallDriver = { WhatsAppLauncher.openChat(context, it, "Halo rekan DRG, koordinasi tim satgas segera.") },
-                isPowerSaverEnabled = isPowerSaverMode
-            )
-            MainNavTab.EMERGENCY -> EmergencyScreen(
-                currentMember = currentMember, alerts = activeAlerts,
-                onTriggerEmergency = { t, m, l -> viewModel.triggerEmergency(t, m, l); scope.launch { snackbarHostState.showSnackbar("Sinyal SOS Dipancarkan!") } },
-                onResolveEmergency = { viewModel.resolveEmergency(it) }, onRespondEmergency = { viewModel.respondToEmergency(it) },
-                onCallDriver = { WhatsAppLauncher.openChat(context, it, "Halo rekan DRG, kami pantau sinyal darurat SOS Anda.") },
-                isSosAlarmEnabled = isSosAlarmEnabled, onToggleSosAlarm = { viewModel.toggleSosAlarmSound(it) },
-                isCrashGuardEnabled = isCrashGuardEnabled, crashSensitivity = crashSensitivity,
-                onSimulateCrash = { viewModel.simulateCrashImpact(3.2f) }, onOpenSettings = onShowSettingsDialog,
-                onBack = { viewModel.selectTab(MainNavTab.DASHBOARD) }
-            )
-            MainNavTab.COMMUNITY, MainNavTab.KAS, MainNavTab.FORUM, MainNavTab.GAMIFICATION, MainNavTab.MEMBERS -> {
-                CommunityTabDelegate(
-                    tab = tab, viewModel = viewModel, currentMember = currentMember, members = members,
-                    cashTransactions = cashTransactions, totalIncome = totalIncome, totalExpense = totalExpense,
-                    netBalance = netBalance, posts = posts, workshops = workshops, badges = badges, tasks = tasks,
-                    rewards = rewards, poskoList = poskoList, pointTransactions = pointTransactions,
-                    adminLogs = adminLogs, snackbarHostState = snackbarHostState,
-                    onShowAddKasDialog = onShowAddKasDialog, onShowAwardPointDialog = onShowAwardPointDialog
+        Box(modifier = if (tab in fullBleedTabs) Modifier else Modifier.padding(scaffoldPadding)) {
+            when (tab) {
+                MainNavTab.DASHBOARD -> DashboardTabDelegate(
+                    viewModel, currentMember, members, activeAlerts, hazards, notifications, cashTransactions,
+                    poskoList.size, netBalance, onShowEmergencyTrigger, dashboardTheme, onSelectDashboardTheme,
+                    dashboardFocusMode, forumActivityCount, openTasksCount, eventUpdatesCount, scaffoldPadding
                 )
+                MainNavTab.RADAR -> RadarScreen(
+                    members, activeAlerts, poskoList, hazards, currentMember,
+                    { viewModel.toggleLocationSharingConsent(it) }, onShowAddHazardDialog, { viewModel.confirmHazard(it) },
+                    onShowEmergencyTrigger, { WhatsAppLauncher.openChat(context, it, "Halo rekan DRG, koordinasi tim satgas segera.") },
+                    isPowerSaverMode
+                )
+                MainNavTab.EMERGENCY -> EmergencyScreen(
+                    currentMember, activeAlerts,
+                    { t, m, l -> viewModel.triggerEmergency(t, m, l); scope.launch { snackbarHostState.showSnackbar("Sinyal SOS Dipancarkan!") } },
+                    { viewModel.resolveEmergency(it) }, { viewModel.respondToEmergency(it) },
+                    { WhatsAppLauncher.openChat(context, it, "Halo rekan DRG, kami pantau sinyal darurat SOS Anda.") },
+                    isSosAlarmEnabled, { viewModel.toggleSosAlarmSound(it) },
+                    isCrashGuardEnabled, crashSensitivity, { viewModel.simulateCrashImpact(3.2f) }, onShowSettingsDialog,
+                    { viewModel.selectTab(MainNavTab.DASHBOARD) }, Modifier.padding(scaffoldPadding)
+                )
+                MainNavTab.COMMUNITY, MainNavTab.KAS, MainNavTab.FORUM, MainNavTab.GAMIFICATION, MainNavTab.MEMBERS -> CommunityTabDelegate(
+                    tab, viewModel, currentMember, members, cashTransactions, totalIncome, totalExpense, netBalance,
+                    posts, workshops, badges, tasks, rewards, poskoList, pointTransactions, adminLogs,
+                    snackbarHostState, onShowAddKasDialog, onShowAwardPointDialog, eventUpdatesCount
+                )
+                MainNavTab.PROFILE -> ProfileTabDelegate(
+                    viewModel, currentMember, badges, isSosAlarmEnabled, dashboardTheme, snackbarHostState, scaffoldPadding
+                )
+                MainNavTab.SETTINGS -> SettingsTabDelegate(
+                    viewModel, currentMember, dashboardTheme, onSelectDashboardTheme, dashboardFocusMode, onSelectDashboardFocusMode,
+                    isSosAlarmEnabled, isCrashGuardEnabled, crashSensitivity, mapCachePolicy, locationSyncProfile,
+                    isDataSaverMode, isPowerSaverMode, snackbarHostState, scaffoldPadding
+                )
+                MainNavTab.ABOUT -> AboutScreen(onBack = { viewModel.selectTab(MainNavTab.SETTINGS) }, contentPadding = scaffoldPadding)
+                MainNavTab.FIELD_WORKFLOW -> FieldWorkflowScreen({ viewModel.selectTab(MainNavTab.DASHBOARD) }, { viewModel.selectTab(MainNavTab.RADAR) }, onShowEmergencyTrigger, Modifier.padding(scaffoldPadding))
+                MainNavTab.EVENTS -> EventsTabDelegate(viewModel, currentMember, dashboardTheme, scaffoldPadding)
+                MainNavTab.DEV_TOOLS -> DevToolsDashboardScreen(currentMember = currentMember, visualTheme = dashboardTheme, contentPadding = scaffoldPadding, onBack = { viewModel.selectTab(MainNavTab.PROFILE) })
+                MainNavTab.ADMIN, MainNavTab.ROLES -> AdminTabDelegate(tab, viewModel, currentMember, members, snackbarHostState, scaffoldPadding)
             }
-            MainNavTab.PROFILE -> ProfileScreen(
-                currentMember = currentMember, badges = badges,
-                onUpdateProfile = { p, a, m, pl, pu, ad, b, ec, ep, s, k ->
-                    viewModel.updateProfile(p, a, m, pl, pu, ad, b, ec, ep, s, k)
-                    scope.launch { snackbarHostState.showSnackbar("Biodata lengkap berhasil disimpan!") }
-                },
-                isSosAlarmEnabled = isSosAlarmEnabled, onToggleSosAlarm = { viewModel.toggleSosAlarmSound(it) },
-                onOpenSettings = onShowSettingsDialog, onOpenAdmin = { viewModel.selectTab(MainNavTab.ADMIN) },
-                onOpenDevTools = { viewModel.selectTab(MainNavTab.DEV_TOOLS) },
-                onOpenAbout = { viewModel.selectTab(MainNavTab.ABOUT) }, onLogout = { viewModel.logout() }
-            )
-            MainNavTab.ABOUT -> AboutScreen(onBack = { viewModel.selectTab(MainNavTab.PROFILE) })
-            MainNavTab.FIELD_WORKFLOW -> FieldWorkflowScreen(
-                onBack = { viewModel.selectTab(MainNavTab.DASHBOARD) },
-                onNavigateRadar = { viewModel.selectTab(MainNavTab.RADAR) },
-                onTriggerEmergency = onShowEmergencyTrigger
-            )
-            MainNavTab.DEV_TOOLS -> DevToolsDashboardScreen(
-                currentMember = currentMember,
-                onBack = { viewModel.selectTab(MainNavTab.PROFILE) }
-            )
-            MainNavTab.ADMIN, MainNavTab.ROLES -> AdminTabDelegate(tab = tab, viewModel = viewModel, currentMember = currentMember, members = members, snackbarHostState = snackbarHostState)
         }
     }
 }

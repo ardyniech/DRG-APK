@@ -1,22 +1,19 @@
 package com.example.modules.emergency
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.ui.theme.*
 
 @Composable
@@ -26,26 +23,16 @@ fun SosAlarmQuickCard(
     onOpenSettings: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val cardShape = RoundedCornerShape(22.dp)
-    val highlightBrush = Brush.linearGradient(
-        colors = listOf(
-            Color.White,
-            Color.White.copy(alpha = 0.5f),
-            if (isSosAlarmEnabled) DrgRedDanger.copy(alpha = 0.35f) else DrgGreenPrimary.copy(alpha = 0.15f)
-        )
-    )
-
-    Surface(
-        shape = cardShape,
-        color = if (isSosAlarmEnabled) DrgRedContainer.copy(alpha = 0.85f) else Color.White.copy(alpha = 0.85f),
-        tonalElevation = 0.dp,
-        modifier = modifier
-            .fillMaxWidth()
-            .shadow(4.dp, cardShape, ambientColor = DrgShadowGreenAmbientStrong, spotColor = DrgShadowGreenSpotStrong)
-            .border(1.2.dp, highlightBrush, cardShape)
+    val theme = LocalAppVisualTheme.current
+    DrgLuminousGlassCard(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(22.dp),
+        backgroundColor = if (isSosAlarmEnabled) DrgRedContainer.copy(alpha = 0.86f) else theme.glassBg,
+        borderHighlightColor = if (isSosAlarmEnabled) DrgRedDanger.copy(alpha = 0.55f) else theme.glassBorderColor,
+        contentPadding = 14.dp
     ) {
         Row(
-            modifier = Modifier.padding(14.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -57,7 +44,7 @@ fun SosAlarmQuickCard(
                         tint = if (isSosAlarmEnabled) DrgRedDanger else DrgTextSecondary,
                         modifier = Modifier.size(20.dp)
                     )
-                    Spacer(modifier = Modifier.width(6.dp))
+                    Spacer(Modifier.width(6.dp))
                     Text(
                         text = "Sirine SOS Desibel Tinggi (100 dB)",
                         fontWeight = FontWeight.Bold,
@@ -65,35 +52,20 @@ fun SosAlarmQuickCard(
                         color = if (isSosAlarmEnabled) DrgRedDanger else DrgTextPrimary
                     )
                 }
-                Spacer(modifier = Modifier.height(2.dp))
+                Spacer(Modifier.height(2.dp))
                 Text(
-                    text = if (isSosAlarmEnabled)
-                        "Aktif • Sirine frekuensi tinggi membahana saat tombol SOS dipancarkan."
-                    else
-                        "Nonaktif (Mode Senyap) • Hanya sinyal visual disiarkan ke radar.",
+                    text = if (isSosAlarmEnabled) "Aktif • Sirine frekuensi tinggi membahana saat tombol SOS dipancarkan."
+                    else "Nonaktif (Mode Senyap) • Hanya sinyal visual disiarkan ke radar.",
                     fontSize = 10.sp,
                     color = DrgTextSecondary
                 )
             }
-            Spacer(modifier = Modifier.width(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = onOpenSettings, modifier = Modifier.size(36.dp)) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "Buka Pengaturan Alarm",
-                        tint = DrgTextSecondary,
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
-                Switch(
-                    checked = isSosAlarmEnabled,
-                    onCheckedChange = onToggleSosAlarm,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = DrgRedDanger,
-                        checkedTrackColor = DrgRedDanger.copy(alpha = 0.3f)
-                    )
-                )
-            }
+            Spacer(Modifier.width(8.dp))
+            Switch(
+                checked = isSosAlarmEnabled,
+                onCheckedChange = onToggleSosAlarm,
+                colors = SwitchDefaults.colors(checkedThumbColor = DrgRedDanger, checkedTrackColor = DrgRedDanger.copy(alpha = 0.3f))
+            )
         }
     }
 }

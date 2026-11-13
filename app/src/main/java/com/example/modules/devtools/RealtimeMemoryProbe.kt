@@ -27,8 +27,8 @@ object RealtimeMemoryProbe {
         val memInfo = ActivityManager.MemoryInfo()
         am?.getMemoryInfo(memInfo)
 
-        val availRamMb = memInfo.availMem / (1024 * 1024)
-        val totalRamMb = memInfo.totalMem / (1024 * 1024)
+        val totalRamMb = if (memInfo.totalMem > 0) memInfo.totalMem / (1024 * 1024) else heapMaxMb
+        val availRamMb = if (memInfo.totalMem > 0) memInfo.availMem / (1024 * 1024) else heapFreeMb
         val isLowRam = am?.isLowRamDevice == true
         val isSysLow = memInfo.lowMemory
         val threads = Thread.activeCount()

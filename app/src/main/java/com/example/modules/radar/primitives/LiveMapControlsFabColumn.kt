@@ -12,9 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.ui.theme.DrgGreenPrimary
-import com.example.ui.theme.DrgSurface
-import com.example.ui.theme.DrgTextPrimary
+import com.example.shared.atoms.LocalAppVisualTheme
+import com.example.ui.theme.DrgTextDark
 
 @Composable
 fun LiveMapControlsFabColumn(
@@ -23,27 +22,28 @@ fun LiveMapControlsFabColumn(
     onRecenterGps: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val theme = LocalAppVisualTheme.current
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         SmallFloatingActionButton(
             onClick = onZoomIn,
-            containerColor = DrgSurface,
-            contentColor = DrgTextPrimary
+            containerColor = Color(0xF2FFFFFF),
+            contentColor = DrgTextDark
         ) {
             Icon(Icons.Default.Add, contentDescription = "Zoom In")
         }
         SmallFloatingActionButton(
             onClick = onZoomOut,
-            containerColor = DrgSurface,
-            contentColor = DrgTextPrimary
+            containerColor = Color(0xF2FFFFFF),
+            contentColor = DrgTextDark
         ) {
             Icon(Icons.Default.Remove, contentDescription = "Zoom Out")
         }
         SmallFloatingActionButton(
             onClick = onRecenterGps,
-            containerColor = DrgGreenPrimary,
+            containerColor = theme.primaryColor,
             contentColor = Color.White
         ) {
             Icon(Icons.Default.MyLocation, contentDescription = "Pusat GPS")

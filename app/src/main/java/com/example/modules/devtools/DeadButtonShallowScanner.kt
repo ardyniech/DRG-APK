@@ -51,7 +51,7 @@ object DeadButtonShallowScanner {
         FeatureAuditItem(
             name = "Helmet GATT Bluetooth Intercom — PENDING DEV",
             module = "Hardware",
-            stage = FeatureStage.BENIH,
+            stage = FeatureStage.ANAK,
             hasDeadButtons = false,
             isShallow = false,
             shallowReason = "DEFERRED/PENDING DEV di luar scope rilis awal — integrasi helm/intercom ditunda.",

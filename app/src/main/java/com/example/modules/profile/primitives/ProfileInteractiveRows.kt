@@ -3,8 +3,8 @@ package com.example.modules.profile.primitives
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Navigation
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -60,7 +60,7 @@ fun ProfilePhoneRow(phone: String, onChatWa: (String) -> Unit) {
                 colors = ButtonDefaults.filledTonalButtonColors(containerColor = DrgGreenPrimary.copy(alpha = 0.15f)),
                 modifier = Modifier.height(30.dp)
             ) {
-                Icon(Icons.Default.Chat, contentDescription = "Chat WA", modifier = Modifier.size(13.dp), tint = DrgGreenPrimary)
+                Icon(Icons.AutoMirrored.Filled.Chat, contentDescription = "Chat WA", modifier = Modifier.size(13.dp), tint = DrgGreenPrimary)
                 Spacer(modifier = Modifier.width(4.dp))
                 Text("WA", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary)
             }

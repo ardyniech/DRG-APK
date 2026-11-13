@@ -1,38 +1,28 @@
 package com.example.modules.devtools
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ui.theme.DrgGreenPrimary
-import com.example.ui.theme.DrgOutline
-import com.example.ui.theme.DrgTextPrimary
-import com.example.ui.theme.DrgTextSecondary
+import com.example.ui.theme.*
 
 /**
- * Scaffold kanonis semua Dev*Tab — hilangkan copy-paste LazyColumn + header.
- * Kanonis: 1 tempat; tab hanya membawa scanner + items() unik.
- * Jaga kompatibilitas: 17 layout lama (kondisional warna/badge/refresh/filter)
- * diekspresikan lewat param bg/border/title/trailing/extra tanpa ubah visual inti.
+ * Unified Frosted Glass Scaffold shared across all 18 Super-Admin DevTools audit tabs.
  */
 @Composable
 fun DevTabShell(
@@ -41,25 +31,34 @@ fun DevTabShell(
     headerTitle: String,
     headerDesc: String,
     modifier: Modifier = Modifier,
-    headerBackground: Color = Color.White,
-    headerBorderColor: Color = DrgOutline.copy(alpha = 0.5f),
-    titleColor: Color = DrgTextPrimary,
+    headerBackground: Color = Color(0xCCFFFFFF),
+    headerBorderColor: Color = Color(0xFF93C5FD),
+    titleColor: Color = DrgTextDark,
     headerExtra: (@Composable () -> Unit)? = null,
     headerTrailing: (@Composable RowScope.() -> Unit)? = null,
     content: LazyListScope.() -> Unit
 ) {
+    val cardShape = RoundedCornerShape(22.dp)
+    val glassBg = Brush.verticalGradient(listOf(headerBackground.copy(alpha = 0.90f), Color.White.copy(alpha = 0.78f)))
+    val glassRim = Brush.linearGradient(listOf(Color.White, headerBorderColor.copy(alpha = 0.55f)))
+
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(bottom = 24.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(top = 8.dp, bottom = 104.dp)
     ) {
         if (headerContent != null) item { headerContent() }
         item {
-            Surface(
-                shape = RoundedCornerShape(12.dp), color = headerBackground,
-                modifier = Modifier.fillMaxWidth().border(1.dp, headerBorderColor, RoundedCornerShape(12.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .shadow(8.dp, cardShape, ambientColor = headerBorderColor.copy(alpha = 0.25f))
+                    .clip(cardShape)
+                    .background(glassBg)
+                    .border(1.2.dp, glassRim, cardShape)
+                    .padding(14.dp)
             ) {
-                Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -80,11 +79,10 @@ fun DevTabShell(
     }
 }
 
-/** Baris metrik label-nilai dukuan untuk semua tab DevTools. */
 @Composable
-fun DevMetricRow(label: String, value: String, valueColor: Color = DrgTextPrimary) {
+fun DevMetricRow(label: String, value: String, valueColor: Color = DrgTextDark) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Text(label, fontSize = 11.sp, color = DrgTextSecondary)
-        Text(value, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = valueColor)
+        Text(value, fontFamily = SpaceGroteskFontFamily, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = valueColor)
     }
 }

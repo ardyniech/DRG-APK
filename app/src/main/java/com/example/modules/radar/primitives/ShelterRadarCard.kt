@@ -1,6 +1,5 @@
 package com.example.modules.radar.primitives
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -11,16 +10,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ui.theme.DrgGrabGreenPrimary
-import com.example.ui.theme.DrgGreenPrimary
-import com.example.ui.theme.DrgShadowGreenAmbientStrong
-import com.example.ui.theme.DrgShadowGreenSpotStrong
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
+import com.example.ui.theme.DrgTextDark
+import com.example.ui.theme.DrgTextSecondary
+import com.example.ui.theme.SpaceGroteskFontFamily
 
 @Composable
 fun ShelterRadarCard(
@@ -32,57 +29,51 @@ fun ShelterRadarCard(
     onNavigateClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    val cardShape = RoundedCornerShape(22.dp)
-    val highlightBrush = Brush.linearGradient(
-        listOf(Color.White, Color.White.copy(alpha = 0.5f), DrgGreenPrimary.copy(alpha = 0.2f))
-    )
-
-    Surface(
-        shape = cardShape,
-        color = Color.White.copy(alpha = 0.88f),
-        tonalElevation = 0.dp,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 6.dp)
-            .shadow(4.dp, cardShape, ambientColor = DrgShadowGreenAmbientStrong, spotColor = DrgShadowGreenSpotStrong)
-            .border(1.2.dp, highlightBrush, cardShape)
+    val theme = LocalAppVisualTheme.current
+    DrgLuminousGlassCard(
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp),
+        shape = RoundedCornerShape(22.dp),
+        backgroundColor = theme.glassBg,
+        borderHighlightColor = theme.glassBorderColor,
+        contentPadding = 16.dp
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(text = name, fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurface)
-                    Text(text = "Jarak: %.1f km • %d driver siaga".format(distanceKm, availableSlots), fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(name, fontWeight = FontWeight.Bold, fontSize = 15.sp, color = DrgTextDark)
+                    Text(
+                        text = "Jarak: %.1f km • %d driver siaga".format(distanceKm, availableSlots),
+                        fontFamily = SpaceGroteskFontFamily,
+                        fontSize = 11.sp,
+                        color = DrgTextSecondary
+                    )
                 }
                 Button(
                     onClick = onNavigateClick,
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = DrgGrabGreenPrimary),
+                    colors = ButtonDefaults.buttonColors(containerColor = theme.primaryColor),
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.Navigation, contentDescription = "Navigasi", modifier = Modifier.size(15.dp))
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "Rute", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                    Icon(Icons.Default.Navigation, contentDescription = "Navigasi", modifier = Modifier.size(15.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("Rute", fontSize = 11.sp, fontWeight = FontWeight.Bold)
                 }
             }
             if (hasCoffee || hasPowerOutlet) {
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(Modifier.height(10.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
                     if (hasCoffee) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(imageVector = Icons.Default.Coffee, contentDescription = null, tint = DrgGrabGreenPrimary, modifier = Modifier.size(14.dp))
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(text = "Kopi Gratis", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Icon(Icons.Default.Coffee, contentDescription = null, tint = theme.primaryColor, modifier = Modifier.size(14.dp))
+                            Spacer(Modifier.width(4.dp))
+                            Text("Kopi Gratis", fontSize = 11.sp, color = DrgTextSecondary)
                         }
                     }
                     if (hasPowerOutlet) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(imageVector = Icons.Default.Power, contentDescription = null, tint = DrgGrabGreenPrimary, modifier = Modifier.size(14.dp))
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(text = "Colokan Cas", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Icon(Icons.Default.Power, contentDescription = null, tint = theme.primaryColor, modifier = Modifier.size(14.dp))
+                            Spacer(Modifier.width(4.dp))
+                            Text("Colokan Cas", fontSize = 11.sp, color = DrgTextSecondary)
                         }
                     }
                 }

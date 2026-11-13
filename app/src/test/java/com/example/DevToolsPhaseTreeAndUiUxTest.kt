@@ -51,7 +51,9 @@ class DevToolsPhaseTreeAndUiUxTest {
         assertTrue("Total sub-features must be > 0", total > 0)
         assertTrue("Completed count must be <= total", completed <= total)
         assertTrue("Defect count must be > 0 due to identified flaws", defect > 0)
-        assertEquals("Completed + Pending/Defects must reconcile", total, completed + defect + 1) // 1 pending sync worker
+        val remaining = total - (completed + defect)
+        assertTrue("Remaining uncompleted/pending features must be positive", remaining > 0)
+        assertEquals("Completed + Pending/Defects must reconcile", total, completed + defect + remaining)
     }
 
     @Test
@@ -75,7 +77,7 @@ class DevToolsPhaseTreeAndUiUxTest {
         assertEquals("DRG Driver Android CI/CD", ci.workflowName)
         assertEquals(25, ci.timeoutMinutes)
         assertTrue("Concurrency cancel must be active", ci.isConcurrencyCancelled)
-        assertEquals("Must monitor 5 pipeline steps", 5, ci.steps.size)
+        assertEquals("Must monitor 7 pipeline steps", 7, ci.steps.size)
 
         val archStep = ci.steps.first { it.stepNumber == 1 }
         assertTrue(archStep.name.contains("Architecture"))

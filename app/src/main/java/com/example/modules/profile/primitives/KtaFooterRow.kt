@@ -14,39 +14,27 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.models.DriverMember
 import com.example.ui.theme.*
 
 @Composable
 fun KtaFooterRow(member: DriverMember?) {
+    val theme = LocalAppVisualTheme.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(DrgBackground)
+            .clip(RoundedCornerShape(10.dp))
+            .background(theme.pillBg)
             .padding(horizontal = 10.dp, vertical = 6.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.Default.LocationOn,
-                contentDescription = "Area",
-                tint = DrgGreenPrimary,
-                modifier = Modifier.size(14.dp)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = "DRG Malang Raya",
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                color = DrgTextPrimary
-            )
+            Icon(Icons.Default.LocationOn, contentDescription = "Area", tint = theme.primaryColor, modifier = Modifier.size(14.dp))
+            Spacer(Modifier.width(4.dp))
+            Text("DRG Malang Raya", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
         }
-        Text(
-            text = "Bergabung: ${member?.joinedDate ?: "Jan 2024"}",
-            color = DrgTextMuted,
-            fontSize = 11.sp
-        )
+        Text("Bergabung: ${member?.joinedDate ?: "Jan 2024"}", fontFamily = SpaceGroteskFontFamily, color = DrgTextMuted, fontSize = 11.sp)
     }
 }

@@ -103,4 +103,24 @@ class Converters {
     } catch (_: Exception) {
         PostType.UPDATE
     }
+
+    @TypeConverter
+    fun fromEventPhaseStage(value: EventPhaseStage): String = value.name
+
+    @TypeConverter
+    fun toEventPhaseStage(value: String): EventPhaseStage = try {
+        EventPhaseStage.valueOf(value)
+    } catch (_: Exception) {
+        EventPhaseStage.PERENCANAAN
+    }
+
+    @TypeConverter
+    fun fromCommitteeTaskStatus(value: CommitteeTaskStatus): String = value.name
+
+    @TypeConverter
+    fun toCommitteeTaskStatus(value: String): CommitteeTaskStatus = try {
+        CommitteeTaskStatus.valueOf(value)
+    } catch (_: Exception) {
+        CommitteeTaskStatus.BELUM_MULAI
+    }
 }

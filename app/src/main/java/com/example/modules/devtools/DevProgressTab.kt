@@ -30,29 +30,30 @@ fun DevProgressTab(
             item { headerContent() }
         }
         item {
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = if (defect > 0) DrgRoseBgSoft else DrgGreenLight,
+            com.example.shared.atoms.DrgLuminousGlassCard(
+                shape = RoundedCornerShape(22.dp),
+                backgroundColor = if (defect > 0) Color(0xDDFEE2E2) else Color(0xDCFFFFFF),
+                borderHighlightColor = if (defect > 0) DrgRedPanic else DrgGreenPrimary,
+                contentPadding = 14.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column(modifier = Modifier.padding(12.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
-                        "🌳 Hierarki Fase Dev & Sub-Fitur (Progres Jujur)",
+                        "Hierarki Fase Dev & Sub-Fitur (Progres Jujur)",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
+                        fontSize = 13.sp,
                         color = if (defect > 0) DrgRedPanic else DrgGreenPrimary
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        "Total: $total Sub-Fitur | Lulus: $completed | Cacat: $defect | ${String.format("%.1f", progressPct)}% (dari fitur lulus). PENDING/DEFERRED tidak dihitung cacat in-scope.",
-                        fontSize = 10.sp,
+                        "Total: $total Sub-Fitur | Lulus: $completed | Cacat: $defect | ${String.format("%.1f", progressPct)}%",
+                        fontFamily = SpaceGroteskFontFamily,
+                        fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
-                        color = DrgTextPrimary
+                        color = DrgTextDark
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        "Catatan: status selaras roadmap/scope; fitur deferred (Asuransi/Intercom) ditandai PENDING, bukan cacat menyesatkan.",
-                        fontSize = 9.sp,
+                        "Catatan: status selaras roadmap/scope; fitur deferred (Asuransi/Intercom) ditandai PENDING, bukan cacat.",
+                        fontSize = 10.sp,
                         color = DrgTextSecondary
                     )
                 }

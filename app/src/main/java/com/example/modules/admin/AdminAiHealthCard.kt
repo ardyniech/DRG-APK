@@ -1,7 +1,6 @@
 package com.example.modules.admin
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -13,75 +12,57 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.ui.theme.*
 
 @Composable
 fun AiCommunityHealthCard(memberCount: Int) {
     var expanded by remember { mutableStateOf(false) }
+    val theme = LocalAppVisualTheme.current
 
-    Surface(
-        shape = RoundedCornerShape(14.dp),
-        color = DrgSurface,
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(1.5.dp, DrgGreenPrimary, RoundedCornerShape(14.dp))
+    DrgLuminousGlassCard(
+        shape = RoundedCornerShape(22.dp),
+        backgroundColor = theme.glassBg,
+        borderHighlightColor = theme.glassBorderColor,
+        contentPadding = 14.dp,
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(36.dp)
-                            .background(DrgGreenContainer, RoundedCornerShape(8.dp)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Analytics,
-                            contentDescription = "AI Health Analytics",
-                            tint = DrgGreenPrimary,
-                            modifier = Modifier.size(20.dp)
-                        )
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
+                    Box(modifier = Modifier.size(36.dp).background(theme.pillBg, RoundedCornerShape(10.dp)), contentAlignment = Alignment.Center) {
+                        Icon(Icons.Default.Analytics, contentDescription = "AI Health Analytics", tint = theme.primaryColor, modifier = Modifier.size(20.dp))
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(Modifier.width(8.dp))
                     Column {
-                        Text(text = "ANALISIS KESEHATAN KOMUNITAS AI", fontWeight = FontWeight.Black, fontSize = 13.sp, color = DrgGreenPrimary)
-                        Text(text = "Skor Kesehatan Total: 82/100 (SEHAT & STABIL)", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
+                        Text("ANALISIS KESEHATAN KOMUNITAS", fontWeight = FontWeight.Black, fontSize = 12.sp, color = theme.primaryColor)
+                        Text("Skor Kesehatan Total: 82/100 (STABIL)", fontFamily = SpaceGroteskFontFamily, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
                     }
                 }
                 TextButton(onClick = { expanded = !expanded }) {
-                    Text(if (expanded) "Sembunyikan" else "Rincian Jujur", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary)
+                    Text(if (expanded) "Tutup" else "Rincian", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = theme.primaryColor)
                 }
             }
 
             Text(
-                text = "Komunitas DRG memiliki fondasi solidaritas lapangan yang sangat solid ($memberCount driver aktif), namun terdapat beberapa celah struktural yang perlu dibenahi.",
-                fontSize = 12.sp,
-                color = DrgTextSecondary
+                "Komunitas DRG memiliki fondasi solidaritas lapangan yang sangat solid ($memberCount driver aktif), namun terdapat beberapa celah struktural yang perlu dibenahi.",
+                fontSize = 12.sp, color = DrgTextSecondary
             )
 
             if (expanded) {
-                HorizontalDivider(color = DrgOutline.copy(alpha = 0.5f))
+                HorizontalDivider(color = theme.glassBorderColor.copy(alpha = 0.45f))
                 Text("🔍 Temuan Audit & Risiko Utama:", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextPrimary)
-
-                HealthPointRow(status = "🟢 SOLID (92%)", title = "Respon SOS Satgas Lapangan", desc = "Kecepatan bantuan darurat saat anggota mengalami kecelakaan/mogok di jalan sangat memuaskan (< 7 menit).")
-                HealthPointRow(status = "🟢 TRANSPARAN (88%)", title = "Akuntabilitas Kas Komunitas", desc = "Pengelolaan uang kas masuk & keluar tercatat transparan dan dapat dipantau seluruh anggota.")
-                HealthPointRow(status = "🟡 PERLU PERHATIAN (64%)", title = "Keaktifan Anggota Pasif", desc = "Partisipasi absensi Kopdar & diskusi forum didominasi 35% pengurus senior.")
-                HealthPointRow(status = "🔴 RISIKO TINGGI", title = "Ketergantungan Figur Central", desc = "Pengambilan keputusan darurat terlalu bergantung pada Ketua & Ketua Satgas.")
-
-                Spacer(modifier = Modifier.height(4.dp))
-                Text("🚀 4 Langkah Konkret Improvement Komunitas:", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgGreenDark)
-
-                ImprovementStepRow(num = "1", title = "Desentralisasi Korwil Posko", desc = "Bentuk Koordinator Wilayah mandiri di tiap Posko.")
-                ImprovementStepRow(num = "2", title = "Program Onboarding Driver Baru", desc = "Sediakan 'Buddy System' pendampingan driver senior.")
-                ImprovementStepRow(num = "3", title = "Piket Bergilir Satgas Radar", desc = "Jadwalkan giliran jam siaga Satgas secara sistematis.")
-                ImprovementStepRow(num = "4", title = "Unit Usaha Koperasi Berkelanjutan", desc = "Gunakan kas untuk kulakan oli/sparepart massal diskon.")
+                HealthPointRow("🟢 SOLID (92%)", "Respon SOS Satgas Lapangan", "Kecepatan bantuan darurat saat anggota mengalami kecelakaan/mogok di jalan sangat memuaskan (< 7 menit).")
+                HealthPointRow("🟢 TRANSPARAN (88%)", "Akuntabilitas Kas Komunitas", "Pengelolaan uang kas masuk & keluar tercatat transparan dan dapat dipantau seluruh anggota.")
+                HealthPointRow("🟡 PERLU PERHATIAN (64%)", "Keaktifan Anggota Pasif", "Partisipasi absensi Kopdar & diskusi forum didominasi 35% pengurus senior.")
+                HealthPointRow("🔴 RISIKO TINGGI", "Ketergantungan Figur Central", "Pengambilan keputusan darurat terlalu bergantung pada Ketua & Ketua Satgas.")
+                Spacer(Modifier.height(4.dp))
+                Text("🚀 4 Langkah Konkret Improvement Komunitas:", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = theme.primaryColor)
+                ImprovementStepRow("1", "Desentralisasi Korwil Posko", "Bentuk Koordinator Wilayah mandiri di tiap Posko.")
+                ImprovementStepRow("2", "Program Onboarding Driver Baru", "Sediakan 'Buddy System' pendampingan driver senior.")
+                ImprovementStepRow("3", "Piket Bergilir Satgas Radar", "Jadwalkan giliran jam siaga Satgas secara sistematis.")
+                ImprovementStepRow("4", "Unit Usaha Koperasi Berkelanjutan", "Gunakan kas untuk kulakan oli/sparepart massal diskon.")
             }
         }
     }

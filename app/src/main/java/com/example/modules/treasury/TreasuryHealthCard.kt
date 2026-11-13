@@ -7,65 +7,47 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.ui.theme.*
 
 @Composable
 fun TreasuryHealthCard(modifier: Modifier = Modifier) {
-    val cardShape = RoundedCornerShape(22.dp)
-    val highlightBrush = Brush.linearGradient(
-        colors = listOf(
-            Color.White,
-            Color.White.copy(alpha = 0.5f),
-            DrgGreenPrimary.copy(alpha = 0.25f)
-        )
-    )
-
-    Surface(
-        shape = cardShape,
-        color = Color.White.copy(alpha = 0.85f),
-        tonalElevation = 0.dp,
-        modifier = modifier
-            .fillMaxWidth()
-            .shadow(5.dp, cardShape, ambientColor = DrgShadowGreenAmbientStrong, spotColor = DrgShadowGreenSpotStrong)
-            .border(1.2.dp, highlightBrush, cardShape)
+    val theme = LocalAppVisualTheme.current
+    DrgLuminousGlassCard(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(22.dp),
+        backgroundColor = Color(0xEBFFFFFF),
+        borderHighlightColor = theme.glassBorderColor,
+        contentPadding = 16.dp
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = "📊 Audit Kinerja Kas Komunitas",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp,
-                    color = DrgGreenPrimary
-                )
+                Text("Audit Kinerja Kas Komunitas", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = theme.primaryColor)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
-                        .background(DrgGreenContainer.copy(alpha = 0.8f))
+                        .background(theme.pillBg)
+                        .border(0.8.dp, theme.primaryColor.copy(alpha = 0.25f), RoundedCornerShape(8.dp))
                         .padding(horizontal = 8.dp, vertical = 3.dp)
                 ) {
-                    Icon(Icons.Default.CheckCircle, contentDescription = null, tint = DrgGreenPrimary, modifier = Modifier.size(12.dp))
-                    Text("Audit Sehat", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary)
+                    Icon(Icons.Default.CheckCircle, contentDescription = null, tint = theme.primaryColor, modifier = Modifier.size(12.dp))
+                    Text("Audit Sehat", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = theme.primaryColor)
                 }
             }
             Text(

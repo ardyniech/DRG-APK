@@ -1,19 +1,21 @@
 package com.example.modules.devtools
 
-import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Update
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgLuminousGlassCard
 import com.example.ui.theme.*
 
 @Composable
@@ -22,36 +24,29 @@ fun DevApkSkewCard(
     dbReport: DatabaseRuntimeReport,
     capsReport: RuntimeCapabilitiesReport
 ) {
-    Surface(
-        shape = RoundedCornerShape(12.dp),
-        color = DrgSurfaceVariant,
-        modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+    DrgLuminousGlassCard(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        backgroundColor = Color(0xCCFFFFFF),
+        borderHighlightColor = Color(0xFF93C5FD),
+        contentPadding = 12.dp
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+        Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Icon(Icons.Default.CheckCircle, contentDescription = null, tint = DrgTextSecondary, modifier = Modifier.size(16.dp))
-                    Text("🛡️ Info APK/DB/Modul (Runtime)", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = DrgTextPrimary)
+                    Icon(Icons.Default.CheckCircle, contentDescription = null, tint = DrgGreenPrimary, modifier = Modifier.size(16.dp))
+                    Text("Runtime APK / DB / DEX Telemetry", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextDark)
                 }
-                Surface(shape = RoundedCornerShape(4.dp), color = DrgSlateBorder) {
-                    Text("CEK UPDATE: MANUAL", fontSize = 8.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
+                Box(modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(Color(0xFFE0F2FE)).padding(horizontal = 7.dp, vertical = 2.dp)) {
+                    Text("v${apkInfo.installedVersionName}", fontFamily = SpaceGroteskFontFamily, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color(0xFF0284C7))
                 }
             }
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(apkInfo.versionSkewDescription, fontSize = 9.sp, color = DrgTextSecondary)
-            Spacer(modifier = Modifier.height(4.dp))
+            Text(apkInfo.versionSkewDescription, fontSize = 10.sp, color = DrgTextSecondary)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("📦 Terpasang: v${apkInfo.installedVersionName} (code ${apkInfo.installedVersionCode})", fontSize = 9.sp, color = DrgTextSecondary)
-                Text("🗄️ SQLite: v${dbReport.actualUserVersion} (${dbReport.actualTableCount} tabel)", fontSize = 9.sp, color = DrgTextSecondary)
+                Text("Code ${apkInfo.installedVersionCode} • ${apkInfo.updateTimeFormatted}", fontFamily = SpaceGroteskFontFamily, fontSize = 9.5.sp, color = DrgTextSecondary)
+                Text("SQLite v${dbReport.actualUserVersion} (${dbReport.actualTableCount} tbl)", fontFamily = SpaceGroteskFontFamily, fontSize = 9.5.sp, fontWeight = FontWeight.SemiBold, color = DrgTextDark)
             }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("🧩 Modul DEX: ${capsReport.presentCount}/${capsReport.totalCount} (${capsReport.compatibilityPercentage.toInt()}%)", fontSize = 9.sp, color = DrgTextSecondary)
-                Text("🕒 Update: ${apkInfo.updateTimeFormatted}", fontSize = 9.sp, color = DrgTextSecondary)
-            }
+            Text("DEX Modul: ${capsReport.presentCount}/${capsReport.totalCount} (${capsReport.compatibilityPercentage.toInt()}%)", fontFamily = SpaceGroteskFontFamily, fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary)
         }
     }
 }

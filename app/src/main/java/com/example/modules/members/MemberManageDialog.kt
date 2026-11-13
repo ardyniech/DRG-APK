@@ -1,19 +1,21 @@
 package com.example.modules.members
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ManageAccounts
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.core.RoleManager
+import com.example.shared.atoms.DrgLuminousGlassModal
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.models.DriverMember
 import com.example.shared.models.MemberRole
 import com.example.shared.models.VerificationStatus
-import com.example.ui.theme.*
 
 @Composable
 fun MemberManageDialog(
@@ -25,21 +27,33 @@ fun MemberManageDialog(
     onUpdateMemberVerification: (String, VerificationStatus) -> Unit
 ) {
     val isAdmin = RoleManager.canManageRoles(currentMember)
+    val theme = LocalAppVisualTheme.current
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(text = "Kelola & Apresiasi: ${member.name}", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary) },
-        text = {
-            Column(modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                MemberReviewSection(memberId = member.id, onSubmitReview = { id, rating, comment ->
-                    onAddReview(id, rating, comment)
-                    onDismiss()
-                })
-                HorizontalDivider(color = DrgOutline.copy(alpha = 0.5f), modifier = Modifier.padding(vertical = 4.dp))
-                MemberAuthoritySection(member = member, isAdmin = isAdmin, onUpdateRole = onUpdateMemberRole, onUpdateVerification = onUpdateMemberVerification)
+    DrgLuminousGlassModal(
+        title = "Kelola & Apresiasi",
+        subtitle = "${member.name} (${member.motorcyclePlate})",
+        icon = Icons.Default.ManageAccounts,
+        accentColor = theme.primaryColor,
+        onDismiss = onDismiss,
+        footer = {
+            OutlinedButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
+                Text("Tutup")
             }
-        },
-        confirmButton = {},
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Tutup", color = DrgTextSecondary) } }
-    )
+        }
+    ) {
+        MemberReviewSection(
+            memberId = member.id,
+            onSubmitReview = { id, rating, comment ->
+                onAddReview(id, rating, comment)
+                onDismiss()
+            }
+        )
+        HorizontalDivider(color = theme.glassBorderColor.copy(alpha = 0.45f), modifier = Modifier.padding(vertical = 4.dp))
+        MemberAuthoritySection(
+            member = member,
+            isAdmin = isAdmin,
+            onUpdateRole = onUpdateMemberRole,
+            onUpdateVerification = onUpdateMemberVerification
+        )
+    }
 }

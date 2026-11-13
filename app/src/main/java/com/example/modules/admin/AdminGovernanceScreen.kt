@@ -1,7 +1,5 @@
 package com.example.modules.admin
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,8 +15,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.modules.members.role_management.RolePermissionManagementScreen
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.models.*
+import com.example.shared.utils.rememberSharedRecordBadgeState
 import com.example.ui.theme.*
 
 @Composable
@@ -33,11 +33,15 @@ fun AdminGovernanceScreen(
     modifier: Modifier = Modifier
 ) {
     var showNotifDialog by remember { mutableStateOf(false) }
-    val isLeadershipOrAdmin = currentMember?.role?.isLeadership == true || currentMember?.role?.name in listOf("SEKRETARIS", "ADMIN")
+    val isLeadershipOrAdmin = currentMember?.role?.isLeadership == true || currentMember?.role?.name in listOf("SEKRETARIS", "ADMIN", "SUPER_ADMIN")
+    val pendingScreenings = remember(members) { members.filter { it.verificationStatus == VerificationStatus.PENDING_SCREENING } }
+    val theme = LocalAppVisualTheme.current
+    val badgeState = rememberSharedRecordBadgeState(listOf("admin"))
+    LaunchedEffect(pendingScreenings.size) { badgeState.markSeen("admin", pendingScreenings.size) }
 
     LazyColumn(
-        modifier = modifier.fillMaxSize().background(DrgBackground).padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
+        modifier = modifier.fillMaxSize().padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(top = 12.dp, bottom = 24.dp)
     ) {
         item { AdminGovernanceHeaderCard(currentMember = currentMember) }
@@ -48,24 +52,24 @@ fun AdminGovernanceScreen(
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(
                         onClick = onOpenRoleManagement,
-                        colors = ButtonDefaults.buttonColors(containerColor = DrgGrabGreenPrimary),
-                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = theme.primaryColor),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.weight(1f).height(46.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp)
                     ) {
                         Icon(Icons.Default.ManageAccounts, contentDescription = "Role", tint = Color.White, modifier = Modifier.size(18.dp))
-                        Spacer(modifier = Modifier.width(4.dp))
+                        Spacer(Modifier.width(4.dp))
                         Text("Atur Jabatan & Izin", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = Color.White)
                     }
                     Button(
                         onClick = { showNotifDialog = true },
                         colors = ButtonDefaults.buttonColors(containerColor = DrgAmberSecondary),
-                        shape = RoundedCornerShape(12.dp),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.weight(1f).height(46.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp)
                     ) {
                         Icon(Icons.Default.Campaign, contentDescription = "Broadcast", tint = Color.White, modifier = Modifier.size(18.dp))
-                        Spacer(modifier = Modifier.width(4.dp))
+                        Spacer(Modifier.width(4.dp))
                         Text("Kirim Siaran", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = Color.White)
                     }
                 }
@@ -74,35 +78,24 @@ fun AdminGovernanceScreen(
 
         item { Text("Pendaftaran Driver Baru Dalam Verifikasi", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = DrgTextPrimary) }
 
-        val pendingScreenings = members.filter { it.verificationStatus == VerificationStatus.PENDING_SCREENING }
         if (pendingScreenings.isEmpty()) {
             item {
-                Box(
-                    modifier = Modifier.fillMaxWidth().background(DrgSurface, RoundedCornerShape(12.dp)).padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Semua calon anggota telah diverifikasi.", fontSize = 12.sp, color = DrgTextSecondary)
+                DrgLuminousGlassCard(shape = RoundedCornerShape(18.dp), backgroundColor = theme.glassBg, borderHighlightColor = theme.glassBorderColor, contentPadding = 16.dp, modifier = Modifier.fillMaxWidth()) {
+                    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Text("Semua calon anggota telah diverifikasi.", fontSize = 12.sp, color = DrgTextSecondary)
+                    }
                 }
             }
         } else {
             items(pendingScreenings) { pending ->
-                PendingMemberCard(
-                    member = pending,
-                    canApprove = isLeadershipOrAdmin,
-                    onApprove = { onApproveScreening(pending.id) },
-                    onReject = { reason -> onRejectScreening(pending.id, reason) }
-                )
+                PendingMemberCard(pending, isLeadershipOrAdmin, { onApproveScreening(pending.id) }, { reason -> onRejectScreening(pending.id, reason) })
             }
         }
 
         item {
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = DrgSurface,
-                modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
-            ) {
-                Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text("📋 Evaluasi Kode Etik: KONDUSIF", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgGreenPrimary)
+            DrgLuminousGlassCard(shape = RoundedCornerShape(18.dp), backgroundColor = theme.glassBg, borderHighlightColor = theme.glassBorderColor, contentPadding = 14.dp, modifier = Modifier.fillMaxWidth()) {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text("📋 Evaluasi Kode Etik: KONDUSIF", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = theme.primaryColor)
                     Text("Dewan Etika memantau rating & ulasan dari sesama driver.", fontSize = 11.sp, color = DrgTextSecondary)
                 }
             }
@@ -112,10 +105,7 @@ fun AdminGovernanceScreen(
     if (showNotifDialog) {
         CreateAdminNotificationDialog(
             onDismiss = { showNotifDialog = false },
-            onSend = { title, msg, sev ->
-                onSendNotification(title, msg, sev)
-                showNotifDialog = false
-            }
+            onSend = { title, msg, sev -> onSendNotification(title, msg, sev); showNotifDialog = false }
         )
     }
 }

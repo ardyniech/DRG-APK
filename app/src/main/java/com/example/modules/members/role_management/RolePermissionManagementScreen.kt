@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -13,12 +14,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.core.RoleManager
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.models.*
+import com.example.shared.utils.bouncyClick
 import com.example.ui.theme.*
 
 @Composable
@@ -33,8 +38,9 @@ fun RolePermissionManagementScreen(
     var selectedCategory by remember { mutableStateOf(RoleFilterCategory.SEMUA) }
     var selectedMemberForEdit by remember { mutableStateOf<DriverMember?>(null) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    var activeSubTab by remember { mutableStateOf(0) }
+    var activeSubTab by remember { mutableIntStateOf(0) }
     val canEdit = remember(currentMember) { RoleManager.canManageRoles(currentMember) }
+    val theme = LocalAppVisualTheme.current
 
     val filteredMembers = remember(members, searchQuery, selectedCategory) {
         members.filter { m ->
@@ -49,27 +55,27 @@ fun RolePermissionManagementScreen(
         }
     }
 
-    Column(modifier = modifier.fillMaxSize().background(DrgBackground).padding(horizontal = 16.dp)) {
-        Row(modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali") }
-            Spacer(modifier = Modifier.width(4.dp))
-            Column {
-                Text("Tata Kelola Jabatan & Otoritas", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = DrgTextDark)
-                Text(if (canEdit) "Wewenang Khusus Super Admin & Pengurus" else "Transparansi Struktur Organisasi DRG", fontSize = 11.sp, color = DrgTextMuted)
+    Column(modifier = modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+        Row(modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Box(
+                modifier = Modifier.size(40.dp).clip(CircleShape).background(theme.glassBg).border(1.2.dp, Color.White.copy(alpha = 0.9f), CircleShape).bouncyClick { onBack() },
+                contentAlignment = Alignment.Center
+            ) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali", tint = DrgTextPrimary, modifier = Modifier.size(20.dp)) }
+            Column(modifier = Modifier.weight(1f)) {
+                Text("Tata Kelola Jabatan & Otoritas", fontWeight = FontWeight.ExtraBold, fontSize = 16.sp, color = DrgTextDark)
+                Text(if (canEdit) "Wewenang Khusus Super Admin & Pengurus" else "Transparansi Struktur Organisasi DRG", fontSize = 11.sp, color = theme.primaryColor, fontWeight = FontWeight.SemiBold)
             }
         }
 
-        TabRow(
-            selectedTabIndex = activeSubTab,
-            containerColor = Color.Transparent,
-            contentColor = DrgGreenPrimary,
-            modifier = Modifier.padding(bottom = 10.dp)
-        ) {
-            Tab(selected = activeSubTab == 0, onClick = { activeSubTab = 0 }) {
-                Text("Daftar Anggota", fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(vertical = 10.dp))
-            }
-            Tab(selected = activeSubTab == 1, onClick = { activeSubTab = 1 }) {
-                Text("Matriks Otoritas", fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(vertical = 10.dp))
+        DrgLuminousGlassCard(shape = RoundedCornerShape(18.dp), backgroundColor = theme.glassBg, borderHighlightColor = theme.glassBorderColor, contentPadding = 4.dp, modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp)) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                listOf("Daftar Anggota", "Matriks Otoritas").forEachIndexed { idx, label ->
+                    val sel = activeSubTab == idx
+                    Box(
+                        modifier = Modifier.weight(1f).clip(RoundedCornerShape(13.dp)).background(if (sel) theme.primaryColor else Color.Transparent).bouncyClick { activeSubTab = idx }.padding(vertical = 9.dp),
+                        contentAlignment = Alignment.Center
+                    ) { Text(label, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = if (sel) Color.White else DrgTextSecondary) }
+                }
             }
         }
 
@@ -77,25 +83,18 @@ fun RolePermissionManagementScreen(
             RoleMatrixSection(modifier = Modifier.padding(bottom = 10.dp))
         } else {
             RoleSummaryStatsRow(members = members, modifier = Modifier.padding(bottom = 8.dp))
-
             OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
+                value = searchQuery, onValueChange = { searchQuery = it },
                 placeholder = { Text("Cari nama, KTA, atau plat nomor...", fontSize = 12.sp) },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = DrgTextMuted) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth().padding(bottom = 6.dp),
-                shape = RoundedCornerShape(10.dp)
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = theme.primaryColor) },
+                singleLine = true, modifier = Modifier.fillMaxWidth().padding(bottom = 6.dp), shape = RoundedCornerShape(14.dp)
             )
-
             RoleFilterBar(selectedCategory = selectedCategory, onSelectCategory = { selectedCategory = it }, modifier = Modifier.padding(bottom = 8.dp))
-
             errorMessage?.let { msg ->
-                Surface(shape = RoundedCornerShape(8.dp), color = DrgRedDanger.copy(alpha = 0.1f), modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
+                Surface(shape = RoundedCornerShape(10.dp), color = DrgRedDanger.copy(alpha = 0.12f), modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
                     Text(msg, color = DrgRedDanger, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(8.dp))
                 }
             }
-
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
                 items(filteredMembers) { member ->
                     RoleMemberCard(member = member, onManageClick = { selectedMemberForEdit = member }, canEdit = canEdit)
@@ -106,17 +105,12 @@ fun RolePermissionManagementScreen(
 
     selectedMemberForEdit?.let { target ->
         MemberRolePermissionDialog(
-            member = target,
-            onDismiss = { selectedMemberForEdit = null },
+            member = target, onDismiss = { selectedMemberForEdit = null },
             onSave = { newRole, canKas, canVerify, canSos, canPosko, newStatus ->
                 val (isValid, msg) = RoleManager.validateRoleChange(currentMember, target, newRole, members)
                 if (isValid) {
-                    errorMessage = null
-                    onSavePermissions(target.id, newRole, canKas, canVerify, canSos, canPosko, newStatus)
-                    selectedMemberForEdit = null
-                } else {
-                    errorMessage = msg
-                }
+                    errorMessage = null; onSavePermissions(target.id, newRole, canKas, canVerify, canSos, canPosko, newStatus); selectedMemberForEdit = null
+                } else { errorMessage = msg }
             }
         )
     }

@@ -51,5 +51,6 @@ object DRGRepositorySeeder {
         db.kasDao().insertTransactions(CommunitySeedPostsKas.defaultTransactions())
         db.gamificationDao().insertRewards(CommunitySeedGamification.defaultRewards())
         CommunitySeedGamification.defaultTasks().forEach { db.gamificationDao().insertTask(it) }
+        repo.eventRepo.seedIfEmpty()
     }
 }

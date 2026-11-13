@@ -1,12 +1,9 @@
 package com.example.modules.workflow
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ElectricBike
 import androidx.compose.material.icons.filled.Speed
-import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,26 +12,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.ui.theme.*
 
 @Composable
-fun WorkflowTelemetryHud(
-    stage: WorkflowStage,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        shape = RoundedCornerShape(16.dp),
-        color = DrgTextDark,
-        modifier = modifier.fillMaxWidth().border(1.2.dp, DrgGreenPrimary, RoundedCornerShape(16.dp))
+fun WorkflowTelemetryHud(stage: WorkflowStage, modifier: Modifier = Modifier) {
+    val theme = LocalAppVisualTheme.current
+    val isAlertStage = stage.id == 3
+    DrgLuminousGlassCard(
+        shape = RoundedCornerShape(20.dp),
+        backgroundColor = theme.glassBg,
+        borderHighlightColor = if (isAlertStage) DrgRedDanger.copy(alpha = 0.65f) else theme.glassBorderColor,
+        contentPadding = 14.dp,
+        modifier = modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Speed, contentDescription = null, tint = DrgGreenPrimary, modifier = Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text("TELEMETRI LAPANGAN RIIL (OFF-APP)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Icon(Icons.Default.Speed, contentDescription = null, tint = theme.primaryColor, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(6.dp))
+                    Text("TELEMETRI LAPANGAN RIIL (OFF-APP)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextDark)
                 }
-                Surface(shape = RoundedCornerShape(6.dp), color = if (stage.speedKmh > 0) DrgGreenDark else DrgAmberDark) {
+                Surface(shape = RoundedCornerShape(6.dp), color = if (stage.speedKmh > 0) theme.primaryColor else DrgAmberDark) {
                     Text(
                         text = if (stage.speedKmh > 0) "MELAJU" else "STANDBY / REHAT",
                         fontSize = 9.sp, fontWeight = FontWeight.Black, color = Color.White,
@@ -42,26 +42,24 @@ fun WorkflowTelemetryHud(
                     )
                 }
             }
-
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Column {
-                    Text("KECEPATAN", fontSize = 9.sp, color = DrgSlateTextMuted, fontWeight = FontWeight.SemiBold)
-                    Text("${stage.speedKmh} KM/H", fontSize = 22.sp, fontWeight = FontWeight.Black, color = DrgSegmentOn)
+                    Text("KECEPATAN", fontSize = 9.sp, color = DrgTextMuted, fontWeight = FontWeight.SemiBold)
+                    Text("${stage.speedKmh} KM/H", fontFamily = SpaceGroteskFontFamily, fontSize = 22.sp, fontWeight = FontWeight.Black, color = theme.primaryColor)
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("SENSOR G-FORCE", fontSize = 9.sp, color = DrgSlateTextMuted, fontWeight = FontWeight.SemiBold)
-                    Text(stage.gForceText, fontSize = 13.sp, fontWeight = FontWeight.Bold, color = if (stage.id == 3) DrgRedDanger else Color.White)
+                    Text("SENSOR G-FORCE", fontSize = 9.sp, color = DrgTextMuted, fontWeight = FontWeight.SemiBold)
+                    Text(stage.gForceText, fontFamily = SpaceGroteskFontFamily, fontSize = 13.sp, fontWeight = FontWeight.Bold, color = if (isAlertStage) DrgRedDanger else DrgTextDark)
                 }
                 Column(horizontalAlignment = Alignment.End) {
-                    Text("CUACA JALAN", fontSize = 9.sp, color = DrgSlateTextMuted, fontWeight = FontWeight.SemiBold)
-                    Text(stage.weather, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgAmberWarning)
+                    Text("CUACA JALAN", fontSize = 9.sp, color = DrgTextMuted, fontWeight = FontWeight.SemiBold)
+                    Text(stage.weather, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgAmberDark)
                 }
             }
-
-            Surface(shape = RoundedCornerShape(8.dp), color = DrgSlateDarkBg, modifier = Modifier.fillMaxWidth()) {
+            Surface(shape = RoundedCornerShape(10.dp), color = theme.pillBg, modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.padding(8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text("Status Sistem DRG:", fontSize = 10.sp, color = DrgSlateTextMuted)
-                    Text(stage.statusText, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary)
+                    Text("Status Sistem DRG:", fontSize = 10.sp, color = DrgTextSecondary)
+                    Text(stage.statusText, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = theme.primaryColor)
                 }
             }
         }

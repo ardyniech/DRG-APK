@@ -109,6 +109,8 @@ fun DRGViewModel.precacheMap(context: Context) = radarCoord.precacheMap(context,
 fun DRGViewModel.clearMapCache(context: Context) = radarCoord.clearMapCache(context)
 fun DRGViewModel.getCacheSizeDesc(context: Context) = radarCoord.getCacheSizeDesc(context)
 
+fun DRGViewModel.getNotificationPrefFlow(memberId: String) = repository.getPrefForMember(memberId)
+
 fun DRGViewModel.addPosko(name: String, area: String, phone: String, lat: Double, lng: Double) = viewModelScope.launch {
     repository.addPosko(PoskoLocation("PSKO-${System.currentTimeMillis()}", name, area, area, lat, lng, "Pengurus DRG", phone, "Rest Area, Charger, Kopi", 0, false))
     showToast("Berhasil mendaftarkan Posko baru: $name")

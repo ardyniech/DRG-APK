@@ -1,6 +1,5 @@
 package com.example.modules.treasury.primitives
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,9 +18,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.modules.treasury.KasTransactionCard
+import com.example.shared.atoms.EmptyStateOrganicGraphic
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.models.KasTransaction
 import com.example.shared.models.TransactionType
-import com.example.ui.theme.*
+import com.example.ui.theme.DrgRedDanger
+import com.example.ui.theme.DrgTextSecondary
 
 @Composable
 fun KasTransparanComponent(
@@ -33,6 +35,8 @@ fun KasTransparanComponent(
     onAddTransactionClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val theme = LocalAppVisualTheme.current
+    val accent = theme.primaryColor
     var selectedFilter by remember { mutableStateOf<TransactionType?>(null) }
     var selectedPeriod by remember { mutableStateOf("Semua") }
     val filteredList = remember(transactions, selectedFilter, selectedPeriod) {
@@ -44,75 +48,72 @@ fun KasTransparanComponent(
         if (selectedFilter == null) byPeriod else byPeriod.filter { it.type == selectedFilter }
     }
 
-    Column(
-        modifier = modifier.fillMaxSize().background(DrgBackground).padding(horizontal = 14.dp, vertical = 8.dp).testTag("kas_transparan_component"),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+    LazyColumn(
+        modifier = modifier.fillMaxSize().padding(horizontal = 14.dp).testTag("kas_transparan_component"),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(top = 6.dp, bottom = 24.dp)
     ) {
-        KasSummaryHeader(totalIncome = totalIncome, totalExpense = totalExpense, netBalance = netBalance)
-        KasFinancialChartCard(totalIncome = totalIncome, totalExpense = totalExpense, netBalance = netBalance)
-        KasPeriodSummaryCard(transactions = transactions, selectedPeriod = selectedPeriod, onPeriodSelected = { selectedPeriod = it })
+        item { KasSummaryHeader(totalIncome = totalIncome, totalExpense = totalExpense, netBalance = netBalance) }
+        item { KasFinancialChartCard(totalIncome = totalIncome, totalExpense = totalExpense, netBalance = netBalance) }
+        item { KasPeriodSummaryCard(transactions = transactions, selectedPeriod = selectedPeriod, onPeriodSelected = { selectedPeriod = it }) }
 
-        val context = LocalContext.current
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            if (canAddTransaction) {
-                Button(
-                    onClick = onAddTransactionClick,
-                    colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.weight(1.3f).height(42.dp).testTag("add_kas_transaction_button")
-                ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Tambah", tint = Color.White, modifier = Modifier.size(14.dp))
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Catat Kas", fontWeight = FontWeight.Bold, fontSize = 11.sp)
+        item {
+            val context = LocalContext.current
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (canAddTransaction) {
+                    Button(
+                        onClick = onAddTransactionClick,
+                        colors = ButtonDefaults.buttonColors(containerColor = accent),
+                        shape = RoundedCornerShape(14.dp),
+                        modifier = Modifier.weight(1.3f).height(44.dp).testTag("add_kas_transaction_button")
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = "Tambah", tint = Color.White, modifier = Modifier.size(15.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Catat Kas", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = Color.White)
+                    }
                 }
-            }
-            OutlinedButton(
-                onClick = { KasReportExporter.exportReport(context, selectedPeriod, totalIncome, totalExpense, netBalance, filteredList) },
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.weight(1f).height(42.dp).testTag("export_kas_report_button")
-            ) {
-                Icon(imageVector = Icons.Default.Share, contentDescription = "Ekspor", tint = DrgGreenPrimary, modifier = Modifier.size(14.dp))
-                Spacer(modifier = Modifier.width(4.dp))
-                Text("Ekspor Rekap", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = DrgGreenPrimary)
+                OutlinedButton(
+                    onClick = { KasReportExporter.exportReport(context, selectedPeriod, totalIncome, totalExpense, netBalance, filteredList) },
+                    shape = RoundedCornerShape(14.dp),
+                    modifier = Modifier.weight(1f).height(44.dp).testTag("export_kas_report_button")
+                ) {
+                    Icon(Icons.Default.Share, contentDescription = "Ekspor", tint = accent, modifier = Modifier.size(15.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Ekspor Rekap", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = accent)
+                }
             }
         }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("Saring Status:", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextSecondary)
-            FilterChip(
-                selected = selectedFilter == null, onClick = { selectedFilter = null },
-                label = { Text("Semua", fontSize = 10.sp) },
-                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = DrgGreenPrimary, selectedLabelColor = Color.White)
-            )
-            FilterChip(
-                selected = selectedFilter == TransactionType.INCOME, onClick = { selectedFilter = TransactionType.INCOME },
-                label = { Text("Pemasukan (+)", fontSize = 10.sp) },
-                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = DrgGreenPrimary, selectedLabelColor = Color.White)
-            )
-            FilterChip(
-                selected = selectedFilter == TransactionType.EXPENSE, onClick = { selectedFilter = TransactionType.EXPENSE },
-                label = { Text("Pengeluaran (-)", fontSize = 10.sp) },
-                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = DrgRedDanger, selectedLabelColor = Color.White)
-            )
+        item {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text("Saring:", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DrgTextSecondary)
+                FilterChip(
+                    selected = selectedFilter == null, onClick = { selectedFilter = null },
+                    label = { Text("Semua", fontSize = 10.sp) },
+                    colors = FilterChipDefaults.filterChipColors(selectedContainerColor = accent, selectedLabelColor = Color.White)
+                )
+                FilterChip(
+                    selected = selectedFilter == TransactionType.INCOME, onClick = { selectedFilter = TransactionType.INCOME },
+                    label = { Text("Masuk (+)", fontSize = 10.sp) },
+                    colors = FilterChipDefaults.filterChipColors(selectedContainerColor = accent, selectedLabelColor = Color.White)
+                )
+                FilterChip(
+                    selected = selectedFilter == TransactionType.EXPENSE, onClick = { selectedFilter = TransactionType.EXPENSE },
+                    label = { Text("Keluar (-)", fontSize = 10.sp) },
+                    colors = FilterChipDefaults.filterChipColors(selectedContainerColor = DrgRedDanger, selectedLabelColor = Color.White)
+                )
+            }
         }
 
         if (filteredList.isEmpty()) {
-            com.example.shared.atoms.EmptyStateOrganicGraphic(
-                title = "Belum Ada Transaksi Kas",
-                message = "Transaksi untuk filter/kategori yang Anda pilih saat ini masih kosong."
-            )
-        } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(bottom = 20.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(filteredList) { tx -> KasTransactionCard(transaction = tx) }
+            item {
+                EmptyStateOrganicGraphic(
+                    title = "Belum Ada Transaksi Kas",
+                    message = "Transaksi untuk filter/kategori yang Anda pilih saat ini masih kosong."
+                )
             }
+        } else {
+            items(filteredList) { tx -> KasTransactionCard(transaction = tx) }
         }
     }
 }

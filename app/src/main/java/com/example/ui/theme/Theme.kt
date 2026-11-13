@@ -67,7 +67,7 @@ private val GrabColorScheme = lightColorScheme(
 fun DRGDriverTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = GrabColorScheme,
-        typography = MaterialTheme.typography,
+        typography = DrgTypography,
         shapes = MaterialTheme.shapes,
         content = content
     )

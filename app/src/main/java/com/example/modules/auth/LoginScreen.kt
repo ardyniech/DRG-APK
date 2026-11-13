@@ -43,36 +43,34 @@ fun LoginScreen(
     var showHelpDialog by remember { mutableStateOf(false) }
     val haptic = LocalHapticFeedback.current
     val context = LocalContext.current
+    val theme = LocalAppVisualTheme.current
 
     Column(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 12.dp)) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onBack, modifier = Modifier.testTag("login_back_button")) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali", tint = DrgTextDark)
             }
             Box(
-                modifier = Modifier.size(46.dp).clip(RoundedCornerShape(12.dp)).background(Color.Black).border(1.5.dp, DrgGrabGreenPrimary, RoundedCornerShape(12.dp)),
+                modifier = Modifier.size(46.dp).clip(RoundedCornerShape(12.dp)).background(Color.Black).border(1.5.dp, theme.primaryColor, RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Image(painter = painterResource(id = R.drawable.drg_app_icon), contentDescription = "Logo DRG", contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize().padding(2.dp))
             }
         }
 
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(Modifier.height(14.dp))
         Text("Autentikasi Driver DRG", fontSize = 22.sp, fontWeight = FontWeight.Black, color = DrgTextDark)
         Text("Masukkan ID KTA, No. HP, atau Plat Motor dan PIN.", fontSize = 13.sp, color = DrgTextMuted)
 
-        Spacer(modifier = Modifier.height(16.dp))
-        DrgGlassCard(
+        Spacer(Modifier.height(16.dp))
+        DrgLuminousGlassCard(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(22.dp),
-            backgroundColor = Color.White.copy(alpha = 0.88f),
-            elevation = 6.dp
+            shape = RoundedCornerShape(24.dp),
+            backgroundColor = theme.glassBg,
+            borderHighlightColor = theme.glassBorderColor,
+            contentPadding = 18.dp
         ) {
-            Column(modifier = Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = inputId, onValueChange = { inputId = it; errorMessage = null },
                     label = { Text("No. HP / KTA ID / Plat Motor") }, placeholder = { Text("DRG-001 atau 0812...") },
@@ -80,7 +78,6 @@ fun LoginScreen(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                     isError = errorMessage != null, shape = RoundedCornerShape(14.dp)
                 )
-
                 OutlinedTextField(
                     value = inputPin, onValueChange = { if (it.length <= 4) { inputPin = it; errorMessage = null } },
                     label = { Text("4-Digit PIN Keamanan") }, placeholder = { Text("4 digit PIN") },
@@ -90,19 +87,18 @@ fun LoginScreen(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     isError = errorMessage != null, shape = RoundedCornerShape(14.dp)
                 )
-
                 if (errorMessage != null) {
-                    Text(errorMessage!!, color = MaterialTheme.colorScheme.error, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                    DrgFormValidationBanner(message = errorMessage!!)
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(Modifier.height(8.dp))
         TextButton(onClick = { showHelpDialog = true }, modifier = Modifier.align(Alignment.CenterHorizontally).testTag("forgot_id_button")) {
-            Text("Lupa PIN / KTA ID Anggota? Bantuan Pengurus", color = DrgGrabGreenPrimary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+            Text("Lupa PIN / KTA ID Anggota? Bantuan Pengurus", color = theme.primaryColor, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(Modifier.weight(1f))
         DrgGlassPrimaryButton(
             text = "Masuk Terverifikasi",
             onClick = {
@@ -113,7 +109,7 @@ fun LoginScreen(
             },
             modifier = Modifier.testTag("login_submit_button")
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
     }
 
     if (showHelpDialog) { LoginHelpDialog(onDismiss = { showHelpDialog = false }) }

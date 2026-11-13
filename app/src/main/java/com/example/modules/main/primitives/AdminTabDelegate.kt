@@ -1,8 +1,12 @@
 package com.example.modules.main.primitives
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.example.core.viewmodel.*
 import com.example.modules.admin.AdminGovernanceScreen
 import com.example.modules.members.role_management.RolePermissionManagementScreen
@@ -15,7 +19,8 @@ fun AdminTabDelegate(
     viewModel: DRGViewModel,
     currentMember: DriverMember?,
     members: List<DriverMember>,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    scaffoldPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val scope = rememberCoroutineScope()
 
@@ -39,7 +44,8 @@ fun AdminTabDelegate(
             onBack = { viewModel.selectTab(MainNavTab.ADMIN) },
             onSavePermissions = { id, ro, k, v, so, po, st ->
                 viewModel.updateMemberPermissions(id, ro, k, v, so, po, st)
-            }
+            },
+            modifier = Modifier.padding(scaffoldPadding)
         )
     }
 }

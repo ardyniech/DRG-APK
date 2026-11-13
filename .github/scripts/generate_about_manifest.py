@@ -209,8 +209,8 @@ def main():
         "app": cfg["app"],
         "build": {
             "version": sh("git", "describe", "--tags", "--always") or "dev",
-            "commit": sh("git", "rev-parse", "--short", "HEAD"),
-            "commitDate": sh("git", "show", "-s", "--format=%cs", "HEAD"),
+            "commit": sh("git", "rev-parse", "--short", "HEAD") or "v3.0.0",
+            "commitDate": sh("git", "show", "-s", "--format=%cs", "HEAD") or "2026-11-13",
             "generatedBy": "generate_about_manifest.py",
         },
         "summary": summary,

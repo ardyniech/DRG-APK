@@ -1,21 +1,19 @@
 package com.example.modules.about.primitives
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.modules.about.AboutSummary
-import com.example.ui.theme.*
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
+import com.example.ui.theme.DrgTextMuted
+import com.example.ui.theme.SpaceGroteskFontFamily
 
 @Composable
 fun AboutStatGrid(summary: AboutSummary) {
@@ -33,30 +31,19 @@ fun AboutStatGrid(summary: AboutSummary) {
 
 @Composable
 private fun StatTile(label: String, value: String, modifier: Modifier = Modifier) {
-    val cardShape = RoundedCornerShape(18.dp)
-    val highlightBrush = Brush.linearGradient(
-        listOf(Color.White, Color.White.copy(alpha = 0.5f), DrgGreenPrimary.copy(alpha = 0.2f))
-    )
-
-    Surface(
-        shape = cardShape,
-        color = Color.White.copy(alpha = 0.85f),
-        tonalElevation = 0.dp,
+    val theme = LocalAppVisualTheme.current
+    DrgLuminousGlassCard(
+        shape = RoundedCornerShape(18.dp),
+        backgroundColor = theme.glassBg,
+        borderHighlightColor = theme.glassBorderColor,
+        contentPadding = 14.dp,
         modifier = modifier
-            .shadow(3.dp, cardShape, ambientColor = DrgShadowGreenAmbient, spotColor = DrgShadowGreenSpot)
-            .border(1.2.dp, highlightBrush, cardShape)
     ) {
-        Column(
-            modifier = Modifier.padding(14.dp).fillMaxWidth(),
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(value, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold, color = DrgGreenPrimary)
+        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
+            Text(value, fontFamily = SpaceGroteskFontFamily, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold, color = theme.primaryColor)
             Text(label, fontSize = 11.sp, color = DrgTextMuted)
         }
     }
 }
 
-private fun formatNumber(value: Int): String {
-    val digits = value.toString()
-    return digits.reversed().chunked(3).joinToString(".").reversed()
-}
+private fun formatNumber(value: Int): String = value.toString().reversed().chunked(3).joinToString(".").reversed()

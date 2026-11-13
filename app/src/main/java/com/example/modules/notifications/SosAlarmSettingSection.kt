@@ -1,6 +1,5 @@
 package com.example.modules.notifications
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -9,9 +8,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.ui.theme.*
 
 @Composable
@@ -22,18 +24,15 @@ fun SosAlarmSettingSection(
     onTestToggle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        shape = RoundedCornerShape(14.dp),
-        color = if (isSosAlarmEnabled) DrgRedContainer.copy(alpha = 0.7f) else DrgSurfaceVariant.copy(alpha = 0.5f),
-        modifier = modifier
-            .fillMaxWidth()
-            .border(
-                1.dp,
-                if (isSosAlarmEnabled) DrgRedDanger else DrgOutline.copy(alpha = 0.4f),
-                RoundedCornerShape(14.dp)
-            )
+    val theme = LocalAppVisualTheme.current
+    DrgLuminousGlassCard(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        backgroundColor = if (isSosAlarmEnabled) DrgRedPanic.copy(alpha = 0.08f) else Color(0xCCFFFFFF),
+        borderHighlightColor = if (isSosAlarmEnabled) DrgRedPanic.copy(alpha = 0.65f) else theme.glassBorderColor.copy(alpha = 0.6f),
+        contentPadding = 12.dp
     ) {
-        Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -43,8 +42,8 @@ fun SosAlarmSettingSection(
                     Icon(
                         imageVector = if (isSosAlarmEnabled) Icons.Default.VolumeUp else Icons.Default.VolumeOff,
                         contentDescription = "Sirine SOS",
-                        tint = if (isSosAlarmEnabled) DrgRedDanger else DrgTextMuted,
-                        modifier = Modifier.size(24.dp)
+                        tint = if (isSosAlarmEnabled) DrgRedPanic else DrgTextMuted,
+                        modifier = Modifier.size(22.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Column {
@@ -52,10 +51,10 @@ fun SosAlarmSettingSection(
                             text = "Sirine SOS Desibel Tinggi (100 dB)",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
-                            color = if (isSosAlarmEnabled) DrgRedDanger else DrgTextPrimary
+                            color = if (isSosAlarmEnabled) DrgRedPanic else DrgTextDark
                         )
                         Text(
-                            text = if (isSosAlarmEnabled) "Alarm nyaring aktif saat tombol darurat ditekan" else "Alarm hening (hanya sinyal radar visual)",
+                            text = if (isSosAlarmEnabled) "Alarm nyaring aktif saat tombol darurat ditekan" else "Alarm hening (radar visual saja)",
                             fontSize = 10.sp,
                             color = DrgTextSecondary
                         )
@@ -64,32 +63,21 @@ fun SosAlarmSettingSection(
                 Switch(
                     checked = isSosAlarmEnabled,
                     onCheckedChange = onToggleSosAlarm,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = DrgRedDanger,
-                        checkedTrackColor = DrgRedDanger.copy(alpha = 0.3f)
-                    )
+                    colors = SwitchDefaults.colors(checkedThumbColor = DrgRedPanic, checkedTrackColor = DrgRedPanic.copy(alpha = 0.3f))
                 )
             }
 
             if (isSosAlarmEnabled) {
                 OutlinedButton(
                     onClick = onTestToggle,
-                    modifier = Modifier.fillMaxWidth().height(36.dp),
-                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.fillMaxWidth().height(38.dp),
+                    shape = RoundedCornerShape(10.dp),
                     contentPadding = PaddingValues(0.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = DrgRedDanger)
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = DrgRedPanic)
                 ) {
-                    Icon(
-                        imageVector = if (isTestingSound) Icons.Default.Stop else Icons.Default.PlayArrow,
-                        contentDescription = "Tes Sirine",
-                        modifier = Modifier.size(16.dp)
-                    )
+                    Icon(if (isTestingSound) Icons.Default.Stop else Icons.Default.PlayArrow, contentDescription = "Tes Sirine", modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = if (isTestingSound) "Hentikan Suara Sirine" else "Uji Suara Sirine (3 Detik)",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Text(if (isTestingSound) "Hentikan Suara Sirine" else "Uji Suara Sirine (3 Detik)", fontSize = 11.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }

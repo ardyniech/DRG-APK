@@ -1,13 +1,12 @@
 package com.example.modules.radar
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.modules.radar.primitives.*
 import com.example.shared.models.*
-import com.example.ui.theme.*
+import com.example.shared.utils.rememberSharedRecordBadgeState
 
 @Composable
 fun RadarScreen(
@@ -29,8 +28,10 @@ fun RadarScreen(
     var selectedHazard by remember { mutableStateOf<HazardArea?>(null) }
     var selectedPosko by remember { mutableStateOf<PoskoLocation?>(null) }
 
-    val filters = listOf("Semua", "Lalu Lintas", "Satgas", "Posko", "Area Rawan", "Sedang Narik")
+    val badgeState = rememberSharedRecordBadgeState(listOf("radar"))
+    LaunchedEffect(hazards.size) { badgeState.markSeen("radar", hazards.size) }
 
+    val filters = listOf("Semua", "Lalu Lintas", "Satgas", "Posko", "Area Rawan", "Sedang Narik")
     val displayMembers = remember(members, selectedFilter) {
         when (selectedFilter) {
             "Satgas" -> members.filter { it.role.name == "SATGAS" }
@@ -41,7 +42,7 @@ fun RadarScreen(
     val isConsentOn = currentMember?.isLocationSharingConsent ?: true
 
     Column(
-        modifier = modifier.fillMaxSize().background(DrgBackgroundGradient).padding(horizontal = 10.dp, vertical = 4.dp),
+        modifier = modifier.fillMaxSize().padding(horizontal = 10.dp, vertical = 4.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         RadarConsentAndHazardBar(isConsentOn = isConsentOn, onToggleConsent = onToggleConsent, onAddHazardClick = onAddHazardClick)

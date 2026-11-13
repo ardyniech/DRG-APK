@@ -2,22 +2,27 @@ package com.example.modules.profile.primitives
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.WorkspacePremium
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
+import com.example.shared.atoms.DrgGlassPrimaryButton
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.DrgLuminousGlassModal
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.models.BadgeItem
 import com.example.ui.theme.*
 
@@ -26,6 +31,7 @@ fun ProfileBadgesShowcase(
     badges: List<BadgeItem>,
     modifier: Modifier = Modifier
 ) {
+    val theme = LocalAppVisualTheme.current
     var selectedBadge by remember { mutableStateOf<BadgeItem?>(null) }
 
     Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -33,32 +39,36 @@ fun ProfileBadgesShowcase(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Default.WorkspacePremium, contentDescription = null, tint = DrgGoldReward, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(6.dp))
-                Text("Lencana & Penghargaan Komunitas", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
+                Text("Lencana & Penghargaan Komunitas", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = DrgTextDark)
             }
-            Text("${badges.count { it.isEarned }}/${badges.size} Terbuka", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary)
+            Text(
+                "${badges.count { it.isEarned }}/${badges.size} Terbuka",
+                fontSize = 10.sp,
+                fontFamily = SpaceGroteskFontFamily,
+                fontWeight = FontWeight.Bold,
+                color = theme.primaryColor
+            )
         }
 
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             items(badges) { b ->
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = if (b.isEarned) DrgSurface else DrgSlateBgSoftAlt,
-                    modifier = Modifier
-                        .clickable { selectedBadge = b }
-                        .border(1.2.dp, if (b.isEarned) DrgGoldReward else DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+                DrgLuminousGlassCard(
+                    modifier = Modifier.widthIn(min = 86.dp),
+                    shape = RoundedCornerShape(14.dp),
+                    backgroundColor = if (b.isEarned) Color(0xF2FFFFFF) else theme.glassBg,
+                    borderHighlightColor = if (b.isEarned) DrgGoldReward.copy(alpha = 0.7f) else theme.glassBorderColor.copy(alpha = 0.5f),
+                    contentPadding = 10.dp,
+                    onClick = { selectedBadge = b }
                 ) {
-                    Column(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text(text = b.iconEmoji, fontSize = 22.sp)
-                        Text(text = b.title, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = if (b.isEarned) DrgTextPrimary else DrgTextMuted)
+                        Text(text = b.title, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = if (b.isEarned) DrgTextDark else DrgTextMuted)
                         Text(
                             text = if (b.isEarned) "DIRAIH" else "${b.requiredXp} XP",
-                            fontSize = 8.sp,
+                            fontSize = 8.5.sp,
+                            fontFamily = SpaceGroteskFontFamily,
                             fontWeight = FontWeight.Black,
-                            color = if (b.isEarned) DrgGreenPrimary else DrgTextMuted
+                            color = if (b.isEarned) theme.primaryColor else DrgTextMuted
                         )
                     }
                 }
@@ -67,24 +77,30 @@ fun ProfileBadgesShowcase(
     }
 
     selectedBadge?.let { b ->
-        Dialog(onDismissRequest = { selectedBadge = null }) {
-            Surface(shape = RoundedCornerShape(16.dp), color = DrgSurface, modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                Column(modifier = Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = b.iconEmoji, fontSize = 38.sp)
-                    Text(text = b.title, fontSize = 15.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
-                    Text(text = b.description, fontSize = 12.sp, color = DrgTextSecondary, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
-                    Surface(shape = RoundedCornerShape(8.dp), color = if (b.isEarned) DrgGreenContainer else DrgAmberContainer) {
-                        Text(
-                            text = if (b.isEarned) "✓ Lencana Resmi Terbuka (${b.earnedDate})" else "Target: Kumpulkan ${b.requiredXp} XP Loyalitas DRG",
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (b.isEarned) DrgGreenDark else DrgAmberSecondary,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                        )
-                    }
-                    Button(onClick = { selectedBadge = null }, colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary)) {
-                        Text("Tutup")
-                    }
+        DrgLuminousGlassModal(
+            title = b.title,
+            subtitle = if (b.isEarned) "Lencana Resmi Terbuka" else "Target Penghargaan DRG",
+            onDismiss = { selectedBadge = null },
+            icon = Icons.Default.WorkspacePremium,
+            accentColor = DrgGoldReward,
+            footer = { DrgGlassPrimaryButton(text = "Tutup", onClick = { selectedBadge = null }) }
+        ) {
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(text = b.iconEmoji, fontSize = 40.sp)
+                Text(text = b.description, fontSize = 12.sp, color = DrgTextSecondary, textAlign = TextAlign.Center)
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(if (b.isEarned) theme.pillBg else DrgAmberContainer)
+                        .border(0.8.dp, (if (b.isEarned) theme.primaryColor else DrgAmberSecondary).copy(alpha = 0.35f), RoundedCornerShape(10.dp))
+                        .padding(horizontal = 12.dp, vertical = 7.dp)
+                ) {
+                    Text(
+                        text = if (b.isEarned) "✓ Lencana Resmi Terbuka (${b.earnedDate})" else "Target: Kumpulkan ${b.requiredXp} XP Loyalitas DRG",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (b.isEarned) theme.primaryColor else DrgAmberSecondary
+                    )
                 }
             }
         }

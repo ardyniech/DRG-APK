@@ -1,6 +1,5 @@
 package com.example.modules.radar.primitives
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -17,6 +16,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.modules.radar.logic.CoordinateUtils
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.atoms.RoleBadge
 import com.example.shared.models.DriverMember
 import com.example.shared.utils.WhatsAppLauncher
@@ -31,88 +32,64 @@ fun LiveDriverCoordinatesCard(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    Surface(
-        shape = RoundedCornerShape(16.dp),
-        color = DrgSurface,
-        tonalElevation = 2.dp,
-        modifier = modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.6f), RoundedCornerShape(16.dp)).testTag("live_driver_coordinates_card")
+    val theme = LocalAppVisualTheme.current
+    DrgLuminousGlassCard(
+        shape = RoundedCornerShape(20.dp),
+        backgroundColor = theme.glassBg,
+        borderHighlightColor = theme.glassBorderColor,
+        contentPadding = 14.dp,
+        modifier = modifier.fillMaxWidth().testTag("live_driver_coordinates_card")
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Column(modifier = Modifier.weight(1f)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = driver.name, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = DrgTextPrimary)
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(driver.name, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = DrgTextPrimary)
+                        Spacer(Modifier.width(6.dp))
                         RoleBadge(role = driver.role)
                     }
-                    Text(text = "${driver.motorcycleModel} • ${driver.motorcyclePlate}", fontSize = 11.sp, color = DrgTextSecondary)
+                    Text("${driver.motorcycleModel} • ${driver.motorcyclePlate}", fontSize = 11.sp, color = DrgTextSecondary)
                 }
-
-                Surface(shape = RoundedCornerShape(8.dp), color = DrgGreenContainer) {
+                Surface(shape = RoundedCornerShape(8.dp), color = theme.pillBg) {
                     Text(
                         text = String.format("%.2f km", distanceKm),
-                        fontSize = 12.sp, fontWeight = FontWeight.Bold, color = DrgGreenPrimary,
+                        fontFamily = SpaceGroteskFontFamily,
+                        fontSize = 12.sp, fontWeight = FontWeight.Bold, color = theme.primaryColor,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
                 }
             }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "📍 " + CoordinateUtils.formatCoordinates(driver.currentLat, driver.currentLng),
-                    fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = DrgTextPrimary
-                )
-                Text(
-                    text = "Status: ${driver.currentStatus}",
-                    fontSize = 11.sp, fontWeight = FontWeight.Medium, color = DrgGreenPrimary
-                )
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("📍 " + CoordinateUtils.formatCoordinates(driver.currentLat, driver.currentLng), fontFamily = SpaceGroteskFontFamily, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = DrgTextPrimary)
+                Text("Status: ${driver.currentStatus}", fontSize = 11.sp, fontWeight = FontWeight.Medium, color = theme.primaryColor)
             }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 OutlinedButton(
                     onClick = { onFocusCoordinates(driver.currentLat, driver.currentLng) },
                     contentPadding = PaddingValues(horizontal = 8.dp),
                     modifier = Modifier.weight(1f).height(40.dp).testTag("recenter_coordinates_button")
                 ) {
                     Icon(Icons.Default.Navigation, contentDescription = "Fokus Koordinat", modifier = Modifier.size(14.dp))
-                    Spacer(modifier = Modifier.width(2.dp))
+                    Spacer(Modifier.width(2.dp))
                     Text("Fokus GPS", fontSize = 10.sp)
                 }
-
                 OutlinedButton(
-                    onClick = { 
-                        WhatsAppLauncher.shareLocation(context, driver.name, "${driver.motorcycleModel} (${driver.motorcyclePlate})", driver.currentLat, driver.currentLng)
-                    },
+                    onClick = { WhatsAppLauncher.shareLocation(context, driver.name, "${driver.motorcycleModel} (${driver.motorcyclePlate})", driver.currentLat, driver.currentLng) },
                     contentPadding = PaddingValues(horizontal = 8.dp),
                     modifier = Modifier.weight(1f).height(40.dp).testTag("share_coordinates_button")
                 ) {
                     Icon(Icons.Default.Share, contentDescription = "Share Lokasi", modifier = Modifier.size(14.dp))
-                    Spacer(modifier = Modifier.width(2.dp))
+                    Spacer(Modifier.width(2.dp))
                     Text("Share", fontSize = 10.sp)
                 }
-
                 Button(
                     onClick = { onCall(driver.phone) },
-                    colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
+                    colors = ButtonDefaults.buttonColors(containerColor = theme.primaryColor),
                     contentPadding = PaddingValues(horizontal = 8.dp),
                     modifier = Modifier.weight(1f).height(40.dp).testTag("call_driver_button")
                 ) {
                     Icon(Icons.Default.Phone, contentDescription = "Hubungi Driver", modifier = Modifier.size(14.dp))
-                    Spacer(modifier = Modifier.width(2.dp))
+                    Spacer(Modifier.width(2.dp))
                     Text("Hubungi", fontSize = 10.sp)
                 }
             }

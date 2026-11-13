@@ -1,6 +1,5 @@
 package com.example.modules.emergency
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -10,14 +9,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
+import com.example.core.audio.AudioRouteManager
 import com.example.core.audio.SosAlarmSoundManager
 import com.example.core.audio.SosHapticManager
+import com.example.shared.atoms.DrgGlassPrimaryButton
+import com.example.shared.atoms.DrgLuminousGlassModal
 import com.example.shared.models.EmergencyType
 import com.example.ui.theme.*
 import kotlinx.coroutines.delay
@@ -31,13 +32,11 @@ fun SosCountdownOverlay(
     onTriggerNow: () -> Unit
 ) {
     var secondsLeft by remember { mutableIntStateOf(initialSeconds) }
-    val context = androidx.compose.ui.platform.LocalContext.current
-    val vol = remember(context) { com.example.core.audio.AudioRouteManager.getRecommendedAlarmVolume(context) }
+    val context = LocalContext.current
+    val vol = remember(context) { AudioRouteManager.getRecommendedAlarmVolume(context) }
 
     LaunchedEffect(Unit) {
-        if (isAlarmSoundEnabled) {
-            SosAlarmSoundManager.playHighDecibelAlarm(initialSeconds * 1000L, vol)
-        }
+        if (isAlarmSoundEnabled) SosAlarmSoundManager.playHighDecibelAlarm(initialSeconds * 1000L, vol)
         while (secondsLeft > 0) {
             SosHapticManager.playCountdownTick(secondsLeft)
             delay(1000L)
@@ -48,74 +47,49 @@ fun SosCountdownOverlay(
     }
 
     DisposableEffect(Unit) {
-        onDispose {
-            SosAlarmSoundManager.stopAlarm()
-            SosHapticManager.stopVibration()
-        }
+        onDispose { SosAlarmSoundManager.stopAlarm(); SosHapticManager.stopVibration() }
     }
 
-    Dialog(
-        onDismissRequest = onCancel,
-        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = false)
-    ) {
-        Surface(
-            shape = RoundedCornerShape(24.dp),
-            color = DrgSurface,
-            modifier = Modifier.fillMaxWidth().border(2.dp, DrgRedDanger, RoundedCornerShape(24.dp))
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+    val cancelAction: () -> Unit = {
+        SosAlarmSoundManager.stopAlarm()
+        SosHapticManager.stopVibration()
+        SosHapticManager.playSuccessHaptic()
+        onCancel()
+    }
+
+    DrgLuminousGlassModal(
+        title = "Memancarkan SOS Darurat",
+        subtitle = "Kategori: ${emergencyType.label}",
+        onDismiss = cancelAction,
+        icon = Icons.Default.Warning,
+        accentColor = DrgRedPanic,
+        footer = {
+            DrgGlassPrimaryButton(text = "SAYA AMAN (BATALKAN)", icon = Icons.Default.CheckCircle, onClick = cancelAction)
+            OutlinedButton(
+                onClick = {
+                    SosAlarmSoundManager.stopAlarm()
+                    SosHapticManager.playEmergencyDispatchedHaptic()
+                    onTriggerNow()
+                },
+                shape = RoundedCornerShape(14.dp),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = DrgRedPanic),
+                modifier = Modifier.fillMaxWidth().height(46.dp)
             ) {
-                SosCountdownCircle(secondsLeft = secondsLeft)
-
-                Text(
-                    text = "MEMANCARKAN SOS DARURAT",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Black,
-                    color = DrgRedDanger,
-                    textAlign = TextAlign.Center
-                )
-
-                Text(
-                    text = "Kategori: ${emergencyType.label}\nSinyal SOS & lokasi GPS disiarkan otomatis dalam $secondsLeft detik.",
-                    fontSize = 12.sp,
-                    color = DrgTextSecondary,
-                    textAlign = TextAlign.Center
-                )
-
-                Button(
-                    onClick = {
-                        SosAlarmSoundManager.stopAlarm()
-                        SosHapticManager.stopVibration()
-                        SosHapticManager.playSuccessHaptic()
-                        onCancel()
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.fillMaxWidth().height(50.dp)
-                ) {
-                    Icon(Icons.Default.CheckCircle, contentDescription = null, modifier = Modifier.size(20.dp))
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("SAYA AMAN (BATALKAN)", fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                }
-
-                OutlinedButton(
-                    onClick = {
-                        SosAlarmSoundManager.stopAlarm()
-                        SosHapticManager.playEmergencyDispatchedHaptic()
-                        onTriggerNow()
-                    },
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = DrgRedDanger),
-                    modifier = Modifier.fillMaxWidth().height(46.dp)
-                ) {
-                    Icon(Icons.Default.Warning, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text("KIRIM SOS SEKARANG", fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                }
+                Icon(Icons.Default.Warning, contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(modifier = Modifier.width(6.dp))
+                Text("KIRIM SOS SEKARANG", fontSize = 12.sp, fontWeight = FontWeight.Bold)
             }
+        }
+    ) {
+        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            SosCountdownCircle(secondsLeft = secondsLeft)
+            Text("MEMANCARKAN SOS DARURAT", fontSize = 15.sp, fontWeight = FontWeight.Black, color = DrgRedPanic, textAlign = TextAlign.Center)
+            Text(
+                text = "Kategori: ${emergencyType.label}\nSinyal SOS & koordinat GPS disiarkan otomatis dalam $secondsLeft detik.",
+                fontSize = 12.sp,
+                color = DrgTextSecondary,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

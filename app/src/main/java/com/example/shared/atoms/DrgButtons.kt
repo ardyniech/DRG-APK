@@ -1,8 +1,6 @@
 package com.example.shared.atoms
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -18,7 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ui.theme.*
+import com.example.shared.utils.bouncyClick
 
 @Composable
 fun DrgGlassPrimaryButton(
@@ -28,22 +26,18 @@ fun DrgGlassPrimaryButton(
     icon: ImageVector? = null,
     enabled: Boolean = true
 ) {
-    val shape = RoundedCornerShape(16.dp)
-    val gradient = Brush.horizontalGradient(
-        colors = listOf(
-            DrgGrabGreenPrimary,
-            DrgGrabGreenDark
-        )
-    )
+    val theme = LocalAppVisualTheme.current
+    val shape = RoundedCornerShape(18.dp)
+    val gradient = Brush.horizontalGradient(listOf(theme.primaryColor, theme.secondaryColor))
 
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(52.dp)
-            .shadow(6.dp, shape, ambientColor = DrgGrabGreenPrimary.copy(alpha = 0.35f), spotColor = DrgGrabGreenPrimary.copy(alpha = 0.25f))
+            .shadow(8.dp, shape, ambientColor = theme.primaryColor.copy(alpha = 0.36f), spotColor = theme.primaryColor.copy(alpha = 0.25f))
             .clip(shape)
-            .background(if (enabled) gradient else Brush.linearGradient(listOf(Color.Gray, Color.DarkGray)))
-            .clickable(enabled = enabled) { onClick() },
+            .background(if (enabled) gradient else Brush.linearGradient(listOf(Color(0xFF94A3B8), Color(0xFF64748B))))
+            .let { if (enabled) it.bouncyClick { onClick() } else it },
         contentAlignment = Alignment.Center
     ) {
         Row(
@@ -53,13 +47,7 @@ fun DrgGlassPrimaryButton(
             if (icon != null) {
                 Icon(icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
             }
-            Text(
-                text = text,
-                color = Color.White,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 0.3.sp
-            )
+            Text(text = text, color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.3.sp)
         }
     }
 }
@@ -71,16 +59,13 @@ fun DrgGlassSecondaryButton(
     modifier: Modifier = Modifier,
     icon: ImageVector? = null
 ) {
-    val shape = RoundedCornerShape(16.dp)
-
-    DrgGlassCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(52.dp),
-        shape = shape,
-        backgroundColor = Color.White.copy(alpha = 0.75f),
-        borderBrush = DrgGlassBorderBrush,
-        elevation = 3.dp,
+    val theme = LocalAppVisualTheme.current
+    DrgLuminousGlassCard(
+        modifier = modifier.fillMaxWidth().height(52.dp),
+        shape = RoundedCornerShape(18.dp),
+        backgroundColor = theme.glassBg,
+        borderHighlightColor = theme.glassBorderColor,
+        contentPadding = 0.dp,
         onClick = onClick
     ) {
         Row(
@@ -89,15 +74,10 @@ fun DrgGlassSecondaryButton(
             horizontalArrangement = Arrangement.Center
         ) {
             if (icon != null) {
-                Icon(icon, contentDescription = null, tint = DrgGrabGreenPrimary, modifier = Modifier.size(18.dp))
+                Icon(icon, contentDescription = null, tint = theme.primaryColor, modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(8.dp))
             }
-            Text(
-                text = text,
-                color = DrgGrabGreenPrimary,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Text(text = text, color = theme.primaryColor, fontSize = 15.sp, fontWeight = FontWeight.Bold)
         }
     }
 }

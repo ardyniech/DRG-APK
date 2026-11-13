@@ -11,59 +11,51 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.models.DriverMember
 import com.example.shared.models.MemberRole
 import com.example.ui.theme.*
 
 @Composable
 fun SatgasShiftScheduleCard(currentMember: DriverMember?) {
+    val theme = LocalAppVisualTheme.current
     var isDutyOn by remember { mutableStateOf(currentMember?.role == MemberRole.SATGAS) }
 
-    Surface(
-        shape = RoundedCornerShape(14.dp),
-        color = DrgSurface,
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, DrgGreenPrimary.copy(alpha = 0.4f), RoundedCornerShape(14.dp))
+    DrgLuminousGlassCard(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        backgroundColor = Color(0xEBFFFFFF),
+        borderHighlightColor = if (isDutyOn) theme.primaryColor.copy(alpha = 0.65f) else theme.glassBorderColor,
+        contentPadding = 14.dp
     ) {
-        Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.AccessTime,
-                        contentDescription = "Piket Satgas",
-                        tint = DrgGreenPrimary,
-                        modifier = Modifier.size(18.dp)
-                    )
+                    Icon(Icons.Default.AccessTime, contentDescription = "Piket Satgas", tint = theme.primaryColor, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = "Jadwal Piket Siaga Satgas (Shift)",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp,
-                        color = DrgTextPrimary
-                    )
+                    Text("Jadwal Piket Siaga Satgas", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = DrgTextDark)
                 }
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(if (isDutyOn) DrgGreenContainer else DrgSurfaceVariant)
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(if (isDutyOn) theme.pillBg else Color(0xFFF1F5F9))
+                        .border(0.8.dp, if (isDutyOn) theme.primaryColor.copy(alpha = 0.35f) else theme.glassBorderColor, RoundedCornerShape(8.dp))
+                        .padding(horizontal = 8.dp, vertical = 3.dp)
                 ) {
                     Text(
-                        text = if (isDutyOn) "🟢 ON-DUTY (SIAGA)" else "⚪ OFF-DUTY",
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = if (isDutyOn) DrgGreenPrimary else DrgTextMuted
+                        text = if (isDutyOn) "ON-DUTY (SIAGA)" else "OFF-DUTY",
+                        fontSize = 9.5.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = if (isDutyOn) theme.primaryColor else DrgTextMuted
                     )
                 }
             }
@@ -79,16 +71,11 @@ fun SatgasShiftScheduleCard(currentMember: DriverMember?) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "Daftar Piket Siaga Malam Ini",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = DrgTextPrimary
-                )
+                Text("Daftar Piket Siaga Malam Ini", fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = DrgTextDark)
                 Switch(
                     checked = isDutyOn,
                     onCheckedChange = { isDutyOn = it },
-                    colors = SwitchDefaults.colors(checkedThumbColor = DrgGreenPrimary)
+                    colors = SwitchDefaults.colors(checkedThumbColor = theme.primaryColor, checkedTrackColor = theme.primaryColor.copy(alpha = 0.3f))
                 )
             }
         }

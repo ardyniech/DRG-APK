@@ -17,7 +17,7 @@ fun DrgScreenContainer(
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         if (showAtmosphericGlow) {
-            DrgAtmosphericGlow(modifier = Modifier.fillMaxSize())
+            DrgLuminousAtmosphere(theme = LocalAppVisualTheme.current, modifier = Modifier.fillMaxSize())
         }
         Box(
             modifier = Modifier.fillMaxSize(),

@@ -1,13 +1,11 @@
 package com.example.modules.profile
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.AdminPanelSettings
-import androidx.compose.material.icons.filled.Code
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -16,10 +14,16 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgLuminousAtmosphere
+import com.example.shared.models.AppVisualTheme
+import com.example.shared.models.BadgeItem
 import com.example.shared.models.DriverMember
-import com.example.shared.models.MemberRole
-import com.example.ui.theme.*
+import com.example.ui.theme.DrgRedDanger
 
+/**
+ * Redesigned ProfileScreen sharing 1-DNA Luminous Frosted Glass OS with DashboardScreen.
+ * Houses the exclusive Settings Launcher entry alongside biodata, role tools, and loyalty progress.
+ */
 @Composable
 fun ProfileScreen(
     currentMember: DriverMember?,
@@ -31,67 +35,64 @@ fun ProfileScreen(
     onOpenDevTools: () -> Unit = {},
     onOpenAbout: () -> Unit = {},
     onLogout: () -> Unit = {},
-    badges: List<com.example.shared.models.BadgeItem> = emptyList(),
+    badges: List<BadgeItem> = emptyList(),
+    visualTheme: AppVisualTheme = AppVisualTheme.EMERALD_AURORA,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     modifier: Modifier = Modifier
 ) {
     var showEditDialog by remember { mutableStateOf(false) }
     var showLogoutDialog by remember { mutableStateOf(false) }
 
-    LazyColumn(
-        modifier = modifier.fillMaxSize().background(DrgBackgroundGradient).padding(horizontal = 14.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(top = 10.dp, bottom = 24.dp)
-    ) {
-        item { KtaDigitalCard(member = currentMember) }
+    Box(modifier = modifier.fillMaxSize().testTag("profile_screen")) {
+        DrgLuminousAtmosphere(theme = visualTheme)
 
-        if (currentMember?.role == MemberRole.SUPER_ADMIN || currentMember?.role?.isLeadership == true) {
-            item {
-                Button(
-                    onClick = onOpenAdmin,
-                    modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_admin_governance"),
-                    colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
-                    shape = RoundedCornerShape(14.dp)
-                ) {
-                    Icon(Icons.Default.AdminPanelSettings, contentDescription = null, tint = Color.White)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Masuk Panel Admin & Jabatan", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                }
-            }
-        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(contentPadding)
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            ProfileGlassHeroCard(
+                member = currentMember,
+                visualTheme = visualTheme,
+                onOpenSettings = onOpenSettings
+            )
 
-        if (currentMember?.role == MemberRole.SUPER_ADMIN) {
-            item {
-                Button(
-                    onClick = onOpenDevTools,
-                    modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_superadmin_dev_tools"),
-                    colors = ButtonDefaults.buttonColors(containerColor = DrgTextDark),
-                    shape = RoundedCornerShape(14.dp)
-                ) {
-                    Icon(Icons.Default.Code, contentDescription = null, tint = Color.White)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("🛠️ Dev Tools AI & Super Admin Monitor", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                }
-            }
-        }
+            ProfileLauncherDeck(
+                role = currentMember?.role,
+                visualTheme = visualTheme,
+                onOpenSettings = onOpenSettings,
+                onEditBiodata = { showEditDialog = true },
+                onOpenAdmin = onOpenAdmin,
+                onOpenDevTools = onOpenDevTools
+            )
 
-        item { ProfileSettingsCard(isSosAlarmEnabled = isSosAlarmEnabled, onToggleSosAlarm = onToggleSosAlarm, onOpenSettings = onOpenSettings) }
-        item { ProfileUpdateEntry() }
-        item { ProfileAboutEntry(onOpenAbout = onOpenAbout) }
-        item { GamificationCard(member = currentMember, badges = badges) }
-        item { VehicleInfoCard(member = currentMember, onEditClick = { showEditDialog = true }) }
+            GamificationCard(
+                member = currentMember,
+                badges = badges,
+                visualTheme = visualTheme
+            )
 
-        item {
-            Spacer(modifier = Modifier.height(10.dp))
+            VehicleInfoCard(
+                member = currentMember,
+                onEditClick = { showEditDialog = true },
+                visualTheme = visualTheme
+            )
+
             Button(
                 onClick = { showLogoutDialog = true },
-                modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_logout_profile"),
+                modifier = Modifier.fillMaxWidth().height(50.dp).testTag("btn_logout_profile"),
                 colors = ButtonDefaults.buttonColors(containerColor = DrgRedDanger),
-                shape = RoundedCornerShape(14.dp)
+                shape = RoundedCornerShape(18.dp)
             ) {
                 Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = null, tint = Color.White)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Keluar Aplikasi (Logout)", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
             }
+
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 

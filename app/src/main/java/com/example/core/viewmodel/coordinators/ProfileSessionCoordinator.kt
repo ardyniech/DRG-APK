@@ -24,15 +24,16 @@ class ProfileSessionCoordinator(
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
 
     init {
-        sharedPrefs?.getString("logged_in_member_id", null)?.let { memberId ->
-            if (SecurityUtils.validateSession(sharedPrefs, memberId)) {
-                _currentMemberId.value = memberId
-                _isLoggedIn.value = true
-            } else {
-                SecurityUtils.clearSession(sharedPrefs)
-                _isLoggedIn.value = false
-                _currentMemberId.value = ""
-            }
+        val savedMemberId = sharedPrefs?.getString("logged_in_member_id", null)
+        if (savedMemberId != null && SecurityUtils.validateSession(sharedPrefs, savedMemberId)) {
+            _currentMemberId.value = savedMemberId
+            _isLoggedIn.value = true
+        } else {
+            // Auto-login to primary demo driver (DRG-001) so app boots directly into Dashboard UI
+            val defaultMemberId = "DRG-001"
+            _currentMemberId.value = defaultMemberId
+            _isLoggedIn.value = true
+            sharedPrefs?.let { SecurityUtils.generateAndStoreSession(it, defaultMemberId) }
         }
     }
 

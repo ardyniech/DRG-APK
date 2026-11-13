@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -13,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.TwoWheeler
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -25,10 +27,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.shared.atoms.DrgGlassCard
-import com.example.ui.theme.DrgDialogDarkBg
-import com.example.ui.theme.DrgGlassBorderBrush
-import com.example.ui.theme.DrgGrabGreenPrimary
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
+import com.example.ui.theme.DrgTextDark
+import com.example.ui.theme.DrgTextSecondary
 
 @Composable
 fun LandingAuthMenuDialog(
@@ -39,6 +41,7 @@ fun LandingAuthMenuDialog(
     onRegister: () -> Unit,
     onAbout: () -> Unit
 ) {
+    val theme = LocalAppVisualTheme.current
     AnimatedVisibility(
         visible = visible,
         enter = fadeIn() + slideInVertically { it / 2 },
@@ -47,23 +50,24 @@ fun LandingAuthMenuDialog(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.65f))
+                .background(Color(0x660F172A))
                 .clickable { onDismiss() }
                 .padding(horizontal = 20.dp, vertical = 24.dp),
             contentAlignment = Alignment.Center
         ) {
-            DrgGlassCard(
+            DrgLuminousGlassCard(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .widthIn(max = 520.dp)
                     .clickable(enabled = false) {}
                     .testTag("landing_auth_menu_dialog"),
                 shape = RoundedCornerShape(26.dp),
-                backgroundColor = DrgDialogDarkBg.copy(alpha = 0.95f),
-                borderBrush = DrgGlassBorderBrush,
-                elevation = 16.dp
+                backgroundColor = Color(0xF5FFFFFF),
+                borderHighlightColor = theme.glassBorderColor,
+                contentPadding = 20.dp
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(20.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
@@ -72,20 +76,28 @@ fun LandingAuthMenuDialog(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                             Box(
-                                modifier = Modifier.size(34.dp).clip(CircleShape).background(DrgGrabGreenPrimary.copy(alpha = 0.20f)),
+                                modifier = Modifier
+                                    .size(38.dp)
+                                    .clip(CircleShape)
+                                    .background(theme.pillBg)
+                                    .border(1.dp, theme.primaryColor.copy(alpha = 0.35f), CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Icon(Icons.Default.TwoWheeler, contentDescription = null, tint = DrgGrabGreenPrimary, modifier = Modifier.size(20.dp))
+                                Icon(Icons.Default.TwoWheeler, contentDescription = null, tint = theme.primaryColor, modifier = Modifier.size(20.dp))
                             }
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Text("DRG Driver • Masuk", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.White)
+                            Column {
+                                Text("DRG Driver • Masuk", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = DrgTextDark)
+                                Text("Portal Komunitas Malang Raya", fontSize = 11.sp, color = DrgTextSecondary)
+                            }
                         }
-                        IconButton(onClick = onDismiss, modifier = Modifier.size(32.dp)) {
-                            Icon(Icons.Default.Close, contentDescription = "Tutup", tint = Color.White.copy(alpha = 0.7f))
+                        IconButton(onClick = onDismiss, modifier = Modifier.size(36.dp)) {
+                            Icon(Icons.Default.Close, contentDescription = "Tutup", tint = DrgTextDark)
                         }
                     }
+
+                    HorizontalDivider(color = theme.glassBorderColor.copy(alpha = 0.45f))
 
                     LandingAuthMenuButtons(
                         onDismiss = onDismiss,

@@ -3,6 +3,7 @@ package com.example.modules.radar.primitives
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -13,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.ui.theme.*
 
 @Composable
@@ -21,6 +23,7 @@ fun MapOverlayScaleIndicator(
     activeCount: Int,
     modifier: Modifier = Modifier
 ) {
+    val theme = LocalAppVisualTheme.current
     val scaleText = when (zoom) {
         in 17..18 -> "100 m"
         16 -> "200 m"
@@ -37,23 +40,20 @@ fun MapOverlayScaleIndicator(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Surface(
-            shape = RoundedCornerShape(8.dp),
-            color = DrgSurface.copy(alpha = 0.92f),
-            modifier = Modifier.border(0.5.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+            shape = RoundedCornerShape(10.dp),
+            color = Color(0xECFFFFFF),
+            modifier = Modifier.border(0.8.dp, theme.glassBorderColor.copy(alpha = 0.7f), RoundedCornerShape(10.dp))
         ) {
             Row(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(6.dp)
-                        .background(DrgGreenPrimary, RoundedCornerShape(3.dp))
-                )
+                Box(modifier = Modifier.size(6.dp).background(theme.primaryColor, CircleShape))
                 Text(
                     text = "$activeCount Driver Siaga",
                     fontSize = 10.sp,
+                    fontFamily = SpaceGroteskFontFamily,
                     fontWeight = FontWeight.Bold,
                     color = DrgTextDark
                 )
@@ -61,16 +61,17 @@ fun MapOverlayScaleIndicator(
         }
 
         Surface(
-            shape = RoundedCornerShape(8.dp),
-            color = DrgSurface.copy(alpha = 0.92f),
-            modifier = Modifier.border(0.5.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+            shape = RoundedCornerShape(10.dp),
+            color = Color(0xECFFFFFF),
+            modifier = Modifier.border(0.8.dp, theme.glassBorderColor.copy(alpha = 0.7f), RoundedCornerShape(10.dp))
         ) {
             Text(
-                text = "📏 $scaleText",
+                text = scaleText,
                 fontSize = 10.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = DrgTextMuted,
-                modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
+                fontFamily = SpaceGroteskFontFamily,
+                fontWeight = FontWeight.Bold,
+                color = DrgTextSecondary,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
             )
         }
     }

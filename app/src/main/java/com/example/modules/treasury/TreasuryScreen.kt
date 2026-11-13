@@ -1,13 +1,11 @@
 package com.example.modules.treasury
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,12 +14,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.core.RoleManager
 import com.example.modules.treasury.primitives.KasBalanceCard
+import com.example.shared.atoms.DrgGlassPrimaryButton
 import com.example.shared.atoms.EmptyStateOrganicGraphic
 import com.example.shared.models.AccessLevel
 import com.example.shared.models.DriverMember
 import com.example.shared.models.KasTransaction
 import com.example.shared.models.TransactionType
-import com.example.ui.theme.*
+import com.example.ui.theme.DrgTextDark
 
 @Composable
 fun TreasuryScreen(
@@ -35,45 +34,30 @@ fun TreasuryScreen(
     val isTreasurerOrAdmin = userRole != null && (userRole.accessLevel == AccessLevel.ADMIN || userRole.accessLevel == AccessLevel.PENGURUS)
 
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .background(DrgBackground)
-            .padding(horizontal = 16.dp),
+        modifier = modifier.fillMaxSize().padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp),
         contentPadding = PaddingValues(top = 12.dp, bottom = 24.dp)
     ) {
-        // Balance Header Card
-        item {
-            KasBalanceCard(totalBalance = totalBalance)
-        }
+        item { KasBalanceCard(totalBalance = totalBalance) }
 
         if (isTreasurerOrAdmin) {
             item {
-                Button(
-                    onClick = onAddTransactionClick,
-                    colors = ButtonDefaults.buttonColors(containerColor = DrgGreenPrimary),
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Tambah", tint = Color.White)
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text("Catat Transaksi Kas Baru (Pengurus)", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                }
+                DrgGlassPrimaryButton(
+                    text = "Catat Transaksi Kas Baru",
+                    icon = Icons.Default.Add,
+                    onClick = onAddTransactionClick
+                )
             }
         }
 
-        item {
-            TreasuryHealthCard()
-        }
+        item { TreasuryHealthCard() }
 
         item {
             Text(
                 text = "Riwayat Mutasi Kas Komunitas",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = DrgTextPrimary
+                color = DrgTextDark
             )
         }
 

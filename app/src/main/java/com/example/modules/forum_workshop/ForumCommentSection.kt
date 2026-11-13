@@ -1,6 +1,7 @@
 package com.example.modules.forum_workshop
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,11 +11,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.models.ForumComment
 import com.example.ui.theme.*
 
@@ -26,12 +29,15 @@ fun ForumCommentSection(
     onDeleteComment: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val theme = LocalAppVisualTheme.current
     var replyText by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(DrgSurfaceVariant.copy(alpha = 0.5f), RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(14.dp))
+            .background(theme.pillBg.copy(alpha = 0.35f))
+            .border(0.8.dp, theme.glassBorderColor.copy(alpha = 0.55f), RoundedCornerShape(14.dp))
             .padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -39,7 +45,7 @@ fun ForumCommentSection(
             text = "Balasan & Diskusi (${comments.size})",
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
-            color = DrgTextPrimary
+            color = DrgTextDark
         )
 
         if (comments.isEmpty()) {
@@ -68,14 +74,14 @@ fun ForumCommentSection(
                 value = replyText,
                 onValueChange = { replyText = it },
                 placeholder = { Text("Tulis balasan atau saran...", fontSize = 11.sp) },
-                modifier = Modifier
-                    .weight(1f)
-                    .testTag("forum_comment_input"),
+                modifier = Modifier.weight(1f).testTag("forum_comment_input"),
                 singleLine = true,
                 shape = RoundedCornerShape(20.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
+                    unfocusedContainerColor = Color(0xEBFFFFFF),
+                    focusedBorderColor = theme.primaryColor,
+                    unfocusedBorderColor = theme.glassBorderColor.copy(alpha = 0.6f)
                 )
             )
             IconButton(
@@ -87,16 +93,11 @@ fun ForumCommentSection(
                 },
                 enabled = replyText.isNotBlank(),
                 modifier = Modifier
-                    .size(40.dp)
-                    .background(if (replyText.isNotBlank()) DrgGreenPrimary else DrgOutline, CircleShape)
+                    .size(44.dp)
+                    .background(if (replyText.isNotBlank()) theme.primaryColor else DrgOutline, CircleShape)
                     .testTag("forum_comment_send_btn")
             ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.Send,
-                    contentDescription = "Kirim Balasan",
-                    tint = Color.White,
-                    modifier = Modifier.size(16.dp)
-                )
+                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Kirim Balasan", tint = Color.White, modifier = Modifier.size(17.dp))
             }
         }
     }

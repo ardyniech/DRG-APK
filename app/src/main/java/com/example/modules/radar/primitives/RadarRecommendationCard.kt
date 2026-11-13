@@ -12,11 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.shared.atoms.DrgGlassCard
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.ui.theme.*
 
 @Composable
@@ -25,40 +25,28 @@ fun RadarRecommendationCard(
     isVerified: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val theme = LocalAppVisualTheme.current
     val pendingTodo = when {
-        !isConsentOn -> Pair(
-            "Aktifkan Izin Lokasi Live",
-            "Lokasi live Anda mati. Aktifkan demi fitur radar keselamatan & pemantauan Satgas Korlap."
-        )
-        !isVerified -> Pair(
-            "Verifikasi Akun Pengemudi",
-            "Profil Anda belum diverifikasi Ketua DRG. Hubungi pengurus pada Kopdar terdekat!"
-        )
-        else -> Pair(
-            "Absen Kehadiran Kopdar DRG",
-            "Saling sapa anggota ojol Malang Raya hari ini dan amankan tambahan +50 Poin!"
-        )
+        !isConsentOn -> Pair("Aktifkan Izin Lokasi Live", "Lokasi live Anda mati. Aktifkan demi fitur radar keselamatan & pemantauan Satgas Korlap.")
+        !isVerified -> Pair("Verifikasi Akun Pengemudi", "Profil Anda belum diverifikasi Ketua DRG. Hubungi pengurus pada Kopdar terdekat!")
+        else -> Pair("Absen Kehadiran Kopdar DRG", "Saling sapa anggota ojol Malang Raya hari ini dan amankan tambahan +50 Poin!")
     }
 
-    DrgGlassCard(
+    DrgLuminousGlassCard(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        backgroundColor = Color.White.copy(alpha = 0.86f),
-        elevation = 4.dp
+        shape = RoundedCornerShape(18.dp),
+        backgroundColor = theme.glassBg,
+        borderHighlightColor = theme.glassBorderColor,
+        contentPadding = 12.dp
     ) {
-        Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
-                modifier = Modifier
-                    .size(36.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(DrgGrabGreenContainer),
+                modifier = Modifier.size(36.dp).clip(RoundedCornerShape(10.dp)).background(theme.pillBg),
                 contentAlignment = Alignment.Center
-            ) {
-                Icon(Icons.Default.TaskAlt, contentDescription = null, tint = DrgGrabGreenPrimary, modifier = Modifier.size(20.dp))
-            }
-            Spacer(modifier = Modifier.width(10.dp))
+            ) { Icon(Icons.Default.TaskAlt, contentDescription = null, tint = theme.primaryColor, modifier = Modifier.size(20.dp)) }
+            Spacer(Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text("Rekomendasi Satgas", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = DrgGrabGreenPrimary)
+                Text("Rekomendasi Satgas", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = theme.primaryColor)
                 Text(pendingTodo.first, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
                 Text(pendingTodo.second, fontSize = 10.sp, color = DrgTextSecondary)
             }
@@ -73,14 +61,16 @@ fun RadarConsentAndHazardBar(
     onAddHazardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    DrgGlassCard(
+    val theme = LocalAppVisualTheme.current
+    DrgLuminousGlassCard(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        backgroundColor = Color.White.copy(alpha = 0.88f),
-        elevation = 4.dp
+        shape = RoundedCornerShape(18.dp),
+        backgroundColor = theme.glassBg,
+        borderHighlightColor = theme.glassBorderColor,
+        contentPadding = 10.dp
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -91,21 +81,19 @@ fun RadarConsentAndHazardBar(
             Switch(
                 checked = isConsentOn,
                 onCheckedChange = onToggleConsent,
-                modifier = Modifier.scale(0.8f)
+                modifier = Modifier.scale(0.8f),
+                colors = SwitchDefaults.colors(checkedThumbColor = theme.primaryColor, checkedTrackColor = theme.primaryColor.copy(alpha = 0.35f))
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(Modifier.width(8.dp))
             Button(
                 onClick = onAddHazardClick,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = DrgRedPanic.copy(alpha = 0.14f),
-                    contentColor = DrgRedPanic
-                ),
+                colors = ButtonDefaults.buttonColors(containerColor = DrgRedPanic.copy(alpha = 0.14f), contentColor = DrgRedPanic),
                 shape = RoundedCornerShape(10.dp),
                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
                 modifier = Modifier.height(34.dp)
             ) {
                 Icon(Icons.Default.AddLocationAlt, contentDescription = null, modifier = Modifier.size(15.dp))
-                Spacer(modifier = Modifier.width(4.dp))
+                Spacer(Modifier.width(4.dp))
                 Text("Bahaya", fontSize = 11.sp, fontWeight = FontWeight.Bold)
             }
         }
