@@ -4,6 +4,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.ui.theme.DrgWarningText
+import com.example.ui.theme.DrgPurpleAccent
+import com.example.ui.theme.DrgBlueAccent
 import com.example.core.viewmodel.MainNavTab
 import com.example.modules.dashboard.theme.DashboardVisualTheme
 import com.example.shared.models.MemberRole
@@ -36,14 +39,14 @@ fun buildDashboardLauncherFeatures(
     add(SquircleLauncherFeature("radar", "Radar", Icons.Default.Radar, visualTheme.primaryColor, MainNavTab.RADAR, radarCount))
     add(SquircleLauncherFeature("sos", "Darurat", Icons.Default.Warning, DrgRedPanic, MainNavTab.EMERGENCY, emergencyCount, alwaysBadge = true))
     add(SquircleLauncherFeature("event", "Event", Icons.Default.EventAvailable, Color(0xFFDB2777), MainNavTab.EVENTS, eventsCount))
-    add(SquircleLauncherFeature("forum", "Forum", Icons.Default.Forum, Color(0xFFD97706), MainNavTab.FORUM, forumCount))
+    add(SquircleLauncherFeature("forum", "Forum", Icons.Default.Forum, DrgWarningText, MainNavTab.FORUM, forumCount))
     add(SquircleLauncherFeature("kas", "Kas", Icons.Default.AccountBalanceWallet, Color(0xFF059669), MainNavTab.KAS, kasCount))
-    add(SquircleLauncherFeature("members", "Anggota", Icons.Default.Groups, Color(0xFF0284C7), MainNavTab.MEMBERS, membersCount))
+    add(SquircleLauncherFeature("members", "Anggota", Icons.Default.Groups, DrgBlueAccent, MainNavTab.MEMBERS, membersCount))
     add(SquircleLauncherFeature("community", "Info", Icons.Default.Campaign, Color(0xFF0EA5E9), MainNavTab.COMMUNITY, communityNotifCount))
     add(SquircleLauncherFeature("tasks", "Misi", Icons.Default.EmojiEvents, Color(0xFFEAB308), MainNavTab.GAMIFICATION, openTasksCount))
     add(SquircleLauncherFeature("workflow", "Lapangan", Icons.Default.Route, Color(0xFFEA580C), MainNavTab.FIELD_WORKFLOW, poskoCount))
     add(SquircleLauncherFeature("posko", "Posko", Icons.Default.Place, Color(0xFF0D9488), MainNavTab.RADAR, poskoCount))
-    add(SquircleLauncherFeature("profile", "Profil", Icons.Default.Person, Color(0xFF7C3AED), MainNavTab.PROFILE, 0))
+    add(SquircleLauncherFeature("profile", "Profil", Icons.Default.Person, DrgPurpleAccent, MainNavTab.PROFILE, 0))
     if (role == MemberRole.SUPER_ADMIN || role?.isLeadership == true) {
         add(SquircleLauncherFeature("admin", "Admin", Icons.Default.AdminPanelSettings, Color(0xFF2563EB), MainNavTab.ADMIN, pendingAdminCount, alwaysBadge = true))
     }

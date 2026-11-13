@@ -23,6 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ui.theme.DrgPurpleAccent
+import com.example.ui.theme.DrgBlueAccent
 import com.example.shared.atoms.DrgLuminousGlassCard
 import com.example.shared.models.AppVisualTheme
 import com.example.shared.models.MemberRole
@@ -57,10 +59,10 @@ fun ProfileLauncherDeck(
         add(ProfileLauncherSpec("Pengaturan", Icons.Filled.Tune, visualTheme.primaryColor, "btn_open_settings_launcher", true, onOpenSettings))
         add(ProfileLauncherSpec("Biodata", Icons.Filled.Edit, visualTheme.secondaryColor, "btn_edit_profile_launcher", false, onEditBiodata))
         if (role == MemberRole.SUPER_ADMIN || role?.isLeadership == true) {
-            add(ProfileLauncherSpec("Admin", Icons.Filled.AdminPanelSettings, Color(0xFF0284C7), "btn_admin_governance", false, onOpenAdmin))
+            add(ProfileLauncherSpec("Admin", Icons.Filled.AdminPanelSettings, DrgBlueAccent, "btn_admin_governance", false, onOpenAdmin))
         }
         if (role == MemberRole.SUPER_ADMIN) {
-            add(ProfileLauncherSpec("Dev Tools", Icons.Filled.Terminal, Color(0xFF7C3AED), "btn_superadmin_dev_tools", false, onOpenDevTools))
+            add(ProfileLauncherSpec("Dev Tools", Icons.Filled.Terminal, DrgPurpleAccent, "btn_superadmin_dev_tools", false, onOpenDevTools))
         }
     }
 

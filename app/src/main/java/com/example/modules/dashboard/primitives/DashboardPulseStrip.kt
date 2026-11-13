@@ -21,6 +21,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ui.theme.DrgWarningText
+import com.example.ui.theme.DrgPurpleAccent
+import com.example.ui.theme.DrgBlueAccent
 import com.example.core.viewmodel.MainNavTab
 import com.example.modules.dashboard.theme.DashboardFocusMode
 import com.example.modules.dashboard.theme.DashboardVisualTheme
@@ -61,16 +64,16 @@ fun DashboardPulseStrip(
             PulseStripItem("Siaga", "$activeMemberCount On", Icons.Default.GpsFixed, accent, MainNavTab.RADAR),
             PulseStripItem("Jalur", if (hazardCount > 0) "$hazardCount Awas" else "Aman", Icons.Default.Warning, if (hazardCount > 0) DrgRedPanic else accent, MainNavTab.RADAR),
             PulseStripItem("Posko", "$poskoCount Titik", Icons.Default.Place, alt, MainNavTab.RADAR),
-            PulseStripItem("Lapangan", "Check-In", Icons.Default.Route, Color(0xFFD97706), MainNavTab.FIELD_WORKFLOW),
+            PulseStripItem("Lapangan", "Check-In", Icons.Default.Route, DrgWarningText, MainNavTab.FIELD_WORKFLOW),
             PulseStripItem("TRC", "Siaga 24j", Icons.Default.Shield, DrgRedPanic, MainNavTab.EMERGENCY)
         )
     } else {
         listOf(
             PulseStripItem("Kas", "Aktif", Icons.Default.AccountBalanceWallet, accent, MainNavTab.KAS),
             PulseStripItem("Mutasi", "$transactionCount Log", Icons.AutoMirrored.Filled.ReceiptLong, alt, MainNavTab.KAS),
-            PulseStripItem("Anggota", "$totalMemberCount Org", Icons.Default.Groups, Color(0xFF0284C7), MainNavTab.MEMBERS),
-            PulseStripItem("Forum", "Diskusi", Icons.Default.Forum, Color(0xFFD97706), MainNavTab.FORUM),
-            PulseStripItem("Poin", "Reward", Icons.Default.Stars, Color(0xFF7C3AED), MainNavTab.GAMIFICATION)
+            PulseStripItem("Anggota", "$totalMemberCount Org", Icons.Default.Groups, DrgBlueAccent, MainNavTab.MEMBERS),
+            PulseStripItem("Forum", "Diskusi", Icons.Default.Forum, DrgWarningText, MainNavTab.FORUM),
+            PulseStripItem("Poin", "Reward", Icons.Default.Stars, DrgPurpleAccent, MainNavTab.GAMIFICATION)
         )
     }
 

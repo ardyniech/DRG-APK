@@ -42,7 +42,7 @@ fun EventCreateFieldsSection(
     LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         items(categories) { cat ->
             val active = cat == category
-            Box(modifier = Modifier.clip(RoundedCornerShape(10.dp)).background(if (active) accent else Color(0xFFF1F5F9)).bouncyClick { onCategoryChange(cat) }.padding(horizontal = 10.dp, vertical = 6.dp)) {
+            Box(modifier = Modifier.clip(RoundedCornerShape(10.dp)).background(if (active) accent else DrgSlateBgSoftAlt).bouncyClick { onCategoryChange(cat) }.padding(horizontal = 10.dp, vertical = 6.dp)) {
                 Text(cat, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = if (active) Color.White else DrgTextDark)
             }
         }
@@ -53,7 +53,7 @@ fun EventCreateFieldsSection(
         Text("Deadline:", fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = DrgTextSecondary)
         dayPresets.forEach { (d, lbl) ->
             val active = daysAhead == d
-            Box(modifier = Modifier.clip(RoundedCornerShape(9.dp)).background(if (active) accent else Color(0xFFF1F5F9)).border(1.dp, if (active) accent else Color.Transparent, RoundedCornerShape(9.dp)).bouncyClick { onDaysAheadChange(d) }.padding(horizontal = 9.dp, vertical = 5.dp)) {
+            Box(modifier = Modifier.clip(RoundedCornerShape(9.dp)).background(if (active) accent else DrgSlateBgSoftAlt).border(1.dp, if (active) accent else Color.Transparent, RoundedCornerShape(9.dp)).bouncyClick { onDaysAheadChange(d) }.padding(horizontal = 9.dp, vertical = 5.dp)) {
                 Text(lbl, fontFamily = SpaceGroteskFontFamily, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = if (active) Color.White else DrgTextDark)
             }
         }

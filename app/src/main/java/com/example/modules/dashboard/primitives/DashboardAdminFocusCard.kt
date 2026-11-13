@@ -20,6 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ui.theme.DrgWarningText
+import com.example.ui.theme.DrgPurpleAccent
 import com.example.core.viewmodel.MainNavTab
 import com.example.modules.dashboard.CommunityStatusMiniTile
 import com.example.modules.dashboard.theme.DashboardVisualTheme
@@ -97,12 +99,12 @@ fun DashboardAdminFocusCard(
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 CommunityStatusMiniTile(
                     title = "Mutasi Kas", value = "$transactionCount Catatan",
-                    icon = Icons.AutoMirrored.Filled.ReceiptLong, color = Color(0xFFD97706),
+                    icon = Icons.AutoMirrored.Filled.ReceiptLong, color = DrgWarningText,
                     onClick = { onNavigateTab(MainNavTab.KAS) }, modifier = Modifier.weight(1f)
                 )
                 CommunityStatusMiniTile(
                     title = "Log & Peran", value = "Arsip Lengkap",
-                    icon = Icons.AutoMirrored.Filled.Assignment, color = Color(0xFF7C3AED),
+                    icon = Icons.AutoMirrored.Filled.Assignment, color = DrgPurpleAccent,
                     onClick = { onNavigateTab(MainNavTab.PROFILE) }, modifier = Modifier.weight(1f)
                 )
             }

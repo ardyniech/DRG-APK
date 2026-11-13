@@ -50,14 +50,14 @@ fun EventFeedbackPanel(
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     items(categories) { cat ->
                         val active = cat == category
-                        Box(modifier = Modifier.clip(RoundedCornerShape(9.dp)).background(if (active) accent else Color(0xFFF1F5F9)).bouncyClick { category = cat }.padding(horizontal = 9.dp, vertical = 5.dp)) {
+                        Box(modifier = Modifier.clip(RoundedCornerShape(9.dp)).background(if (active) accent else DrgSlateBgSoftAlt).bouncyClick { category = cat }.padding(horizontal = 9.dp, vertical = 5.dp)) {
                             Text(cat, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = if (active) Color.White else DrgTextDark)
                         }
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     severities.forEach { sev ->
-                        val sevColor = when (sev) { "KRITIS" -> DrgRedPanic; "PERINGATAN" -> Color(0xFFD97706); else -> Color(0xFF0284C7) }
+                        val sevColor = when (sev) { "KRITIS" -> DrgRedPanic; "PERINGATAN" -> DrgWarningText; else -> DrgBlueAccent }
                         val active = sev == severity
                         Box(modifier = Modifier.testTag("severity_chip_$sev").clip(RoundedCornerShape(9.dp)).background(if (active) sevColor else sevColor.copy(alpha = 0.12f)).bouncyClick { severity = sev }.padding(horizontal = 10.dp, vertical = 5.dp)) {
                             Text(sev, fontFamily = SpaceGroteskFontFamily, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = if (active) Color.White else sevColor)
@@ -77,7 +77,7 @@ fun EventFeedbackPanel(
         }
 
         feedbackList.forEach { fb ->
-            val sevColor = when (fb.severityLevel) { "KRITIS" -> DrgRedPanic; "PERINGATAN" -> Color(0xFFD97706); else -> Color(0xFF0284C7) }
+            val sevColor = when (fb.severityLevel) { "KRITIS" -> DrgRedPanic; "PERINGATAN" -> DrgWarningText; else -> DrgBlueAccent }
             var responseDraft by remember(fb.id, fb.committeeResponse) { mutableStateOf(fb.committeeResponse) }
             DrgLuminousGlassCard(shape = RoundedCornerShape(18.dp), backgroundColor = visualTheme.glassBg, borderHighlightColor = if (fb.isResolved) DrgGreenPrimary.copy(alpha = 0.55f) else sevColor.copy(alpha = 0.6f), contentPadding = 12.dp, modifier = Modifier.fillMaxWidth().testTag("feedback_card_${fb.id}")) {
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {

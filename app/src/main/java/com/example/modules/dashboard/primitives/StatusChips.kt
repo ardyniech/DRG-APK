@@ -29,7 +29,7 @@ fun StatusChips(
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         listOf(
             Triple("Aktif Narik", true, accentColor),
-            Triple("Siaga Posko", true, Color(0xFFD97706)),
+            Triple("Siaga Posko", true, DrgWarningText),
             Triple("Rehat", false, DrgTextSecondary)
         ).forEach { (status, online, color) ->
             val isSelected = currentStatus.contains(status, ignoreCase = true)

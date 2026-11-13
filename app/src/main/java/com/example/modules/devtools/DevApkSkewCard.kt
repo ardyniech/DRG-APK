@@ -38,7 +38,7 @@ fun DevApkSkewCard(
                     Text("Runtime APK / DB / DEX Telemetry", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextDark)
                 }
                 Box(modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(Color(0xFFE0F2FE)).padding(horizontal = 7.dp, vertical = 2.dp)) {
-                    Text("v${apkInfo.installedVersionName}", fontFamily = SpaceGroteskFontFamily, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color(0xFF0284C7))
+                    Text("v${apkInfo.installedVersionName}", fontFamily = SpaceGroteskFontFamily, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = DrgBlueAccent)
                 }
             }
             Text(apkInfo.versionSkewDescription, fontSize = 10.sp, color = DrgTextSecondary)

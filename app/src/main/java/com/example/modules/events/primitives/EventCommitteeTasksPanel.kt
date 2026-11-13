@@ -64,7 +64,7 @@ fun EventCommitteeTasksPanel(
             val canEditTask = canManage || currentMember?.id == task.picMemberId
             val statusColor = when (task.status) {
                 CommitteeTaskStatus.SELESAI -> DrgGreenPrimary
-                CommitteeTaskStatus.DIKERJAKAN -> Color(0xFF0284C7)
+                CommitteeTaskStatus.DIKERJAKAN -> DrgBlueAccent
                 CommitteeTaskStatus.TERKENDALA -> DrgRedPanic
                 CommitteeTaskStatus.BELUM_MULAI -> DrgTextSecondary
             }
@@ -90,7 +90,7 @@ fun EventCommitteeTasksPanel(
                     if (canEditTask) {
                         OutlinedTextField(value = noteDraft, onValueChange = { noteDraft = it }, label = { Text("Update Catatan / Hambatan Nyata", fontSize = 9.5.sp) }, singleLine = true, modifier = Modifier.fillMaxWidth())
                         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            TaskQuickActionChip("50% Jalan", Color(0xFF0284C7), Modifier.weight(1f)) { onUpdateTask(task.id, 50, CommitteeTaskStatus.DIKERJAKAN, noteDraft) }
+                            TaskQuickActionChip("50% Jalan", DrgBlueAccent, Modifier.weight(1f)) { onUpdateTask(task.id, 50, CommitteeTaskStatus.DIKERJAKAN, noteDraft) }
                             TaskQuickActionChip("Terkendala", DrgRedPanic, Modifier.weight(1f)) { onUpdateTask(task.id, task.progressPercent, CommitteeTaskStatus.TERKENDALA, noteDraft.ifBlank { "Ada hambatan, perlu dukungan!" }) }
                             TaskQuickActionChip("100% Selesai", DrgGreenPrimary, Modifier.weight(1f).testTag("btn_complete_task_${task.id}")) { onUpdateTask(task.id, 100, CommitteeTaskStatus.SELESAI, noteDraft) }
                         }

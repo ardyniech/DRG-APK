@@ -81,7 +81,7 @@ fun EventGlassHeader(
                 EventHeaderStatPill("Event", "$totalEvents", accent, Modifier.weight(1f))
                 EventHeaderStatPill("Siap", "$readyCount", DrgGreenPrimary, Modifier.weight(1f))
                 EventHeaderStatPill("Kendala", "$blockedTasksCount", if (blockedTasksCount > 0) DrgRedPanic else DrgTextSecondary, Modifier.weight(1f))
-                EventHeaderStatPill("Masukan", "$openFeedbackCount", if (openFeedbackCount > 0) Color(0xFFD97706) else DrgTextSecondary, Modifier.weight(1f))
+                EventHeaderStatPill("Masukan", "$openFeedbackCount", if (openFeedbackCount > 0) DrgWarningText else DrgTextSecondary, Modifier.weight(1f))
             }
 
             LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {

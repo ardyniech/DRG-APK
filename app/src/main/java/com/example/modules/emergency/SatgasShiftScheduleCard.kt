@@ -47,7 +47,7 @@ fun SatgasShiftScheduleCard(currentMember: DriverMember?) {
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
-                        .background(if (isDutyOn) theme.pillBg else Color(0xFFF1F5F9))
+                        .background(if (isDutyOn) theme.pillBg else DrgSlateBgSoftAlt)
                         .border(0.8.dp, if (isDutyOn) theme.primaryColor.copy(alpha = 0.35f) else theme.glassBorderColor, RoundedCornerShape(8.dp))
                         .padding(horizontal = 8.dp, vertical = 3.dp)
                 ) {

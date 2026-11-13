@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "v1.10-70-g4fd22c9",
-    "commit": "4fd22c9",
+    "version": "v1.10-71-g0bb0bf1",
+    "commit": "0bb0bf1",
     "commitDate": "2026-11-13",
     "generatedBy": "generate_about_manifest.py"
   },
@@ -26,7 +26,7 @@
     "planned": 8,
     "modules": 18,
     "totalSourceFiles": 534,
-    "totalLoc": 37831,
+    "totalLoc": 37845,
     "testSuites": 65
   },
   "phases": [
@@ -230,7 +230,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 46,
-      "loc": 3698,
+      "loc": 3708,
       "todos": 0,
       "tests": [
         "ProgressiveOnboardingLogicTest",
@@ -329,7 +329,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 25,
-      "loc": 1947,
+      "loc": 1949,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
@@ -361,7 +361,7 @@
       "status": "IN_PROGRESS",
       "progress": 70,
       "files": 17,
-      "loc": 1308,
+      "loc": 1310,
       "todos": 0,
       "tests": [
         "ViewModelRefactorAuditTest"
@@ -600,7 +600,7 @@
     {
       "severity": "MINOR",
       "category": "code",
-      "detail": "Hardcode hex Color(0x...) di22 file — melanggar 'No Magic Numbers' AGENTS §1.",
+      "detail": "Hardcode hex Color(0x...) di10 file — melanggar 'No Magic Numbers' AGENTS §1.",
       "fix": "Pindah ke DesignTokens/Theme."
     },
     {

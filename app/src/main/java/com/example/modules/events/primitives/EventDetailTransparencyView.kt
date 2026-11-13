@@ -48,7 +48,7 @@ fun EventDetailTransparencyView(
     val canManage = currentMember != null && (currentMember.role == MemberRole.SUPER_ADMIN || currentMember.role.isLeadership || currentMember.id == event.coordinatorId)
     var subTab by remember { mutableIntStateOf(0) }
     val riskColor = when (report.riskLevel) {
-        EventRiskLevel.AMAN -> DrgGreenPrimary; EventRiskLevel.WASPADA -> Color(0xFFD97706); EventRiskLevel.KRITIS_RAWAN_GAGAL -> DrgRedPanic
+        EventRiskLevel.AMAN -> DrgGreenPrimary; EventRiskLevel.WASPADA -> DrgWarningText; EventRiskLevel.KRITIS_RAWAN_GAGAL -> DrgRedPanic
     }
     val rupiahFmt = NumberFormat.getNumberInstance(Locale.forLanguageTag("id-ID"))
 

@@ -40,7 +40,7 @@ fun EventTransparencyGlassCard(
 ) {
     val riskColor = when (report.riskLevel) {
         EventRiskLevel.AMAN -> DrgGreenPrimary
-        EventRiskLevel.WASPADA -> Color(0xFFD97706)
+        EventRiskLevel.WASPADA -> DrgWarningText
         EventRiskLevel.KRITIS_RAWAN_GAGAL -> DrgRedPanic
     }
     val rupiahFmt = NumberFormat.getNumberInstance(Locale.forLanguageTag("id-ID"))
@@ -69,7 +69,7 @@ fun EventTransparencyGlassCard(
                 Text(event.targetDateText, fontSize = 11.sp, color = DrgTextSecondary)
             }
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Icon(Icons.Default.LocationOn, contentDescription = null, tint = Color(0xFF0284C7), modifier = Modifier.size(13.dp))
+                Icon(Icons.Default.LocationOn, contentDescription = null, tint = DrgBlueAccent, modifier = Modifier.size(13.dp))
                 Text("${event.locationName} • PJ: ${event.coordinatorName}", fontSize = 11.sp, color = DrgTextSecondary, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
 

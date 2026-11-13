@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ui.theme.DrgPurpleAccent
 import com.example.modules.dashboard.theme.DashboardVisualTheme
 import com.example.ui.theme.DrgTextDark
 import com.example.ui.theme.DrgTextSecondary
@@ -30,7 +31,7 @@ fun BentoIntercomWidget(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val purple = Color(0xFF7C3AED)
+    val purple = DrgPurpleAccent
 
     GlassCard(
         modifier = modifier.fillMaxHeight(),
