@@ -41,7 +41,7 @@ fun MapOverlayScaleIndicator(
     ) {
         Surface(
             shape = RoundedCornerShape(10.dp),
-            color = Color(0xECFFFFFF),
+            color = DrgGlassSurfaceStrong,
             modifier = Modifier.border(0.8.dp, theme.glassBorderColor.copy(alpha = 0.7f), RoundedCornerShape(10.dp))
         ) {
             Row(
@@ -62,7 +62,7 @@ fun MapOverlayScaleIndicator(
 
         Surface(
             shape = RoundedCornerShape(10.dp),
-            color = Color(0xECFFFFFF),
+            color = DrgGlassSurfaceStrong,
             modifier = Modifier.border(0.8.dp, theme.glassBorderColor.copy(alpha = 0.7f), RoundedCornerShape(10.dp))
         ) {
             Text(

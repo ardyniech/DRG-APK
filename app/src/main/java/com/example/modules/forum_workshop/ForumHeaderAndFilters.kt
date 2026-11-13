@@ -47,8 +47,8 @@ fun ForumHeaderAndFilters(
             singleLine = true,
             shape = RoundedCornerShape(14.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color(0xEBFFFFFF),
-                unfocusedContainerColor = Color(0xDBFFFFFF),
+                focusedContainerColor = DrgGlassSurfaceStrong,
+                unfocusedContainerColor = DrgGlassSurface,
                 focusedBorderColor = theme.primaryColor,
                 unfocusedBorderColor = theme.glassBorderColor.copy(alpha = 0.7f)
             ),
@@ -63,26 +63,26 @@ fun ForumHeaderAndFilters(
                 selected = selectedCategory == null && selectedPostType == null,
                 onClick = { onSelectCategory(null); onSelectPostType(null) },
                 label = { Text("Semua", fontSize = 11.sp, fontWeight = FontWeight.SemiBold) },
-                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = theme.pillBg, selectedLabelColor = theme.primaryColor, containerColor = Color(0xCCFFFFFF))
+                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = theme.pillBg, selectedLabelColor = theme.primaryColor, containerColor = DrgGlassSurfaceSoft)
             )
             FilterChip(
                 selected = selectedPostType == PostType.QUESTION,
                 onClick = { onSelectPostType(if (selectedPostType == PostType.QUESTION) null else PostType.QUESTION) },
                 label = { Text("Tanya Rekan", fontSize = 11.sp, fontWeight = FontWeight.SemiBold) },
-                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = DrgAmberWarning.copy(alpha = 0.2f), selectedLabelColor = DrgAmberSecondary, containerColor = Color(0xCCFFFFFF))
+                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = DrgAmberWarning.copy(alpha = 0.2f), selectedLabelColor = DrgAmberSecondary, containerColor = DrgGlassSurfaceSoft)
             )
             FilterChip(
                 selected = selectedPostType == PostType.UPDATE,
                 onClick = { onSelectPostType(if (selectedPostType == PostType.UPDATE) null else PostType.UPDATE) },
                 label = { Text("Update Terkini", fontSize = 11.sp, fontWeight = FontWeight.SemiBold) },
-                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = DrgBlueInfo.copy(alpha = 0.18f), selectedLabelColor = DrgBlueInfo, containerColor = Color(0xCCFFFFFF))
+                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = DrgBlueInfo.copy(alpha = 0.18f), selectedLabelColor = DrgBlueInfo, containerColor = DrgGlassSurfaceSoft)
             )
             ForumCategory.entries.forEach { category ->
                 FilterChip(
                     selected = selectedCategory == category,
                     onClick = { onSelectCategory(if (selectedCategory == category) null else category) },
                     label = { Text(category.label, fontSize = 11.sp) },
-                    colors = FilterChipDefaults.filterChipColors(selectedContainerColor = theme.pillBg, selectedLabelColor = theme.primaryColor, containerColor = Color(0xCCFFFFFF))
+                    colors = FilterChipDefaults.filterChipColors(selectedContainerColor = theme.pillBg, selectedLabelColor = theme.primaryColor, containerColor = DrgGlassSurfaceSoft)
                 )
             }
         }

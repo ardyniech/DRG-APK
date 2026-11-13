@@ -36,7 +36,7 @@ fun RealTrafficLiveCard(
     DrgLuminousGlassCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        backgroundColor = Color(0xEBFFFFFF),
+        backgroundColor = DrgGlassSurfaceStrong,
         borderHighlightColor = theme.glassBorderColor,
         contentPadding = 14.dp
     ) {

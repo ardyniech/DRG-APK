@@ -27,6 +27,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ui.theme.DrgGlassSurfaceBright
+import com.example.ui.theme.DrgScrimOverlay
 import com.example.shared.atoms.DrgLuminousGlassCard
 import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.ui.theme.DrgTextDark
@@ -50,7 +52,7 @@ fun LandingAuthMenuDialog(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0x660F172A))
+                .background(DrgScrimOverlay)
                 .clickable { onDismiss() }
                 .padding(horizontal = 20.dp, vertical = 24.dp),
             contentAlignment = Alignment.Center
@@ -62,7 +64,7 @@ fun LandingAuthMenuDialog(
                     .clickable(enabled = false) {}
                     .testTag("landing_auth_menu_dialog"),
                 shape = RoundedCornerShape(26.dp),
-                backgroundColor = Color(0xF5FFFFFF),
+                backgroundColor = DrgGlassSurfaceBright,
                 borderHighlightColor = theme.glassBorderColor,
                 contentPadding = 20.dp
             ) {

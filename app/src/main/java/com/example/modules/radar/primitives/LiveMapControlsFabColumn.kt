@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.ui.theme.DrgGlassSurfaceBright
 import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.ui.theme.DrgTextDark
 
@@ -29,14 +30,14 @@ fun LiveMapControlsFabColumn(
     ) {
         SmallFloatingActionButton(
             onClick = onZoomIn,
-            containerColor = Color(0xF2FFFFFF),
+            containerColor = DrgGlassSurfaceBright,
             contentColor = DrgTextDark
         ) {
             Icon(Icons.Default.Add, contentDescription = "Zoom In")
         }
         SmallFloatingActionButton(
             onClick = onZoomOut,
-            containerColor = Color(0xF2FFFFFF),
+            containerColor = DrgGlassSurfaceBright,
             contentColor = DrgTextDark
         ) {
             Icon(Icons.Default.Remove, contentDescription = "Zoom Out")

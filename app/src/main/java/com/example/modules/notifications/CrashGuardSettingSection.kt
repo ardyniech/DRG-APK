@@ -31,7 +31,7 @@ fun CrashGuardSettingSection(
     DrgLuminousGlassCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        backgroundColor = if (isCrashGuardEnabled) theme.pillBg.copy(alpha = 0.55f) else Color(0xCCFFFFFF),
+        backgroundColor = if (isCrashGuardEnabled) theme.pillBg.copy(alpha = 0.55f) else DrgGlassSurfaceSoft,
         borderHighlightColor = if (isCrashGuardEnabled) theme.primaryColor.copy(alpha = 0.55f) else theme.glassBorderColor.copy(alpha = 0.5f),
         contentPadding = 12.dp
     ) {
@@ -73,7 +73,7 @@ fun CrashGuardSettingSection(
                             colors = FilterChipDefaults.filterChipColors(
                                 selectedContainerColor = theme.pillBg,
                                 selectedLabelColor = theme.primaryColor,
-                                containerColor = Color(0xDCFFFFFF)
+                                containerColor = DrgGlassSurface
                             )
                         )
                     }

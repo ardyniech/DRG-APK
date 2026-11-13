@@ -79,7 +79,7 @@ fun ForumCommentSection(
                 shape = RoundedCornerShape(20.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color(0xEBFFFFFF),
+                    unfocusedContainerColor = DrgGlassSurfaceStrong,
                     focusedBorderColor = theme.primaryColor,
                     unfocusedBorderColor = theme.glassBorderColor.copy(alpha = 0.6f)
                 )

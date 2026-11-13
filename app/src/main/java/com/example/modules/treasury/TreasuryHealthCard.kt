@@ -26,7 +26,7 @@ fun TreasuryHealthCard(modifier: Modifier = Modifier) {
     DrgLuminousGlassCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(22.dp),
-        backgroundColor = Color(0xEBFFFFFF),
+        backgroundColor = DrgGlassSurfaceStrong,
         borderHighlightColor = theme.glassBorderColor,
         contentPadding = 16.dp
     ) {

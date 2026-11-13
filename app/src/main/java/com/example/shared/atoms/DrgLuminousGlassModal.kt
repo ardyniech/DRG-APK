@@ -45,13 +45,13 @@ fun DrgLuminousGlassModal(
     val resolvedAccent = accentColor ?: theme.primaryColor
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Box(
-            modifier = Modifier.fillMaxSize().background(Color(0x660F172A)).padding(horizontal = 16.dp, vertical = 20.dp),
+            modifier = Modifier.fillMaxSize().background(DrgScrimOverlay).padding(horizontal = 16.dp, vertical = 20.dp),
             contentAlignment = Alignment.Center
         ) {
             DrgLuminousGlassCard(
                 modifier = modifier.fillMaxWidth().widthIn(max = 540.dp).heightIn(max = 680.dp).wrapContentHeight(),
                 shape = RoundedCornerShape(26.dp),
-                backgroundColor = Color(0xF5FFFFFF),
+                backgroundColor = DrgGlassSurfaceBright,
                 borderHighlightColor = accentColor?.copy(alpha = 0.72f) ?: theme.glassBorderColor,
                 contentPadding = 18.dp
             ) {

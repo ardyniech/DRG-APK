@@ -38,6 +38,14 @@ val DrgBorderLight = Color(0xFFC2DFCD)
 // Glassmorphism & High-Tech Visual Polish Tokens
 val DrgGlassWhite = Color(0xD9FFFFFF) // 85% opacity frosted white
 val DrgGlassBorderHighlight = Color(0xF2FFFFFF) // Specular edge
+
+// Frosted glass surface scale — named veils over the luminous atmosphere.
+// Gunakan token ini, jangan hardcode Color(0x..FFFFFF) di komponen.
+val DrgGlassSurfaceSoft = Color(0xCCFFFFFF) // 80% — kartu/chip standar
+val DrgGlassSurface = Color(0xDCFFFFFF) // 86% — kartu di atas peta/panel
+val DrgGlassSurfaceStrong = Color(0xEBFFFFFF) // 92% — header/panel penting
+val DrgGlassSurfaceBright = Color(0xF2FFFFFF) // 95% — FAB, badge, sheet
+val DrgScrimOverlay = Color(0x660F172A) // scrim dialog/modal
 val DrgGlassAuraGreen = Color(0xFF00B14F)
 val DrgGlassAuraMint = Color(0xFF10B981)
 val DrgGlassAuraGold = Color(0xFFF59E0B)

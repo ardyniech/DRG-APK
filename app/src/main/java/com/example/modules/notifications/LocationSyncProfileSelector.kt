@@ -39,7 +39,7 @@ fun LocationSyncProfileSelector(
                         color = if (isSelected) theme.primaryColor else theme.glassBorderColor.copy(alpha = 0.5f)
                     ),
                     colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = if (isSelected) theme.pillBg else Color(0xDCFFFFFF)
+                        containerColor = if (isSelected) theme.pillBg else DrgGlassSurface
                     )
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {

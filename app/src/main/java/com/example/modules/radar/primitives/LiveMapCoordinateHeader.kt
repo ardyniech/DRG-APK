@@ -32,7 +32,7 @@ fun LiveMapCoordinateHeader(
     DrgLuminousGlassCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
-        backgroundColor = Color(0xEBFFFFFF),
+        backgroundColor = DrgGlassSurfaceStrong,
         borderHighlightColor = theme.glassBorderColor,
         contentPadding = 12.dp
     ) {

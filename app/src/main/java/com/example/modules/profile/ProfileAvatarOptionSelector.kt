@@ -46,7 +46,7 @@ fun ProfileAvatarOptionSelector(
                 Surface(
                     onClick = { onSelectPhoto(key) },
                     shape = RoundedCornerShape(10.dp),
-                    color = if (isSelected) theme.pillBg else Color(0xCCFFFFFF),
+                    color = if (isSelected) theme.pillBg else DrgGlassSurfaceSoft,
                     border = BorderStroke(1.dp, if (isSelected) theme.primaryColor else theme.glassBorderColor.copy(alpha = 0.6f)),
                     modifier = Modifier.weight(1f)
                 ) {

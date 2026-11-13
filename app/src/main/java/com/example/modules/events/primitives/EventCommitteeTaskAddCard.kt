@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ui.theme.DrgGlassSurfaceStrong
 import com.example.shared.atoms.DrgLuminousGlassCard
 
 @Composable
@@ -26,7 +27,7 @@ fun EventCommitteeTaskAddCard(
 
     DrgLuminousGlassCard(
         shape = RoundedCornerShape(18.dp),
-        backgroundColor = Color(0xECFFFFFF),
+        backgroundColor = DrgGlassSurfaceStrong,
         borderHighlightColor = accent,
         contentPadding = 12.dp
     ) {

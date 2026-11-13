@@ -28,7 +28,7 @@ fun SosAlarmSettingSection(
     DrgLuminousGlassCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        backgroundColor = if (isSosAlarmEnabled) DrgRedPanic.copy(alpha = 0.08f) else Color(0xCCFFFFFF),
+        backgroundColor = if (isSosAlarmEnabled) DrgRedPanic.copy(alpha = 0.08f) else DrgGlassSurfaceSoft,
         borderHighlightColor = if (isSosAlarmEnabled) DrgRedPanic.copy(alpha = 0.65f) else theme.glassBorderColor.copy(alpha = 0.6f),
         contentPadding = 12.dp
     ) {

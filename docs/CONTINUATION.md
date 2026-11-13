@@ -5,8 +5,8 @@
 ## Current state
 - **Last updated (UTC):** 2026-11-13
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** `c1b3512` (docs CONTINUATION engine event-sync)
-- **Working tree:** dirty — batch "DevTools honesty (metrik terpisah)" siap commit (lihat di bawah).
+- **HEAD (pushed):** `4fd22c9` + batch "tokenisasi permukaan glass" (lihat Done).
+- **Working tree:** clean (batch tokenisasi glass sudah di-commit di batch yang sama dengan file ini).
 - **Latest CI:** deprioritized per owner (preview via aigoogle.studio); last known issues fixed in `ab0b581`/`a4f7032`. Confirm if needed: `gh run list -R ardyniech/DRG-APK --limit 5`.
 
 ## Audit snapshot
@@ -15,7 +15,7 @@
   - **MAJOR [multi-user]:** Seed lokal-only (butuh backend + akun server). *No fake sync.*
   - **MAJOR [database]:** Schema Room hilang `1,2,3,4,8,9.json` (export/commit valid saja; **jangan difabrikasi**).
   - **MINOR [security]:** SQLite belum terenkripsi/SQLCipher (risiko terdokumentasi di `README.md`).
-  - **MINOR [code]:** hardcoded `Color(0x...)` di 44 file.
+  - **MINOR [code]:** hardcoded `Color(0x...)` di 22 file (turun dari 42 setelah tokenisasi glass; sisa = palet aksen + file definisi token).
   - **MINOR [test]:** `androidTest` minim (alur kritis login/SOS/kas).
 - **Line cap:** PASS (`check_file_length.py`, semua <125 lines).
 
@@ -68,6 +68,11 @@
   - **Hasil pindai:** **0** container `Surface/Card(color = Color.White)` tersisa di seluruh `modules/`.
   - **Temuan (belum diubah):** kode mati UI — `treasury/TreasuryScreen.kt`, `treasury/primitives/KasBalanceCard.kt`, `treasury/TreasuryHealthCard.kt`, `forum_workshop/WorkshopScreen.kt`, `radar/DriverRadarScreen.kt`, `radar/LiveMapScreen.kt` (tanpa pemanggil; UI Kas yang live = `KasTransparanComponent` via `TransparencyReportScreen`). Penghapusan menunggu keputusan produk.
   - **Verifikasi:** `:app:compileDebugKotlin` **BUILD SUCCESSFUL**; 10 test kelas lulus (`DashboardGlassmorphismTest`, `ForumPersistenceTest`, `PoskoManagementTest`, `PoskoProximityAndWatermarkTest`, `KasTransparanComponentTest`, `TreasuryAuditComputationTest`, `GamificationAndLoyaltyTest`, `LandingFeatureAutoScrollTest`, `ProgressiveOnboardingLogicTest`, `DriverContactInteractionTest`); `check_file_length.py` PASS; `audit_minus.py` 0 BLOCKER / 2 MAJOR / 3 MINOR.
+- **This batch (tokenisasi permukaan glass — `4fd22c9` lanjutan):**
+  - **Token baru di `ui/theme/Color.kt`:** `DrgGlassSurfaceSoft` (80%), `DrgGlassSurface` (86%), `DrgGlassSurfaceStrong` (92%), `DrgGlassSurfaceBright` (95%), `DrgScrimOverlay` — menggantikan literal `Color(0xCC/DC/DB/EB/EC/E8/F2/F5/FAFFFFFF)` dan `Color(0x660F172A)`.
+  - **26 file dikonversi** dari hex mentah ke token bernama (termasuk 5 file yang sebelumnya hanya punya import tema eksplisit: `GlassCard.kt`, `LandingAuthMenuDialog.kt`, `EventCommitteeTaskAddCard.kt`, `LiveMapControlsFabColumn.kt`, `DrgLuminousGlassCard.kt`).
+  - **Dampak audit:** temuan `[code] hardcoded hex Color(0x...)` turun **42 → 22 file** (sisa = palet aksen semantik amber/blue/violet/indigo + file definisi token; sengaja tidak diganti mekanis).
+  - **Verifikasi:** `:app:compileDebugKotlin` **BUILD SUCCESSFUL**; test `DashboardGlassmorphismTest`, `ForumPersistenceTest`, `KasTransparanComponentTest`, `DevToolsPhaseTreeAndUiUxTest`, `NotificationSettingsTest` **lulus**; `check_file_length.py` PASS.
 - **`450a061` (UI revamp besar + implementasi event paralel, incomplete):** revamp UI bertahap (acuan dashboard/luminous, nav/tema baru, banyak layar dimodernisasi) + path event baru (`modules/events`, `EVENTS` tab, model task/feedback/readiness) yang engine-nya belum nyambung.
 - **This batch (sinkronisasi engine, fokus engine):** rekonsiliasi ke **satu model event** sesuai schema 14.json & UI baru (`CommunityEventEntity`, `EventCommitteeTaskEntity`, `EventMemberFeedbackEntity`): perbaiki `EventConverters`, `CommunityEventDao`, `AppDatabase` (entity registry), `MIGRATION_13_14`, wiring `CommunityEventRepository`/`DRGRepository`, `EventCoordinator` (create/stage/task/progress/feedback/resolve), `DRGViewModel` (`communityEvents`/`committeeTasks`/`eventFeedback`) agar `EventsTabDelegate`/`CommunityEventsScreen` punya kontrak lengkap. Hapus duplikasi path event lama saya (`modules/community/events/*`, `EventManagementRepository`, `DRGEventViewModelExtensions`, model `CommunityEvent/EventCommitteeMember/EventFunding/EventLpjReport/EventStakeholder`) & lepas sub-tab Event dari `CommunityHub` (Event kini top-level). `DynamicDbIntrospector`/README diselaraskan (26 tabel v14). *Catatan:* model event aktif kini task+budget+readiness+feedback (berbeda dari request awal dana sumber/keluar, LPJ & stakeholder sebagai entitas terpisah — perlu keputusan/konsolidasi produk bila ingin eksplisit). Build Gradle/UI runtime belum diverifikasi di sini.
 

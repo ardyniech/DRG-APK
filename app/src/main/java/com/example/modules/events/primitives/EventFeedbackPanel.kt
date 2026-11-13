@@ -43,7 +43,7 @@ fun EventFeedbackPanel(
     var message by remember { mutableStateOf("") }
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        DrgLuminousGlassCard(shape = RoundedCornerShape(20.dp), backgroundColor = Color(0xE8FFFFFF), borderHighlightColor = accent.copy(alpha = 0.6f), contentPadding = 12.dp, modifier = Modifier.fillMaxWidth()) {
+        DrgLuminousGlassCard(shape = RoundedCornerShape(20.dp), backgroundColor = DrgGlassSurfaceStrong, borderHighlightColor = accent.copy(alpha = 0.6f), contentPadding = 12.dp, modifier = Modifier.fillMaxWidth()) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("Beri Masukan / Koreksi Perencanaan", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = DrgTextDark)
                 Text("Semua anggota dapat melaporkan kekurangan panitia, kendala logistik, atau potensi acara telat.", fontSize = 10.sp, color = DrgTextSecondary)

@@ -51,11 +51,11 @@ fun EventCreateRecordModal(
     }
 
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
-        Box(modifier = Modifier.fillMaxSize().background(Color(0x660F172A)).padding(14.dp), contentAlignment = Alignment.Center) {
+        Box(modifier = Modifier.fillMaxSize().background(DrgScrimOverlay).padding(14.dp), contentAlignment = Alignment.Center) {
             DrgLuminousGlassCard(
                 modifier = Modifier.fillMaxWidth().fillMaxHeight(0.92f).testTag("event_create_modal"),
                 shape = RoundedCornerShape(26.dp),
-                backgroundColor = Color(0xF5FFFFFF),
+                backgroundColor = DrgGlassSurfaceBright,
                 borderHighlightColor = visualTheme.glassBorderColor,
                 contentPadding = 16.dp
             ) {

@@ -8,13 +8,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.ui.theme.DrgGlassSurfaceSoft
 import com.example.shared.atoms.DrgLuminousGlassCard
 
 @Composable
 fun GlassCard(
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(24.dp),
-    backgroundColor: Color = Color(0xCCFFFFFF),
+    backgroundColor: Color = DrgGlassSurfaceSoft,
     borderHighlightColor: Color = Color(0xFF86EFAC),
     contentPadding: Dp = 16.dp,
     onClick: (() -> Unit)? = null,

@@ -51,7 +51,7 @@ fun MemberAuthoritySection(
             ) {
                 Text("Peran: ${member.role.shortName} (Klik Ubah)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = if (isAdmin) theme.primaryColor else DrgTextMuted)
             }
-            DropdownMenu(expanded = showRoleDropdown, onDismissRequest = { showRoleDropdown = false }, modifier = Modifier.background(Color(0xFAFFFFFF))) {
+            DropdownMenu(expanded = showRoleDropdown, onDismissRequest = { showRoleDropdown = false }, modifier = Modifier.background(DrgGlassSurfaceBright)) {
                 MemberRole.entries.forEach { r ->
                     DropdownMenuItem(
                         text = { Text("${r.title} (${r.shortName})", fontSize = 11.sp, color = DrgTextDark) },

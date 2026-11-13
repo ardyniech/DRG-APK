@@ -27,7 +27,7 @@ fun DevApkSkewCard(
     DrgLuminousGlassCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        backgroundColor = Color(0xCCFFFFFF),
+        backgroundColor = DrgGlassSurfaceSoft,
         borderHighlightColor = Color(0xFF93C5FD),
         contentPadding = 12.dp
     ) {

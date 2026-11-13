@@ -29,7 +29,7 @@ fun AboutHeaderCard(app: AboutApp, build: AboutBuild) {
     DrgLuminousGlassCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
-        backgroundColor = Color(0xECFFFFFF),
+        backgroundColor = DrgGlassSurfaceStrong,
         borderHighlightColor = theme.glassBorderColor,
         contentPadding = 18.dp
     ) {

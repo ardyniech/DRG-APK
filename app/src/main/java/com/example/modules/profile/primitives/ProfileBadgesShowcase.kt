@@ -55,7 +55,7 @@ fun ProfileBadgesShowcase(
                 DrgLuminousGlassCard(
                     modifier = Modifier.widthIn(min = 86.dp),
                     shape = RoundedCornerShape(14.dp),
-                    backgroundColor = if (b.isEarned) Color(0xF2FFFFFF) else theme.glassBg,
+                    backgroundColor = if (b.isEarned) DrgGlassSurfaceBright else theme.glassBg,
                     borderHighlightColor = if (b.isEarned) DrgGoldReward.copy(alpha = 0.7f) else theme.glassBorderColor.copy(alpha = 0.5f),
                     contentPadding = 10.dp,
                     onClick = { selectedBadge = b }

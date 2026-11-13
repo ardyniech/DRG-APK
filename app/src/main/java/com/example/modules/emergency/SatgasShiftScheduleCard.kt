@@ -29,7 +29,7 @@ fun SatgasShiftScheduleCard(currentMember: DriverMember?) {
     DrgLuminousGlassCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
-        backgroundColor = Color(0xEBFFFFFF),
+        backgroundColor = DrgGlassSurfaceStrong,
         borderHighlightColor = if (isDutyOn) theme.primaryColor.copy(alpha = 0.65f) else theme.glassBorderColor,
         contentPadding = 14.dp
     ) {

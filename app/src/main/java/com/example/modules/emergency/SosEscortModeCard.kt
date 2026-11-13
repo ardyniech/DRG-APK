@@ -26,7 +26,7 @@ fun SosEscortModeCard(
     DrgLuminousGlassCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
-        backgroundColor = if (isEscortActive) theme.pillBg.copy(alpha = 0.65f) else Color(0xEBFFFFFF),
+        backgroundColor = if (isEscortActive) theme.pillBg.copy(alpha = 0.65f) else DrgGlassSurfaceStrong,
         borderHighlightColor = if (isEscortActive) theme.primaryColor else theme.glassBorderColor.copy(alpha = 0.7f),
         contentPadding = 14.dp
     ) {

@@ -31,7 +31,7 @@ fun DevProgressTab(
         item {
             com.example.shared.atoms.DrgLuminousGlassCard(
                 shape = RoundedCornerShape(22.dp),
-                backgroundColor = if (metrics.defectFeatures > 0) Color(0xDDFEE2E2) else Color(0xDCFFFFFF),
+                backgroundColor = if (metrics.defectFeatures > 0) Color(0xDDFEE2E2) else DrgGlassSurface,
                 borderHighlightColor = if (metrics.defectFeatures > 0) DrgRedPanic else DrgGreenPrimary,
                 contentPadding = 14.dp,
                 modifier = Modifier.fillMaxWidth()
