@@ -3,9 +3,9 @@
 > Durable handoff trail for model/agent switches. Keep this file current at the end of every batch and at every stop point. Do not rely on chat memory.
 
 ## Current state
-- **Last updated (UTC):** 2026-11-12
+- **Last updated (UTC):** 2026-11-13
 - **Repo/branch:** `projects/DRG-APK` — `main`
-- **HEAD (pushed):** `4f62b9f` (fitur Event komunitas: panitia/dana/LPJ/stakeholder, Room v14)
+- **HEAD (pushed):** `450a061` + pending sync commit (rekonsiliasi engine event & UI paths)
 - **Working tree:** to be clean after commit/push
 - **Latest CI:** deprioritized per owner (preview via aigoogle.studio); last known issues fixed in `ab0b581`/`a4f7032`. Confirm if needed: `gh run list -R ardyniech/DRG-APK --limit 5`.
 
@@ -16,7 +16,7 @@
   - **MAJOR [database]:** Schema Room hilang `1,2,3,4,8,9.json` (export/commit valid saja; **jangan difabrikasi**).
   - **MINOR [security]:** SQLite belum terenkripsi/SQLCipher (risiko terdokumentasi di `README.md`).
   - **MINOR [test]:** `androidTest` minim (alur kritis login/SOS/kas).
-- **Line cap:** PASS (489 files audited, <125 lines).
+- **Line cap:** PASS (532 files audited, <125 lines).
 
 ## Done (recent batches)
 - Foundations/refactors, honest sync/P2P local-only, hex-token, CI fixes, handoff trail, ktlint warn-only CI.
@@ -33,6 +33,9 @@
 - **`80f7601`/`45581f1`:** F-2.1.1 (Kas) dijujurkan — hapus klaim "Realtime" berlebihan, tekankan pencatatan di aplikasi (lokal-first). SSOT regenerated.
 - **`e0efb4b`/`dda617c`:** tambah kasus `EmergencySmsFallbackHelperTest` (fallback hotline default saat nomor kosong/tidak valid, Robolectric).
 - **This batch (fitur Event komunitas, lokal-first):** tambah manajemen event (Kopdar rutin tiap 3 bulan, Anniversary, dll) dengan panitia sendiri per event: **susunan panitia, dana sumber, dana keluar, LPJ, dan pihak terkait/terlibat** (jelas & transparan). Implementasi: Room **v13→v14** (migrasi 13_14) + entitas/tabel `community_events`, `event_committee_members`, `event_funding`, `event_lpj_reports`, `event_stakeholders`; DAO, repository, coordinator, ViewModel/extension; UI tab **Event** di Komunitas (list, detail, form tambah/edit/hapus per bagian). DevTools DB introspector & topologi diselaraskan (target v14). README/SSOT diperbarui (v14, 28 entitas). *Catatan: data lokal-first; tidak ada sinkron cloud.*
+
+- **Pulled `450a061` (UI revamp besar + implementasi event paralel, incomplete):** revamp UI bertahap (acuan dashboard/luminous, nav/tema baru, banyak layar dimodernisasi) + path event baru (`modules/events`, `EVENTS` tab, model task/feedback/readiness) yang engine-nya belum nyambung.
+- **This batch (sinkronisasi engine, fokus engine):** rekonsiliasi ke **satu model event** sesuai schema 14.json & UI baru (`CommunityEventEntity`, `EventCommitteeTaskEntity`, `EventMemberFeedbackEntity`): perbaiki `EventConverters`, `CommunityEventDao`, `AppDatabase` (entity registry), `MIGRATION_13_14`, wiring `CommunityEventRepository`/`DRGRepository`, `EventCoordinator` (create/stage/task/progress/feedback/resolve), `DRGViewModel` (`communityEvents`/`committeeTasks`/`eventFeedback`) agar `EventsTabDelegate`/`CommunityEventsScreen` punya kontrak lengkap. Hapus duplikasi path event lama saya (`modules/community/events/*`, `EventManagementRepository`, `DRGEventViewModelExtensions`, model `CommunityEvent/EventCommitteeMember/EventFunding/EventLpjReport/EventStakeholder`) & lepas sub-tab Event dari `CommunityHub` (Event kini top-level). `DynamicDbIntrospector`/README diselaraskan (26 tabel v14). *Catatan:* model event aktif kini task+budget+readiness+feedback (berbeda dari request awal dana sumber/keluar, LPJ & stakeholder sebagai entitas terpisah — perlu keputusan/konsolidasi produk bila ingin eksplisit). Build Gradle/UI runtime belum diverifikasi di sini.
 
 ## Next steps (ordered, toward production)
 1. **DevTools menyeluruh (lanjutkan):** tinjau sisa temuan (DEFECT-01..02 narasi vs aktual, teks tab/engine lain, konsistensi Progress/Maturity/Defects/SSOT) — perbaiki feasible in-app; fakta/probe nyata atau UNKNOWN/heuristik.

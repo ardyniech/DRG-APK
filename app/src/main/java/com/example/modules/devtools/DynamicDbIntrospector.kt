@@ -21,7 +21,7 @@ object DynamicDbIntrospector {
         "hazard_areas", "point_transactions", "notification_preferences",
         "map_tile_metadata", "app_state_settings", "pending_sync", "admin_logs",
         "forum_comments", "member_role_permissions", "role_audit_logs", "posko_check_ins",
-        "community_events", "event_committee_members", "event_funding", "event_lpj_reports", "event_stakeholders"
+        "community_events", "event_committee_tasks", "event_member_feedback"
     )
 
     fun introspectDatabase(context: Context): DatabaseRuntimeReport {

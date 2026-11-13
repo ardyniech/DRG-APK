@@ -95,16 +95,15 @@ object AppDatabaseMigrations {
     val MIGRATION_13_14 = object : Migration(13, 14) {
         override fun migrate(db: SupportSQLiteDatabase) {
             listOf(
-                "CREATE TABLE IF NOT EXISTS `community_events` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `type` TEXT NOT NULL, `status` TEXT NOT NULL, `scheduleNote` TEXT NOT NULL, `dateText` TEXT NOT NULL, `timeText` TEXT NOT NULL, `location` TEXT NOT NULL, `description` TEXT NOT NULL, `createdBy` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
-                "CREATE TABLE IF NOT EXISTS `event_committee_members` (`id` TEXT NOT NULL, `eventId` TEXT NOT NULL, `memberId` TEXT NOT NULL, `name` TEXT NOT NULL, `role` TEXT NOT NULL, `phone` TEXT NOT NULL, `responsibility` TEXT NOT NULL, `notes` TEXT NOT NULL, PRIMARY KEY(`id`))",
-                "CREATE INDEX IF NOT EXISTS `index_event_committee_members_eventId` ON `event_committee_members` (`eventId`)",
-                "CREATE TABLE IF NOT EXISTS `event_funding` (`id` TEXT NOT NULL, `eventId` TEXT NOT NULL, `type` TEXT NOT NULL, `amount` INTEGER NOT NULL, `category` TEXT NOT NULL, `sourceOrRecipient` TEXT NOT NULL, `description` TEXT NOT NULL, `dateText` TEXT NOT NULL, `proofNote` TEXT NOT NULL, `recordedBy` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))",
-                "CREATE INDEX IF NOT EXISTS `index_event_funding_eventId` ON `event_funding` (`eventId`)",
-                "CREATE INDEX IF NOT EXISTS `index_event_funding_type` ON `event_funding` (`type`)",
-                "CREATE TABLE IF NOT EXISTS `event_lpj_reports` (`id` TEXT NOT NULL, `eventId` TEXT NOT NULL, `status` TEXT NOT NULL, `summary` TEXT NOT NULL, `incomeTotal` INTEGER NOT NULL, `expenseTotal` INTEGER NOT NULL, `balance` INTEGER NOT NULL, `notes` TEXT NOT NULL, `submittedBy` TEXT NOT NULL, `submittedAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
-                "CREATE UNIQUE INDEX IF NOT EXISTS `index_event_lpj_reports_eventId` ON `event_lpj_reports` (`eventId`)",
-                "CREATE TABLE IF NOT EXISTS `event_stakeholders` (`id` TEXT NOT NULL, `eventId` TEXT NOT NULL, `name` TEXT NOT NULL, `role` TEXT NOT NULL, `organization` TEXT NOT NULL, `contact` TEXT NOT NULL, `contribution` TEXT NOT NULL, `notes` TEXT NOT NULL, PRIMARY KEY(`id`))",
-                "CREATE INDEX IF NOT EXISTS `index_event_stakeholders_eventId` ON `event_stakeholders` (`eventId`)"
+                "CREATE TABLE IF NOT EXISTS `community_events` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `category` TEXT NOT NULL, `description` TEXT NOT NULL, `targetDateText` TEXT NOT NULL, `eventTimestamp` INTEGER NOT NULL, `locationName` TEXT NOT NULL, `coordinatorId` TEXT NOT NULL, `coordinatorName` TEXT NOT NULL, `estimatedBudgetRupiah` INTEGER NOT NULL, `collectedFundsRupiah` INTEGER NOT NULL, `targetAttendees` INTEGER NOT NULL, `stage` TEXT NOT NULL, `readinessNotes` TEXT NOT NULL, `createdByMemberId` TEXT NOT NULL, `createdByMemberName` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+                "CREATE INDEX IF NOT EXISTS `index_community_events_stage` ON `community_events` (`stage`)",
+                "CREATE INDEX IF NOT EXISTS `index_community_events_eventTimestamp` ON `community_events` (`eventTimestamp`)",
+                "CREATE TABLE IF NOT EXISTS `event_committee_tasks` (`id` TEXT NOT NULL, `eventId` TEXT NOT NULL, `divisionName` TEXT NOT NULL, `taskTitle` TEXT NOT NULL, `picMemberId` TEXT NOT NULL, `picMemberName` TEXT NOT NULL, `deadlineText` TEXT NOT NULL, `progressPercent` INTEGER NOT NULL, `status` TEXT NOT NULL, `blockerNote` TEXT NOT NULL, `budgetAllocatedRupiah` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+                "CREATE INDEX IF NOT EXISTS `index_event_committee_tasks_eventId` ON `event_committee_tasks` (`eventId`)",
+                "CREATE INDEX IF NOT EXISTS `index_event_committee_tasks_status` ON `event_committee_tasks` (`status`)",
+                "CREATE TABLE IF NOT EXISTS `event_member_feedback` (`id` TEXT NOT NULL, `eventId` TEXT NOT NULL, `authorMemberId` TEXT NOT NULL, `authorName` TEXT NOT NULL, `authorRole` TEXT NOT NULL, `category` TEXT NOT NULL, `severityLevel` TEXT NOT NULL, `message` TEXT NOT NULL, `committeeResponse` TEXT NOT NULL, `isResolved` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+                "CREATE INDEX IF NOT EXISTS `index_event_member_feedback_eventId` ON `event_member_feedback` (`eventId`)",
+                "CREATE INDEX IF NOT EXISTS `index_event_member_feedback_createdAt` ON `event_member_feedback` (`createdAt`)"
             ).forEach { db.execSQL(it) }
         }
     }

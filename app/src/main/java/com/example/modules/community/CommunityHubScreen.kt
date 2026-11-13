@@ -4,14 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import com.example.modules.community.events.EventTabScreen
 import com.example.modules.forum_workshop.ForumAndWorkshopScreen
 import com.example.modules.gamification.GamificationLeaderboardScreen
 import com.example.modules.members.MembersAndPoskoScreen
-import com.example.modules.treasury.TransparencyReportScreen
 import com.example.modules.services.DriverServicesScreen
+import com.example.modules.treasury.TransparencyReportScreen
 import com.example.shared.models.*
-import com.example.core.viewmodel.DRGViewModel
 import com.example.ui.theme.*
 
 @Composable
@@ -32,8 +30,6 @@ fun CommunityHubScreen(
     adminLogs: List<AdminLog> = emptyList(),
     initialSubTab: Int = 0,
     commentsMap: Map<String, List<ForumComment>> = emptyMap(),
-    communityEvents: List<CommunityEvent> = emptyList(),
-    viewModel: DRGViewModel? = null,
     onAddTransactionClick: () -> Unit = {},
     onCreatePost: (String, String, ForumCategory, PostType) -> Unit = { _, _, _, _ -> },
     onToggleLike: (String, Boolean) -> Unit = { _, _ -> },
@@ -81,8 +77,7 @@ fun CommunityHubScreen(
                 )
                 2 -> GamificationLeaderboardScreen(currentMember = currentMember, members = members, badges = badges, tasks = tasks, rewards = rewards, pointTransactions = pointTransactions, onAwardPointsClick = onAwardPointsClick, onClaimTask = onClaimTask, onCompleteTask = onCompleteTask, onRedeemReward = onRedeemReward)
                 3 -> MembersAndPoskoScreen(currentMember = currentMember, members = members, poskoList = poskoList, adminLogs = adminLogs, onRecordKopdarAttendance = onRecordKopdarAttendance, onAddReview = onAddReview, onUpdateMemberRole = onUpdateMemberRole, onUpdateMemberVerification = onUpdateMemberVerification, onUpdateMemberPermissions = onUpdateMemberPermissions, onAddPosko = onAddPosko)
-                4 -> EventTabScreen(events = communityEvents, viewModel = viewModel)
-                5 -> DriverServicesScreen(onOrderMarketItem = onOrderMarketItem, onClaimInsurance = onClaimInsurance)
+                4 -> DriverServicesScreen(onOrderMarketItem = onOrderMarketItem, onClaimInsurance = onClaimInsurance)
             }
         }
     }

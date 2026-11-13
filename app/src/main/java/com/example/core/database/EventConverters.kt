@@ -1,18 +1,21 @@
 package com.example.core.database
 
 import androidx.room.TypeConverter
-import com.example.shared.models.*
+import com.example.shared.models.CommitteeTaskStatus
+import com.example.shared.models.EventPhaseStage
 
 class EventConverters {
-    @TypeConverter fun fromEventType(v: CommunityEventType): String = v.name
-    @TypeConverter fun toEventType(v: String): CommunityEventType = runCatching { CommunityEventType.valueOf(v) }.getOrDefault(CommunityEventType.LAINNYA)
+    @TypeConverter
+    fun fromEventPhaseStage(v: EventPhaseStage): String = v.name
 
-    @TypeConverter fun fromEventStatus(v: CommunityEventStatus): String = v.name
-    @TypeConverter fun toEventStatus(v: String): CommunityEventStatus = runCatching { CommunityEventStatus.valueOf(v) }.getOrDefault(CommunityEventStatus.DRAFT)
+    @TypeConverter
+    fun toEventPhaseStage(v: String): EventPhaseStage =
+        runCatching { EventPhaseStage.valueOf(v) }.getOrDefault(EventPhaseStage.PERENCANAAN)
 
-    @TypeConverter fun fromFundingType(v: EventFundingType): String = v.name
-    @TypeConverter fun toFundingType(v: String): EventFundingType = runCatching { EventFundingType.valueOf(v) }.getOrDefault(EventFundingType.SUMBER)
+    @TypeConverter
+    fun fromCommitteeTaskStatus(v: CommitteeTaskStatus): String = v.name
 
-    @TypeConverter fun fromLpjStatus(v: EventLpjStatus): String = v.name
-    @TypeConverter fun toLpjStatus(v: String): EventLpjStatus = runCatching { EventLpjStatus.valueOf(v) }.getOrDefault(EventLpjStatus.BELUM_ADA)
+    @TypeConverter
+    fun toCommitteeTaskStatus(v: String): CommitteeTaskStatus =
+        runCatching { CommitteeTaskStatus.valueOf(v) }.getOrDefault(CommitteeTaskStatus.BELUM_MULAI)
 }

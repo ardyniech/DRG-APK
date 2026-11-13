@@ -2,8 +2,6 @@ package com.example.modules.main.primitives
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import com.example.core.viewmodel.DRGViewModel
@@ -34,11 +32,11 @@ fun CommunityTabDelegate(
     adminLogs: List<AdminLog>,
     snackbarHostState: SnackbarHostState,
     onShowAddKasDialog: () -> Unit,
-    onShowAwardPointDialog: (DriverMember) -> Unit
+    onShowAwardPointDialog: (DriverMember) -> Unit,
+    @Suppress("UNUSED_PARAMETER") eventUpdatesCount: Int = 0
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val communityEvents by viewModel.communityEvents.collectAsState()
     val subTabIndex = when (tab) {
         MainNavTab.FORUM -> 1
         MainNavTab.GAMIFICATION -> 2
@@ -62,30 +60,19 @@ fun CommunityTabDelegate(
         pointTransactions = pointTransactions,
         adminLogs = adminLogs,
         initialSubTab = subTabIndex,
-        communityEvents = communityEvents,
-        viewModel = viewModel,
         onAddTransactionClick = onShowAddKasDialog,
-        onCreatePost = { title, content, cat, postType ->
-            viewModel.addPost(title, content, cat, postType)
-        },
+        onCreatePost = { title, content, cat, postType -> viewModel.addPost(title, content, cat, postType) },
         onToggleLike = { id, liked -> viewModel.toggleLikePost(id, liked) },
         onDeletePost = { id -> viewModel.deletePost(id) },
         onAddComment = { postId, text -> viewModel.addForumComment(postId, text) },
         onDeleteComment = { commentId -> viewModel.deleteForumComment(commentId) },
-        onCallWorkshop = { phone ->
-            WhatsAppLauncher.openChat(context, phone, "Halo Bengkel Rekanan DRG, saya anggota DRG ingin menanyakan perihal servis/booking.")
-        },
-        onRateWorkshop = { bkl, rate, srv, cmt ->
-            viewModel.addWorkshopReview(bkl, rate, srv, cmt)
-        },
+        onCallWorkshop = { phone -> WhatsAppLauncher.openChat(context, phone, "Halo Bengkel Rekanan DRG, saya anggota DRG ingin menanyakan perihal servis/booking.") },
+        onRateWorkshop = { bkl, rate, srv, cmt -> viewModel.addWorkshopReview(bkl, rate, srv, cmt) },
         onBookingWorkshop = { bkl, msg ->
             WhatsAppLauncher.openChat(context, bkl.phone, msg)
             scope.launch { snackbarHostState.showSnackbar("Membuka WhatsApp booking ke ${bkl.name}...") }
         },
-        onAwardPointsClick = {
-            val other = members.find { it.id != currentMember?.id } ?: members.firstOrNull()
-            other?.let { onShowAwardPointDialog(it) }
-        },
+        onAwardPointsClick = { members.find { it.id != currentMember?.id }?.let { onShowAwardPointDialog(it) } },
         onClaimTask = { viewModel.claimTask(it) },
         onCompleteTask = { viewModel.completeTask(it) },
         onRedeemReward = { viewModel.redeemReward(it) },
@@ -102,14 +89,8 @@ fun CommunityTabDelegate(
         onUpdateMemberPermissions = { id, role, canKas, canVerify, canSos, canPosko, status ->
             viewModel.updateMemberPermissions(id, role, canKas, canVerify, canSos, canPosko, status)
         },
-        onOrderMarketItem = { item ->
-            scope.launch { snackbarHostState.showSnackbar("Pesanan ${item.title} berhasil diajukan! Silakan ambil di ${item.poskoLocation}") }
-        },
-        onClaimInsurance = { claim ->
-            scope.launch { snackbarHostState.showSnackbar("Pengajuan ${claim.title} diterima & diproses tim pengurus!") }
-        },
-        onAddPosko = { name, area, phone, lat, lng ->
-            viewModel.addPosko(name, area, phone, lat, lng)
-        }
+        onOrderMarketItem = { item -> scope.launch { snackbarHostState.showSnackbar("Pesanan ${item.title} berhasil diajukan! Silakan ambil di ${item.poskoLocation}") } },
+        onClaimInsurance = { claim -> scope.launch { snackbarHostState.showSnackbar("Pengajuan ${claim.title} diterima & diproses tim pengurus!") } },
+        onAddPosko = { name, area, phone, lat, lng -> viewModel.addPosko(name, area, phone, lat, lng) }
     )
 }

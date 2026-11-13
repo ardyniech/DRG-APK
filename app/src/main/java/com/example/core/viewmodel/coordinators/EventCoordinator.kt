@@ -13,46 +13,80 @@ class EventCoordinator(
 ) {
     private fun id(prefix: String) = "$prefix-${UUID.randomUUID().toString().take(8).uppercase()}"
 
-    fun saveEvent(cur: DriverMember?, event: CommunityEvent, isNew: Boolean) {
-        if (cur == null) return
+    fun createEvent(
+        cur: DriverMember?, title: String, category: String, description: String,
+        targetDateText: String, eventTimestamp: Long, locationName: String,
+        coordinatorId: String, coordinatorName: String, estimatedBudget: Long,
+        collectedFunds: Long, targetAttendees: Int, readinessNotes: String,
+        draftTasks: List<EventCommitteeTaskEntity>
+    ) {
+        if (cur == null) { showToast("Login diperlukan."); return }
         val now = System.currentTimeMillis()
-        val e = event.copy(createdBy = if (isNew) cur.name else event.createdBy, updatedAt = now)
+        val eventId = id("EVT")
+        val event = CommunityEventEntity(
+            id = eventId, title = title.trim(), category = category.trim(), description = description.trim(),
+            targetDateText = targetDateText.trim(), eventTimestamp = eventTimestamp, locationName = locationName.trim(),
+            coordinatorId = coordinatorId.ifBlank { cur.id }, coordinatorName = coordinatorName.ifBlank { cur.name },
+            estimatedBudgetRupiah = estimatedBudget, collectedFundsRupiah = collectedFunds,
+            targetAttendees = targetAttendees, stage = EventPhaseStage.PERENCANAAN, readinessNotes = readinessNotes.trim(),
+            createdByMemberId = cur.id, createdByMemberName = cur.name, createdAt = now
+        )
+        val tasks = draftTasks.map { t ->
+            t.copy(id = if (t.id.startsWith("EVTK-D")) id("TSK") else t.id, eventId = eventId, updatedAt = now)
+        }
         scope.launch {
-            runCatching { repository.upsertCommunityEvent(e) }
-                .onSuccess { showToast(if (isNew) "Event dibuat." else "Event diperbarui.") }
+            runCatching { repository.createEventWithTasks(event, tasks) }
+                .onSuccess { showToast("Event komunitas dibuat.") }
                 .onFailure { showToast("Gagal: ${it.localizedMessage}") }
         }
     }
 
-    fun deleteEvent(event: CommunityEvent) = scope.launch {
-        runCatching { repository.deleteCommunityEvent(event) }
-            .onSuccess { showToast("Event dihapus.") }
+    fun updateStage(cur: DriverMember?, eventId: String, stage: EventPhaseStage, readinessNotes: String) {
+        if (cur == null) return
+        scope.launch {
+            runCatching { repository.updateEventStage(eventId, stage, readinessNotes.trim()) }
+                .onSuccess { showToast("Status event diperbarui.") }
+                .onFailure { showToast("Gagal: ${it.localizedMessage}") }
+        }
+    }
+
+    fun addTask(cur: DriverMember?, eventId: String, divisionName: String, taskTitle: String, picName: String, deadlineText: String, budgetRupiah: Long) {
+        if (cur == null) return
+        val task = EventCommitteeTaskEntity(
+            id = id("TSK"), eventId = eventId, divisionName = divisionName.trim(), taskTitle = taskTitle.trim(),
+            picMemberId = cur.id, picMemberName = picName.trim().ifBlank { cur.name }, deadlineText = deadlineText.trim(),
+            progressPercent = 0, status = CommitteeTaskStatus.BELUM_MULAI, blockerNote = "", budgetAllocatedRupiah = budgetRupiah
+        )
+        scope.launch {
+            runCatching { repository.addCommitteeTask(task) }
+                .onSuccess { showToast("Tugas panitia ditambahkan.") }
+                .onFailure { showToast("Gagal: ${it.localizedMessage}") }
+        }
+    }
+
+    fun updateTask(taskId: String, progress: Int, status: CommitteeTaskStatus, blockerNote: String) = scope.launch {
+        runCatching { repository.updateCommitteeTaskProgress(taskId, progress.coerceIn(0, 100), status, blockerNote.trim()) }
+            .onSuccess { showToast("Progres tugas diperbarui.") }
             .onFailure { showToast("Gagal: ${it.localizedMessage}") }
     }
 
-    fun saveCommittee(eventId: String, name: String, role: String, phone: String, responsibility: String, existingId: String? = null) {
-        val m = EventCommitteeMember(existingId ?: id("PAN"), eventId, "", name, role, phone, responsibility)
-        scope.launch { runCatching { repository.upsertEventCommittee(m) }.onSuccess { showToast("Panitia disimpan.") } }
+    fun submitFeedback(cur: DriverMember?, eventId: String, category: String, severity: String, message: String) {
+        if (cur == null || message.isBlank()) return
+        val fb = EventMemberFeedbackEntity(
+            id = id("EVFB"), eventId = eventId, authorMemberId = cur.id, authorName = cur.name,
+            authorRole = cur.role, category = category.trim(), severityLevel = severity.trim(),
+            message = message.trim(), committeeResponse = "", isResolved = false
+        )
+        scope.launch {
+            runCatching { repository.submitEventFeedback(fb) }
+                .onSuccess { showToast("Masukan event terkirim.") }
+                .onFailure { showToast("Gagal: ${it.localizedMessage}") }
+        }
     }
 
-    fun deleteCommittee(m: EventCommitteeMember) = scope.launch { repository.deleteEventCommittee(m); showToast("Panitia dihapus.") }
-
-    fun saveFunding(eventId: String, type: EventFundingType, amount: Long, category: String, src: String, desc: String, date: String, proof: String, by: String, existingId: String? = null) {
-        val f = EventFunding(existingId ?: id("DANA"), eventId, type, amount, category, src, desc, date, proof, by)
-        scope.launch { runCatching { repository.upsertEventFunding(f) }.onSuccess { showToast("Dana dicatat.") } }
+    fun resolveFeedback(feedbackId: String, response: String) = scope.launch {
+        runCatching { repository.resolveEventFeedback(feedbackId, response.trim()) }
+            .onSuccess { showToast("Masukan ditandai selesai.") }
+            .onFailure { showToast("Gagal: ${it.localizedMessage}") }
     }
-
-    fun deleteFunding(f: EventFunding) = scope.launch { repository.deleteEventFunding(f); showToast("Catatan dana dihapus.") }
-
-    fun saveLpj(eventId: String, status: EventLpjStatus, summary: String, income: Long, expense: Long, notes: String, by: String, existingId: String? = null) {
-        val r = EventLpjReport(existingId ?: id("LPJ"), eventId, status, summary, income, expense, income - expense, notes, by, System.currentTimeMillis())
-        scope.launch { runCatching { repository.upsertEventLpj(r) }.onSuccess { showToast("LPJ disimpan.") } }
-    }
-
-    fun saveStakeholder(eventId: String, name: String, role: String, org: String, contact: String, contribution: String, existingId: String? = null) {
-        val s = EventStakeholder(existingId ?: id("STK"), eventId, name, role, org, contact, contribution)
-        scope.launch { runCatching { repository.upsertEventStakeholder(s) }.onSuccess { showToast("Pihak terkait disimpan.") } }
-    }
-
-    fun deleteStakeholder(s: EventStakeholder) = scope.launch { repository.deleteEventStakeholder(s); showToast("Pihak terkait dihapus.") }
 }

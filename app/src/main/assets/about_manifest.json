@@ -13,9 +13,9 @@
     ]
   },
   "build": {
-    "version": "v1.10-62-gdda617c",
-    "commit": "dda617c",
-    "commitDate": "2026-11-12",
+    "version": "v1.10-65-g450a061",
+    "commit": "450a061",
+    "commitDate": "2026-11-14",
     "generatedBy": "generate_about_manifest.py"
   },
   "summary": {
@@ -24,10 +24,10 @@
     "done": 13,
     "inProgress": 12,
     "planned": 8,
-    "modules": 17,
-    "totalSourceFiles": 489,
-    "totalLoc": 34681,
-    "testSuites": 59
+    "modules": 18,
+    "totalSourceFiles": 532,
+    "totalLoc": 37794,
+    "testSuites": 65
   },
   "phases": [
     {
@@ -70,7 +70,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 7,
-      "loc": 491,
+      "loc": 493,
       "todos": 0,
       "tests": [
         "AdversarialAuditScenariosTest",
@@ -85,7 +85,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 16,
-      "loc": 1292,
+      "loc": 1266,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
@@ -99,8 +99,8 @@
       "phase": "phase-1",
       "status": "IN_PROGRESS",
       "progress": 75,
-      "files": 8,
-      "loc": 623,
+      "files": 2,
+      "loc": 165,
       "todos": 0,
       "tests": []
     },
@@ -156,7 +156,7 @@
       "status": "IN_PROGRESS",
       "progress": 70,
       "files": 24,
-      "loc": 887,
+      "loc": 914,
       "todos": 0,
       "tests": [
         "AppDatabaseMigrationTest",
@@ -229,8 +229,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 28,
-      "loc": 2270,
+      "files": 46,
+      "loc": 3697,
       "todos": 0,
       "tests": [
         "ProgressiveOnboardingLogicTest",
@@ -245,7 +245,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 18,
-      "loc": 1447,
+      "loc": 1255,
       "todos": 0,
       "tests": [
         "CrashDetectionTest",
@@ -265,7 +265,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 20,
-      "loc": 1725,
+      "loc": 1656,
       "todos": 0,
       "tests": [
         "ForumPersistenceTest"
@@ -279,7 +279,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 7,
-      "loc": 545,
+      "loc": 530,
       "todos": 0,
       "tests": [
         "GamificationAndLoyaltyTest"
@@ -293,7 +293,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 22,
-      "loc": 1880,
+      "loc": 1707,
       "todos": 0,
       "tests": [
         "DriverContactInteractionTest",
@@ -314,8 +314,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 11,
-      "loc": 872,
+      "files": 16,
+      "loc": 1268,
       "todos": 0,
       "tests": [
         "CacheAndBatteryTest"
@@ -328,8 +328,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 23,
-      "loc": 1801,
+      "files": 25,
+      "loc": 1955,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
@@ -344,7 +344,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 33,
-      "loc": 2706,
+      "loc": 2638,
       "todos": 0,
       "tests": [
         "FreeMapAndTrafficTest",
@@ -360,8 +360,8 @@
       "phase": "phase-1",
       "status": "IN_PROGRESS",
       "progress": 70,
-      "files": 9,
-      "loc": 808,
+      "files": 17,
+      "loc": 1308,
       "todos": 0,
       "tests": [
         "ViewModelRefactorAuditTest"
@@ -375,7 +375,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 12,
-      "loc": 1022,
+      "loc": 962,
       "todos": 0,
       "tests": [
         "KasTransparanComponentTest",
@@ -390,7 +390,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 14,
-      "loc": 817,
+      "loc": 794,
       "todos": 0,
       "tests": [
         "AboutManifestTest"
@@ -434,7 +434,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 14,
-      "loc": 1016,
+      "loc": 992,
       "todos": 0,
       "tests": [
         "AiAssistantKnowledgeTest",
@@ -571,10 +571,10 @@
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 4,
+    "total": 7,
     "blocker": 0,
     "major": 2,
-    "minor": 2,
+    "minor": 5,
     "note": 0
   },
   "minus": [
@@ -595,6 +595,24 @@
       "category": "database",
       "detail": "Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v13 tidak lengkap.",
       "fix": "Generate & commit schema hilang via Room export."
+    },
+    {
+      "severity": "MINOR",
+      "category": "docs",
+      "detail": "README klaim 59 suite, realita 65 file Test.kt.",
+      "fix": "Update README badge + SETUP/DEVTOOLS jumlahnya."
+    },
+    {
+      "severity": "MINOR",
+      "category": "code",
+      "detail": "Hardcode hex Color(0x...) di44 file — melanggar 'No Magic Numbers' AGENTS §1.",
+      "fix": "Pindah ke DesignTokens/Theme."
+    },
+    {
+      "severity": "MINOR",
+      "category": "hygiene",
+      "detail": "gradlew tidak executable (mode 644) → ./gradlew lokal gagal tanpa chmod.",
+      "fix": "chmod +x atau commit mode 755."
     },
     {
       "severity": "MINOR",

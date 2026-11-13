@@ -4,9 +4,9 @@
 
 **Progres pengembangan keseluruhan: 64%** (13 selesai · 12 dikerjakan · 8 direncanakan)
 
-Versi `v1.10-62-gdda617c` · commit `dda617c` · 2026-11-12 · 17 modul · 489 file sumber · 34681 baris · 59 test suite
+Versi `v1.10-65-g450a061` · commit `450a061` · 2026-11-14 · 18 modul · 532 file sumber · 37794 baris · 65 test suite
 
-**Kekurangan (Bawel Audit): 4 temuan (0 BLOCKER · 2 MAJOR · 2 MINOR · 0 NOTE)**
+**Kekurangan (Bawel Audit): 7 temuan (0 BLOCKER · 2 MAJOR · 5 MINOR · 0 NOTE)**
 
 > **SINGLE SOURCE OF TRUTH** — dokumen ini adalah acuan tunggal untuk AI dev, DevTools in-app, dan in-app Tentang. Digenerate otomatis oleh `generate_about_manifest.py` (mengandung `.github/scripts/audit_minus.py --json`). Jangan tulis manual. Jangan merujuk ke DEVTOOLS.md/README untuk angka — rujuk ke sini.
 
@@ -78,6 +78,9 @@ Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan kl
 | **MAJOR** | multi-user | Seed hanya bila members kosong → tiap HP baru punya data dummy sendiri, bukan data komunitas bersama. | Butuh backend + akun server agar komunitas sinkron. |
 | **MINOR** | security | Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB. | Enkripsi database atau minimal jelaskan risiko di docs. |
 | **MAJOR** | database | Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v13 tidak lengkap. | Generate & commit schema hilang via Room export. |
+| **MINOR** | docs | README klaim 59 suite, realita 65 file Test.kt. | Update README badge + SETUP/DEVTOOLS jumlahnya. |
+| **MINOR** | code | Hardcode hex Color(0x...) di44 file — melanggar 'No Magic Numbers' AGENTS §1. | Pindah ke DesignTokens/Theme. |
+| **MINOR** | hygiene | gradlew tidak executable (mode 644) → ./gradlew lokal gagal tanpa chmod. | chmod +x atau commit mode 755. |
 | **MINOR** | test | androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented. | Tambah UI test untuk login, SOS, kas. |
 
 BLOCKER = dilarang klaim multi-user/sinkron sebelum diperbaiki. Jalankan `python3 .github/scripts/audit_minus.py --json` untuk detail mesin.

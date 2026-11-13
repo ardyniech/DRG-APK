@@ -20,8 +20,7 @@ import com.example.shared.models.*
         MapTileMetadata::class, AppStateSetting::class, PendingSyncEntity::class,
         AdminLog::class, ForumComment::class, MemberRolePermissionEntity::class,
         RoleAuditLogEntity::class, PoskoCheckInEntity::class,
-        CommunityEvent::class, EventCommitteeMember::class, EventFunding::class,
-        EventLpjReport::class, EventStakeholder::class
+        CommunityEventEntity::class, EventCommitteeTaskEntity::class, EventMemberFeedbackEntity::class
     ],
     version = 14,
     exportSchema = true

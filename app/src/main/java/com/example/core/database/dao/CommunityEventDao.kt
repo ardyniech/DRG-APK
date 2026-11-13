@@ -6,48 +6,54 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CommunityEventDao {
-    @Query("SELECT * FROM community_events ORDER BY createdAt DESC")
-    fun getAllEvents(): Flow<List<CommunityEvent>>
+    @Query("SELECT * FROM community_events ORDER BY eventTimestamp DESC")
+    fun getAllEvents(): Flow<List<CommunityEventEntity>>
 
     @Query("SELECT * FROM community_events WHERE id = :eventId LIMIT 1")
-    fun observeEvent(eventId: String): Flow<CommunityEvent?>
+    fun observeEvent(eventId: String): Flow<CommunityEventEntity?>
+
+    @Query("SELECT COUNT(*) FROM community_events")
+    suspend fun getEventCount(): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertEvent(event: CommunityEvent)
-
-    @Delete
-    suspend fun deleteEvent(event: CommunityEvent)
-
-    @Query("SELECT * FROM event_committee_members WHERE eventId = :eventId ORDER BY role")
-    fun getCommittee(eventId: String): Flow<List<EventCommitteeMember>>
+    suspend fun insertEvent(event: CommunityEventEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertCommitteeMember(member: EventCommitteeMember)
+    suspend fun insertEvents(events: List<CommunityEventEntity>)
 
-    @Delete
-    suspend fun deleteCommitteeMember(member: EventCommitteeMember)
+    @Update
+    suspend fun updateEvent(event: CommunityEventEntity)
 
-    @Query("SELECT * FROM event_funding WHERE eventId = :eventId ORDER BY timestamp DESC")
-    fun getFunding(eventId: String): Flow<List<EventFunding>>
+    @Query("UPDATE community_events SET stage = :stage, readinessNotes = :readinessNotes WHERE id = :eventId")
+    suspend fun updateEventStage(eventId: String, stage: EventPhaseStage, readinessNotes: String)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertFunding(funding: EventFunding)
+    @Query("SELECT * FROM event_committee_tasks ORDER BY updatedAt DESC")
+    fun getAllCommitteeTasks(): Flow<List<EventCommitteeTaskEntity>>
 
-    @Delete
-    suspend fun deleteFunding(funding: EventFunding)
-
-    @Query("SELECT * FROM event_lpj_reports WHERE eventId = :eventId LIMIT 1")
-    fun observeLpj(eventId: String): Flow<EventLpjReport?>
+    @Query("SELECT * FROM event_committee_tasks WHERE eventId = :eventId ORDER BY updatedAt DESC")
+    fun getTasksForEvent(eventId: String): Flow<List<EventCommitteeTaskEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertLpj(report: EventLpjReport)
-
-    @Query("SELECT * FROM event_stakeholders WHERE eventId = :eventId ORDER BY name")
-    fun getStakeholders(eventId: String): Flow<List<EventStakeholder>>
+    suspend fun insertTask(task: EventCommitteeTaskEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertStakeholder(stakeholder: EventStakeholder)
+    suspend fun insertTasks(tasks: List<EventCommitteeTaskEntity>)
 
-    @Delete
-    suspend fun deleteStakeholder(stakeholder: EventStakeholder)
+    @Query("UPDATE event_committee_tasks SET progressPercent = :progress, status = :status, blockerNote = :blockerNote, updatedAt = :updatedAt WHERE id = :taskId")
+    suspend fun updateTaskProgress(taskId: String, progress: Int, status: CommitteeTaskStatus, blockerNote: String, updatedAt: Long)
+
+    @Query("SELECT * FROM event_member_feedback ORDER BY createdAt DESC")
+    fun getAllEventFeedback(): Flow<List<EventMemberFeedbackEntity>>
+
+    @Query("SELECT * FROM event_member_feedback WHERE eventId = :eventId ORDER BY createdAt DESC")
+    fun getFeedbackForEvent(eventId: String): Flow<List<EventMemberFeedbackEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFeedback(feedback: EventMemberFeedbackEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFeedbackList(feedback: List<EventMemberFeedbackEntity>)
+
+    @Query("UPDATE event_member_feedback SET committeeResponse = :response, isResolved = 1 WHERE id = :feedbackId")
+    suspend fun resolveFeedback(feedbackId: String, response: String)
 }

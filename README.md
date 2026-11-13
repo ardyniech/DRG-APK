@@ -22,7 +22,7 @@
 
 **Bisa dipakai banyak HP:** APK bisa di-install di banyak HP, **tapi data tidak saling berbagi**. Tiap HP punya database lokal sendiri — kas, forum, anggota, SOS di HP A tidak terlihat di HP B.
 
-**Data tersimpan:** Ya, tapi **hanya lokal** di Room SQLite (`drg_community.db`, v14, 28 entitas). Persist setelah restart, tapi:
+**Data tersimpan:** Ya, tapi **hanya lokal** di Room SQLite (`drg_community.db`, v14, 26 tabel). Persist setelah restart, tapi:
 * `allowBackup = false` + tidak ada cloud sync/backup → ganti HP / reset / uninstal = data hilang.
 * `BackgroundSyncEngine` berlabel "Tersinkronisasi ke Cloud" padahal cuma hapus antrean lokal (`removeSyncItem()`) tanpa network call — **belum sinkron**.
 * Login PIN lokal (`SharedPreferences` + SHA-256 app-in-tanpa-salt, bukan Keystore/PBKDF2) + seed dummy per HP (`DRG-001` / PIN `1234` di `.env.example`).
@@ -42,7 +42,7 @@
 | Area | Plan (target) | Dev sekarang (realita) | Status |
 |---|---|---|---|
 | Arsitektur | Clean MVI + Compose M3, <125 baris/file | 465 file audit, 0 pelanggaran via `check_file_length.py` | ✅ Selesai |
-| Database | Room v14 lokal + migrasi eksplisit | 28 entitas, migrasi 1→14 di kode, tapi schema `1-4,8,9.json` belum dicommit | ⚠️ Sebagian |
+| Database | Room v14 lokal + migrasi eksplisit | 26 tabel, migrasi 1→14 di kode, tapi schema `1-4,8,9.json` belum dicommit | ⚠️ Sebagian |
 | **Iuran Kas (finansial)** | **Kas masuk/keluar/saldo + export (wajib rilis awal)** | Kas Transparan Selesai 100%, grafik + periode + export | ✅ Selesai (lokal) |
 | Marketplace / Arisan | Oli/ban/helm distributor, arisan/talangan | Belum ada modul | ⏸️ **DEFERRED** — bukan blocker |
 | Multi-user sinkron | Firestore/Auth + FCM, data bersama antar driver | Lokal saja, Firestore/Auth off, `google-services.json` hilang | ❌ BLOCKER |

@@ -65,6 +65,8 @@ class DRGViewModel(
     val posts = repository.allPosts.stateIn(viewModelScope, whileSubscribed, emptyList())
     val workshops = repository.allWorkshops.stateIn(viewModelScope, whileSubscribed, emptyList())
     val communityEvents = repository.allCommunityEvents.stateIn(viewModelScope, whileSubscribed, emptyList())
+    val committeeTasks = repository.allCommitteeTasks.stateIn(viewModelScope, whileSubscribed, emptyList())
+    val eventFeedback = repository.allEventFeedback.stateIn(viewModelScope, whileSubscribed, emptyList())
     val adminLogs = governanceCoord.adminLogs
     val isSosAlarmSoundEnabled = emergencyCoord.isSosAlarmSoundEnabled
     val isSosAlarmEnabled get() = isSosAlarmSoundEnabled

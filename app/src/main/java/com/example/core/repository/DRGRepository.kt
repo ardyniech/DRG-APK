@@ -14,7 +14,7 @@ class DRGRepository(val db: AppDatabase) {
     val gamificationRepo = GamificationRepository(db)
     val radarHazardRepo = RadarHazardRepository(db)
     val adminLogRepo = AdminLogRepository(db)
-    val eventRepo = EventManagementRepository(db)
+    val eventRepo = CommunityEventRepository(db)
 
     // Flow Delegations
     val allMembers: Flow<List<DriverMember>> get() = memberRepo.allMembers
@@ -36,22 +36,17 @@ class DRGRepository(val db: AppDatabase) {
     val totalTileSizeBytes: Flow<Long?> get() = radarHazardRepo.totalTileSizeBytes
     val allAppSettings: Flow<List<AppStateSetting>> get() = radarHazardRepo.allAppSettings
     val allAdminLogs: Flow<List<AdminLog>> get() = adminLogRepo.allLogs
-    val allCommunityEvents: Flow<List<CommunityEvent>> get() = eventRepo.allEvents
+    val allCommunityEvents: Flow<List<CommunityEventEntity>> get() = eventRepo.allEvents
+    val allCommitteeTasks: Flow<List<EventCommitteeTaskEntity>> get() = eventRepo.allCommitteeTasks
+    val allEventFeedback: Flow<List<EventMemberFeedbackEntity>> get() = eventRepo.allEventFeedback
 
-    fun observeCommunityEvent(eventId: String) = eventRepo.observeEvent(eventId)
-    fun eventCommittee(eventId: String) = eventRepo.committee(eventId)
-    fun eventFunding(eventId: String) = eventRepo.funding(eventId)
-    fun eventLpj(eventId: String) = eventRepo.lpj(eventId)
-    fun eventStakeholders(eventId: String) = eventRepo.stakeholders(eventId)
-    suspend fun upsertCommunityEvent(e: CommunityEvent) = eventRepo.upsertEvent(e)
-    suspend fun deleteCommunityEvent(e: CommunityEvent) = eventRepo.deleteEvent(e)
-    suspend fun upsertEventCommittee(m: EventCommitteeMember) = eventRepo.upsertCommittee(m)
-    suspend fun deleteEventCommittee(m: EventCommitteeMember) = eventRepo.deleteCommittee(m)
-    suspend fun upsertEventFunding(f: EventFunding) = eventRepo.upsertFunding(f)
-    suspend fun deleteEventFunding(f: EventFunding) = eventRepo.deleteFunding(f)
-    suspend fun upsertEventLpj(r: EventLpjReport) = eventRepo.upsertLpj(r)
-    suspend fun upsertEventStakeholder(s: EventStakeholder) = eventRepo.upsertStakeholder(s)
-    suspend fun deleteEventStakeholder(s: EventStakeholder) = eventRepo.deleteStakeholder(s)
+    suspend fun seedCommunityEventsIfEmpty() = eventRepo.seedIfEmpty()
+    suspend fun createEventWithTasks(event: CommunityEventEntity, tasks: List<EventCommitteeTaskEntity>) = eventRepo.createEventWithTasks(event, tasks)
+    suspend fun updateEventStage(eventId: String, stage: EventPhaseStage, readinessNotes: String) = eventRepo.updateEventStage(eventId, stage, readinessNotes)
+    suspend fun addCommitteeTask(task: EventCommitteeTaskEntity) = eventRepo.addCommitteeTask(task)
+    suspend fun updateCommitteeTaskProgress(taskId: String, progress: Int, status: CommitteeTaskStatus, blockerNote: String) = eventRepo.updateTaskProgress(taskId, progress, status, blockerNote)
+    suspend fun submitEventFeedback(fb: EventMemberFeedbackEntity) = eventRepo.submitFeedback(fb)
+    suspend fun resolveEventFeedback(feedbackId: String, response: String) = eventRepo.resolveFeedback(feedbackId, response)
 
     fun getPrefForMember(memberId: String) = communityRepo.getPrefForMember(memberId)
     fun getReviewsForDriver(driverId: String) = memberRepo.getReviewsForDriver(driverId)
