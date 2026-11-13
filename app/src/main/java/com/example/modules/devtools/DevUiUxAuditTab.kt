@@ -58,8 +58,8 @@ fun DevUiUxAuditTab(
         items(audit.pillars) { pillar ->
             Surface(
                 shape = RoundedCornerShape(10.dp),
-                color = Color.White,
-                modifier = Modifier.fillMaxWidth().border(1.dp, if (pillar.isCompliant) DrgOutline.copy(alpha = 0.4f) else DrgAmberWarning.copy(alpha = 0.6f), RoundedCornerShape(10.dp))
+                color = devGlassBg(),
+                modifier = Modifier.fillMaxWidth().border(1.dp, if (pillar.isCompliant) devGlassBorder().copy(alpha = 0.45f) else DrgAmberWarning.copy(alpha = 0.6f), RoundedCornerShape(10.dp))
             ) {
                 Column(modifier = Modifier.padding(10.dp)) {
                     Row(

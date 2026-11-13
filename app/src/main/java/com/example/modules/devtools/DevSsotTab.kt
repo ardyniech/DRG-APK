@@ -67,7 +67,7 @@ fun DevSsotTab(headerContent: (@Composable () -> Unit)? = null) {
     }) {
         items(shown) { (sev, cat, text) ->
             val chipColor = if (sev == "BLOCKER") Color.Red else if (sev == "MAJOR") DrgWarningTextDark else Color.Gray
-            Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, chipColor.copy(0.35f), RoundedCornerShape(12.dp))) {
+            Surface(shape = RoundedCornerShape(12.dp), color = devGlassBg(), modifier = Modifier.fillMaxWidth().border(1.dp, chipColor.copy(0.35f), RoundedCornerShape(12.dp))) {
                 Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Surface(shape = RoundedCornerShape(6.dp), color = chipColor.copy(alpha = 0.14f)) {

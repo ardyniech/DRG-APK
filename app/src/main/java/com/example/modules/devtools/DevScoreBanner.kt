@@ -25,8 +25,8 @@ fun DevScoreBanner(score: ProjectHealthScore) {
     DrgLuminousGlassCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(22.dp),
-        backgroundColor = Color(0xDCFFFDF5),
-        borderHighlightColor = Color(0xFFFCD34D),
+        backgroundColor = devGlassBg(),
+        borderHighlightColor = devGlassBorder(),
         contentPadding = 14.dp
     ) {
         Row(

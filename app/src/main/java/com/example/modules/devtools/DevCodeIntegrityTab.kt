@@ -51,8 +51,8 @@ fun DevCodeIntegrityTab(
         items(tree) { feature ->
             Surface(
                 shape = RoundedCornerShape(10.dp),
-                color = Color.White,
-                modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(10.dp))
+                color = devGlassBg(),
+                modifier = Modifier.fillMaxWidth().border(1.dp, devGlassBorder().copy(alpha = 0.45f), RoundedCornerShape(10.dp))
             ) {
                 Column(modifier = Modifier.padding(10.dp)) {
                     Row(

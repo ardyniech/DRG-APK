@@ -1,17 +1,16 @@
 package com.example.modules.treasury
 
 import android.widget.Toast
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -21,9 +20,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.modules.treasury.primitives.KasTransactionStatusBadge
+import com.example.shared.atoms.DrgLuminousGlassCard
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.models.KasTransaction
 import com.example.shared.models.TransactionType
-import com.example.ui.theme.*
+import com.example.ui.theme.DrgRedDanger
+import com.example.ui.theme.DrgTextMuted
+import com.example.ui.theme.DrgTextPrimary
+import com.example.ui.theme.DrgTextSecondary
+import com.example.ui.theme.SpaceGroteskFontFamily
 import java.text.NumberFormat
 
 @Composable
@@ -34,23 +39,18 @@ fun KasTransactionCard(
     val isIncome = transaction.type == TransactionType.INCOME
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
-    val cardShape = RoundedCornerShape(18.dp)
-    val highlightBrush = Brush.linearGradient(
-        listOf(Color.White, Color.White.copy(alpha = 0.5f), if (isIncome) DrgGreenPrimary.copy(alpha = 0.2f) else DrgRedDanger.copy(alpha = 0.2f))
-    )
+    val theme = LocalAppVisualTheme.current
+    val accent = if (isIncome) theme.primaryColor else DrgRedDanger
 
-    Surface(
-        shape = cardShape,
-        color = Color.White.copy(alpha = 0.85f),
-        tonalElevation = 0.dp,
-        modifier = modifier
-            .fillMaxWidth()
-            .shadow(3.dp, cardShape, ambientColor = DrgShadowGreenAmbient, spotColor = DrgShadowGreenSpot)
-            .border(1.2.dp, highlightBrush, cardShape)
-            .testTag("kas_transaction_card")
+    DrgLuminousGlassCard(
+        shape = RoundedCornerShape(18.dp),
+        backgroundColor = theme.glassBg,
+        borderHighlightColor = accent,
+        contentPadding = 14.dp,
+        modifier = modifier.fillMaxWidth().testTag("kas_transaction_card")
     ) {
         Row(
-            modifier = Modifier.padding(14.dp),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -66,9 +66,10 @@ fun KasTransactionCard(
             Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
                     text = "${if (isIncome) "+" else "-"}Rp ${NumberFormat.getInstance().format(transaction.amount)}",
+                    fontFamily = SpaceGroteskFontFamily,
                     fontWeight = FontWeight.Black,
                     fontSize = 13.sp,
-                    color = if (isIncome) DrgGreenPrimary else DrgRedDanger
+                    color = accent
                 )
                 IconButton(
                     onClick = {
@@ -78,7 +79,7 @@ fun KasTransactionCard(
                     },
                     modifier = Modifier.size(26.dp)
                 ) {
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ReceiptLong, contentDescription = "Salin", tint = DrgGreenPrimary, modifier = Modifier.size(16.dp))
+                    Icon(imageVector = Icons.AutoMirrored.Filled.ReceiptLong, contentDescription = "Salin", tint = accent, modifier = Modifier.size(16.dp))
                 }
             }
         }

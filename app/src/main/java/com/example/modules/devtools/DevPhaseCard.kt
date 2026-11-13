@@ -23,7 +23,7 @@ fun DevPhaseCard(phase: DevPhase) {
 
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = Color.White,
+        color = devGlassBg(),
         modifier = Modifier
             .fillMaxWidth()
             .border(

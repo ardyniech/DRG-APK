@@ -57,7 +57,7 @@ fun KasPeriodSummaryCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.VerifiedUser, contentDescription = null, tint = theme.primaryColor, modifier = Modifier.size(12.dp))
                     Spacer(Modifier.width(3.dp))
-                    Text("Real-Time", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = theme.primaryColor)
+                    Text("Tercatat", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = theme.primaryColor)
                 }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {

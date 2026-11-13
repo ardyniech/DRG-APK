@@ -53,7 +53,7 @@ fun DevBugHunterTab(
             }
         }
         item {
-            Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))) {
+            Surface(shape = RoundedCornerShape(12.dp), color = devGlassBg(), modifier = Modifier.fillMaxWidth().border(1.dp, devGlassBorder().copy(alpha = 0.45f), RoundedCornerShape(12.dp))) {
                 Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text("⚠️ Rincian Temuan (dari scanner nyata)", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
                     HorizontalDivider(color = DrgOutline.copy(alpha = 0.3f))

@@ -31,15 +31,15 @@ fun DevTabShell(
     headerTitle: String,
     headerDesc: String,
     modifier: Modifier = Modifier,
-    headerBackground: Color = Color(0xCCFFFFFF),
-    headerBorderColor: Color = Color(0xFF93C5FD),
+    headerBackground: Color = devGlassBg(),
+    headerBorderColor: Color = devGlassBorder(),
     titleColor: Color = DrgTextDark,
     headerExtra: (@Composable () -> Unit)? = null,
     headerTrailing: (@Composable RowScope.() -> Unit)? = null,
     content: LazyListScope.() -> Unit
 ) {
     val cardShape = RoundedCornerShape(22.dp)
-    val glassBg = Brush.verticalGradient(listOf(headerBackground.copy(alpha = 0.90f), Color.White.copy(alpha = 0.78f)))
+    val glassBg = Brush.verticalGradient(listOf(headerBackground.copy(alpha = 0.92f), headerBackground.copy(alpha = 0.76f)))
     val glassRim = Brush.linearGradient(listOf(Color.White, headerBorderColor.copy(alpha = 0.55f)))
 
     LazyColumn(
@@ -65,7 +65,7 @@ fun DevTabShell(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.weight(1f)) {
-                            if (headerIcon != null) Icon(headerIcon, contentDescription = null, tint = DrgGreenPrimary)
+                            if (headerIcon != null) Icon(headerIcon, contentDescription = null, tint = devAccent())
                             Text(headerTitle, fontWeight = FontWeight.Bold, fontSize = 13.sp, color = titleColor)
                         }
                         if (headerTrailing != null) headerTrailing()

@@ -15,12 +15,12 @@ import androidx.compose.ui.unit.sp
 import com.example.core.RoleManager
 import com.example.modules.treasury.primitives.KasBalanceCard
 import com.example.shared.atoms.DrgGlassPrimaryButton
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.atoms.EmptyStateOrganicGraphic
 import com.example.shared.models.AccessLevel
 import com.example.shared.models.DriverMember
 import com.example.shared.models.KasTransaction
 import com.example.shared.models.TransactionType
-import com.example.ui.theme.DrgTextDark
 
 @Composable
 fun TreasuryScreen(
@@ -57,7 +57,7 @@ fun TreasuryScreen(
                 text = "Riwayat Mutasi Kas Komunitas",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = DrgTextDark
+                color = LocalAppVisualTheme.current.primaryColor
             )
         }
 

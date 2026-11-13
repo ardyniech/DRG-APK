@@ -38,7 +38,7 @@ fun AddTransactionDialog(
 
     DrgLuminousGlassModal(
         title = "Catat Transaksi Kas DRG",
-        subtitle = "Pembukuan transparan real-time untuk seluruh anggota",
+        subtitle = "Pembukuan transparan untuk seluruh anggota (data tercatat di aplikasi)",
         icon = Icons.Default.AccountBalanceWallet,
         accentColor = accent,
         validationError = validationError,

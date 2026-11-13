@@ -43,7 +43,7 @@ fun DevDeviceAdvisorTab(
             }
         } else {
             items(adviceList) { item ->
-                Surface(shape = RoundedCornerShape(12.dp), color = Color.White, modifier = Modifier.fillMaxWidth().border(1.dp, DrgOutline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))) {
+                Surface(shape = RoundedCornerShape(12.dp), color = devGlassBg(), modifier = Modifier.fillMaxWidth().border(1.dp, devGlassBorder().copy(alpha = 0.45f), RoundedCornerShape(12.dp))) {
                     Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(item.title, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = if (item.isCritical) DrgErrorText else DrgTextPrimary, modifier = Modifier.weight(1f))
