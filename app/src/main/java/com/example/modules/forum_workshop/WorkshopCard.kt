@@ -1,7 +1,6 @@
 package com.example.modules.forum_workshop
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -13,12 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgGlassCard
 import com.example.shared.models.WorkshopPartner
 import com.example.ui.theme.*
 
@@ -30,18 +29,13 @@ fun WorkshopCard(
     onViewReviewsClick: () -> Unit = {},
     onBookingClick: () -> Unit = onCall
 ) {
-    val cardShape = RoundedCornerShape(20.dp)
-    val highlightBrush = Brush.linearGradient(
-        listOf(Color.White, Color.White.copy(alpha = 0.5f), DrgAmberSecondary.copy(alpha = 0.25f))
-    )
-
-    Surface(
-        shape = cardShape,
-        color = Color.White.copy(alpha = 0.92f),
-        modifier = Modifier
-            .fillMaxWidth()
-            .shadow(4.dp, cardShape)
-            .border(1.2.dp, highlightBrush, cardShape)
+    DrgGlassCard(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        elevation = 4.dp,
+        borderBrush = Brush.linearGradient(
+            listOf(Color.White.copy(alpha = 0.96f), Color.White.copy(alpha = 0.52f), DrgAmberSecondary.copy(alpha = 0.35f))
+        )
     ) {
         Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(

@@ -12,10 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.modules.dashboard.primitives.DriverCommunityAtmosphereBadges
 import com.example.modules.dashboard.primitives.GlassCard
 import com.example.modules.dashboard.primitives.StatusChips
@@ -44,11 +44,12 @@ fun WeatherHeroCard(
     }
     val firstName = member?.name?.split(" ")?.firstOrNull() ?: "Rekan Driver"
     val area = member?.baseArea ?: "Malang Raya"
+    val theme = LocalAppVisualTheme.current
 
     GlassCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(26.dp),
-        backgroundColor = Color.White.copy(alpha = 0.88f),
+        backgroundColor = theme.glassBg,
         contentPadding = 16.dp
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {

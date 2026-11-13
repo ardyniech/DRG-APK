@@ -11,10 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgGlassCard
 import com.example.shared.models.DriverMember
 import com.example.shared.models.VerificationStatus
 import com.example.ui.theme.*
@@ -38,11 +38,10 @@ fun DriverProgressiveOnboardingCard(
 
     if (isAllCompleted) return // Progressive Disclosure: auto-hidden once master level reached
 
-    Card(
+    DrgGlassCard(
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = modifier.fillMaxWidth()
+        elevation = 2.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(

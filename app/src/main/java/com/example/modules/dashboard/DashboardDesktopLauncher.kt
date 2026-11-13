@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.core.viewmodel.MainNavTab
 import com.example.ui.theme.DrgGreenPrimary
 import com.example.ui.theme.DrgShadowGreenAmbientStrong
@@ -38,7 +39,7 @@ fun DashboardDesktopLauncher(
 ) {
     Surface(
         shape = RoundedCornerShape(22.dp),
-        color = Color.White.copy(alpha = 0.92f),
+        color = LocalAppVisualTheme.current.glassBg,
         modifier = modifier
             .fillMaxWidth()
             .shadow(6.dp, RoundedCornerShape(22.dp), ambientColor = DrgShadowGreenAmbientStrong, spotColor = DrgShadowGreenSpotStrong)

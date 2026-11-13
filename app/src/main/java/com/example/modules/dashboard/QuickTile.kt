@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.atoms.DrgGlassCard
 import com.example.shared.atoms.DrgIconTileBox
 import com.example.ui.theme.DrgTextPrimary
@@ -35,7 +36,7 @@ fun QuickTile(
     DrgGlassCard(
         modifier = modifier,
         shape = tileShape,
-        backgroundColor = Color.White.copy(alpha = 0.82f),
+        backgroundColor = LocalAppVisualTheme.current.glassBg,
         borderBrush = brush,
         onClick = onClick
     ) {

@@ -1,6 +1,5 @@
 package com.example.modules.members
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -10,13 +9,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgGlassCard
 import com.example.modules.members.primitives.PoskoOfflineMapButton
 import com.example.shared.models.PoskoLocation
 import com.example.shared.utils.WhatsAppLauncher
@@ -26,19 +23,10 @@ import com.example.ui.theme.*
 fun PoskoCard(posko: PoskoLocation, distanceKm: Double? = null) {
     val context = LocalContext.current
     var showContactModal by remember { mutableStateOf(false) }
-    val cardShape = RoundedCornerShape(20.dp)
-    val highlightBrush = Brush.linearGradient(
-        listOf(Color.White, Color.White.copy(alpha = 0.5f), DrgGreenPrimary.copy(alpha = 0.25f))
-    )
-
-    Surface(
-        shape = cardShape,
-        color = Color.White.copy(alpha = 0.88f),
-        tonalElevation = 0.dp,
-        modifier = Modifier
-            .fillMaxWidth()
-            .shadow(4.dp, cardShape, ambientColor = DrgShadowGreenAmbientStrong, spotColor = DrgShadowGreenSpotStrong)
-            .border(1.2.dp, highlightBrush, cardShape)
+    DrgGlassCard(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        elevation = 4.dp
     ) {
         Row(
             modifier = Modifier.padding(14.dp),

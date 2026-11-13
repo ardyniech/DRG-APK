@@ -34,7 +34,6 @@ fun CommunitySubTabRow(
     DrgGlassCard(
         modifier = modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
         shape = RoundedCornerShape(20.dp),
-        backgroundColor = Color.White.copy(alpha = 0.88f),
         elevation = 4.dp
     ) {
         ScrollableTabRow(

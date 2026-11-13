@@ -1,19 +1,17 @@
 package com.example.modules.profile.primitives
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgGlassCard
 import com.example.ui.theme.*
 
 @Composable
@@ -57,10 +55,10 @@ private fun ActivityPointTile(
     activity: ActivityPointSource,
     modifier: Modifier = Modifier
 ) {
-    Surface(
+    DrgGlassCard(
+        modifier = modifier,
         shape = RoundedCornerShape(8.dp),
-        color = Color.White,
-        modifier = modifier.border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+        elevation = 0.dp
     ) {
         Row(
             modifier = Modifier.padding(8.dp),

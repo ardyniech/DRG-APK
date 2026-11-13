@@ -51,7 +51,7 @@ fun AiAssistantChatList(
                         bottomStart = if (msg.isUser) 12.dp else 2.dp,
                         bottomEnd = if (msg.isUser) 2.dp else 12.dp
                     ),
-                    color = if (msg.isUser) theme.primaryColor else Color.White.copy(alpha = 0.92f),
+                    color = if (msg.isUser) theme.primaryColor else theme.glassBg,
                     modifier = Modifier
                         .widthIn(max = 240.dp)
                         .border(
@@ -75,7 +75,7 @@ fun AiAssistantChatList(
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
                     Surface(
                         shape = RoundedCornerShape(12.dp),
-                        color = Color.White.copy(alpha = 0.9f),
+                        color = theme.glassBg,
                         modifier = Modifier.padding(4.dp).border(0.8.dp, theme.glassBorderColor, RoundedCornerShape(12.dp))
                     ) {
                         Text(

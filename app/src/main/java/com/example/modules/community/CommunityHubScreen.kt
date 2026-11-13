@@ -1,6 +1,5 @@
 package com.example.modules.community
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -56,7 +55,7 @@ fun CommunityHubScreen(
 ) {
     var selectedSubTab by remember { mutableIntStateOf(initialSubTab) }
 
-    Column(modifier = modifier.fillMaxSize().background(DrgBackgroundGradient)) {
+    Column(modifier = modifier.fillMaxSize()) {
         CommunitySubTabRow(selectedSubTab = selectedSubTab, onSelectSubTab = { selectedSubTab = it })
 
         Box(modifier = Modifier.fillMaxSize()) {

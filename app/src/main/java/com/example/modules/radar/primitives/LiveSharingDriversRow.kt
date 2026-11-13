@@ -1,6 +1,5 @@
 package com.example.modules.radar.primitives
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -11,15 +10,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgGlassCard
 import com.example.shared.models.DriverMember
 import com.example.ui.theme.DrgGreenContainer
 import com.example.ui.theme.DrgGreenPrimary
-import com.example.ui.theme.DrgOutline
 import com.example.ui.theme.DrgTextPrimary
 import com.example.ui.theme.DrgTextSecondary
 
@@ -32,13 +30,12 @@ fun LiveSharingDriversRow(
 ) {
     val activeSharingDrivers = drivers.filter { it.isOnline && it.isLocationSharingConsent }
 
-    Surface(
-        shape = RoundedCornerShape(16.dp),
-        color = Color.White,
+    DrgGlassCard(
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, DrgOutline.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
-            .testTag("live_sharing_drivers_row")
+            .testTag("live_sharing_drivers_row"),
+        shape = RoundedCornerShape(16.dp),
+        elevation = 2.dp
     ) {
         Column(
             modifier = Modifier.padding(12.dp),

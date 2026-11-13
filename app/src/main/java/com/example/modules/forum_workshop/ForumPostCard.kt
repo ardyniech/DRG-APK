@@ -1,7 +1,6 @@
 package com.example.modules.forum_workshop
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,13 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgGlassCard
 import com.example.shared.models.ForumPost
 import com.example.shared.models.PostType
 import com.example.ui.theme.*
@@ -30,20 +28,12 @@ fun ForumPostCard(
     onDeletePost: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
-    val cardShape = RoundedCornerShape(22.dp)
-    val highlightBrush = Brush.linearGradient(
-        listOf(Color.White, Color.White.copy(alpha = 0.5f), DrgGreenPrimary.copy(alpha = 0.2f))
-    )
-
-    Surface(
-        shape = cardShape,
-        color = Color.White.copy(alpha = 0.88f),
-        tonalElevation = 0.dp,
+    DrgGlassCard(
         modifier = modifier
             .fillMaxWidth()
-            .shadow(4.dp, cardShape, ambientColor = DrgShadowGreenAmbientStrong, spotColor = DrgShadowGreenSpotStrong)
-            .border(1.2.dp, highlightBrush, cardShape)
-            .testTag("forum_post_card_${post.id}")
+            .testTag("forum_post_card_${post.id}"),
+        shape = RoundedCornerShape(22.dp),
+        elevation = 4.dp
     ) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             ForumPostCardHeader(post = post, onDeletePost = onDeletePost)

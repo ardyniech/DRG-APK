@@ -1,7 +1,6 @@
 package com.example.modules.forum_workshop
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgGlassCard
 import com.example.shared.models.ForumComment
 import com.example.shared.models.ForumPost
 import com.example.shared.models.PostType
@@ -35,15 +35,13 @@ fun ForumListRowItem(
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
-    Surface(
-        shape = RoundedCornerShape(14.dp),
-        color = Color.White,
-        shadowElevation = 1.dp,
+    DrgGlassCard(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, DrgOutline.copy(alpha = 0.45f), RoundedCornerShape(14.dp))
             .clickable { isExpanded = !isExpanded }
-            .testTag("forum_list_item_${post.id}")
+            .testTag("forum_list_item_${post.id}"),
+        shape = RoundedCornerShape(14.dp),
+        elevation = 1.dp
     ) {
         Column(
             modifier = Modifier.padding(12.dp),

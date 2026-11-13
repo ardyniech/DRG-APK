@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.core.viewmodel.MainNavTab
 import com.example.modules.dashboard.primitives.GlassCard
 import com.example.shared.models.*
@@ -59,7 +60,7 @@ fun RecentCommunityActivitiesSection(
     GlassCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(26.dp),
-        backgroundColor = Color.White.copy(alpha = 0.82f),
+        backgroundColor = LocalAppVisualTheme.current.glassBg,
         contentPadding = 16.dp
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {

@@ -3,7 +3,6 @@ package com.example.modules.auth
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -21,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shared.atoms.DrgGlassCard
 import com.example.ui.theme.*
 
 @Composable
@@ -43,14 +43,12 @@ fun LandingFeatureThumbnailCard(
         label = "zoom"
     )
 
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = Color.White,
-        shadowElevation = 4.dp,
+    DrgGlassCard(
         modifier = modifier
             .fillMaxWidth()
-            .aspectRatio(16f / 9.2f)
-            .border(1.dp, DrgBorderLight, RoundedCornerShape(20.dp))
+            .aspectRatio(16f / 9.2f),
+        shape = RoundedCornerShape(20.dp),
+        elevation = 4.dp
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             if (hasBg) {
