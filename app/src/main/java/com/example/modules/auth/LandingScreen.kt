@@ -21,10 +21,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shared.atoms.cinematic.cyberojol.CyberLauncherArcDock
-import com.example.shared.atoms.cinematic.cyberojol.CyberOjol3DViewport
-import com.example.shared.atoms.cinematic.cyberojol.CyberPresetControlRow
-import com.example.shared.atoms.cinematic.cyberojol.CyberTelemetryOverlay
-import com.example.shared.atoms.cinematic.cyberojol.rememberCyberCameraState
+import com.example.shared.atoms.cinematic.turntable.Ojol360TurntablePresetRow
+import com.example.shared.atoms.cinematic.turntable.Ojol360TurntableTopBar
+import com.example.shared.atoms.cinematic.turntable.Ojol360TurntableViewport
+import com.example.shared.atoms.cinematic.turntable.rememberOjol360TurntableState
 import com.example.ui.theme.DrgGlassSurfaceStrong
 import com.example.ui.theme.DrgTextDark
 import kotlinx.coroutines.delay
@@ -36,24 +36,24 @@ fun LandingScreen(
     onNavigateToAbout: () -> Unit,
     onQuickDemoLogin: () -> Unit = onNavigateToLogin
 ) {
-    val cameraState = rememberCyberCameraState()
+    val turntableState = rememberOjol360TurntableState()
     var launcherVisible by remember { mutableStateOf(false) }
 
-    // Auto-reveal HUD launcher after 5 seconds if untouched
+    // Auto-reveal floating launcher console after 5 seconds if untouched
     LaunchedEffect(Unit) {
         delay(5000L)
         launcherVisible = true
     }
 
     Box(modifier = Modifier.fillMaxSize().testTag("landing_screen")) {
-        // 1. Full Screen Persistent 3D Live Cinematic Simulation (360° Orbit & Pinch Zoom)
-        CyberOjol3DViewport(
-            cameraState = cameraState,
+        // 1. Persistent Photorealistic Full-Screen 360° Live Cinematic Ojol
+        Ojol360TurntableViewport(
+            state = turntableState,
             modifier = Modifier.fillMaxSize(),
             onTap = { launcherVisible = !launcherVisible }
         )
 
-        // 2. Initial Breathing Hint Pill (Visible before launcher reveals)
+        // 2. Breathing Hint Pill (Visible before launcher reveals)
         AnimatedVisibility(
             visible = !launcherVisible,
             enter = fadeIn(),
@@ -80,15 +80,15 @@ fun LandingScreen(
             }
         }
 
-        // 3. Holographic Telemetry Overlay Bar
+        // 3. Floating Telemetry Top Bar
         AnimatedVisibility(
             visible = launcherVisible,
             enter = fadeIn() + slideInVertically { -it },
             exit = fadeOut() + slideOutVertically { -it },
             modifier = Modifier.align(Alignment.TopCenter)
         ) {
-            CyberTelemetryOverlay(
-                cameraState = cameraState,
+            Ojol360TurntableTopBar(
+                state = turntableState,
                 onAboutClick = onNavigateToAbout
             )
         }
@@ -107,7 +107,7 @@ fun LandingScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                CyberPresetControlRow(cameraState = cameraState)
+                Ojol360TurntablePresetRow(state = turntableState)
 
                 CyberLauncherArcDock(
                     onLoginClick = onNavigateToLogin,
