@@ -21,7 +21,8 @@ import kotlinx.coroutines.isActive
 fun CinematicOjol360Viewport(
     state: CinematicOjol360State,
     modifier: Modifier = Modifier,
-    showHud: Boolean = true
+    showHud: Boolean = true,
+    onTap: () -> Unit = {}
 ) {
     val transition = rememberInfiniteTransition(label = "ojol360-motion")
 
@@ -45,7 +46,6 @@ fun CinematicOjol360Viewport(
         label = "bounce"
     )
 
-    // Smooth auto-orbit rotation when enabled
     LaunchedEffect(state.isAutoRotating) {
         while (isActive && state.isAutoRotating) {
             delay(16)
@@ -56,7 +56,7 @@ fun CinematicOjol360Viewport(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .cinematicOjolGesture(state)
+            .cinematicOjolGesture(state, onTap = onTap)
             .testTag("cinematic_ojol_360_viewport")
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {

@@ -4,6 +4,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import com.example.ui.theme.DrgGrabGreenDark
 import com.example.ui.theme.DrgGrabGreenPrimary
@@ -12,6 +13,22 @@ import com.example.ui.theme.DrgHeadlightWarm
 fun DrawScope.drawOjolFrontView(centerX: Float, centerY: Float, bounceY: Float) {
     val cy = centerY + bounceY
 
+    // 0. Volumetric Headlight Cone projecting onto road
+    val beamPath = Path().apply {
+        moveTo(centerX - 24f, cy + 18f)
+        lineTo(centerX - 130f, size.height)
+        lineTo(centerX + 130f, size.height)
+        lineTo(centerX + 24f, cy + 18f)
+        close()
+    }
+    drawPath(
+        path = beamPath,
+        brush = Brush.verticalGradient(
+            0f to DrgHeadlightWarm.copy(alpha = 0.42f),
+            1f to Color.Transparent
+        )
+    )
+
     // 1. Front Tyre & Alloy Rim
     drawRoundRect(
         color = Color(0xFF14181B),
@@ -19,11 +36,7 @@ fun DrawScope.drawOjolFrontView(centerX: Float, centerY: Float, bounceY: Float) 
         size = Size(32f, 74f),
         cornerRadius = androidx.compose.ui.geometry.CornerRadius(10f, 10f)
     )
-    drawCircle(
-        color = Color(0xFF4A5568),
-        center = Offset(centerX, cy + 78f),
-        radius = 12f
-    )
+    drawCircle(color = Color(0xFF4A5568), center = Offset(centerX, cy + 78f), radius = 12f)
 
     // 2. Dual Front Suspension Forks
     drawRect(color = Color(0xFFCBD5E1), topLeft = Offset(centerX - 24f, cy + 24f), size = Size(6f, 48f))
@@ -38,8 +51,8 @@ fun DrawScope.drawOjolFrontView(centerX: Float, centerY: Float, bounceY: Float) 
     )
 
     // 4. Dual LED Headlights (Luminous Glow)
-    drawCircle(color = DrgHeadlightWarm, center = Offset(centerX - 20f, cy + 14f), radius = 9f)
-    drawCircle(color = DrgHeadlightWarm, center = Offset(centerX + 20f, cy + 14f), radius = 9f)
+    drawCircle(color = DrgHeadlightWarm, center = Offset(centerX - 20f, cy + 14f), radius = 10f)
+    drawCircle(color = DrgHeadlightWarm, center = Offset(centerX + 20f, cy + 14f), radius = 10f)
     drawCircle(color = Color.White, center = Offset(centerX - 20f, cy + 14f), radius = 5f)
     drawCircle(color = Color.White, center = Offset(centerX + 20f, cy + 14f), radius = 5f)
 
@@ -58,7 +71,6 @@ fun DrawScope.drawOjolFrontView(centerX: Float, centerY: Float, bounceY: Float) 
         size = Size(100f, 62f),
         cornerRadius = androidx.compose.ui.geometry.CornerRadius(18f, 18f)
     )
-    // Silver Reflective Chest Bands
     drawRect(color = Color(0xFFE2E8F0), topLeft = Offset(centerX - 36f, cy - 65f), size = Size(72f, 6f))
 
     // 7. Rider Helmet & Tinted Visor
@@ -69,4 +81,6 @@ fun DrawScope.drawOjolFrontView(centerX: Float, centerY: Float, bounceY: Float) 
         size = Size(32f, 14f),
         cornerRadius = androidx.compose.ui.geometry.CornerRadius(4f, 4f)
     )
+    // Visor Sunlight Glint
+    drawRect(color = Color.White.copy(alpha = 0.6f), topLeft = Offset(centerX - 12f, cy - 118f), size = Size(8f, 3f))
 }

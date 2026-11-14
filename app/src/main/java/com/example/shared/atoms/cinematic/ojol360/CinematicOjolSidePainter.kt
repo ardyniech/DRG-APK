@@ -17,7 +17,7 @@ fun DrawScope.drawOjolSideView(
     val cy = centerY + bounceY
     val dir = if (facingRight) 1f else -1f
 
-    // 1. Rear & Front Wheels
+    // 1. Rear & Front Wheels with alloy disc
     val rearWheelCenter = Offset(centerX - dir * 65f, cy + 58f)
     val frontWheelCenter = Offset(centerX + dir * 75f, cy + 58f)
     drawCircle(color = Color(0xFF14181B), center = rearWheelCenter, radius = 28f)
@@ -33,7 +33,7 @@ fun DrawScope.drawOjolSideView(
         cornerRadius = androidx.compose.ui.geometry.CornerRadius(8f, 8f)
     )
 
-    // 3. Exhaust Pipe & Muffler (facing rear)
+    // 3. Exhaust Pipe & Muffler
     drawRoundRect(
         color = Color(0xFF64748B),
         topLeft = Offset(centerX - dir * 55f, cy + 46f),
@@ -64,7 +64,6 @@ fun DrawScope.drawOjolSideView(
         size = Size(48f, 58f),
         cornerRadius = androidx.compose.ui.geometry.CornerRadius(14f, 14f)
     )
-    // Arm reaching to handlebar
     drawRoundRect(
         color = DrgGrabGreenPrimary,
         topLeft = Offset(centerX + (if (facingRight) 4f else -26f), cy - 42f),

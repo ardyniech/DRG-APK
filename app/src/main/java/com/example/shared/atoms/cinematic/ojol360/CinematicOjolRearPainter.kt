@@ -12,6 +12,13 @@ import com.example.ui.theme.DrgRedPanic
 fun DrawScope.drawOjolRearView(centerX: Float, centerY: Float, bounceY: Float) {
     val cy = centerY + bounceY
 
+    // 0. Red Taillight Glow Bloom on road
+    drawOval(
+        color = DrgRedPanic.copy(alpha = 0.28f),
+        topLeft = Offset(centerX - 60f, cy + 28f),
+        size = Size(120f, 36f)
+    )
+
     // 1. Wide Rear Tyre & Tread
     drawRoundRect(
         color = Color(0xFF14181B),
@@ -21,14 +28,13 @@ fun DrawScope.drawOjolRearView(centerX: Float, centerY: Float, bounceY: Float) {
     )
     drawRect(color = Color(0xFF334155), topLeft = Offset(centerX - 4f, cy + 42f), size = Size(8f, 68f))
 
-    // 2. Mudguard & License Plate
+    // 2. Mudguard & License Plate ("N 1928 DRG")
     drawRoundRect(
         color = Color(0xFF1E293B),
         topLeft = Offset(centerX - 26f, cy + 22f),
         size = Size(52f, 22f),
         cornerRadius = androidx.compose.ui.geometry.CornerRadius(4f, 4f)
     )
-    // License Plate (White background with black text indicator)
     drawRoundRect(
         color = Color.White,
         topLeft = Offset(centerX - 18f, cy + 26f),

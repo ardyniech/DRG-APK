@@ -7,12 +7,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 
 fun Modifier.cinematicOjolGesture(
     state: CinematicOjol360State,
+    onTap: () -> Unit = {},
     onDoubleTap: () -> Unit = { state.toggleFullscreen() }
 ): Modifier = this
     .pointerInput(state) {
         detectTransformGestures { _, pan, zoomChange, _ ->
             if (pan.x != 0f) {
-                // Dragging horizontally rotates camera around the ojol
                 state.setAutoRotateActive(false)
                 val sensitivity = 0.55f
                 state.rotateBy(-pan.x * sensitivity)
@@ -25,6 +25,8 @@ fun Modifier.cinematicOjolGesture(
     .pointerInput(state) {
         detectTapGestures(
             onDoubleTap = { onDoubleTap() },
-            onTap = { state.toggleAutoRotate() }
+            onTap = {
+                onTap()
+            }
         )
     }
