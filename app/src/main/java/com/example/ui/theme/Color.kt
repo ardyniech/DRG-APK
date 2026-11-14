@@ -185,3 +185,13 @@ val DrgMirrorHousing = Color(0xFF13181F)
 val DrgMirrorSkyMid = Color(0xFF1C2733)
 val DrgMirrorSkyBot = Color(0xFF0A0F14)
 val DrgMirrorRoadLine = Color(0xFF556575)
+
+// Feature stage colors — used by FeatureMaturity.kt to avoid magic hex numbers
+val DrgFeatureBenihBadge = Color(0xFFE0E7FF)
+val DrgFeatureBenihText = Color(0xFF3730A3)
+val DrgFeatureAnakBadge = Color(0xFFFEF3C7)
+val DrgFeatureAnakText = Color(0xFF92400E)
+val DrgFeatureMatureBadge = Color(0xFFE0F2FE)
+val DrgFeatureMatureText = Color(0xFF075985)
+val DrgFeatureLulusBadge = Color(0xFFDCFCE7)
+val DrgFeatureLulusText = Color(0xFF166534)
