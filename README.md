@@ -157,7 +157,7 @@ Detail skema dan panduan migrasi dapat dibaca di **[Dokumentasi Migrasi Database
 
 ## 🧪 Strategi Pengujian (Testing Suite)
 
-Proyek ini dilengkapi dengan 64 suite pengujian unit & integrasi otomatis berbasis **Robolectric** dan **Roborazzi**:
+Proyek ini dilengkapi dengan 65 suite pengujian unit & integrasi otomatis berbasis **Robolectric** dan **Roborazzi**:
 
 - `LandingFeatureAutoScrollTest.kt`: Pengujian kelengkapan data & properti thumbnail fitur unggulan aplikasi pada landing screen.
 - `EmergencySmsFallbackHelperTest.kt`: Pengujian fallback SMS darurat saat jaringan data offline.

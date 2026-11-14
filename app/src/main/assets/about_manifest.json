@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "v1.10-76-g4fdb632",
-    "commit": "4fdb632",
+    "version": "v1.10-78-gc84b8e3",
+    "commit": "c84b8e3",
     "commitDate": "2026-11-14",
     "generatedBy": "generate_about_manifest.py"
   },
@@ -27,7 +27,7 @@
     "modules": 18,
     "totalSourceFiles": 532,
     "totalLoc": 37674,
-    "testSuites": 64
+    "testSuites": 65
   },
   "phases": [
     {
