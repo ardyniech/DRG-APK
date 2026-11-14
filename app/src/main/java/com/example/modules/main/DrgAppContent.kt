@@ -58,7 +58,6 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
             else -> doubleBackHandler.handleBackPress()
         }
     }
-
     CompositionLocalProvider(LocalAppVisualTheme provides dashboardTheme) {
         if (!state.isLoggedIn.value) {
             AuthContainerScreen(viewModel = viewModel, onLoginSuccess = { viewModel.login(it) })
@@ -69,8 +68,13 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
                 Scaffold(
                     modifier = Modifier.fillMaxSize().imePadding(), containerColor = Color.Transparent, contentWindowInsets = WindowInsets.systemBars,
                     topBar = {
-                        if (state.currentTab.value !in headerLessTabs) {
-                            Column {
+                        Column {
+                            TopShortcutHost(
+                                viewModel = viewModel,
+                                currentMember = state.currentMember.value,
+                                snackbarHostState = snackbarHostState
+                            )
+                            if (state.currentTab.value !in headerLessTabs) {
                                 DrgHeader(
                                     currentMember = state.currentMember.value,
                                     activeEmergencyCount = state.activeAlerts.value.size,

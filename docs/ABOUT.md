@@ -4,7 +4,7 @@
 
 **Progres pengembangan keseluruhan: 69%** (13 selesai · 12 dikerjakan · 6 direncanakan)
 
-Versi `v1.10-84-g389b815` · commit `389b815` · 2026-11-14 · 18 modul · 568 file sumber · 40382 baris · 68 test suite
+Versi `v1.10-85-g0b4837f` · commit `0b4837f` · 2026-11-14 · 18 modul · 574 file sumber · 40749 baris · 68 test suite
 
 **Kekurangan (Bawel Audit): 5 temuan (0 BLOCKER · 2 MAJOR · 3 MINOR · 0 NOTE)**
 
@@ -76,7 +76,7 @@ Marketplace kebutuhan operasional driver (deferred).
 | **MAJOR** | multi-user | Seed hanya bila members kosong → tiap HP baru punya data dummy sendiri, bukan data komunitas bersama. | Butuh backend + akun server agar komunitas sinkron. |
 | **MINOR** | security | Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB. | Enkripsi database atau minimal jelaskan risiko di docs. |
 | **MAJOR** | database | Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v14 tidak lengkap. | Generate & commit schema hilang via Room export. |
-| **MINOR** | code | Hardcode hex Color(0x...) di8 file — melanggar 'No Magic Numbers' AGENTS §1. | Pindah ke DesignTokens/Theme. |
+| **MINOR** | code | Hardcode hex Color(0x...) di9 file — melanggar 'No Magic Numbers' AGENTS §1. | Pindah ke DesignTokens/Theme. |
 | **MINOR** | test | androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented. | Tambah UI test untuk login, SOS, kas. |
 
 BLOCKER = dilarang klaim multi-user/sinkron sebelum diperbaiki. Jalankan `python3 .github/scripts/audit_minus.py --json` untuk detail mesin.
