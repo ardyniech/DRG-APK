@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "v1.10-80-gf5a9b25",
-    "commit": "f5a9b25",
+    "version": "v1.10-81-gbd72ea0",
+    "commit": "bd72ea0",
     "commitDate": "2026-11-14",
     "generatedBy": "generate_about_manifest.py"
   },
