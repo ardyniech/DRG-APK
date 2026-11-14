@@ -47,7 +47,7 @@ object PhaseTreePhase1 {
                         hasDefect = true,
                         whatIsIt = "Verifikasi tanda tangan kriptografi peran admin di serverless edge.",
                         whyRequired = "Cegah manipulasi lokal tabel role SQLite oleh perangkat root.",
-                        defectExplanation = "Saat ini verifikasi role masih client-side di Room RoleManager."
+                        defectExplanation = "Validasi role sudah terpusat di RoleManager.validateRoleChange() (dipakai RolePermissionRepository & UI), namun tanpa edge signature/backend, manipulasi SQLite lokal oleh perangkat root tetap mungkin. Butuh backend custom claims (DEFECT-01)."
                     )
                 )
             )
