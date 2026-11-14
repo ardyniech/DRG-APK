@@ -30,7 +30,7 @@ class DevToolsPhaseTreeAndUiUxTest {
         val phase2 = phases.first { it.phaseNumber == 2 }
         assertEquals(0, phase2.deferredFeatures)
         assertTrue("In-scope equals total when no deferred features", phase2.inScopeFeatures == phase2.totalFeatures)
-        assertEquals(PhaseTreeStatus.DALAM_PENGERJAAN, phase2.overallStatus)
+        assertEquals(PhaseTreeStatus.LULUS_SEMPURNA, phase2.overallStatus)
 
         // Phase 3 has defects (PTT simulation); intercom helm removed
         val phase3 = phases.first { it.phaseNumber == 3 }

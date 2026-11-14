@@ -59,7 +59,7 @@ object PhaseTreePhase3And4 {
                     DevFeatureLeaf(
                         id = "F-4.2.2",
                         name = "Adaptive GPS Lock Power Management",
-                        status = PhaseTreeStatus.DALAM_PENGERJAAN,
+                        status = PhaseTreeStatus.LULUS_SEMPURNA,
                         hasDefect = false,
                         whatIsIt = "Manajemen frekuensi/prioritas GPS adaptif (motion, baterai, profil hemat daya).",
                         whyRequired = "Mengurangi konsumsi baterai saat pelacakan armada/darurat.",

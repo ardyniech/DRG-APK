@@ -13,21 +13,21 @@
     ]
   },
   "build": {
-    "version": "v1.10-73-g125ab3c",
-    "commit": "125ab3c",
+    "version": "v1.10-75-ga2d2325",
+    "commit": "a2d2325",
     "commitDate": "2026-11-14",
     "generatedBy": "generate_about_manifest.py"
   },
   "summary": {
-    "overallProgress": 64,
-    "totalFeatures": 33,
+    "overallProgress": 69,
+    "totalFeatures": 31,
     "done": 13,
     "inProgress": 12,
-    "planned": 8,
+    "planned": 6,
     "modules": 18,
-    "totalSourceFiles": 534,
-    "totalLoc": 37883,
-    "testSuites": 65
+    "totalSourceFiles": 532,
+    "totalLoc": 37674,
+    "testSuites": 64
   },
   "phases": [
     {
@@ -55,9 +55,9 @@
       "title": "Fase 3 — Layanan Finansial & Kemitraan",
       "target": "v2.0.0",
       "state": "planned",
-      "summary": "Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan klaim asuransi/santunan driver.",
+      "summary": "Marketplace kebutuhan operasional driver (deferred).",
       "progress": 0,
-      "featureCount": 4,
+      "featureCount": 2,
       "doneCount": 0
     }
   ],
@@ -107,12 +107,12 @@
     {
       "id": "core-audio",
       "name": "Audio Route & Alarm",
-      "description": "Routing audio (speaker/alarm) dan manajer alarm sirine SOS; integrasi intercom helm PENDING DEV.",
+      "description": "Routing audio (speaker/alarm) dan manajer alarm sirine SOS.",
       "phase": "phase-1",
       "status": "IN_PROGRESS",
       "progress": 70,
-      "files": 4,
-      "loc": 262,
+      "files": 3,
+      "loc": 216,
       "todos": 0,
       "tests": [
         "AudioRouteManagerTest",
@@ -229,8 +229,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 46,
-      "loc": 3718,
+      "files": 45,
+      "loc": 3632,
       "todos": 0,
       "tests": [
         "ProgressiveOnboardingLogicTest",
@@ -438,8 +438,7 @@
       "todos": 0,
       "tests": [
         "AiAssistantKnowledgeTest",
-        "AudioRouteManagerTest",
-        "HelmetIntercomMonitorTest"
+        "AudioRouteManagerTest"
       ]
     }
   ],
@@ -477,25 +476,9 @@
       "progress": 0
     },
     {
-      "id": "arisan",
-      "name": "Arisan Digital & Dana Talangan",
-      "description": "[DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.",
-      "phase": "phase-3",
-      "status": "PLANNED",
-      "progress": 0
-    },
-    {
       "id": "marketplace",
       "name": "Marketplace Kebutuhan Operasional",
       "description": "[DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.",
-      "phase": "phase-3",
-      "status": "PLANNED",
-      "progress": 0
-    },
-    {
-      "id": "insurance",
-      "name": "Klaim Asuransi & Santunan",
-      "description": "Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan. (PENDING DEV)",
       "phase": "phase-3",
       "status": "PLANNED",
       "progress": 0
@@ -561,9 +544,7 @@
     "Adaptive Icon & Branding — Konversi logo ke adaptive icon (foreground/background) + splash screen production.",
     "Play Integrity & Anti-Tamper — Verifikasi integritas aplikasi, R8 aggressive obfuscation, dan stripping simbol sensitif.",
     "Release Signing & Distribusi — Keystore rilis aman, signing di CI, dan alur distribusi APK production.",
-    "Arisan Digital & Dana Talangan — [DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.",
     "Marketplace Kebutuhan Operasional — [DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.",
-    "Klaim Asuransi & Santunan — Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan. (PENDING DEV)",
     "Rekonsiliasi CRDT — Conflict-free replicated data types untuk sinkronisasi multi-device tanpa locking.",
     "Instrumented UI Tests — Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).",
     "Detekt & KtLint di CI — Static analysis otomatis untuk kualitas kode selain batas 125 baris.",
@@ -572,10 +553,10 @@
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 5,
+    "total": 6,
     "blocker": 0,
     "major": 2,
-    "minor": 3,
+    "minor": 4,
     "note": 0
   },
   "minus": [
@@ -596,6 +577,12 @@
       "category": "database",
       "detail": "Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v14 tidak lengkap.",
       "fix": "Generate & commit schema hilang via Room export."
+    },
+    {
+      "severity": "MINOR",
+      "category": "docs",
+      "detail": "README klaim 65 suite, realita 64 file Test.kt.",
+      "fix": "Update README badge + SETUP/DEVTOOLS jumlahnya."
     },
     {
       "severity": "MINOR",

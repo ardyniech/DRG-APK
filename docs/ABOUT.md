@@ -2,11 +2,11 @@
 
 > Aplikasi komunitas driver ojek online Driver Riang Gembira (DRG)
 
-**Progres pengembangan keseluruhan: 64%** (13 selesai · 12 dikerjakan · 8 direncanakan)
+**Progres pengembangan keseluruhan: 69%** (13 selesai · 12 dikerjakan · 6 direncanakan)
 
-Versi `v1.10-73-g125ab3c` · commit `125ab3c` · 2026-11-14 · 18 modul · 534 file sumber · 37883 baris · 65 test suite
+Versi `v1.10-75-ga2d2325` · commit `a2d2325` · 2026-11-14 · 18 modul · 532 file sumber · 37674 baris · 64 test suite
 
-**Kekurangan (Bawel Audit): 5 temuan (0 BLOCKER · 2 MAJOR · 3 MINOR · 0 NOTE)**
+**Kekurangan (Bawel Audit): 6 temuan (0 BLOCKER · 2 MAJOR · 4 MINOR · 0 NOTE)**
 
 > **SINGLE SOURCE OF TRUTH** — dokumen ini adalah acuan tunggal untuk AI dev, DevTools in-app, dan in-app Tentang. Digenerate otomatis oleh `generate_about_manifest.py` (mengandung `.github/scripts/audit_minus.py --json`). Jangan tulis manual. Jangan merujuk ke DEVTOOLS.md/README untuk angka — rujuk ke sini.
 
@@ -54,13 +54,11 @@ WebRTC DataChannel, self-host per device, discovery via FCM, fallback PendingSyn
 | Release Signing & Distribusi | Direncanakan | 0% |
 
 ### Fase 3 — Layanan Finansial & Kemitraan — 0% (v2.0.0)
-Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan klaim asuransi/santunan driver.
+Marketplace kebutuhan operasional driver (deferred).
 
 | Fitur | Status | Progres |
 |---|---|---|
-| Arisan Digital & Dana Talangan | Direncanakan | 0% |
 | Marketplace Kebutuhan Operasional | Direncanakan | 0% |
-| Klaim Asuransi & Santunan | Direncanakan | 0% |
 | Rekonsiliasi CRDT | Direncanakan | 0% |
 
 ## Rencana Penyempurnaan
@@ -78,6 +76,7 @@ Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan kl
 | **MAJOR** | multi-user | Seed hanya bila members kosong → tiap HP baru punya data dummy sendiri, bukan data komunitas bersama. | Butuh backend + akun server agar komunitas sinkron. |
 | **MINOR** | security | Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB. | Enkripsi database atau minimal jelaskan risiko di docs. |
 | **MAJOR** | database | Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v14 tidak lengkap. | Generate & commit schema hilang via Room export. |
+| **MINOR** | docs | README klaim 65 suite, realita 64 file Test.kt. | Update README badge + SETUP/DEVTOOLS jumlahnya. |
 | **MINOR** | code | Hardcode hex Color(0x...) di1 file — melanggar 'No Magic Numbers' AGENTS §1. | Pindah ke DesignTokens/Theme. |
 | **MINOR** | test | androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented. | Tambah UI test untuk login, SOS, kas. |
 
@@ -99,9 +98,7 @@ BLOCKER = dilarang klaim multi-user/sinkron sebelum diperbaiki. Jalankan `python
 - Adaptive Icon & Branding — Konversi logo ke adaptive icon (foreground/background) + splash screen production.
 - Play Integrity & Anti-Tamper — Verifikasi integritas aplikasi, R8 aggressive obfuscation, dan stripping simbol sensitif.
 - Release Signing & Distribusi — Keystore rilis aman, signing di CI, dan alur distribusi APK production.
-- Arisan Digital & Dana Talangan — [DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.
 - Marketplace Kebutuhan Operasional — [DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.
-- Klaim Asuransi & Santunan — Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan. (PENDING DEV)
 - Rekonsiliasi CRDT — Conflict-free replicated data types untuk sinkronisasi multi-device tanpa locking.
 - Instrumented UI Tests — Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).
 - Detekt & KtLint di CI — Static analysis otomatis untuk kualitas kode selain batas 125 baris.
@@ -109,4 +106,4 @@ BLOCKER = dilarang klaim multi-user/sinkron sebelum diperbaiki. Jalankan `python
 - Verifikasi Migrasi Room v1→v14 — Uji migrasi tiap versi + commit semua schema JSON (schema 1-4,8,9 masih hilang → belum selesai).
 - Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer.
 
-*Total fitur: 33 · 64% selesai.*
+*Total fitur: 31 · 69% selesai.*

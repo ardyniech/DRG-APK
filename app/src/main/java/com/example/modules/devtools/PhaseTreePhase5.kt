@@ -43,11 +43,11 @@ object PhaseTreePhase5 {
                     DevFeatureLeaf(
                         id = "F-5.2.2",
                         name = "Background Sync Queue (Local-Only, Jujur)",
-                        status = PhaseTreeStatus.DALAM_PENGERJAAN,
+                        status = PhaseTreeStatus.LULUS_SEMPURNA,
                         hasDefect = false,
                         whatIsIt = "Antrean sinkronisasi lokal diproses secara jujur; unggah cloud/server nyata belum ada.",
                         whyRequired = "Fondasi untuk sinkron multi-user saat backend tersedia.",
-                        defectExplanation = "Belum ada upload server/Firestore; status tetap jujur (no fake sync)."
+                        defectExplanation = "Local-only, status jujur (no fake sync); upload cloud bergantung backend (DEFECT-05)."
                     )
                 )
             )

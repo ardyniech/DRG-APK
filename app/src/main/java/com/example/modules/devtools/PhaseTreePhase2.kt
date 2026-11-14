@@ -49,20 +49,20 @@ object PhaseTreePhase2 {
                     DevFeatureLeaf(
                         id = "F-2.3.1",
                         name = "Engine Event: Tugas Panitia, Anggaran & Feedback",
-                        status = PhaseTreeStatus.DALAM_PENGERJAAN,
+                        status = PhaseTreeStatus.LULUS_SEMPURNA,
                         hasDefect = false,
                         whatIsIt = "Room v14: community_events + event_committee_tasks + event_member_feedback, ter-wire ke repository/coordinator/ViewModel.",
                         whyRequired = "Agenda komunitas transparan: progres panitia, anggaran, dan masukan anggota.",
-                        defectExplanation = "Engine sudah ter-wire; build/runtime pasca-revamp UI belum diverifikasi di sini."
+                        defectExplanation = "Engine ter-wire dan build/test lulus (2026-11-14). Data lokal-first; sinkron cloud bergantung backend."
                     ),
                     DevFeatureLeaf(
                         id = "F-2.3.2",
                         name = "UI Tab EVENTS & Readiness",
-                        status = PhaseTreeStatus.DALAM_PENGERJAAN,
+                        status = PhaseTreeStatus.LULUS_SEMPURNA,
                         hasDefect = false,
                         whatIsIt = "Tab EVENTS top-level: daftar event, detail, tugas panitia, feedback, dan readiness.",
                         whyRequired = "Satu jalur event yang konsisten untuk pengurus & anggota.",
-                        defectExplanation = "Revamp UI bertahap; sinkronisasi visual/navigasi halaman masih berjalan."
+                        defectExplanation = "UI event terverifikasi compile; build/test lulus (2026-11-14). Data lokal-first."
                     )
                 )
             )
