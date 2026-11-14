@@ -13,8 +13,8 @@
     ]
   },
   "build": {
-    "version": "v1.10-75-ga2d2325",
-    "commit": "a2d2325",
+    "version": "v1.10-76-g4fdb632",
+    "commit": "4fdb632",
     "commitDate": "2026-11-14",
     "generatedBy": "generate_about_manifest.py"
   },
@@ -553,10 +553,10 @@
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 6,
+    "total": 5,
     "blocker": 0,
     "major": 2,
-    "minor": 4,
+    "minor": 3,
     "note": 0
   },
   "minus": [
@@ -577,12 +577,6 @@
       "category": "database",
       "detail": "Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v14 tidak lengkap.",
       "fix": "Generate & commit schema hilang via Room export."
-    },
-    {
-      "severity": "MINOR",
-      "category": "docs",
-      "detail": "README klaim 65 suite, realita 64 file Test.kt.",
-      "fix": "Update README badge + SETUP/DEVTOOLS jumlahnya."
     },
     {
       "severity": "MINOR",
