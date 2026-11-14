@@ -23,13 +23,13 @@ class DevToolsMultiUserGapTest {
     @Test
     fun testExtraDefectsContainMultiUserBlockers() {
         val extras = MultiUserGapScanner.extraDefects()
-        assertEquals(8, extras.size)
+        assertEquals(7, extras.size)
         val ids = extras.map { it.defectId }
-        assertTrue(ids.containsAll(listOf("DEFECT-05", "DEFECT-06", "DEFECT-07", "DEFECT-12")))
+        assertTrue(ids.containsAll(listOf("DEFECT-05", "DEFECT-06", "DEFECT-07")))
         // fake-sync, firebase, auth-lokal, p2p log-only wajib ada
-        assertTrue(extras.any { it.title.contains("SYNCED") })
-        assertTrue(extras.any { it.title.contains("Firestore") })
-        assertTrue(extras.any { it.title.contains("P2P Signaling") })
+        assertTrue(extras.any { it.title.contains("Cloud") })
+        assertTrue(extras.any { it.title.contains("Firebase") })
+        assertTrue(extras.any { it.title.contains("P2P") })
         extras.forEach { d ->
             assertTrue(d.honestDefectExplanation.isNotBlank())
             assertTrue(d.engineeringRoadmapFix.isNotBlank())
@@ -37,10 +37,10 @@ class DevToolsMultiUserGapTest {
     }
 
     @Test
-    fun testCombinedScannerTotal12AndNoMarketplaceBlocker() {
+    fun testCombinedScannerTotal11AndNoMarketplaceBlocker() {
         val all = ProductionDefectScanner.scanKnownDefects()
-        assertEquals(12, all.size)
-        assertEquals(6, all.count { it.type == DefectType.CONCEPT_FLAW })
+        assertEquals(11, all.size)
+        assertEquals(5, all.count { it.type == DefectType.CONCEPT_FLAW })
         assertEquals(6, all.count { it.type == DefectType.PRODUCTION_DEFECT })
         // finansial deferred: marketplace/arisan TIDAK boleh jadi defect blocker
         assertFalse(all.any { it.title.contains("Marketplace", ignoreCase = true) })

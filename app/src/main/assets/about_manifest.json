@@ -13,9 +13,9 @@
     ]
   },
   "build": {
-    "version": "v1.10-72-gd179f66",
-    "commit": "d179f66",
-    "commitDate": "2026-11-13",
+    "version": "v1.10-73-g125ab3c",
+    "commit": "125ab3c",
+    "commitDate": "2026-11-14",
     "generatedBy": "generate_about_manifest.py"
   },
   "summary": {
