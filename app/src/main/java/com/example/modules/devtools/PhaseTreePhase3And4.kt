@@ -3,7 +3,7 @@ package com.example.modules.devtools
 object PhaseTreePhase3And4 {
     fun createPhase3(): DevPhase = DevPhase(
         phaseNumber = 3,
-        title = "Hardware, Audio Intercom & Offline P2P",
+        title = "Hardware & Offline P2P",
         objective = "Komunikasi suara langsung tanpa kuota saat konvoi di blank-spot.",
         subPhases = listOf(
             DevSubPhase(
@@ -18,21 +18,6 @@ object PhaseTreePhase3And4 {
                         whatIsIt = "Komunikasi push-to-talk antar-driver (saat ini simulasi UI).",
                         whyRequired = "Peringatan bahaya jalanan seketika saat konvoi.",
                         defectExplanation = "Belum ada transmisi audio nyata (capture/streaming/jaringan). Implementasi saat ini simulasi UI; butuh pipeline audio + transport/signaling."
-                    )
-                )
-            ),
-            DevSubPhase(
-                id = "SUB-3.2",
-                title = "Integrasi Bluetooth Intercom Helm",
-                features = listOf(
-                    DevFeatureLeaf(
-                        id = "F-3.2.1",
-                        name = "Koneksi GATT Bluetooth Headset Helm (DEFERRED)",
-                        status = PhaseTreeStatus.DEFERRED,
-                        hasDefect = false,
-                        whatIsIt = "Tombol pairing PTT fisik pada tombol stang / helm (ditunda).",
-                        whyRequired = "Di luar scope rilis awal; intercom helm deferred sesuai roadmap.",
-                        defectExplanation = "DEFERRED per roadmap — bukan cacat in-scope, tidak dihitung di progres."
                     )
                 )
             )

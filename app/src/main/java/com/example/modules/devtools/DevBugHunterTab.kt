@@ -61,7 +61,7 @@ fun DevBugHunterTab(
                     shallow.filter { !it.hasDeadButtons }.forEach { Text("• [SHALLOW] ${it.name}: ${it.shallowReason ?: "-"}", fontSize = 10.sp, color = DrgOrangeText) }
                     defects.forEach { Text("• [${it.type.label}] ${it.defectId} ${it.title}", fontSize = 10.sp, color = DrgRedDanger) }
                     if (score.progressPenaltiesCount > 0) Text("• [PROGRES] ${score.progressPenaltiesCount} fitur DALAM_PENGERJAAN non-deferred", fontSize = 10.sp, color = DrgWarningTextDark)
-                    Text("Catatan: fitur DEFERRED (Asuransi, Intercom Helm) dikecualikan dari gap progres & tidak dianggap cacat in-scope.", fontSize = 9.sp, color = DrgTextSecondary)
+                    Text("Catatan: finansial rilis awal hanya iuran Kas; fitur deferred lain dikecualikan dari gap progres & tidak dianggap cacat in-scope.", fontSize = 9.sp, color = DrgTextSecondary)
                 }
             }
         }

@@ -24,8 +24,6 @@ class DevToolsMaturityScoringTest {
         assertTrue("Features list must not be empty", features.isNotEmpty())
 
         val stages = features.map { it.stage }
-        assertTrue("Must contain Benih stage", stages.contains(FeatureStage.BENIH))
-        assertTrue("Must contain Anak stage", stages.contains(FeatureStage.ANAK))
         assertTrue("Must contain Mature stage", stages.contains(FeatureStage.MATURE))
         assertTrue("Must contain Lulus stage", stages.contains(FeatureStage.LULUS))
     }

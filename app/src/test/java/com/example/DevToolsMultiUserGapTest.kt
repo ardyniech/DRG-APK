@@ -23,7 +23,7 @@ class DevToolsMultiUserGapTest {
     @Test
     fun testExtraDefectsContainMultiUserBlockers() {
         val extras = MultiUserGapScanner.extraDefects()
-        assertEquals(7, extras.size)
+        assertEquals(6, extras.size)
         val ids = extras.map { it.defectId }
         assertTrue(ids.containsAll(listOf("DEFECT-05", "DEFECT-06", "DEFECT-07")))
         // fake-sync, firebase, auth-lokal, p2p log-only wajib ada
@@ -37,11 +37,11 @@ class DevToolsMultiUserGapTest {
     }
 
     @Test
-    fun testCombinedScannerTotal11AndNoMarketplaceBlocker() {
+    fun testCombinedScannerTotal10AndNoMarketplaceBlocker() {
         val all = ProductionDefectScanner.scanKnownDefects()
-        assertEquals(11, all.size)
+        assertEquals(10, all.size)
         assertEquals(5, all.count { it.type == DefectType.CONCEPT_FLAW })
-        assertEquals(6, all.count { it.type == DefectType.PRODUCTION_DEFECT })
+        assertEquals(5, all.count { it.type == DefectType.PRODUCTION_DEFECT })
         // finansial deferred: marketplace/arisan TIDAK boleh jadi defect blocker
         assertFalse(all.any { it.title.contains("Marketplace", ignoreCase = true) })
         assertFalse(all.any { it.title.contains("Arisan", ignoreCase = true) })

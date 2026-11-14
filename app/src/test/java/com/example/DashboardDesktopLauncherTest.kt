@@ -17,7 +17,7 @@ class DashboardDesktopLauncherTest {
     @Test
     fun testDefaultAppsHappyPath() {
         val apps = defaultLauncherApps()
-        assertEquals(12, apps.size)
+        assertEquals(11, apps.size)
         assertTrue(apps.any { it.id == "radar" && it.isHot })
         assertTrue(apps.any { it.id == "sos" && it.isHot })
         // ids must be unique for analytics stability

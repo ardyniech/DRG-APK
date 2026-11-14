@@ -54,12 +54,7 @@ fun BentoGridDeck(
                 poskoCount = poskoCount,
                 visualTheme = visualTheme,
                 onClick = { onNavigateTab(MainNavTab.RADAR) },
-                modifier = Modifier.weight(1f)
-            )
-            BentoIntercomWidget(
-                visualTheme = visualTheme,
-                onClick = { onNavigateTab(MainNavTab.PROFILE) },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }

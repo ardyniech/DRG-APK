@@ -39,15 +39,6 @@ object PhaseTreePhase2 {
                         hasDefect = false,
                         whatIsIt = "Direktori bengkel rekanan dengan diskon dan ulasan driver.",
                         whyRequired = "Membantu armada mendapatkan servis terpercaya saat mogok."
-                    ),
-                    DevFeatureLeaf(
-                        id = "F-2.2.2",
-                        name = "Klaim Dokumen Asuransi Laka Driver (DEFERRED)",
-                        status = PhaseTreeStatus.DEFERRED,
-                        hasDefect = false,
-                        whatIsIt = "Unggah dokumen klaim santunan laka lantas driver (ditunda).",
-                        whyRequired = "Di luar scope rilis awal (finansial awal: iuran Kas saja).",
-                        defectExplanation = "DEFERRED per roadmap — bukan cacat in-scope, tidak dihitung di progres."
                     )
                 )
             ),

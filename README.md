@@ -29,7 +29,7 @@
 
 **Belum terhubung ke server:** `firestore`/`auth` di `app/build.gradle.kts` masih dikomentari, `app/google-services.json` belum ada, P2P signaling (`P2PSignalingManager`) cuma `Log.d`, FCM token cuma disimpan lokal.
 
-**Scope finansial sementara: iuran kas saja yang wajib.** Kas Transparan (masuk/keluar/saldo + export) adalah satu-satunya fitur finansial yang harus ada di rilis awal. **Marketplace & arisan = [DEFERRED] di luar scope** — ditandai di `.github/about/features.json`, `ROADMAP.md`, dan `docs/ABOUT.md`. Jangan jadikan blocker. Asuransi & CRDT juga ditunda.
+**Scope finansial sementara: iuran kas saja yang wajib.** Kas Transparan (masuk/keluar/saldo + export) adalah satu-satunya fitur finansial yang harus ada di rilis awal. **Marketplace = [DEFERRED] di luar scope** — ditandai di `.github/about/features.json`, `ROADMAP.md`, dan `docs/ABOUT.md`. Jangan jadikan blocker. CRDT juga ditunda.
 
 **Risiko data-at-rest:** Room SQLite (`drg_community.db`) saat ini **belum terenkripsi** (SQLCipher belum diintegrasikan). Data sensitif (mis. NIK/SIM/telepon/kas) tersimpan plain di storage app; mitigasi sementara: lindungi perangkat, batasi backup/debug, dan rencanakan enkripsi DB sebelum klaim produksi penuh.
 
@@ -44,7 +44,7 @@
 | Arsitektur | Clean MVI + Compose M3, <125 baris/file | 532 file audit, 0 pelanggaran via `check_file_length.py` | ✅ Selesai |
 | Database | Room v14 lokal + migrasi eksplisit | 26 tabel, migrasi 1→14 di kode, tapi schema `1-4,8,9.json` belum dicommit | ⚠️ Sebagian |
 | **Iuran Kas (finansial)** | **Kas masuk/keluar/saldo + export (wajib rilis awal)** | Kas Transparan Selesai 100%, grafik + periode + export | ✅ Selesai (lokal) |
-| Marketplace / Arisan | Oli/ban/helm distributor, arisan/talangan | Belum ada modul | ⏸️ **DEFERRED** — bukan blocker |
+| Marketplace | Oli/ban/helm distributor | Belum ada modul | ⏸️ **DEFERRED** — bukan blocker |
 | Multi-user sinkron | Firestore/Auth + FCM, data bersama antar driver | Lokal saja, Firestore/Auth off, `google-services.json` hilang | ❌ BLOCKER |
 | Sinkron offline | Outbox → cloud saat online | Outbox dihapus lokal tanpa upload; label "SYNCED" menipu | ❌ BLOCKER |
 | SOS / Radar / Forum | SOS broadcast ke tim, radar live antar HP | Tersimpan lokal + SMS fallback (butuh pulsa); radar lokal saja | ⚠️ Lokal saja |
@@ -161,7 +161,6 @@ Proyek ini dilengkapi dengan 65 suite pengujian unit & integrasi otomatis berbas
 
 - `LandingFeatureAutoScrollTest.kt`: Pengujian kelengkapan data & properti thumbnail fitur unggulan aplikasi pada landing screen.
 - `EmergencySmsFallbackHelperTest.kt`: Pengujian fallback SMS darurat saat jaringan data offline.
-- `HelmetIntercomMonitorTest.kt`: Pengujian listener koneksi audio headset/intercom helm bluetooth.
 - `AppDatabaseMigrationTest.kt`: Verifikasi menyeluruh migrasi Room berantai dari v1 hingga v14 tanpa data loss.
 - `AiAssistantKnowledgeTest.kt`: Validasi basis pengetahuan AI Assistant rekomendasi rute dan posko.
 - `PoskoCheckInRepositoryTest.kt`: Pengujian pencatatan check-in posko dan pemberian poin loyalitas.

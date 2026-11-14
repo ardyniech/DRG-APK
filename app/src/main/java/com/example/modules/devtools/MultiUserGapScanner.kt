@@ -3,10 +3,10 @@ package com.example.modules.devtools
 /**
  * Bawel scanner: cacat multi-user, sync, dan keamanan.
  * Sumber: temuan bawel/devtools (sejalan audit_minus.py & kondisi repo). Perbarui saat fakta berubah.
- * Finansial rilis awal: iuran Kas saja — marketplace/arisan DEFERRED (bukan defect blocker di sini).
+ * Finansial rilis awal: iuran Kas saja — marketplace DEFERRED (bukan defect blocker di sini).
  */
 object MultiUserGapScanner {
-    /** @return cacat tambahan (DEFECT-05 s/d 11) di luar 4 awal, jujur & non-fabricated. */
+    /** @return cacat tambahan (DEFECT-05 s/d 10) di luar 4 awal, jujur & non-fabricated. */
     fun extraDefects(): List<SystemDefectItem> = listOf(
         SystemDefectItem(
             defectId = "DEFECT-05",
@@ -61,15 +61,6 @@ object MultiUserGapScanner {
             affectedComponent = "app/schemas/ & Room export",
             honestDefectExplanation = "exportSchema=true namun schema historis 1,2,3,4,8,9.json belum tersedia di repo, sehingga verifikasi migrasi v1→v14 tidak lengkap.",
             engineeringRoadmapFix = "Generate & commit schema hilang via Room export valid (tanpa fabrikasi) dan verifikasi migrasi."
-        ),
-        SystemDefectItem(
-            defectId = "DEFECT-11",
-            title = "Fitur Asuransi & Intercom Helm Masih Pending (Di Luar Scope Rilis Awal)",
-            type = DefectType.PRODUCTION_DEFECT,
-            severityLevel = "Sedang (Scope/Pending)",
-            affectedComponent = "roadmap (Asuransi/Intercom Helm) — lihat juga PTT radio (DEFECT-02/F-3.1.1)",
-            honestDefectExplanation = "Integrasi klaim asuransi & intercom helm (Bluetooth/GATT/headset) masih pending/deferred sesuai roadmap, bukan bagian scope iuran Kas rilis awal. (PTT walkie-talkie di app saat ini simulasi UI, dilacak terpisah.)",
-            engineeringRoadmapFix = "Tandai jelas sebagai PENDING/DEFERRED dan kerjakan setelah prioritas inti produksi stabil; pisahkan dari isu PTT radio."
         )
     )
 }

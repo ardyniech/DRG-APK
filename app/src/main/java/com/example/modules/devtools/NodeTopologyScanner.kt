@@ -51,7 +51,7 @@ object NodeTopologyScanner {
         TopologyNode(
             nodeId = "NODE-MESH-01",
             nodeName = "P2P/Mesh Radio Node (Konseptual)",
-            nodeType = "Offline Ad-Hoc Intercom (belum end-to-end)",
+            nodeType = "Offline Ad-Hoc (belum end-to-end)",
             endpointHost = "Konseptual: multicast/WiFi Direct (belum aktif)",
             protocol = "Rencana: UDP multicast / WebRTC (belum terimplementasi)",
             isConnected = false,

@@ -59,7 +59,6 @@ fun defaultLauncherApps(): List<DesktopAppItem> = listOf(
     DesktopAppItem("posko", "Anggota", Icons.Default.Groups, DrgGrabGreenPrimary, MainNavTab.MEMBERS),
     DesktopAppItem("kas", "Kas Wallet", Icons.Default.AccountBalanceWallet, DrgAmberWarning, MainNavTab.KAS),
     DesktopAppItem("bengkel", "Forum Mitra", Icons.Default.Build, DrgBlueAccent, MainNavTab.FORUM),
-    DesktopAppItem("intercom", "PTT Radio", Icons.Default.CellTower, DrgPurpleAccent, MainNavTab.COMMUNITY),
     DesktopAppItem("ai", "AI Assistant", Icons.Default.SmartToy, DrgIndigoBlueAccent, MainNavTab.COMMUNITY),
     DesktopAppItem("workflow", "Alur Lapangan", Icons.Default.ElectricBike, DrgWarningText, MainNavTab.FIELD_WORKFLOW),
     DesktopAppItem("devtools", "Dev Tools", Icons.Default.Terminal, DrgEmeraldAccent, MainNavTab.DEV_TOOLS),

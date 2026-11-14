@@ -11,7 +11,7 @@ allowBackup=false tanpa backup, schema Room hilang, drift docs,
 nilai DevTools fake, TODO/FIXME, dead onClick, hardcode warna,
 permission kurang, gradlew mode, androidTest kosong, Detekt hilang,
 release signing hilang, dependabot pending, file temp untracked,
-marketplace/arisan ditunda (kas saja untuk finansial).
+marketplace ditunda (kas saja untuk finansial).
 
 Severity: BLOCKER (multi-user rusak), MAJOR (production risk),
 MINOR (hygiene), NOTE (deferred).
@@ -222,7 +222,7 @@ def check_hygiene_small():
     # saran finansial scope
     feats = read(".github/about/features.json")
     if "marketplace" in feats and "DEFERRED" not in feats:
-        add("NOTE", "planning", "Fitur marketplace/arisan masih 'Direncanakan' selevel blocker — padahal scope finansial sementara hanya iuran kas.",
+        add("NOTE", "planning", "Fitur marketplace masih 'Direncanakan' selevel blocker — padahal scope finansial sementara hanya iuran kas.",
             "Tandai DEFERRED agar DevTools tidak hitung sebagai blocker rilis awal.")
 
 def main():
@@ -248,7 +248,7 @@ def main():
                 print(f"  - [{f['category']}] {f['detail']}")
                 print(f"      Fix: {f['fix']}")
         print("\nRingkasan: BLOCKER harus diperbaiki sebelum klaim multi-user.")
-        print("Catatan finansial: Marketplace/Arisan DEFERRED — Kas (iuran) saja yang wajib rilis awal.")
+        print("Catatan finansial: Marketplace DEFERRED — Kas (iuran) saja yang wajib rilis awal.")
     if fail_blocker and any(f["severity"] == "BLOCKER" for f in FINDINGS):
         sys.exit(1)
     sys.exit(0)

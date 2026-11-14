@@ -26,17 +26,17 @@ class DevToolsPhaseTreeAndUiUxTest {
         assertTrue("Phase 1 must be flagged with defects", phase1.hasAnyDefect)
         assertEquals(PhaseTreeStatus.TERKENDALA_CACAT, phase1.overallStatus)
 
-        // Phase 2: Asuransi is DEFERRED (not a defect/progress gap); events are still in progress
+        // Phase 2: Asuransi removed; events are still in progress
         val phase2 = phases.first { it.phaseNumber == 2 }
-        assertEquals(1, phase2.deferredFeatures)
-        assertTrue("Deferred must be excluded from phase completion denominator", phase2.inScopeFeatures < phase2.totalFeatures)
+        assertEquals(0, phase2.deferredFeatures)
+        assertTrue("In-scope equals total when no deferred features", phase2.inScopeFeatures == phase2.totalFeatures)
         assertEquals(PhaseTreeStatus.DALAM_PENGERJAAN, phase2.overallStatus)
 
-        // Phase 3 has defects (PTT simulation) while Bluetooth intercom is DEFERRED
+        // Phase 3 has defects (PTT simulation); intercom helm removed
         val phase3 = phases.first { it.phaseNumber == 3 }
         assertTrue("Phase 3 must be flagged with defects", phase3.hasAnyDefect)
         assertEquals(PhaseTreeStatus.TERKENDALA_CACAT, phase3.overallStatus)
-        assertEquals(1, phase3.deferredFeatures)
+        assertEquals(0, phase3.deferredFeatures)
 
         // Check each leaf has what & why
         phases.forEach { phase ->
@@ -58,7 +58,7 @@ class DevToolsPhaseTreeAndUiUxTest {
         assertTrue("Total sub-features must be > 0", m.totalFeatures > 0)
         assertTrue("Completed count must be <= in-scope count", m.completedFeatures <= m.inScopeFeatures)
         assertTrue("Defect count must be > 0 due to identified flaws", m.defectFeatures > 0)
-        assertTrue("Deferred must be tracked separately", m.deferredFeatures > 0)
+        assertTrue("Deferred count now 0 after removal of deferred features", m.deferredFeatures == 0)
         assertEquals("Total must equal in-scope + deferred", m.totalFeatures, m.inScopeFeatures + m.deferredFeatures)
         assertTrue("In-progress + defect + completed cannot exceed in-scope", m.completedFeatures + m.inProgressFeatures + m.defectFeatures <= m.inScopeFeatures)
         assertEquals(

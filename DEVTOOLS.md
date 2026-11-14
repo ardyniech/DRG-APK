@@ -61,10 +61,9 @@ Prinsip Kejujuran Dev: **Jika salah satu sub-fitur memiliki cacat atau berstatus
    - Sub-Fase 1.2: Wewenang Role & Keamanan Sesi (Terkendala Cacat - Validasi role masih client-side di Room).
 2. **Fase 2: Komunitas, Kas Transparan & Mitra (Status: TERKENDALA CACAT)**
    - Sub-Fase 2.1: Kas Transparan & Laporan Keuangan (Lulus Sempurna - Input kas & export text/CSV).
-   - Sub-Fase 2.2: Forum Diskusi & Rating Bengkel (Terkendala Cacat - Tombol kirim dokumen asuransi belum terhubung ke upload worker).
-3. **Fase 3: Hardware, Audio Intercom & Offline P2P (Status: TERKENDALA CACAT)**
+   - Sub-Fase 2.2: Forum Diskusi & Rating Bengkel (Terkendala Cacat - ulasan & rating bengkel rekanan).
+3. **Fase 3: Hardware & Offline P2P (Status: TERKENDALA CACAT)**
    - Sub-Fase 3.1: P2P Walkie Talkie & Mesh Radar (Terkendala Cacat - Terbatas satu subnet WiFi posko).
-   - Sub-Fase 3.2: Integrasi Bluetooth Intercom Helm (Terkendala Cacat - Dead button pairing GATT helm).
 4. **Fase 4: Emergency SOS & Telemetri Lapangan (Status: TERKENDALA CACAT)**
    - Sub-Fase 4.1: Trigger Darurat & Sirene Taktis (Lulus Sempurna - Countdown 5s & pulsa haptic).
    - Sub-Fase 4.2: Transmisi Sinyal Darurat Lapangan (Terkendala Cacat - SMS fallback butuh pulsa & GPS polling 1s memakan baterai).
@@ -154,7 +153,7 @@ Skrip `.github/scripts/audit_minus.py` adalah detektor statis paling cerewet rep
 | BLOCKER | Fake "Tersinkronisasi ke Cloud" tanpa network call; Firestore/Auth dikomentari + `google-services.json` hilang; seed PIN 1234; P2P signaling `Log.d` saja | **BELUM multi-user** — dilarang klaim sinkron/berbagi data |
 | MAJOR | Permission kurang (RECORD_AUDIO, dsb.); ICE palsu `candidate:1`; login lokal saja; `allowBackup=false` tanpa backup; NIK/SIM dummy di DEFAULT; PIN SHA-256 bukan Keystore; schema `1-4,8,9.json` hilang; TODO `DashboardHeader`; CI tanpa release | Risiko produksi / data-loss / keamanan |
 | MINOR | SQLite belum SQLCipher; gradlew 644; androidTest 1 file; Detekt hilang; hex hardcode | Hygiene / debt kecil yang tetap dilaporkan |
-| NOTE | Marketplace/arisan [DEFERRED] (scope kas saja) | Deferred — bukan blocker rilis awal |
+| NOTE | Marketplace [DEFERRED] (scope kas saja) | Deferred — bukan blocker rilis awal |
 
 **Aturan finansial (2026-11-09):** Marketplace & arisan = `[DEFERRED]` di `.github/about/features.json` + `ROADMAP.md` + SSOT. Finansial wajib rilis awal hanya **iuran kas** (Kas Transparan, phase-1).
 

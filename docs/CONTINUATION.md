@@ -22,9 +22,7 @@
 ## DevTools metric truth (2026-11-13)
 - Angka besar di header DevTools **bukan** progres fitur. Itu `ProjectHealthScore.finalScore`:
   `95 − (6 cacat produksi × 2) − (5 gap progres × 2) = 73` → **Grade B (heuristik)**.
-- **Progres Fitur (PhaseTree, tab Tree Progress):** `LULUS ÷ fitur in-scope` = **9/17 = 52.9%**
-  (total 19 · in-scope 17 · lulus 9 · cacat 3 · dikerjakan 5 · deferred 2).
-- `DEFERRED` (Asuransi `F-2.2.2`, Intercom Helm `F-3.2.1`) dikecualikan dari denominator progres.
+- **Progres Fitur (PhaseTree, tab Tree Progress):** `LULUS ÷ fitur in-scope` (dihitung runtime oleh `PhaseTreeScanner`). Fitur deferred (Asuransi `F-2.2.2`, Intercom Helm `F-3.2.1`) **dihapus** dari roadmap — rilis awal hanya iuran Kas; total in-scope turun 2.
 - `progressPenaltiesCount` kini dinamis dari `PhaseTreeScanner.getMetrics().progressGapCount` (bukan hardcoded 1).
 
 ## Done (recent batches)
@@ -47,7 +45,7 @@
   - **Root cause "81%":** `DevToolsGlassHeader`/`DevScoreBanner` menampilkan `ProjectHealthScore.finalScore`, bukan progres fitur. Sekarang dilabeli **"Skor Kesehatan"** + catatan eksplisit "BUKAN progres fitur".
   - **PhaseTree scope-aware:** `PhaseTreeStatus.DEFERRED` baru; `DevPhase`/`DevSubPhase` punya `inScopeFeatures`, `deferredFeatures`, `completionPercentage` (lulus ÷ in-scope); `PhaseTreeScanner.getMetrics(): PhaseTreeMetrics`.
   - **Tab Tree Progress:** menampilkan total/in-scope/lulus/cacat/dikerjakan/deferred + **Progres in-scope 52.9%** + disclaimer metrik kurasi (bukan runtime/build/produksi).
-  - **Scope:** `F-2.2.2` (Asuransi) & `F-3.2.1` (Intercom Helm) → `DEFERRED`; event `F-2.3.1` (engine) & `F-2.3.2` (UI) → `DALAM_PENGERJAAN`.
+  - **Scope:** event `F-2.3.1` (engine) & `F-2.3.2` (UI) → `DALAM_PENGERJAAN`. (Asuransi/Intercom Helm dihapus dari roadmap.)
   - **`PhaseTreePhase1And2.kt` dipecah** → `PhaseTreePhase1.kt` + `PhaseTreePhase2.kt` (patuh <125 baris).
   - **Fakta basi dibersihkan:** Room v13/23 → **v14/26** di `CodeIntegrityAuditor`, `MultiUserGapScanner`, `DevServerTab`, `NodeTopologyScanner`, `DevGitVersionTab`, `DevTechStackTab`, `DevRepoHealthTab`, `SecurityAuditEngine`; klaim "Firebase Firestore aktif" → "belum aktif penuh; local-first".
   - **Build blocker (bukan test):** KSP gagal karena konverter ganda `EventPhaseStage`/`CommitteeTaskStatus` di `Converters.kt` + `EventConverters.kt` → duplikat di `Converters.kt` dihapus (satu konversi per tipe, sumber tunggal `EventConverters.kt`).
@@ -102,7 +100,7 @@
 - **Release `v1.10`:** `release not found`. **Keputusan owner (L2):** SQLCipher; production signing secrets.
 
 ## Scope reminders (production)
-- Finansial rilis awal = **iuran Kas saja**. **Marketplace/Arisan = DEFERRED**. **Asuransi & Intercom Helm = DEFERRED** (dikecualikan dari denominator progres PhaseTree, bukan cacat in-scope).
+- Finansial rilis awal = **iuran Kas saja**. **Marketplace = DEFERRED**. Asuransi & Intercom Helm **dihapus** dari roadmap (rilis awal hanya iuran Kas). (dikecualikan dari denominator progres PhaseTree, bukan cacat in-scope).
 - Jangan klaim production-ready jika ada gap kritis/CI gagal/perilaku belum terverifikasi.
 
 ## How to resume (for next AI/model)

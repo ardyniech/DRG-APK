@@ -32,7 +32,7 @@
       "title": "Fase 3 — Layanan Finansial & Kemitraan",
       "target": "v2.0.0",
       "state": "planned",
-      "summary": "Arisan digital, dana talangan darurat, marketplace kebutuhan operasional, dan klaim asuransi/santunan driver."
+      "summary": "Marketplace kebutuhan operasional driver (deferred)."
     }
   ],
   "features": [
@@ -138,7 +138,7 @@
       "description": "Walkie-talkie PTT, asisten AI Gemini, proteksi, escort satgas, dan koperasi wholesale.",
       "phase": "phase-2",
       "modulePath": "app/src/main/java/com/example/modules/services",
-      "testKeywords": ["AiAssistantKnowledge", "HelmetIntercomMonitor", "AudioRouteManager"]
+      "testKeywords": ["AiAssistantKnowledge", "AudioRouteManager"]
     },
     {
       "id": "shell",
@@ -199,7 +199,7 @@
     {
       "id": "core-audio",
       "name": "Audio Route & Alarm",
-      "description": "Routing audio (speaker/alarm) dan manajer alarm sirine SOS; integrasi intercom helm PENDING DEV.",
+      "description": "Routing audio (speaker/alarm) dan manajer alarm sirine SOS.",
       "phase": "phase-1",
       "modulePath": "app/src/main/java/com/example/core/audio",
       "testKeywords": ["AudioRouteManager", "SosHapticTactile"]
@@ -263,21 +263,9 @@
       "phase": "phase-2"
     },
     {
-      "id": "arisan",
-      "name": "Arisan Digital & Dana Talangan",
-      "description": "[DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Arisan komunitas dan dana talangan darurat berbasis kas terverifikasi.",
-      "phase": "phase-3"
-    },
-    {
       "id": "marketplace",
       "name": "Marketplace Kebutuhan Operasional",
       "description": "[DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.",
-      "phase": "phase-3"
-    },
-    {
-      "id": "insurance",
-      "name": "Klaim Asuransi & Santunan",
-      "description": "Integrasi klaim asuransi mandiri dan santunan cepat bagi driver korban kecelakaan. (PENDING DEV)",
       "phase": "phase-3"
     },
     {

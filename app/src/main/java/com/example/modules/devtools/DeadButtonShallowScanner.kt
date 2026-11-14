@@ -39,24 +39,6 @@ object DeadButtonShallowScanner {
             hasDeadButtons = false,
             codeLineCount = 112
         ),
-        FeatureAuditItem(
-            name = "Insurance Claim (Asuransi) — PENDING DEV",
-            module = "Services",
-            stage = FeatureStage.BENIH,
-            hasDeadButtons = false,
-            isShallow = false,
-            shallowReason = "DEFERRED/PENDING DEV di luar scope rilis awal (iuran Kas saja) — belum diimplementasikan.",
-            codeLineCount = 98
-        ),
-        FeatureAuditItem(
-            name = "Helmet GATT Bluetooth Intercom — PENDING DEV",
-            module = "Hardware",
-            stage = FeatureStage.ANAK,
-            hasDeadButtons = false,
-            isShallow = false,
-            shallowReason = "DEFERRED/PENDING DEV di luar scope rilis awal — integrasi helm/intercom ditunda.",
-            codeLineCount = 85
-        )
     )
 
     fun countDeadButtons(): Int = getAuditedFeatures().count { it.hasDeadButtons }

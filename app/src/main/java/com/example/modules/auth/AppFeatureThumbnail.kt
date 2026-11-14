@@ -94,7 +94,7 @@ object AppFeatureRepository {
             id = "ptt",
             title = "Walkie-Talkie PTT (Simulasi UI)",
             category = "Komunikasi Suara",
-            description = "Antarmuka PTT/walkie-talkie (simulasi). Transmisi audio real-time antar-driver/intercom helm belum diimplementasikan.",
+            description = "Antarmuka PTT/walkie-talkie (simulasi). Transmisi audio real-time antar-driver belum diimplementasikan.",
             icon = Icons.Default.RecordVoiceOver,
             drawableResId = R.drawable.img_ptt_intercom_real_1789133521397,
             badgeText = "Dalam Pengembangan",
