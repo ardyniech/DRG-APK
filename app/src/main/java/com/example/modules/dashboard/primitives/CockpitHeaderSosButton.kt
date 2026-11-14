@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ui.theme.DrgTrafficRed
 import com.example.shared.utils.bouncyClick
 import com.example.ui.theme.DrgRedPanic
 import com.example.ui.theme.DrgRedPanicDark
@@ -47,7 +48,7 @@ fun CockpitHeaderSosButton(
     )
 
     val squircle = RoundedCornerShape(18.dp)
-    val rubyGradient = Brush.linearGradient(listOf(Color(0xFFEF4444), DrgRedPanic, DrgRedPanicDark))
+    val rubyGradient = Brush.linearGradient(listOf(DrgTrafficRed, DrgRedPanic, DrgRedPanicDark))
 
     Box(
         modifier = modifier.defaultMinSize(minWidth = 56.dp, minHeight = 52.dp),

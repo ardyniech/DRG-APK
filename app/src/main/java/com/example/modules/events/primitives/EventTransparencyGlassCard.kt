@@ -57,7 +57,7 @@ fun EventTransparencyGlassCard(
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
                     EventPillTag(event.category, visualTheme.primaryColor)
-                    EventPillTag(if (report.daysRemaining >= 0) "H-${report.daysRemaining}" else "Lewat", Color(0xFF4F46E5))
+                    EventPillTag(if (report.daysRemaining >= 0) "H-${report.daysRemaining}" else "Lewat", DrgIndigoVioletAccent)
                 }
                 EventPillTag(report.riskLevel.label, riskColor)
             }
@@ -99,7 +99,7 @@ fun EventTransparencyGlassCard(
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("Tugas: ${report.completedTasks}/${report.totalTasks} selesai", fontFamily = SpaceGroteskFontFamily, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = DrgTextDark)
-                Text("Dana: Rp ${rupiahFmt.format(event.collectedFundsRupiah)} / ${rupiahFmt.format(event.estimatedBudgetRupiah)}", fontFamily = SpaceGroteskFontFamily, fontSize = 10.sp, color = Color(0xFF059669), fontWeight = FontWeight.Bold)
+                Text("Dana: Rp ${rupiahFmt.format(event.collectedFundsRupiah)} / ${rupiahFmt.format(event.estimatedBudgetRupiah)}", fontFamily = SpaceGroteskFontFamily, fontSize = 10.sp, color = DrgEmeraldAccent, fontWeight = FontWeight.Bold)
                 Text("${report.unresolvedFeedback} masukan", fontFamily = SpaceGroteskFontFamily, fontSize = 10.sp, color = if (report.criticalFeedback > 0) DrgRedPanic else DrgTextSecondary, fontWeight = FontWeight.Bold)
             }
         }

@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ui.theme.DrgRoseBgSoft
 import com.example.ui.theme.DrgRedPanic
 import com.example.ui.theme.DrgRedPanicDark
 import com.example.ui.theme.DrgRedPanicDarker
@@ -65,7 +66,7 @@ fun DrgBottomNavSatellite(
     )
     val rimColor = if (hasAlert || isEmergencyActiveTab) Color.White.copy(alpha = 0.9f) else DrgRedPanic.copy(alpha = 0.35f)
     val glowColor = if (hasAlert) DrgRedPanic else accentColor
-    val bgBrush = Brush.verticalGradient(listOf(baseFill, if (hasAlert || isEmergencyActiveTab) DrgRedPanicDarker else Color(0xFFFFF1F2)))
+    val bgBrush = Brush.verticalGradient(listOf(baseFill, if (hasAlert || isEmergencyActiveTab) DrgRedPanicDarker else DrgRoseBgSoft))
 
     Box(modifier = modifier.size(60.dp), contentAlignment = Alignment.Center) {
         if (hasAlert) {

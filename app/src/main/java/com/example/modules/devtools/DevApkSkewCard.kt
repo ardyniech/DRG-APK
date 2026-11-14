@@ -28,7 +28,7 @@ fun DevApkSkewCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         backgroundColor = DrgGlassSurfaceSoft,
-        borderHighlightColor = Color(0xFF93C5FD),
+        borderHighlightColor = DrgGlassBorderBlueLight,
         contentPadding = 12.dp
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -37,7 +37,7 @@ fun DevApkSkewCard(
                     Icon(Icons.Default.CheckCircle, contentDescription = null, tint = DrgGreenPrimary, modifier = Modifier.size(16.dp))
                     Text("Runtime APK / DB / DEX Telemetry", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextDark)
                 }
-                Box(modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(Color(0xFFE0F2FE)).padding(horizontal = 7.dp, vertical = 2.dp)) {
+                Box(modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(DrgGlassTintBlueSoft).padding(horizontal = 7.dp, vertical = 2.dp)) {
                     Text("v${apkInfo.installedVersionName}", fontFamily = SpaceGroteskFontFamily, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = DrgBlueAccent)
                 }
             }

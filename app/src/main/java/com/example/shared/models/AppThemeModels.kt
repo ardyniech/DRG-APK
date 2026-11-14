@@ -1,5 +1,17 @@
 package com.example.shared.models
 
+import com.example.ui.theme.DrgTealAccent
+import com.example.ui.theme.DrgOrangeWarning
+import com.example.ui.theme.DrgIndigoVioletAccent
+import com.example.ui.theme.DrgGreenPrimary
+import com.example.ui.theme.DrgGreenDark
+import com.example.ui.theme.DrgGreenContainer
+import com.example.ui.theme.DrgGlassTintBlueSoft
+import com.example.ui.theme.DrgGlassBorderGreenLight
+import com.example.ui.theme.DrgGlassBorderBlueLight
+import com.example.ui.theme.DrgEmeraldAccent
+import com.example.ui.theme.DrgBlueAccent
+import com.example.ui.theme.DrgAmberWarning
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import com.example.ui.theme.DrgGrabGreenPrimary
@@ -25,24 +37,24 @@ enum class AppVisualTheme(
         title = "Emerald Aurora",
         subtitle = "Segar Khas DRG",
         primaryColor = DrgGrabGreenPrimary,
-        secondaryColor = Color(0xFF059669),
+        secondaryColor = DrgEmeraldAccent,
         glassBg = Color(0xCCFFFFFF),
         pillBg = Color(0xFFE3F8EC),
-        glassBorderColor = Color(0xFF86EFAC),
+        glassBorderColor = DrgGlassBorderGreenLight,
         skyTop = Color(0xFF9DE8C1),
         skyMid = Color(0xFFCFF4E1),
         skyBottom = Color(0xFFECFBF2),
-        orbPrimary = Color(0xFF00B14F),
-        orbSecondary = Color(0xFFF59E0B)
+        orbPrimary = DrgGreenPrimary,
+        orbSecondary = DrgAmberWarning
     ),
     MINIMAL_PEARL(
         title = "Minimal Pearl",
         subtitle = "Frosted Sky Ice",
-        primaryColor = Color(0xFF0284C7),
-        secondaryColor = Color(0xFF4F46E5),
+        primaryColor = DrgBlueAccent,
+        secondaryColor = DrgIndigoVioletAccent,
         glassBg = Color(0xD4FFFFFF),
-        pillBg = Color(0xFFE0F2FE),
-        glassBorderColor = Color(0xFF93C5FD),
+        pillBg = DrgGlassTintBlueSoft,
+        glassBorderColor = DrgGlassBorderBlueLight,
         skyTop = Color(0xFFBBD7FA),
         skyMid = Color(0xFFE1EDFD),
         skyBottom = Color(0xFFF4F8FF),
@@ -52,8 +64,8 @@ enum class AppVisualTheme(
     DEEP_SUNSET_TEAL(
         title = "Sunset Teal",
         subtitle = "Horizon Senja",
-        primaryColor = Color(0xFF0D9488),
-        secondaryColor = Color(0xFFEA580C),
+        primaryColor = DrgTealAccent,
+        secondaryColor = DrgOrangeWarning,
         glassBg = Color(0xCCFFFDF9),
         pillBg = Color(0xFFCCFBF1),
         glassBorderColor = Color(0xFF5EEAD4),

@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.ui.theme.DrgGlassBorderGreenLight
 import com.example.ui.theme.DrgGlassSurfaceSoft
 import com.example.shared.utils.bouncyClick
 
@@ -29,7 +30,7 @@ fun DrgLuminousGlassCard(
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(24.dp),
     backgroundColor: Color = DrgGlassSurfaceSoft,
-    borderHighlightColor: Color = Color(0xFF86EFAC),
+    borderHighlightColor: Color = DrgGlassBorderGreenLight,
     contentPadding: Dp = 16.dp,
     onClick: (() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit

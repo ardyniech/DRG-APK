@@ -16,6 +16,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ui.theme.DrgDisabledGradientStart
+import com.example.ui.theme.DrgDisabledGradientEnd
 import com.example.shared.utils.bouncyClick
 
 @Composable
@@ -36,7 +38,7 @@ fun DrgGlassPrimaryButton(
             .height(52.dp)
             .shadow(8.dp, shape, ambientColor = theme.primaryColor.copy(alpha = 0.36f), spotColor = theme.primaryColor.copy(alpha = 0.25f))
             .clip(shape)
-            .background(if (enabled) gradient else Brush.linearGradient(listOf(Color(0xFF94A3B8), Color(0xFF64748B))))
+            .background(if (enabled) gradient else Brush.linearGradient(listOf(DrgDisabledGradientStart, DrgDisabledGradientEnd)))
             .let { if (enabled) it.bouncyClick { onClick() } else it },
         contentAlignment = Alignment.Center
     ) {
