@@ -13,21 +13,10 @@ fun DRGViewModel.addWorkshopReview(
     serviceType: String,
     comment: String
 ) = viewModelScope.launch {
-    val member = currentMember.value ?: DriverMember(
-        id = "DRG-001",
-        name = "Driver DRG",
-        driverId = "DRG-001",
-        phone = "08123456789",
-        role = MemberRole.ANGGOTA,
-        motorcyclePlate = "N 1234 XX",
-        motorcycleModel = "Honda Vario 160",
-        rating = 4.9f,
-        reviewCount = 10,
-        loyaltyPoints = 150,
-        loyaltyTier = "Kapten",
-        verificationStatus = VerificationStatus.VERIFIED,
-        screeningNotes = "Anggota Aktif DRG"
-    )
+    val member = currentMember.value ?: run {
+        showToast("Silakan masuk dengan Google terlebih dahulu untuk memberi ulasan.")
+        return@launch
+    }
     repository.addWorkshopReview(workshop, member, rating, serviceType, comment)
     showToast("Ulasan untuk ${workshop.name} berhasil disimpan! (+15 XP)")
 }

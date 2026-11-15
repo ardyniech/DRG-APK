@@ -11,9 +11,13 @@ import com.example.core.cache.LocationSyncPowerProfile
 import com.example.core.cache.MapCachePolicy
 import com.example.core.viewmodel.*
 import com.example.modules.notifications.settings.SettingsScreen
+import com.example.modules.profile.CloudBackupCard
 import com.example.modules.profile.ProfileAboutEntry
 import com.example.modules.profile.ProfileUpdateEntry
 import com.example.shared.models.*
+import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 
 @Composable
@@ -37,6 +41,8 @@ fun SettingsTabDelegate(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val memberId = currentMember?.id ?: "DRG-001"
+    val syncStatus by viewModel.syncEngine.syncStatus.collectAsStateWithLifecycle()
+    val userEmail = rememberFirebaseAuthEmail(context)
     val savedPref by viewModel.getNotificationPrefFlow(memberId)
         .collectAsStateWithLifecycle(initialValue = NotificationPreference(memberId))
 
@@ -73,10 +79,25 @@ fun SettingsTabDelegate(
             scope.launch { snackbarHostState.showSnackbar("Preferensi pengaturan disimpan") }
         },
         systemEntriesContent = {
+            CloudBackupCard(
+                syncStatus = syncStatus,
+                userEmail = userEmail,
+                onSyncNow = {
+                    viewModel.syncOwnProfileToCloud(currentMember)
+                    viewModel.syncEngine.triggerBackgroundSync(isPowerSaverMode)
+                },
+                onUploadBackup = { viewModel.uploadEncryptedCloudBackup() },
+                onRestoreBackup = { viewModel.restoreEncryptedCloudBackup() }
+            )
             ProfileUpdateEntry()
             ProfileAboutEntry(onOpenAbout = { viewModel.selectTab(MainNavTab.ABOUT) }, visualTheme = visualTheme)
         },
         onBack = { viewModel.selectTab(MainNavTab.PROFILE) },
         contentPadding = scaffoldPadding
     )
+}
+
+@Composable
+private fun rememberFirebaseAuthEmail(context: android.content.Context): String? {
+    return if (FirebaseApp.getApps(context).isNotEmpty()) Firebase.auth.currentUser?.email else null
 }

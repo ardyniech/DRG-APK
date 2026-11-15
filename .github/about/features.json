@@ -39,7 +39,7 @@
     {
       "id": "auth",
       "name": "Autentikasi & Onboarding",
-      "description": "Landing, login PIN/KTA, registrasi anggota, dan area dropdown.",
+      "description": "Landing 360°, Google Sign-In tunggal (Credential Manager), registrasi KTA tertaut Google UID, dan area dropdown.",
       "phase": "phase-1",
       "modulePath": "app/src/main/java/com/example/modules/auth",
       "testKeywords": ["AuthAndProfileSecurity", "LandingFeatureAutoScroll"]

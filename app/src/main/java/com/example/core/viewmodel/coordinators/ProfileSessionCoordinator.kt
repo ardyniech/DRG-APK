@@ -1,13 +1,14 @@
 package com.example.core.viewmodel.coordinators
 
+import android.content.Context
 import android.content.SharedPreferences
+import com.example.core.firebase.GoogleAuthManager
 import com.example.core.repository.DRGRepository
 import com.example.shared.models.*
 import com.example.shared.utils.SecurityUtils
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -19,21 +20,14 @@ class ProfileSessionCoordinator(
 ) {
     private val _currentMemberId = MutableStateFlow("")
     val currentMemberId: StateFlow<String> = _currentMemberId.asStateFlow()
-
     private val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
 
     init {
-        val savedMemberId = sharedPrefs?.getString("logged_in_member_id", null)
-        if (savedMemberId != null && SecurityUtils.validateSession(sharedPrefs, savedMemberId)) {
-            _currentMemberId.value = savedMemberId
+        val savedId = sharedPrefs?.getString("logged_in_member_id", null)
+        if (savedId != null && SecurityUtils.validateSession(sharedPrefs, savedId)) {
+            _currentMemberId.value = savedId
             _isLoggedIn.value = true
-        } else {
-            // Auto-login to primary demo driver (DRG-001) so app boots directly into Dashboard UI
-            val defaultMemberId = "DRG-001"
-            _currentMemberId.value = defaultMemberId
-            _isLoggedIn.value = true
-            sharedPrefs?.let { SecurityUtils.generateAndStoreSession(it, defaultMemberId) }
         }
     }
 
@@ -44,40 +38,49 @@ class ProfileSessionCoordinator(
         showToast("Selamat datang kembali di DRG Malang Raya!")
     }
 
-    fun logout() {
+    fun loginWithGoogleUser(user: FirebaseUser, onSynced: (DriverMember) -> Unit = {}) {
+        scope.launch {
+            val isAdmin = user.isEmailVerified && user.email == ADMIN_EMAIL
+            val mappedId = if (isAdmin) "DRG-001" else user.uid
+            val draft = PendingRegistrationPrefs.consume(sharedPrefs)
+            val existing = repository.db.memberDao().getMemberById(mappedId)
+            val member = existing?.let {
+                if (draft != null) it.copy(name = draft.name, phone = draft.phone, motorcyclePlate = draft.plate, motorcycleModel = draft.model, baseArea = draft.area)
+                    .also { updated -> repository.updateMember(updated) }
+                else it
+            } ?: PendingRegistrationPrefs.buildGoogleMember(mappedId, user, isAdmin, draft).also { repository.registerMember(it) }
+            if (draft != null && draft.draftId.isNotBlank() && draft.draftId != mappedId) {
+                repository.db.memberDao().deleteMemberById(draft.draftId)
+            }
+            _currentMemberId.value = member.id
+            _isLoggedIn.value = true
+            sharedPrefs?.let { SecurityUtils.generateAndStoreSession(it, member.id) }
+            onSynced(member)
+            showToast("Masuk sebagai ${member.name} (${user.email ?: "Google"})")
+        }
+    }
+
+    fun logout(context: Context? = null) {
         _isLoggedIn.value = false
         _currentMemberId.value = ""
         sharedPrefs?.let { SecurityUtils.clearSession(it) }
+        if (context != null) scope.launch { GoogleAuthManager.signOut(context) }
         showToast("Sesi berhasil keluar. Salam Gacor!")
     }
 
-    fun registerNewDriver(name: String, phone: String, plate: String, model: String, area: String, pin: String) {
-        val timestampHex = System.currentTimeMillis().toString(36).uppercase()
-        val randomEntropy = UUID.randomUUID().toString().replace("-", "").take(6).uppercase()
+    fun registerNewDriver(name: String, phone: String, plate: String, model: String, area: String) {
+        val ts = System.currentTimeMillis().toString(36).uppercase()
+        val rand = UUID.randomUUID().toString().replace("-", "").take(6).uppercase()
+        val draftId = "DRG-$ts-$rand"
         scope.launch {
             runCatching {
-                val newDriver = DriverMember(
-                    id = "DRG-$timestampHex-$randomEntropy", name = name, driverId = "DRG-REG-$timestampHex",
-                    phone = phone, role = MemberRole.ANGGOTA, motorcyclePlate = plate, motorcycleModel = model,
-                    rating = 5.0f, reviewCount = 0, loyaltyPoints = 10, loyaltyTier = "Junior Rider",
-                    verificationStatus = VerificationStatus.PENDING_SCREENING,
-                    screeningNotes = "Pendaftar baru, menunggu proses screening Admin & Dewan Etika.",
-                    isOnline = false, currentStatus = "Pendaftaran Baru (Pending)", baseArea = area
-                )
-                repository.registerMember(newDriver)
-                sharedPrefs?.let { sp ->
-                    SecurityUtils.storePinHash(sp, newDriver.id, pin)
-                    SecurityUtils.storePinHash(sp, newDriver.phone, pin)
-                    SecurityUtils.storePinHash(sp, newDriver.driverId, pin)
-                }
-                val log = AdminLogUtils.createLog(null, "mendaftar sebagai calon anggota baru (menunggu screening)", newDriver.name)
-                repository.adminLogRepo.insertLog(log)
-                newDriver.name
-            }.onSuccess { driverName ->
-                showToast("Pendaftaran $driverName diajukan! Menunggu screening pengurus DRG.")
-            }.onFailure { error ->
-                showToast("Gagal mendaftar: ${error.localizedMessage}")
-            }
+                PendingRegistrationPrefs.save(sharedPrefs, PendingRegistrationDraft(draftId, name, phone, plate, model, area))
+                val driver = PendingRegistrationPrefs.buildPendingMember(draftId, "DRG-REG-$ts", name, phone, plate, model, area)
+                repository.registerMember(driver)
+                repository.adminLogRepo.insertLog(AdminLogUtils.createLog(null, "mengajukan pendaftaran KTA", driver.name))
+                driver.name
+            }.onSuccess { showToast("Biodata $it tersimpan! Masuk dengan Google untuk menautkan KTA.") }
+                .onFailure { showToast("Gagal mendaftar: ${it.localizedMessage}") }
         }
     }
 
@@ -88,15 +91,16 @@ class ProfileSessionCoordinator(
         if (cur == null) return
         val updated = cur.copy(
             motorcyclePlate = plate, motorcycleModel = model, phone = phone, baseArea = area, profilePhotoUrl = photoUrl,
-            address = address, bloodType = bloodType, emergencyContact = emergencyContact, emergencyPhone = emergencyPhone,
-            simNumber = simNumber, nik = nik
+            address = address, bloodType = bloodType, emergencyContact = emergencyContact,
+            emergencyPhone = emergencyPhone, simNumber = simNumber, nik = nik
         )
         scope.launch { runCatching { repository.updateMember(updated) }.onSuccess { showToast("Biodata lengkap berhasil disimpan.") } }
     }
 
     fun updateDutyStatus(cur: DriverMember?, status: String, isOnline: Boolean) {
         if (cur == null) return
-        val updated = cur.copy(currentStatus = status, isOnline = isOnline)
-        scope.launch { runCatching { repository.updateMember(updated) }.onSuccess { showToast("Status: $status") } }
+        scope.launch { runCatching { repository.updateMember(cur.copy(currentStatus = status, isOnline = isOnline)) }.onSuccess { showToast("Status: $status") } }
     }
+
+    private companion object { const val ADMIN_EMAIL = "ardy.syafii@gmail.com" }
 }

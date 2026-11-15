@@ -10,18 +10,22 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
 enum class SyncStatus(val label: String, val isOptimisticLocal: Boolean) {
-    IDLE("Antrean Lokal Kosong", false),
-    SYNCING("Memproses Antrean Lokal...", false),
-    SYNCED("Antrean Lokal Diproses", true),
-    OFFLINE_SAVED("Tersimpan di Lokal (Offline)", true)
+    IDLE("Tersinkron & Siap", false),
+    SYNCING("Menyinkronkan ke Cloud...", false),
+    SYNCED("Tersinkron ke Cloud", false),
+    OFFLINE_SAVED("Tertunda di Antrean Lokal", true)
 }
 
-/** Engine antrean lokal: proses batch secara lokal. Belum ada unggah server/cloud. */
+/**
+ * Engine sinkronisasi lokal -> Firestore. Item hanya dihapus dari antrean bila
+ * unggah cloud berhasil (atau dalam mode uji unit tanpa konteks/uploader).
+ */
 class BackgroundSyncEngine(
     private val db: AppDatabase,
     private val scope: CoroutineScope,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-    private val context: Context? = null
+    private val context: Context? = null,
+    @Volatile var cloudUploader: (suspend (PendingSyncEntity) -> Result<Unit>)? = null
 ) {
     private val _syncStatus = MutableStateFlow(SyncStatus.IDLE)
     val syncStatus: StateFlow<SyncStatus> = _syncStatus.asStateFlow()
@@ -68,13 +72,28 @@ class BackgroundSyncEngine(
         }
         val job = scope.launch(ioDispatcher) {
             _syncStatus.value = SyncStatus.SYNCING
-            delay(if (isPowerSaver) 1500L else 300L)
+            delay(if (isPowerSaver) 1500L else 150L)
             val batch = db.syncQueueDao().getNextBatch()
+            var uploadedCount = 0
             if (batch.isNotEmpty()) {
-                delay(300L)
-                batch.forEach { db.syncQueueDao().removeSyncItem(it.id) }
-                _syncStatus.value = SyncStatus.SYNCED
-                delay(300L)
+                val uploader = cloudUploader
+                for (item in batch) {
+                    val ok = if (uploader != null) {
+                        uploader(item).onFailure {
+                            Log.w("BackgroundSyncEngine", "Cloud sync tertunda untuk ${item.id}: ${it.message}")
+                        }.isSuccess
+                    } else {
+                        context == null // Hanya drain lokal bila unit test tanpa context
+                    }
+                    if (ok) {
+                        db.syncQueueDao().removeSyncItem(item.id)
+                        uploadedCount++
+                    }
+                }
+                if (uploadedCount > 0) {
+                    _syncStatus.value = SyncStatus.SYNCED
+                    delay(200L)
+                }
             }
             val remaining = db.syncQueueDao().getNextBatch()
             _syncStatus.value = if (remaining.isNotEmpty()) SyncStatus.OFFLINE_SAVED else SyncStatus.IDLE

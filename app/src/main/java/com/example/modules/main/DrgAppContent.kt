@@ -23,6 +23,7 @@ import com.example.shared.utils.rememberDoubleBackExitHandler
 fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewModel) {
     val state = rememberDrgAppState(viewModel = viewModel, cashViewModel = cashViewModel)
     val context = LocalContext.current
+    val firebaseUser by rememberFirebaseAuthUser(context)
     var dashboardTheme by remember { mutableStateOf(AppThemePreferences.loadVisualTheme(context)) }
     var dashboardFocusMode by remember { mutableStateOf(AppThemePreferences.loadFocusMode(context)) }
     var showEmergencyTrigger by remember { mutableStateOf(false) }
@@ -37,14 +38,11 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
 
     val forumCount = remember(state.posts.value) { computeForumActivityCount(state.posts.value) }
     val openTasksCount = remember(state.tasks.value) { computeOpenTasksCount(state.tasks.value) }
-    val eventsCount = remember(state.communityEvents.value, state.eventFeedback.value) {
-        computeEventActivityCount(state.communityEvents.value, state.eventFeedback.value)
-    }
-    val liveCounts = rememberCommunityLiveCounts(
-        state.cashTransactions.value.size, forumCount, openTasksCount, state.members.value.size, eventsCount
-    )
+    val eventsCount = remember(state.communityEvents.value, state.eventFeedback.value) { computeEventActivityCount(state.communityEvents.value, state.eventFeedback.value) }
+    val liveCounts = rememberCommunityLiveCounts(state.cashTransactions.value.size, forumCount, openTasksCount, state.members.value.size, eventsCount)
+    val isAuthenticated = firebaseUser != null && state.isLoggedIn.value
 
-    BackHandler(enabled = state.isLoggedIn.value) {
+    BackHandler(enabled = isAuthenticated) {
         when {
             showEmergencyTrigger -> showEmergencyTrigger = false
             showAddKasDialog -> showAddKasDialog = false
@@ -59,9 +57,11 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
         }
     }
     CompositionLocalProvider(LocalAppVisualTheme provides dashboardTheme) {
-        if (!state.isLoggedIn.value) {
-            AuthContainerScreen(viewModel = viewModel, onLoginSuccess = { viewModel.login(it) })
-        } else {
+        val signedInUser = firebaseUser
+        if (signedInUser == null || !state.isLoggedIn.value) {
+            AuthContainerScreen(viewModel = viewModel)
+        } else key(signedInUser.uid) {
+            CloudSyncSessionEffect(viewModel = viewModel, firebaseUser = signedInUser, context = context)
             val headerLessTabs = remember { setOf(MainNavTab.DASHBOARD, MainNavTab.PROFILE, MainNavTab.SETTINGS, MainNavTab.EVENTS, MainNavTab.DEV_TOOLS, MainNavTab.EMERGENCY, MainNavTab.FIELD_WORKFLOW, MainNavTab.ABOUT, MainNavTab.ROLES) }
             Box(modifier = Modifier.fillMaxSize()) {
                 DrgLuminousAtmosphere(theme = dashboardTheme)
@@ -69,17 +69,9 @@ fun DrgAppContent(viewModel: DRGViewModel, cashViewModel: CashManagementViewMode
                     modifier = Modifier.fillMaxSize().imePadding(), containerColor = Color.Transparent, contentWindowInsets = WindowInsets.systemBars,
                     topBar = {
                         Column {
-                            TopShortcutHost(
-                                viewModel = viewModel,
-                                currentMember = state.currentMember.value,
-                                snackbarHostState = snackbarHostState
-                            )
+                            TopShortcutHost(viewModel = viewModel, currentMember = state.currentMember.value, snackbarHostState = snackbarHostState)
                             if (state.currentTab.value !in headerLessTabs) {
-                                DrgHeader(
-                                    currentMember = state.currentMember.value,
-                                    activeEmergencyCount = state.activeAlerts.value.size,
-                                    onEmergencyBadgeClick = { viewModel.selectTab(MainNavTab.EMERGENCY) }
-                                )
+                                DrgHeader(currentMember = state.currentMember.value, activeEmergencyCount = state.activeAlerts.value.size, onEmergencyBadgeClick = { viewModel.selectTab(MainNavTab.EMERGENCY) })
                                 if (state.syncStatus.value == SyncStatus.SYNCING) LinearProgressIndicator(Modifier.fillMaxWidth().height(3.dp), color = dashboardTheme.primaryColor)
                             }
                         }

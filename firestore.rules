@@ -1,0 +1,439 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Primitive Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isBootstrappedAdmin() {
+      return isSignedIn() &&
+             request.auth.token.email_verified == true &&
+             request.auth.token.email == 'ardy.syafii@gmail.com';
+    }
+
+    function isAdmin() {
+      return isBootstrappedAdmin() ||
+             (isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)));
+    }
+
+    function isValidServerTimestamp(ts) {
+      return ts is timestamp && ts <= request.time;
+    }
+
+    function isValidRole(role) {
+      return role in ['ANGGOTA', 'SATGAS', 'BENDAHARA', 'WAKIL_KETUA', 'DEWAN_ETIKA', 'SEKRETARIS', 'KETUA', 'SUPER_ADMIN'];
+    }
+
+    function isValidVerificationStatus(status) {
+      return status in ['PENDING_SCREENING', 'VERIFIED', 'REJECTED', 'SUSPENDED'];
+    }
+
+    // --- Validation Helpers ---
+    function isValidAdminRecord(data) {
+      return data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128 &&
+             isValidRole(data.role) &&
+             (!('email' in data) || (data.email is string && data.email.size() <= 120));
+    }
+
+    function isValidUserAccount(data) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 80 &&
+             isValidRole(data.role) &&
+             (!('email' in data) || (data.email is string && data.email.size() <= 120)) &&
+             (!('driverId' in data) || (data.driverId is string && data.driverId.size() <= 48));
+    }
+
+    function isValidPrivatePii(data) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             (!('phone' in data) || (data.phone is string && data.phone.size() <= 32)) &&
+             (!('address' in data) || (data.address is string && data.address.size() <= 240)) &&
+             (!('bloodType' in data) || (data.bloodType is string && data.bloodType.size() <= 8)) &&
+             (!('emergencyContact' in data) || (data.emergencyContact is string && data.emergencyContact.size() <= 80)) &&
+             (!('emergencyPhone' in data) || (data.emergencyPhone is string && data.emergencyPhone.size() <= 32)) &&
+             (!('simNumber' in data) || (data.simNumber is string && data.simNumber.size() <= 32)) &&
+             (!('nik' in data) || (data.nik is string && data.nik.size() <= 32));
+    }
+
+    function isValidEncryptedBackup(data) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             data.checksumSha256 is string && data.checksumSha256.size() == 64 &&
+             data.encryptedPayload is string && data.encryptedPayload.size() >= 1 && data.encryptedPayload.size() <= 500000 &&
+             data.schemaVersion is int && data.schemaVersion >= 1 && data.schemaVersion <= 100;
+    }
+
+    function isValidCloudSyncItem(data) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             data.entityType is string && data.entityType.size() >= 1 && data.entityType.size() <= 64 &&
+             data.entityId is string && data.entityId.size() >= 1 && data.entityId.size() <= 128 &&
+             data.syncState in ['SYNCED', 'PENDING'] &&
+             (!('payload' in data) || (data.payload is string && data.payload.size() <= 32768));
+    }
+
+    function isValidCommunityMember(data) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             data.name is string && data.name.size() >= 1 && data.name.size() <= 80 &&
+             data.driverId is string && data.driverId.size() >= 1 && data.driverId.size() <= 48 &&
+             isValidRole(data.role) &&
+             isValidVerificationStatus(data.verificationStatus) &&
+             (!('baseArea' in data) || (data.baseArea is string && data.baseArea.size() <= 80)) &&
+             (!('motorcycleModel' in data) || (data.motorcycleModel is string && data.motorcycleModel.size() <= 60)) &&
+             (!('motorcyclePlate' in data) || (data.motorcyclePlate is string && data.motorcyclePlate.size() <= 24)) &&
+             (!('loyaltyPoints' in data) || (data.loyaltyPoints is int && data.loyaltyPoints >= 0 && data.loyaltyPoints <= 1000000)) &&
+             (!('isOnline' in data) || data.isOnline is bool);
+    }
+
+    function isValidKasTransaction(data) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 120 &&
+             data.amount is int && data.amount > 0 && data.amount <= 1000000000 &&
+             data.type in ['INCOME', 'EXPENSE'] &&
+             data.category is string && data.category.size() >= 1 && data.category.size() <= 60 &&
+             (!('recordedBy' in data) || (data.recordedBy is string && data.recordedBy.size() <= 80));
+    }
+
+    function isValidEmergencyAlert(data) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             data.driverName is string && data.driverName.size() >= 1 && data.driverName.size() <= 80 &&
+             data.alertType is string && data.alertType.size() >= 1 && data.alertType.size() <= 40 &&
+             data.status in ['ACTIVE', 'RESOLVED'] &&
+             (!('message' in data) || (data.message is string && data.message.size() <= 240)) &&
+             (!('locationName' in data) || (data.locationName is string && data.locationName.size() <= 120)) &&
+             (!('latitude' in data) || (data.latitude is number && data.latitude >= -90 && data.latitude <= 90)) &&
+             (!('longitude' in data) || (data.longitude is number && data.longitude >= -180 && data.longitude <= 180)) &&
+             (!('respondersCount' in data) || (data.respondersCount is int && data.respondersCount >= 0 && data.respondersCount <= 10000));
+    }
+
+    function isValidRoleAuditLog(data) {
+      return data.actorUid is string && data.actorUid.size() >= 1 && data.actorUid.size() <= 128 &&
+             data.targetUserId is string && data.targetUserId.size() >= 1 && data.targetUserId.size() <= 128 &&
+             isValidRole(data.previousRole) &&
+             isValidRole(data.newRole) &&
+             data.reason is string && data.reason.size() >= 1 && data.reason.size() <= 240;
+    }
+
+    function isValidP2pPeerPresence(data) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             data.driverName is string && data.driverName.size() >= 1 && data.driverName.size() <= 80 &&
+             data.channelId is string && isValidId(data.channelId) && data.channelId.size() <= 64 &&
+             data.localIp is string && data.localIp.size() <= 64 &&
+             data.port is int && data.port >= 1024 && data.port <= 65535 &&
+             data.status in ['ONLINE', 'OFFLINE'] &&
+             (!('sdpOffer' in data) || (data.sdpOffer is string && data.sdpOffer.size() <= 16384));
+    }
+
+    function isValidP2pSignalPacket(data) {
+      return data.senderUserId is string && data.senderUserId.size() >= 1 && data.senderUserId.size() <= 128 &&
+             data.targetUserId is string && data.targetUserId.size() >= 1 && data.targetUserId.size() <= 128 &&
+             data.channelId is string && isValidId(data.channelId) && data.channelId.size() <= 64 &&
+             data.signalType in ['OFFER', 'ANSWER', 'ICE'] &&
+             data.payload is string && data.payload.size() >= 1 && data.payload.size() <= 16384 &&
+             data.consumed is bool;
+    }
+
+    function isValidPttTransmission(data) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             data.senderName is string && data.senderName.size() >= 1 && data.senderName.size() <= 80 &&
+             data.channelId is string && isValidId(data.channelId) && data.channelId.size() <= 64 &&
+             data.audioBase64 is string && data.audioBase64.size() >= 1 && data.audioBase64.size() <= 180000 &&
+             data.codec in ['ULAW_8K', 'PCM_8K'] &&
+             data.sampleRateHz is int && data.sampleRateHz >= 8000 && data.sampleRateHz <= 48000 &&
+             data.durationMs is int && data.durationMs >= 100 && data.durationMs <= 15000 &&
+             data.status in ['LIVE', 'ENDED'];
+    }
+
+    // --- Collection Rules ---
+    match /admins/{adminId} {
+      allow get: if isValidId(adminId) && isSignedIn() && (request.auth.uid == adminId || isAdmin());
+      allow list: if isBootstrappedAdmin();
+      allow create: if isValidId(adminId) && isAdmin() &&
+                       incoming().uid == adminId &&
+                       incoming().keys().hasAll(['uid', 'role', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['uid', 'email', 'role', 'createdAt', 'updatedAt']) &&
+                       isValidServerTimestamp(incoming().createdAt) &&
+                       isValidServerTimestamp(incoming().updatedAt) &&
+                       isValidAdminRecord(incoming());
+      allow update: if isValidId(adminId) && isAdmin() &&
+                       isValidAdminRecord(incoming()) &&
+                       incoming().uid == existing().uid &&
+                       incoming().createdAt == existing().createdAt &&
+                       isValidServerTimestamp(incoming().updatedAt) &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['email', 'role', 'updatedAt']);
+      allow delete: if isValidId(adminId) && isBootstrappedAdmin();
+    }
+
+    match /users/{userId} {
+      allow get: if isValidId(userId) && isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isBootstrappedAdmin());
+
+      allow create: if isValidId(userId) && isSignedIn() &&
+                       (request.auth.uid == userId || isAdmin()) &&
+                       incoming().userId == userId &&
+                       (isAdmin() || incoming().role == 'ANGGOTA') &&
+                       incoming().keys().hasAll(['userId', 'displayName', 'role', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['userId', 'displayName', 'email', 'driverId', 'role', 'createdAt', 'updatedAt']) &&
+                       isValidServerTimestamp(incoming().createdAt) &&
+                       isValidServerTimestamp(incoming().updatedAt) &&
+                       isValidUserAccount(incoming());
+
+      allow update: if isValidId(userId) && isSignedIn() &&
+                       isValidUserAccount(incoming()) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       isValidServerTimestamp(incoming().updatedAt) && (
+                         (isAdmin() && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'email', 'driverId', 'role', 'updatedAt'])) ||
+                         (request.auth.uid == userId &&
+                          incoming().role == existing().role &&
+                          incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'email', 'driverId', 'updatedAt']))
+                       );
+
+      allow delete: if isValidId(userId) && isSignedIn() && (request.auth.uid == userId || isAdmin());
+
+      match /private/{docId} {
+        allow get: if isValidId(docId) && isSignedIn() && (request.auth.uid == userId || isAdmin());
+        allow list: if isSignedIn() && request.auth.uid == userId;
+        allow create: if isValidId(docId) && isSignedIn() && request.auth.uid == userId &&
+                         incoming().userId == request.auth.uid &&
+                         incoming().keys().hasAll(['userId', 'createdAt', 'updatedAt']) &&
+                         incoming().keys().hasOnly(['userId', 'phone', 'address', 'bloodType', 'emergencyContact', 'emergencyPhone', 'simNumber', 'nik', 'createdAt', 'updatedAt']) &&
+                         isValidServerTimestamp(incoming().createdAt) &&
+                         isValidServerTimestamp(incoming().updatedAt) &&
+                         isValidPrivatePii(incoming());
+        allow update: if isValidId(docId) && isSignedIn() && request.auth.uid == userId &&
+                         isValidPrivatePii(incoming()) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         isValidServerTimestamp(incoming().updatedAt) &&
+                         incoming().diff(existing()).affectedKeys().hasOnly(['phone', 'address', 'bloodType', 'emergencyContact', 'emergencyPhone', 'simNumber', 'nik', 'updatedAt']);
+        allow delete: if isValidId(docId) && isSignedIn() && request.auth.uid == userId;
+      }
+
+      match /backups/{backupId} {
+        allow get: if isValidId(backupId) && isSignedIn() && request.auth.uid == userId;
+        allow list: if isSignedIn() && request.auth.uid == userId;
+        allow create: if isValidId(backupId) && isSignedIn() && request.auth.uid == userId &&
+                         incoming().userId == request.auth.uid &&
+                         incoming().keys().hasAll(['userId', 'checksumSha256', 'encryptedPayload', 'schemaVersion', 'createdAt', 'updatedAt']) &&
+                         incoming().keys().hasOnly(['userId', 'checksumSha256', 'encryptedPayload', 'schemaVersion', 'createdAt', 'updatedAt']) &&
+                         isValidServerTimestamp(incoming().createdAt) &&
+                         isValidServerTimestamp(incoming().updatedAt) &&
+                         isValidEncryptedBackup(incoming());
+        allow update: if isValidId(backupId) && isSignedIn() && request.auth.uid == userId &&
+                         isValidEncryptedBackup(incoming()) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         isValidServerTimestamp(incoming().updatedAt) &&
+                         incoming().diff(existing()).affectedKeys().hasOnly(['checksumSha256', 'encryptedPayload', 'schemaVersion', 'updatedAt']);
+        allow delete: if isValidId(backupId) && isSignedIn() && request.auth.uid == userId;
+      }
+
+      match /sync_queue/{itemId} {
+        allow get: if isValidId(itemId) && isSignedIn() && request.auth.uid == userId;
+        allow list: if isSignedIn() && request.auth.uid == userId;
+        allow create: if isValidId(itemId) && isSignedIn() && request.auth.uid == userId &&
+                         incoming().userId == request.auth.uid &&
+                         incoming().keys().hasAll(['userId', 'entityType', 'entityId', 'syncState', 'createdAt', 'updatedAt']) &&
+                         incoming().keys().hasOnly(['userId', 'entityType', 'entityId', 'payload', 'syncState', 'createdAt', 'updatedAt']) &&
+                         isValidServerTimestamp(incoming().createdAt) &&
+                         isValidServerTimestamp(incoming().updatedAt) &&
+                         isValidCloudSyncItem(incoming());
+        allow update: if isValidId(itemId) && isSignedIn() && request.auth.uid == userId &&
+                         isValidCloudSyncItem(incoming()) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         isValidServerTimestamp(incoming().updatedAt) &&
+                         incoming().diff(existing()).affectedKeys().hasOnly(['entityType', 'entityId', 'payload', 'syncState', 'updatedAt']);
+        allow delete: if isValidId(itemId) && isSignedIn() && request.auth.uid == userId;
+      }
+    }
+
+    match /members/{memberId} {
+      allow get: if isValidId(memberId) && isSignedIn() && (existing().userId == request.auth.uid || memberId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isBootstrappedAdmin());
+
+      allow create: if isValidId(memberId) && isSignedIn() &&
+                       (request.auth.uid == memberId || isAdmin()) &&
+                       incoming().userId == memberId &&
+                       (isAdmin() || (incoming().role == 'ANGGOTA' && incoming().verificationStatus == 'PENDING_SCREENING')) &&
+                       incoming().keys().hasAll(['userId', 'name', 'driverId', 'role', 'verificationStatus', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['userId', 'name', 'driverId', 'baseArea', 'motorcycleModel', 'motorcyclePlate', 'role', 'verificationStatus', 'loyaltyPoints', 'isOnline', 'createdAt', 'updatedAt']) &&
+                       isValidServerTimestamp(incoming().createdAt) &&
+                       isValidServerTimestamp(incoming().updatedAt) &&
+                       isValidCommunityMember(incoming());
+
+      allow update: if isValidId(memberId) && isSignedIn() &&
+                       isValidCommunityMember(incoming()) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       isValidServerTimestamp(incoming().updatedAt) && (
+                         (isAdmin() && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'driverId', 'baseArea', 'motorcycleModel', 'motorcyclePlate', 'role', 'verificationStatus', 'loyaltyPoints', 'isOnline', 'updatedAt'])) ||
+                         (existing().userId == request.auth.uid &&
+                          incoming().role == existing().role &&
+                          incoming().verificationStatus == existing().verificationStatus &&
+                          incoming().loyaltyPoints == existing().loyaltyPoints &&
+                          incoming().diff(existing()).affectedKeys().hasOnly(['name', 'baseArea', 'motorcycleModel', 'motorcyclePlate', 'isOnline', 'updatedAt']))
+                       );
+
+      allow delete: if isValidId(memberId) && isAdmin();
+    }
+
+    match /kas_transactions/{txId} {
+      allow get: if isValidId(txId) && isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isBootstrappedAdmin());
+
+      allow create: if isValidId(txId) && isSignedIn() &&
+                       incoming().userId == request.auth.uid &&
+                       incoming().keys().hasAll(['userId', 'title', 'amount', 'type', 'category', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['userId', 'title', 'amount', 'type', 'category', 'recordedBy', 'createdAt', 'updatedAt']) &&
+                       isValidServerTimestamp(incoming().createdAt) &&
+                       isValidServerTimestamp(incoming().updatedAt) &&
+                       isValidKasTransaction(incoming());
+
+      allow update: if isValidId(txId) && isSignedIn() &&
+                       isValidKasTransaction(incoming()) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       isValidServerTimestamp(incoming().updatedAt) &&
+                       (existing().userId == request.auth.uid || isAdmin()) &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['title', 'amount', 'type', 'category', 'recordedBy', 'updatedAt']);
+
+      allow delete: if isValidId(txId) && isAdmin();
+    }
+
+    match /emergency_alerts/{alertId} {
+      allow get: if isValidId(alertId) && isSignedIn() && (existing().userId == request.auth.uid || existing().status == 'ACTIVE' || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.status == 'ACTIVE' || isBootstrappedAdmin());
+
+      allow create: if isValidId(alertId) && isSignedIn() &&
+                       incoming().userId == request.auth.uid &&
+                       incoming().status == 'ACTIVE' &&
+                       incoming().keys().hasAll(['userId', 'driverName', 'alertType', 'status', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['userId', 'driverName', 'alertType', 'message', 'locationName', 'latitude', 'longitude', 'status', 'respondersCount', 'createdAt', 'updatedAt']) &&
+                       isValidServerTimestamp(incoming().createdAt) &&
+                       isValidServerTimestamp(incoming().updatedAt) &&
+                       isValidEmergencyAlert(incoming());
+
+      allow update: if isValidId(alertId) && isSignedIn() &&
+                       isValidEmergencyAlert(incoming()) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       isValidServerTimestamp(incoming().updatedAt) &&
+                       existing().status != 'RESOLVED' && (
+                         isAdmin() ||
+                         (existing().userId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'message', 'updatedAt'])) ||
+                         (incoming().status == existing().status && incoming().diff(existing()).affectedKeys().hasOnly(['respondersCount', 'updatedAt']))
+                       );
+
+      allow delete: if isValidId(alertId) && isAdmin();
+    }
+
+    match /role_audit_logs/{logId} {
+      allow get: if isValidId(logId) && isSignedIn() && (existing().targetUserId == request.auth.uid || existing().actorUid == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.targetUserId == request.auth.uid || resource.data.actorUid == request.auth.uid || isBootstrappedAdmin());
+
+      allow create: if isValidId(logId) && isAdmin() &&
+                       incoming().actorUid == request.auth.uid &&
+                       incoming().keys().hasAll(['actorUid', 'targetUserId', 'previousRole', 'newRole', 'reason', 'createdAt']) &&
+                       incoming().keys().hasOnly(['actorUid', 'targetUserId', 'previousRole', 'newRole', 'reason', 'createdAt']) &&
+                       isValidServerTimestamp(incoming().createdAt) &&
+                       isValidRoleAuditLog(incoming());
+
+      allow update, delete: if false;
+    }
+
+    match /p2p_peers/{peerId} {
+      allow get: if isValidId(peerId) && isSignedIn() && (request.auth.uid == peerId || (resource != null && (existing().userId == request.auth.uid || existing().status == 'ONLINE')) || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.status == 'ONLINE' || isBootstrappedAdmin());
+
+      allow create: if isValidId(peerId) && isSignedIn() &&
+                       request.auth.uid == peerId &&
+                       incoming().userId == request.auth.uid &&
+                       incoming().keys().hasAll(['userId', 'driverName', 'channelId', 'localIp', 'port', 'status', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['userId', 'driverName', 'channelId', 'localIp', 'port', 'sdpOffer', 'status', 'createdAt', 'updatedAt']) &&
+                       isValidServerTimestamp(incoming().createdAt) &&
+                       isValidServerTimestamp(incoming().updatedAt) &&
+                       isValidP2pPeerPresence(incoming());
+
+      allow update: if isValidId(peerId) && isSignedIn() &&
+                       request.auth.uid == peerId &&
+                       isValidP2pPeerPresence(incoming()) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       isValidServerTimestamp(incoming().updatedAt) &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['driverName', 'channelId', 'localIp', 'port', 'sdpOffer', 'status', 'updatedAt']);
+
+      allow delete: if isValidId(peerId) && isSignedIn() && (request.auth.uid == peerId || isAdmin());
+    }
+
+    match /p2p_signals/{signalId} {
+      allow get: if isValidId(signalId) && isSignedIn() && (existing().senderUserId == request.auth.uid || existing().targetUserId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.senderUserId == request.auth.uid || resource.data.targetUserId == request.auth.uid);
+
+      allow create: if isValidId(signalId) && isSignedIn() &&
+                       incoming().senderUserId == request.auth.uid &&
+                       incoming().consumed == false &&
+                       incoming().keys().hasAll(['senderUserId', 'targetUserId', 'channelId', 'signalType', 'payload', 'consumed', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['senderUserId', 'targetUserId', 'channelId', 'signalType', 'payload', 'consumed', 'createdAt', 'updatedAt']) &&
+                       isValidServerTimestamp(incoming().createdAt) &&
+                       isValidServerTimestamp(incoming().updatedAt) &&
+                       isValidP2pSignalPacket(incoming());
+
+      allow update: if isValidId(signalId) && isSignedIn() &&
+                       isValidP2pSignalPacket(incoming()) &&
+                       existing().targetUserId == request.auth.uid &&
+                       incoming().senderUserId == existing().senderUserId &&
+                       incoming().targetUserId == existing().targetUserId &&
+                       incoming().channelId == existing().channelId &&
+                       incoming().signalType == existing().signalType &&
+                       incoming().payload == existing().payload &&
+                       incoming().createdAt == existing().createdAt &&
+                       isValidServerTimestamp(incoming().updatedAt) &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['consumed', 'updatedAt']);
+
+      allow delete: if isValidId(signalId) && isSignedIn() && (existing().senderUserId == request.auth.uid || existing().targetUserId == request.auth.uid || isAdmin());
+    }
+
+    match /ptt_transmissions/{txId} {
+      allow get: if isValidId(txId) && isSignedIn() && (existing().userId == request.auth.uid || existing().status == 'LIVE' || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.status == 'LIVE' || isBootstrappedAdmin());
+
+      allow create: if isValidId(txId) && isSignedIn() &&
+                       incoming().userId == request.auth.uid &&
+                       incoming().status == 'LIVE' &&
+                       incoming().keys().hasAll(['userId', 'senderName', 'channelId', 'audioBase64', 'codec', 'sampleRateHz', 'durationMs', 'status', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['userId', 'senderName', 'channelId', 'audioBase64', 'codec', 'sampleRateHz', 'durationMs', 'status', 'createdAt', 'updatedAt']) &&
+                       isValidServerTimestamp(incoming().createdAt) &&
+                       isValidServerTimestamp(incoming().updatedAt) &&
+                       isValidPttTransmission(incoming());
+
+      allow update: if isValidId(txId) && isSignedIn() &&
+                       isValidPttTransmission(incoming()) &&
+                       existing().userId == request.auth.uid &&
+                       existing().status != 'ENDED' &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       isValidServerTimestamp(incoming().updatedAt) &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt']);
+
+      allow delete: if isValidId(txId) && isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+    }
+  }
+}

@@ -1,24 +1,25 @@
 package com.example.modules.devtools
 
-import com.example.ui.theme.drgFeatureBenihBadge
-import com.example.ui.theme.drgFeatureBenihText
-import com.example.ui.theme.drgFeatureAnakBadge
-import com.example.ui.theme.drgFeatureAnakText
-import com.example.ui.theme.drgFeatureMatureBadge
-import com.example.ui.theme.drgFeatureMatureText
-import com.example.ui.theme.drgFeatureLulusBadge
-import com.example.ui.theme.drgFeatureLulusText
+import androidx.compose.ui.graphics.Color
+import com.example.ui.theme.DrgFeatureAnakBadge
+import com.example.ui.theme.DrgFeatureAnakText
+import com.example.ui.theme.DrgFeatureBenihBadge
+import com.example.ui.theme.DrgFeatureBenihText
+import com.example.ui.theme.DrgFeatureLulusBadge
+import com.example.ui.theme.DrgFeatureLulusText
+import com.example.ui.theme.DrgFeatureMatureBadge
+import com.example.ui.theme.DrgFeatureMatureText
 
 enum class FeatureStage(
     val label: String,
     val description: String,
-    val badgeColor: Long,
-    val textColor: Long
+    val badgeColor: Color,
+    val textColor: Color
 ) {
-    BENIH("Benih (Seed)", "Konsep/Schema saja, belum ada controller", drgFeatureBenihBadge, drgFeatureBenihText),
-    ANAK("Anak (Incubating)", "UI ada, logic parsial, rentan dead button", drgFeatureAnakBadge, drgFeatureAnakText),
-    MATURE("Mature (Remaja)", "ViewModel + Room DAO + Flow aktif", drgFeatureMatureBadge, drgFeatureMatureText),
-    LULUS("Lulus (Graduated)", "Siap rilis: tidak ada dead button/cacat kritis teridentifikasi", drgFeatureLulusBadge, drgFeatureLulusText)
+    BENIH("Benih (Seed)", "Konsep/Schema saja, belum ada controller", DrgFeatureBenihBadge, DrgFeatureBenihText),
+    ANAK("Anak (Incubating)", "UI ada, logic parsial, rentan dead button", DrgFeatureAnakBadge, DrgFeatureAnakText),
+    MATURE("Mature (Remaja)", "ViewModel + Room DAO + Flow aktif", DrgFeatureMatureBadge, DrgFeatureMatureText),
+    LULUS("Lulus (Graduated)", "Siap rilis: tidak ada dead button/cacat kritis teridentifikasi", DrgFeatureLulusBadge, DrgFeatureLulusText)
 }
 
 data class FeatureAuditItem(

@@ -34,7 +34,8 @@ class CashManagementViewModel(
         type: TransactionType,
         category: KasCategory,
         description: String,
-        recordedBy: String
+        recordedBy: String,
+        onCreated: ((KasTransaction) -> Unit)? = null
     ) {
         viewModelScope.launch {
             val dateStr = com.example.shared.utils.DateTimeUtils.formatCurrentDateTimeReadable()
@@ -49,6 +50,7 @@ class CashManagementViewModel(
                 description = description
             )
             repository.addKasTransaction(tx)
+            onCreated?.invoke(tx)
         }
     }
 }

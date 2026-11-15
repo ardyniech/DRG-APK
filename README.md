@@ -6,7 +6,7 @@
 [![Compose](https://img.shields.io/badge/Jetpack_Compose-Material_3-emerald.svg)](https://developer.android.com/jetpack/compose)
 [![Database](https://img.shields.io/badge/Room_Database-v14_26_Tabel_Local_First-teal.svg)](docs/DATABASE_MIGRATIONS.md)
 [![Architecture Gating](https://img.shields.io/badge/Architecture-125_Lines_Cap_Enforced-success.svg)](.github/scripts/check_file_length.py)
-[![Tests](https://img.shields.io/badge/Unit_Tests-68_Suites-brightgreen.svg)](#-strategi-pengujian-testing-suite)
+[![Tests](https://img.shields.io/badge/Unit_Tests-72_Suites-brightgreen.svg)](#-strategi-pengujian-testing-suite)
 
 ---
 
@@ -16,24 +16,14 @@
 
 ---
 
-## ⚠️ Kondisi Real Saat Ini (Jujur, 2026-11-09) — Baca ini dulu
+## 📌 Status Implementasi Cloud & Keamanan (SSOT: [docs/ABOUT.md](docs/ABOUT.md))
 
-> Bagian ini ditulis karena audit bawel (`audit_minus.py`) menemukan kesenjangan antara klaim lama dan kode nyata. Jangan klaim multi-user/sinkron sebelum BLOCKER di bawah diperbaiki.
+> **Sumber kebenaran tunggal:** Hitungan audit terkini **hanya** di [docs/ABOUT.md](docs/ABOUT.md) — bagian **Kekurangan (Bawel Audit)** (digenerate dari `audit_minus.py --json` via `generate_about_manifest.py`, machine: `app/src/main/assets/about_manifest.json`).
 
-**Bisa dipakai banyak HP:** APK bisa di-install di banyak HP, **tapi data tidak saling berbagi**. Tiap HP punya database lokal sendiri — kas, forum, anggota, SOS di HP A tidak terlihat di HP B.
-
-**Data tersimpan:** Ya, tapi **hanya lokal** di Room SQLite (`drg_community.db`, v14, 26 tabel). Persist setelah restart, tapi:
-* `allowBackup = false` + tidak ada cloud sync/backup → ganti HP / reset / uninstal = data hilang.
-* `BackgroundSyncEngine` berlabel "Tersinkronisasi ke Cloud" padahal cuma hapus antrean lokal (`removeSyncItem()`) tanpa network call — **belum sinkron**.
-* Login PIN lokal (`SharedPreferences` + SHA-256 app-in-tanpa-salt, bukan Keystore/PBKDF2) + seed dummy per HP (`DRG-001` / PIN `1234` di `.env.example`).
-
-**Belum terhubung ke server:** `firestore`/`auth` di `app/build.gradle.kts` masih dikomentari, `app/google-services.json` belum ada, P2P signaling (`P2PSignalingManager`) cuma `Log.d`, FCM token cuma disimpan lokal.
-
-**Scope finansial sementara: iuran kas saja yang wajib.** Kas Transparan (masuk/keluar/saldo + export) adalah satu-satunya fitur finansial yang harus ada di rilis awal. **Marketplace = [DEFERRED] di luar scope** — ditandai di `.github/about/features.json`, `ROADMAP.md`, dan `docs/ABOUT.md`. Jangan jadikan blocker. CRDT juga ditunda.
-
-**Risiko data-at-rest:** Room SQLite (`drg_community.db`) saat ini **belum terenkripsi** (SQLCipher belum diintegrasikan). Data sensitif (mis. NIK/SIM/telepon/kas) tersimpan plain di storage app; mitigasi sementara: lindungi perangkat, batasi backup/debug, dan rencanakan enkripsi DB sebelum klaim produksi penuh.
-
-**Sumber kebenaran tunggal:** Hitungan audit terkini **hanya** di [docs/ABOUT.md](docs/ABOUT.md) — bagian **Kekurangan (Bawel Audit)** (digenerate dari `audit_minus.py --json` via `generate_about_manifest.py`, machine: `app/src/main/assets/about_manifest.json`, kunci `minus`/`minusSummary`). Jangan refer ke README/DEVTOOLS untuk angka — rujuk SSOT tersebut. AI dev wajib baca SSOT dulu (`.AGENTS.md` §18).
+* ✅ **Firebase Backend Aktif:** Cloud Firestore (named database), Firebase Auth (**Google Sign-In** via Credential Manager), Zero-Trust Security Rules, dan **Firebase App Check**.
+* ✅ **Sync & Cloud Backup Terenkripsi:** `BackgroundSyncEngine` memverifikasi unggah cloud (status jujur `SYNCED` vs `OFFLINE_SAVED`), ditambah ekspor/impor **AES-GCM** ke Firestore (`/users/{uid}/backups`).
+* ✅ **Clean Auth UI:** Layar login lokal duplikat, tombol demo, dan auto-seed akun demo lokal telah dihapus.
+* ⚠️ **Backlog Lanjutan:** P2P WebRTC/FCM signaling antar perangkat (Point 3) dan pelengkapan schema Room historis `1-4,8,9.json` / SQLCipher opsional (Point 4). Marketplace ditandai **[DEFERRED]**.
 
 ---
 
@@ -41,17 +31,16 @@
 
 | Area | Plan (target) | Dev sekarang (realita) | Status |
 |---|---|---|---|
-| Arsitektur | Clean MVI + Compose M3, <125 baris/file | 532 file audit, 0 pelanggaran via `check_file_length.py` | ✅ Selesai |
-| Database | Room v14 lokal + migrasi eksplisit | 26 tabel, migrasi 1→14 di kode, tapi schema `1-4,8,9.json` belum dicommit | ⚠️ Sebagian |
-| **Iuran Kas (finansial)** | **Kas masuk/keluar/saldo + export (wajib rilis awal)** | Kas Transparan Selesai 100%, grafik + periode + export | ✅ Selesai (lokal) |
+| Arsitektur | Clean MVI + Compose M3, <125 baris/file | 562 file audit, 0 pelanggaran via `check_file_length.py` | ✅ Selesai |
+| Database | Room v14 lokal + migrasi eksplisit | 26 tabel, migrasi 1→14 di kode, schema `1-4,8,9.json` menyusul | ⚠️ Sebagian |
+| **Iuran Kas (finansial)** | **Kas masuk/keluar/saldo + export (wajib rilis awal)** | Kas Transparan + sinkronisasi Firestore & backup terenkripsi | ✅ Selesai |
 | Marketplace | Oli/ban/helm distributor | Belum ada modul | ⏸️ **DEFERRED** — bukan blocker |
-| Multi-user sinkron | Firestore/Auth + FCM, data bersama antar driver | Lokal saja, Firestore/Auth off, `google-services.json` hilang | ❌ BLOCKER |
-| Sinkron offline | Outbox → cloud saat online | Outbox dihapus lokal tanpa upload; label "SYNCED" menipu | ❌ BLOCKER |
-| SOS / Radar / Forum | SOS broadcast ke tim, radar live antar HP | Tersimpan lokal + SMS fallback (butuh pulsa); radar lokal saja | ⚠️ Lokal saja |
-| P2P / FCM discovery | Peer discovery via FCM topic + WebRTC | Kerangka WebRTC ada, signaling cuma log, discovery 0% | ❌ Belum |
-| Keamanan | Keystore, TLS 1.3, RBAC server-side | TLS strict ✅, tapi PIN SHA-256 SharedPrefs, role client-side, SQLite belum terenkripsi | ⚠️ Perlu perkuat |
-| CI/CD | Audit + lint + test + release AAB | Audit/lint/test/debug APK ✅, release signing belum ada | ⚠️ Sebagian |
-| Update OTA | Update tanpa unduh APK penuh | Delta BSDIFF40: patch 2,4 MB vs APK 73,5 MB (hemat 96,7%), kanal preview debug | ✅ Selesai (preview) |
+| Multi-user & Auth | Google Sign-In + Firestore + App Check + Rules | Credential Manager Google Sign-In, Rules teruji & deployed | ✅ Aktif (Inti) |
+| Sinkron offline | Outbox → cloud saat online | Antrean `SYNCED` saat terunggah, `OFFLINE_SAVED` saat offline | ✅ Selesai |
+| P2P / FCM discovery | Peer discovery via FCM + WebRTC | Kerangka WebRTC ada, signaling antar-HP masih bertahap | ⚠️ Menyusul (Point 3) |
+| Keamanan | Keystore, TLS 1.3, RBAC server-side, App Check | TLS strict + App Check + RBAC Rules + Backup AES-GCM | ✅ Aktif |
+| CI/CD | Audit + lint + test + release AAB | Audit/lint/test/debug APK ✅, release signing di CI secrets | ⚠️ Sebagian |
+| Update OTA | Update tanpa unduh APK penuh | Delta BSDIFF40: patch 2,4 MB vs APK 73,5 MB (hemat 96,7%) | ✅ Selesai (preview) |
 
 Bacaan lanjut: [DEVTOOLS.md](DEVTOOLS.md) (peta bawel), [ROADMAP.md](ROADMAP.md) (jadwal fase), [docs/ABOUT.md](docs/ABOUT.md) (manifest auto), [docs/UPDATE_DELTA.md](docs/UPDATE_DELTA.md) (OTA hemat kuota).
 
@@ -157,7 +146,7 @@ Detail skema dan panduan migrasi dapat dibaca di **[Dokumentasi Migrasi Database
 
 ## 🧪 Strategi Pengujian (Testing Suite)
 
-Proyek ini dilengkapi dengan 68 suite pengujian unit & integrasi otomatis berbasis **Robolectric** dan **Roborazzi**:
+Proyek ini dilengkapi dengan 72 suite pengujian unit & integrasi otomatis berbasis **Robolectric**, **Roborazzi**, dan **Firebase Emulator Rules**:
 
 - `Ojol360TurntableTest.kt`: Pengujian turntable sequence 16-frame 360°, normalisasi sudut rotasi, mapping frame index, clamping level zoom, dan sanitasi bad input.
 

@@ -6,12 +6,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import com.example.ui.theme.DrgAsphaltDeep
-import com.example.ui.theme.DrgGrabGreenPrimary
-import com.example.ui.theme.DrgHeadlightWarm
-import com.example.ui.theme.DrgLaneMarker
-import com.example.ui.theme.DrgWarmGradientEnd
-import com.example.ui.theme.DrgWarmGradientStart
+import com.example.ui.theme.*
 import kotlin.math.cos
 
 fun DrawScope.drawCyber3DHighway(
@@ -25,7 +20,7 @@ fun DrawScope.drawCyber3DHighway(
         brush = Brush.verticalGradient(
             0f to DrgWarmGradientStart.copy(alpha = 0.90f),
             0.65f to DrgWarmGradientEnd,
-            1f to Color(0xFFD0EBD7)
+            1f to DrgSkyCyberMint
         ),
         topLeft = Offset.Zero,
         size = Size(size.width, horizonY)
@@ -55,7 +50,7 @@ fun DrawScope.drawCyber3DHighway(
     }
     drawPath(
         path = roadPath,
-        brush = Brush.verticalGradient(listOf(Color(0xFF23322B), DrgAsphaltDeep))
+        brush = Brush.verticalGradient(listOf(DrgRoadCyberUpper, DrgAsphaltDeep))
     )
 
     // 4. Dynamic Markings Rushing in 3D Perspective

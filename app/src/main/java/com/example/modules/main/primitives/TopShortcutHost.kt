@@ -18,17 +18,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.core.viewmodel.DRGViewModel
-import com.example.core.viewmodel.logout
+import com.example.core.viewmodel.logoutSession
 import com.example.core.viewmodel.updateProfile
 import com.example.modules.profile.EditProfileDialog
 import com.example.modules.profile.ProfileLogoutDialog
 import com.example.shared.atoms.LocalAppVisualTheme
 import com.example.shared.models.DriverMember
+import com.example.ui.theme.DrgRedDanger
 import kotlinx.coroutines.launch
 
 /**
@@ -42,6 +41,7 @@ fun TopShortcutHost(
     modifier: Modifier = Modifier
 ) {
     val theme = LocalAppVisualTheme.current
+    val context = LocalContext.current
     var showEdit by remember { mutableStateOf(false) }
     var showLogout by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -55,14 +55,14 @@ fun TopShortcutHost(
             Icon(Icons.Default.Edit, contentDescription = "Edit Profil", tint = theme.primaryColor)
         }
         IconButton(onClick = { showLogout = true }) {
-            Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Logout", tint = Color(0xFFDC2626))
+            Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Logout", tint = DrgRedDanger)
         }
     }
 
     if (showLogout) {
         ProfileLogoutDialog(
             onDismiss = { showLogout = false },
-            onConfirm = { showLogout = false; viewModel.logout() }
+            onConfirm = { showLogout = false; viewModel.logoutSession(context) }
         )
     }
 
@@ -91,7 +91,7 @@ fun TopShortcutBar(onEditProfile: () -> Unit, onLogout: () -> Unit, modifier: Mo
             Icon(Icons.Default.Edit, contentDescription = "Edit Profil", tint = theme.primaryColor)
         }
         IconButton(onClick = onLogout) {
-            Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Logout", tint = Color(0xFFDC2626))
+            Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Logout", tint = DrgRedDanger)
         }
     }
 }

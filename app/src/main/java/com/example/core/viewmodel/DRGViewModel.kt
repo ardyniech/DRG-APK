@@ -26,7 +26,12 @@ class DRGViewModel(
     fun clearSnackBar() { _snackBarMessage.value = null }
 
     val batteryManager = BatteryOptimizationManager(sharedPrefs)
-    val syncEngine = BackgroundSyncEngine(repository.db, viewModelScope, context = application)
+    val syncEngine = BackgroundSyncEngine(
+        db = repository.db,
+        scope = viewModelScope,
+        context = application,
+        cloudUploader = { item -> uploadPendingSyncItem(application, item) }
+    )
 
     internal val profileCoord = ProfileSessionCoordinator(repository, sharedPrefs, viewModelScope) { showToast(it) }
     internal val emergencyCoord = EmergencyCoordinator(repository, sharedPrefs, application, viewModelScope, syncEngine) { showToast(it) }

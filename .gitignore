@@ -30,3 +30,4 @@ debug.keystore
 .kotlin/
 release-upload.jks
 *.jks.b64
+*-debug.log

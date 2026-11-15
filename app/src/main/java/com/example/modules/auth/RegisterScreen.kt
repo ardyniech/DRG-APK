@@ -10,7 +10,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -35,23 +34,21 @@ import com.example.ui.theme.*
 @Composable
 fun RegisterScreen(
     onBack: () -> Unit,
-    onSubmit: (name: String, phone: String, plate: String, model: String, area: String, pin: String) -> Unit
+    onSubmit: (name: String, phone: String, plate: String, model: String, area: String) -> Unit
 ) {
     var name by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var plate by remember { mutableStateOf("N ") }
     var model by remember { mutableStateOf("") }
-    var pin by remember { mutableStateOf("") }
     val areaOptions = listOf("Klojen, Malang", "Lowokwaru, Malang", "Blimbing, Malang", "Sukun, Malang", "Kedungkandang, Malang", "Singosari, Malang", "Kota Batu")
     var selectedArea by remember { mutableStateOf(areaOptions[0]) }
     var nameTouched by remember { mutableStateOf(false) }
     var phoneTouched by remember { mutableStateOf(false) }
     var plateTouched by remember { mutableStateOf(false) }
     var modelTouched by remember { mutableStateOf(false) }
-    var pinTouched by remember { mutableStateOf(false) }
     val haptic = LocalHapticFeedback.current
     val theme = LocalAppVisualTheme.current
-    val isValid = name.isNotBlank() && phone.length >= 10 && plate.trim().length > 2 && model.isNotBlank() && pin.length == 4
+    val isValid = name.isNotBlank() && phone.length >= 10 && plate.trim().length > 2 && model.isNotBlank()
 
     Column(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 14.dp).verticalScroll(rememberScrollState())) {
         Row(modifier = Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -62,7 +59,7 @@ fun RegisterScreen(
         }
         Spacer(Modifier.height(8.dp))
         Text("Daftar Anggota DRG", fontSize = 22.sp, fontWeight = FontWeight.Black, color = DrgTextDark)
-        Text("Bergabung dengan solidaritas driver Arema Malang Raya.", fontSize = 12.sp, color = DrgTextMuted)
+        Text("Isi biodata KTA, lalu masuk dengan akun Google Anda.", fontSize = 12.sp, color = DrgTextMuted)
         Spacer(Modifier.height(14.dp))
 
         DrgLuminousGlassCard(shape = RoundedCornerShape(24.dp), backgroundColor = theme.glassBg, borderHighlightColor = theme.glassBorderColor, contentPadding = 16.dp, modifier = Modifier.fillMaxWidth()) {
@@ -88,21 +85,15 @@ fun RegisterScreen(
                     isError = modelTouched && model.isBlank(), supportingText = { if (modelTouched && model.isBlank()) Text("Model motor wajib diisi", color = DrgRedPanic) },
                     placeholder = { Text("Contoh: Honda Vario 160") }, modifier = Modifier.fillMaxWidth().testTag("reg_motor"), shape = RoundedCornerShape(12.dp)
                 )
-                OutlinedTextField(
-                    value = pin, onValueChange = { if (it.length <= 4) { pin = it; pinTouched = true } }, label = { Text("Setel 4-Digit PIN Baru") },
-                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) }, isError = pinTouched && pin.length < 4,
-                    supportingText = { if (pinTouched && pin.length < 4) Text("PIN wajib 4 digit angka", color = DrgRedPanic) else Text("PIN ini akan digunakan untuk login anggota.") },
-                    modifier = Modifier.fillMaxWidth().testTag("reg_pin"), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), shape = RoundedCornerShape(12.dp)
-                )
                 RegisterAreaDropdown(selectedArea = selectedArea, onAreaSelected = { selectedArea = it }, areaOptions = areaOptions)
             }
         }
         Spacer(Modifier.height(14.dp))
         Button(
-            onClick = { if (isValid) { haptic.performHapticFeedback(HapticFeedbackType.LongPress); onSubmit(name, phone, plate, model, selectedArea, pin) } },
+            onClick = { if (isValid) { haptic.performHapticFeedback(HapticFeedbackType.LongPress); onSubmit(name, phone, plate, model, selectedArea) } },
             enabled = isValid, modifier = Modifier.fillMaxWidth().height(52.dp).testTag("reg_submit_button"), shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = theme.primaryColor)
-        ) { Text("Kirim Pendaftaran Terverifikasi", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color.White) }
+        ) { Text("Simpan Biodata & Lanjut Google Sign-In", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.White) }
         Spacer(Modifier.height(12.dp))
     }
 }

@@ -61,7 +61,9 @@ fun DrgAppDialogs(
 
     if (showAddKasDialog) {
         AddTransactionDialog(onDismiss = onDismissAddKasDialog, onConfirm = { title, amount, type, cat, desc ->
-            cashViewModel.addTransaction(title = title, amount = amount, type = type, category = cat, description = desc, recordedBy = currentMember?.name ?: "Pengurus")
+            cashViewModel.addTransaction(title = title, amount = amount, type = type, category = cat, description = desc, recordedBy = currentMember?.name ?: "Pengurus") {
+                viewModel.syncKasTransactionToCloud(it)
+            }
             scope.launch { snackbarHostState.showSnackbar("Pencatatan kas berhasil disimpan!") }
         })
     }
@@ -82,8 +84,8 @@ fun DrgAppDialogs(
         })
     }
 
-    if (showNotifPrefDialog) {
-        NotificationPreferencesDialog(initialPref = NotificationPreference(currentMember?.id ?: "DRG-001"), onDismiss = onDismissNotifPrefDialog, onSave = {
+    if (showNotifPrefDialog && currentMember != null) {
+        NotificationPreferencesDialog(initialPref = NotificationPreference(currentMember.id), onDismiss = onDismissNotifPrefDialog, onSave = {
             viewModel.saveNotificationPref(it)
             onDismissNotifPrefDialog()
             scope.launch { snackbarHostState.showSnackbar("Preferensi notifikasi disimpan!") }

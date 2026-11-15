@@ -1,0 +1,249 @@
+{
+  "entities": {
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Server-side admin registry document authorizing community governance operations.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID of the admin." },
+        "email": { "type": "string", "format": "email", "description": "Verified admin email address." },
+        "role": { "type": "string", "enum": ["SUPER_ADMIN", "KETUA", "SEKRETARIS", "DEWAN_ETIKA"] },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp (FieldValue.serverTimestamp())." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp (FieldValue.serverTimestamp())." }
+      },
+      "required": ["uid", "role", "createdAt", "updatedAt"]
+    },
+    "UserAccount": {
+      "title": "UserAccount",
+      "description": "Authenticated driver account root document scoped to Firebase Auth UID.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Firebase Auth UID." },
+        "displayName": { "type": "string", "description": "Driver display name." },
+        "email": { "type": "string", "format": "email", "description": "Verified Google account email." },
+        "driverId": { "type": "string", "description": "Community KTA identifier." },
+        "role": { "type": "string", "enum": ["ANGGOTA", "SATGAS", "BENDAHARA", "WAKIL_KETUA", "DEWAN_ETIKA", "SEKRETARIS", "KETUA", "SUPER_ADMIN"] },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp (FieldValue.serverTimestamp())." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp (FieldValue.serverTimestamp())." }
+      },
+      "required": ["userId", "displayName", "role", "createdAt", "updatedAt"]
+    },
+    "UserPrivatePii": {
+      "title": "UserPrivatePii",
+      "description": "Isolated PII document storing sensitive driver contact and identity numbers.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner Firebase Auth UID." },
+        "phone": { "type": "string" },
+        "address": { "type": "string" },
+        "bloodType": { "type": "string" },
+        "emergencyContact": { "type": "string" },
+        "emergencyPhone": { "type": "string" },
+        "simNumber": { "type": "string" },
+        "nik": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "createdAt", "updatedAt"]
+    },
+    "EncryptedBackup": {
+      "title": "EncryptedBackup",
+      "description": "AES-GCM encrypted Room database backup metadata and ciphertext payload.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "checksumSha256": { "type": "string" },
+        "encryptedPayload": { "type": "string" },
+        "schemaVersion": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "checksumSha256", "encryptedPayload", "schemaVersion", "createdAt", "updatedAt"]
+    },
+    "CloudSyncItem": {
+      "title": "CloudSyncItem",
+      "description": "Cloud-replicated pending sync record scoped to authenticated owner.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "entityType": { "type": "string" },
+        "entityId": { "type": "string" },
+        "payload": { "type": "string" },
+        "syncState": { "type": "string", "enum": ["SYNCED", "PENDING"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "entityType", "entityId", "syncState", "createdAt", "updatedAt"]
+    },
+    "CommunityMember": {
+      "title": "CommunityMember",
+      "description": "Operational non-PII community member profile and role state.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "driverId": { "type": "string" },
+        "baseArea": { "type": "string" },
+        "motorcycleModel": { "type": "string" },
+        "motorcyclePlate": { "type": "string" },
+        "role": { "type": "string", "enum": ["ANGGOTA", "SATGAS", "BENDAHARA", "WAKIL_KETUA", "DEWAN_ETIKA", "SEKRETARIS", "KETUA", "SUPER_ADMIN"] },
+        "verificationStatus": { "type": "string", "enum": ["PENDING_SCREENING", "VERIFIED", "REJECTED", "SUSPENDED"] },
+        "loyaltyPoints": { "type": "integer" },
+        "isOnline": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "driverId", "role", "verificationStatus", "createdAt", "updatedAt"]
+    },
+    "CloudKasTransaction": {
+      "title": "CloudKasTransaction",
+      "description": "Synced community treasury transaction record.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "amount": { "type": "integer" },
+        "type": { "type": "string", "enum": ["INCOME", "EXPENSE"] },
+        "category": { "type": "string" },
+        "recordedBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "amount", "type", "category", "createdAt", "updatedAt"]
+    },
+    "CloudEmergencyAlert": {
+      "title": "CloudEmergencyAlert",
+      "description": "SOS emergency broadcast document.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "driverName": { "type": "string" },
+        "alertType": { "type": "string" },
+        "message": { "type": "string" },
+        "locationName": { "type": "string" },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" },
+        "status": { "type": "string", "enum": ["ACTIVE", "RESOLVED"] },
+        "respondersCount": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "driverName", "alertType", "status", "createdAt", "updatedAt"]
+    },
+    "CloudRoleAuditLog": {
+      "title": "CloudRoleAuditLog",
+      "description": "Immutable role mutation audit log written by verified administrators.",
+      "type": "object",
+      "properties": {
+        "actorUid": { "type": "string" },
+        "targetUserId": { "type": "string" },
+        "previousRole": { "type": "string" },
+        "newRole": { "type": "string" },
+        "reason": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["actorUid", "targetUserId", "previousRole", "newRole", "reason", "createdAt"]
+    },
+    "P2pPeerPresence": {
+      "title": "P2pPeerPresence",
+      "description": "Active WebRTC P2P peer node endpoint and SDP offer per convoy channel.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "driverName": { "type": "string" },
+        "channelId": { "type": "string" },
+        "localIp": { "type": "string" },
+        "port": { "type": "integer" },
+        "sdpOffer": { "type": "string" },
+        "status": { "type": "string", "enum": ["ONLINE", "OFFLINE"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "driverName", "channelId", "localIp", "port", "status", "createdAt", "updatedAt"]
+    },
+    "P2pSignalPacket": {
+      "title": "P2pSignalPacket",
+      "description": "Directed WebRTC SDP offer/answer or ICE candidate signal between authenticated peers.",
+      "type": "object",
+      "properties": {
+        "senderUserId": { "type": "string" },
+        "targetUserId": { "type": "string" },
+        "channelId": { "type": "string" },
+        "signalType": { "type": "string", "enum": ["OFFER", "ANSWER", "ICE"] },
+        "payload": { "type": "string" },
+        "consumed": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["senderUserId", "targetUserId", "channelId", "signalType", "payload", "consumed", "createdAt", "updatedAt"]
+    },
+    "CloudPttTransmission": {
+      "title": "CloudPttTransmission",
+      "description": "Compressed 8kHz voice burst broadcast to an active DRG convoy PTT channel.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "channelId": { "type": "string" },
+        "audioBase64": { "type": "string" },
+        "codec": { "type": "string", "enum": ["ULAW_8K", "PCM_8K"] },
+        "sampleRateHz": { "type": "integer" },
+        "durationMs": { "type": "integer" },
+        "status": { "type": "string", "enum": ["LIVE", "ENDED"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "senderName", "channelId", "audioBase64", "codec", "sampleRateHz", "durationMs", "status", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Server-validated admin registry documents."
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserAccount" },
+      "description": "Authenticated user account root."
+    },
+    "/users/{userId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/UserPrivatePii" },
+      "description": "Owner-isolated sensitive PII storage."
+    },
+    "/users/{userId}/backups/{backupId}": {
+      "schema": { "$ref": "#/entities/EncryptedBackup" },
+      "description": "Owner-isolated encrypted Room database cloud backups."
+    },
+    "/users/{userId}/sync_queue/{itemId}": {
+      "schema": { "$ref": "#/entities/CloudSyncItem" },
+      "description": "Owner-isolated cloud sync queue items."
+    },
+    "/members/{memberId}": {
+      "schema": { "$ref": "#/entities/CommunityMember" },
+      "description": "Non-PII community member records."
+    },
+    "/kas_transactions/{txId}": {
+      "schema": { "$ref": "#/entities/CloudKasTransaction" },
+      "description": "Treasury income and expense records."
+    },
+    "/emergency_alerts/{alertId}": {
+      "schema": { "$ref": "#/entities/CloudEmergencyAlert" },
+      "description": "SOS emergency broadcast records."
+    },
+    "/role_audit_logs/{logId}": {
+      "schema": { "$ref": "#/entities/CloudRoleAuditLog" },
+      "description": "Immutable RBAC audit trail."
+    },
+    "/p2p_peers/{peerId}": {
+      "schema": { "$ref": "#/entities/P2pPeerPresence" },
+      "description": "Active P2P peer discovery records per convoy channel."
+    },
+    "/p2p_signals/{signalId}": {
+      "schema": { "$ref": "#/entities/P2pSignalPacket" },
+      "description": "Directed WebRTC SDP/ICE signaling packets."
+    },
+    "/ptt_transmissions/{txId}": {
+      "schema": { "$ref": "#/entities/CloudPttTransmission" },
+      "description": "Real-time compressed PTT audio channel broadcasts."
+    }
+  }
+}

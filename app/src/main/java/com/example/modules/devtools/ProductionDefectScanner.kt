@@ -28,12 +28,12 @@ object ProductionDefectScanner {
         ),
         SystemDefectItem(
             defectId = "DEFECT-02",
-            title = "PTT Walkie-Talkie Masih Simulasi UI (Audio P2P Belum Nyata)",
+            title = "PTT Walkie-Talkie & WebRTC P2P Signaling Telah Aktif",
             type = DefectType.PRODUCTION_DEFECT,
-            severityLevel = "Sedang (Feature Gap)",
-            affectedComponent = "modules/services/PttWalkieTalkieDialog.kt",
-            honestDefectExplanation = "Dialog PTT saat ini simulasi UI (haptic/waveform/teks) tanpa capture, streaming, atau transmisi audio antar-driver. Belum ada implementasi UDP multicast/WiFi Direct/WebRTC nyata.",
-            engineeringRoadmapFix = "Implementasikan pipeline audio nyata (capture/encode/transport) + signaling/discovery (mis. mesh lokal atau relay) dengan fallback & pengujian lapangan."
+            severityLevel = "Rendah (Telah Terimplementasi)",
+            affectedComponent = "modules/services/PttWalkieTalkieDialog.kt & core/audio/PttAudioEngine.kt",
+            honestDefectExplanation = "Pipeline audio nyata (AudioRecord, G.711 mu-law, AudioTrack, dan signaling Firestore p2p_peers/p2p_signals/ptt_transmissions) kini aktif. Sinyal offline otomatis masuk ke antrean Room.",
+            engineeringRoadmapFix = "Perluas pengujian lapangan antar-perangkat dan optimasi STUN/TURN traversal untuk jaringan seluler ketat."
         ),
         SystemDefectItem(
             defectId = "DEFECT-03",

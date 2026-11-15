@@ -9,8 +9,8 @@ import com.example.shared.models.*
 
 fun DRGViewModel.login(memberId: String) = profileCoord.login(memberId)
 fun DRGViewModel.logout() = profileCoord.logout()
-fun DRGViewModel.registerNewDriver(name: String, phone: String, plate: String, motorcycle: String, area: String, pin: String) =
-    profileCoord.registerNewDriver(name, phone, plate, motorcycle, area, pin)
+fun DRGViewModel.registerNewDriver(name: String, phone: String, plate: String, motorcycle: String, area: String) =
+    profileCoord.registerNewDriver(name, phone, plate, motorcycle, area)
 fun DRGViewModel.updateProfile(
     phone: String,
     area: String,
@@ -23,25 +23,19 @@ fun DRGViewModel.updateProfile(
     emergencyPhone: String = "",
     simNumber: String = "",
     nik: String = ""
-) = profileCoord.updateProfile(
-    currentMember.value,
-    phone,
-    area,
-    motorcycle,
-    plate,
-    photoUrl,
-    address,
-    bloodType,
-    emergencyContact,
-    emergencyPhone,
-    simNumber,
-    nik
-)
-fun DRGViewModel.updateDutyStatus(status: String, isOnline: Boolean) =
+) {
+    profileCoord.updateProfile(currentMember.value, phone, area, motorcycle, plate, photoUrl, address, bloodType, emergencyContact, emergencyPhone, simNumber, nik)
+    syncOwnProfileToCloud()
+}
+fun DRGViewModel.updateDutyStatus(status: String, isOnline: Boolean) {
     profileCoord.updateDutyStatus(currentMember.value, status, isOnline)
+    syncOwnProfileToCloud()
+}
 
-fun DRGViewModel.triggerEmergency(type: EmergencyType, message: String, location: String) =
+fun DRGViewModel.triggerEmergency(type: EmergencyType, message: String, location: String) {
     emergencyCoord.triggerEmergency(currentMember.value, type, message, location)
+    currentMember.value?.let { syncEmergencyToCloud(it.name, type.name, message, location, it.currentLat, it.currentLng) }
+}
 fun DRGViewModel.resolveEmergency(alertId: String) = emergencyCoord.resolveEmergency(alertId, currentMember.value)
 fun DRGViewModel.respondEmergency(alertId: String) = emergencyCoord.respondEmergency(alertId)
 fun DRGViewModel.respondToEmergency(alertId: String) = respondEmergency(alertId)
@@ -59,19 +53,19 @@ fun DRGViewModel.confirmCrashAutoSos(gForce: Float) {
 
 fun DRGViewModel.approveMemberScreening(memberId: String, note: String = "Diverifikasi") = governanceCoord.approveMemberScreening(memberId, note)
 fun DRGViewModel.rejectMemberScreening(memberId: String, reason: String) = governanceCoord.rejectMemberScreening(memberId, reason)
-fun DRGViewModel.updateMemberRole(memberId: String, role: MemberRole) = governanceCoord.updateMemberRole(memberId, role, currentMember.value)
+fun DRGViewModel.updateMemberRole(memberId: String, role: MemberRole) {
+    val target = members.value.find { it.id == memberId }
+    governanceCoord.updateMemberRole(memberId, role, currentMember.value)
+    if (target != null) syncAdminRoleChangeToCloud(memberId, target.role, role, target.verificationStatus, "Ubah role ke ${role.name}")
+}
 fun DRGViewModel.updateMemberVerification(memberId: String, status: VerificationStatus) = governanceCoord.updateMemberVerification(memberId, status, currentMember.value)
 fun DRGViewModel.updateMemberPermissions(
-    memberId: String,
-    role: MemberRole,
-    canKas: Boolean,
-    canVerify: Boolean,
-    canSos: Boolean,
-    canPosko: Boolean,
-    status: VerificationStatus
-) = governanceCoord.updateMemberPermissions(
-    memberId, role, canKas, canVerify, canSos, canPosko, status, currentMember.value
-)
+    memberId: String, role: MemberRole, canKas: Boolean, canVerify: Boolean, canSos: Boolean, canPosko: Boolean, status: VerificationStatus
+) {
+    val target = members.value.find { it.id == memberId }
+    governanceCoord.updateMemberPermissions(memberId, role, canKas, canVerify, canSos, canPosko, status, currentMember.value)
+    if (target != null) syncAdminRoleChangeToCloud(memberId, target.role, role, status, "Update RBAC & status ke ${status.name}")
+}
 fun DRGViewModel.createPost(title: String, content: String, category: ForumCategory, postType: PostType = PostType.UPDATE) =
     communityCoord.createPost(currentMember.value, title, content, category, postType)
 fun DRGViewModel.addPost(title: String, content: String, category: ForumCategory, postType: PostType = PostType.UPDATE) =

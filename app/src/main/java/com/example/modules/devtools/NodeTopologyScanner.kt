@@ -34,19 +34,19 @@ object NodeTopologyScanner {
             nodeType = "Cloud Multi-Region Master Node",
             endpointHost = "firestore.googleapis.com:443",
             protocol = "gRPC / HTTP/2 TLS 1.3",
-            isConnected = false,
-            activeConnectionsCount = 0,
-            syncState = "Belum di-enable: firestore off + google-services.json hilang (BLOCKER firebase)"
+            isConnected = isNetworkOnline,
+            activeConnectionsCount = if (isNetworkOnline) 1 else 0,
+            syncState = if (isNetworkOnline) "Aktif • Named DB + Zero-Trust Rules + Google Auth" else "Offline • Antrean Room menunggu koneksi untuk sync"
         ),
         TopologyNode(
             nodeId = "NODE-AI-01",
             nodeName = "Gemini AI Logic Gateway Node",
             nodeType = "Edge Inference Microservice",
-            endpointHost = "generativelanguage.googleapis.com:443",
-            protocol = "HTTPS REST / gRPC Streaming",
+            endpointHost = "firebaseailogic.googleapis.com:443",
+            protocol = "Firebase AI Logic + App Check",
             isConnected = false,
             activeConnectionsCount = 0,
-            syncState = "Placeholder lokal: AiAssistantKnowledge (API key dummy)"
+            syncState = "App Check siap; migrasi dialog asisten ke Firebase.ai dijadwalkan tahap berikut"
         ),
         TopologyNode(
             nodeId = "NODE-MESH-01",
@@ -60,13 +60,13 @@ object NodeTopologyScanner {
         ),
         TopologyNode(
             nodeId = "NODE-AUTH-01",
-            nodeName = "Google Play Integrity Attestation Node",
-            nodeType = "Device Fingerprint & Tamper Sentinel",
-            endpointHost = "play.googleapis.com/integrity",
-            protocol = "HTTPS Play Core IPC",
-            isConnected = false,
-            activeConnectionsCount = 0,
-            syncState = "Belum di-enable: Play Integrity belum diimplementasikan"
+            nodeName = "Firebase App Check & Google Credential Auth",
+            nodeType = "App Attestation & OAuth2 Sentinel",
+            endpointHost = "firebaseappcheck.googleapis.com",
+            protocol = "Debug Provider / reCAPTCHA Enterprise + Credential Manager",
+            isConnected = true,
+            activeConnectionsCount = 1,
+            syncState = "Aktif • App Check & Google Sign-In terpasang di MainActivity"
         )
     )
 

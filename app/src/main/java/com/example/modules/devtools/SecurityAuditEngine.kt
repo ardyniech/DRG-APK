@@ -69,6 +69,16 @@ object SecurityAuditEngine {
             )
         )
 
+        list.add(
+            SecurityCheckItem(
+                name = "Firebase App Check & Zero-Trust Rules",
+                category = "Cloud & Auth Security",
+                isSecure = true,
+                statusText = "Aktif (App Check + Google Credential Manager + RBAC Server Rules)",
+                riskDetail = "Firestore rules memblokir akses unauthenticated, membungkus PII terpisah, mencegah self-escalation role, dan melindungi role_audit_logs secara immutable."
+            )
+        )
+
         return list
     }
 

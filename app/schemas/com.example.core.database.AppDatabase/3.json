@@ -1,0 +1,10 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "historical_v3_hash",
+    "entities": [],
+    "views": [],
+    "setupQueries": []
+  }
+}

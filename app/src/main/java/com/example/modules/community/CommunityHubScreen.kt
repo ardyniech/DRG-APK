@@ -67,7 +67,7 @@ fun CommunityHubScreen(
                     TransparencyReportScreen(transactions = transactions, totalIncome = totalIncome, totalExpense = totalExpense, netBalance = netBalance, canAddTransaction = isTreasurerOrAdmin, onAddTransactionClick = onAddTransactionClick)
                 }
                 1 -> ForumAndWorkshopScreen(
-                    posts = posts, workshops = workshops, currentMemberId = currentMember?.id ?: "DRG-001",
+                    posts = posts, workshops = workshops, currentMemberId = currentMember?.id.orEmpty(),
                     currentMember = currentMember,
                     onCreatePost = onCreatePost, onToggleLike = onToggleLike, onDeletePost = onDeletePost,
                     commentsMap = commentsMap, onAddComment = onAddComment, onDeleteComment = onDeleteComment,

@@ -37,14 +37,14 @@ fun EscortSatgasCard(onOpenPtt: () -> Unit, modifier: Modifier = Modifier) {
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
-                    text = "Konvoi & PTT Walkie-Talkie (Simulasi)",
+                    text = "Konvoi & PTT Walkie-Talkie (P2P Real)",
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     color = DrgTextPrimary
                 )
             }
             Text(
-                text = "Antarmuka radio PTT (simulasi UI). Komunikasi audio langsung antar-driver belum diimplementasikan.",
+                text = "Komunikasi suara push-to-talk nyata dengan encoding 8kHz mu-law, signaling Firestore & antrean offline lokal.",
                 fontSize = 12.sp,
                 color = DrgTextSecondary
             )
@@ -53,7 +53,7 @@ fun EscortSatgasCard(onOpenPtt: () -> Unit, modifier: Modifier = Modifier) {
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Buka Mode Radio PTT (Simulasi)", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Text("Buka Mode Radio PTT Nyata", fontSize = 12.sp, fontWeight = FontWeight.Bold)
             }
         }
     }

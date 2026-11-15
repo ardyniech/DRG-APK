@@ -27,41 +27,37 @@ import com.example.shared.atoms.cinematic.turntable.Ojol360TurntableViewport
 import com.example.shared.atoms.cinematic.turntable.rememberOjol360TurntableState
 import com.example.ui.theme.DrgGlassSurfaceStrong
 import com.example.ui.theme.DrgTextDark
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.delay
 
 @Composable
 fun LandingScreen(
-    onNavigateToLogin: () -> Unit,
     onNavigateToRegister: () -> Unit,
     onNavigateToAbout: () -> Unit,
-    onQuickDemoLogin: () -> Unit = onNavigateToLogin
+    onGoogleSignedIn: (FirebaseUser) -> Unit = {},
+    onAuthError: (String) -> Unit = {}
 ) {
     val turntableState = rememberOjol360TurntableState()
     var launcherVisible by remember { mutableStateOf(false) }
+    var showHelpDialog by remember { mutableStateOf(false) }
 
-    // Auto-reveal floating launcher console after 5 seconds if untouched
     LaunchedEffect(Unit) {
         delay(5000L)
         launcherVisible = true
     }
 
     Box(modifier = Modifier.fillMaxSize().testTag("landing_screen")) {
-        // 1. Persistent Photorealistic Full-Screen 360° Live Cinematic Ojol
         Ojol360TurntableViewport(
             state = turntableState,
             modifier = Modifier.fillMaxSize(),
             onTap = { launcherVisible = !launcherVisible }
         )
 
-        // 2. Breathing Hint Pill (Visible before launcher reveals)
         AnimatedVisibility(
             visible = !launcherVisible,
             enter = fadeIn(),
             exit = fadeOut(),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .navigationBarsPadding()
-                .padding(bottom = 28.dp)
+            modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 28.dp)
         ) {
             Box(
                 modifier = Modifier
@@ -72,50 +68,36 @@ fun LandingScreen(
             ) {
                 Text(
                     text = "💡 SENTUH LAYAR // BUKA KONSOL • GESER 360°",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Monospace,
-                    color = DrgTextDark
+                    fontSize = 11.sp, fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Monospace, color = DrgTextDark
                 )
             }
         }
 
-        // 3. Floating Telemetry Top Bar
         AnimatedVisibility(
             visible = launcherVisible,
             enter = fadeIn() + slideInVertically { -it },
             exit = fadeOut() + slideOutVertically { -it },
             modifier = Modifier.align(Alignment.TopCenter)
         ) {
-            Ojol360TurntableTopBar(
-                state = turntableState,
-                onAboutClick = onNavigateToAbout
-            )
+            Ojol360TurntableTopBar(state = turntableState, onAboutClick = onNavigateToAbout)
         }
 
-        // 4. Floating Holographic Launcher Console (Revealed after 5s or on tap)
         AnimatedVisibility(
             visible = launcherVisible,
             enter = fadeIn() + slideInVertically { it },
             exit = fadeOut() + slideOutVertically { it },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .navigationBarsPadding()
-                .padding(horizontal = 16.dp, vertical = 14.dp)
+            modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(horizontal = 16.dp, vertical = 14.dp)
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Ojol360TurntablePresetRow(state = turntableState)
-
+                GoogleSignInButton(onSignedIn = onGoogleSignedIn, onAuthError = onAuthError, label = "Masuk dengan Google • Cloud Sync")
                 CyberLauncherArcDock(
-                    onLoginClick = onNavigateToLogin,
                     onRegisterClick = onNavigateToRegister,
-                    onQuickDemoClick = onQuickDemoLogin,
-                    onAboutClick = onNavigateToAbout
+                    onHelpClick = { showHelpDialog = true }
                 )
             }
         }
     }
+    if (showHelpDialog) LoginHelpDialog(onDismiss = { showHelpDialog = false })
 }

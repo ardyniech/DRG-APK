@@ -10,48 +10,48 @@ object MultiUserGapScanner {
     fun extraDefects(): List<SystemDefectItem> = listOf(
         SystemDefectItem(
             defectId = "DEFECT-05",
-            title = "Sinkronisasi Cloud/Server Belum Nyata (Antrean Lokal Saja)",
+            title = "Sinkronisasi Cloud Parsial (Profil/Kas/SOS/Queue Aktif, Forum/Hazard Menyusul)",
             type = DefectType.CONCEPT_FLAW,
-            severityLevel = "Tinggi (Blocker Multi-User)",
-            affectedComponent = "core/sync/BackgroundSyncEngine.kt",
-            honestDefectExplanation = "Engine sinkron kini jujur memproses antrean lokal (bukan klaim upload cloud palsu), namun belum ada unggah server/Firestore/Retrofit nyata. Data belum tersinkron lintas perangkat.",
-            engineeringRoadmapFix = "Implementasikan upload server sungguhan (Worker + retry) saat backend/akun tersedia; pertahankan status jujur."
+            severityLevel = "Rendah (Parsial Tersinkron)",
+            affectedComponent = "core/sync/BackgroundSyncEngine.kt & FirestoreOperationsRepository",
+            honestDefectExplanation = "Profil, Kas, SOS, dan antrean sync kini terhubung ke Firestore secara nyata dan jujur (tetap OFFLINE_SAVED bila offline). Koleksi sekunder (Forum/Hazard/Event penuh) masih bertahap.",
+            engineeringRoadmapFix = "Ekspansi sinkron dua arah untuk ForumPosts, Hazards, dan Events ke Firestore."
         ),
         SystemDefectItem(
             defectId = "DEFECT-06",
-            title = "Backend Firebase/Auth/FCM Belum Aktif Penuh",
+            title = "Backend Firebase/Auth/App Check Aktif (FCM Server Push Menyusul)",
             type = DefectType.CONCEPT_FLAW,
-            severityLevel = "Tinggi (Blocker Multi-User)",
-            affectedComponent = "app/build.gradle.kts & app/google-services.json",
-            honestDefectExplanation = "Layanan cloud (Firestore/Auth/FCM) bergantung konfigurasi & kredensial server yang belum aktif end-to-end untuk produksi multi-user, sehingga perangkat bisa terisolasi.",
-            engineeringRoadmapFix = "Aktifkan kredensial & dependensi cloud terverifikasi, lalu migrasikan sinkron Room→server secara bertahap."
+            severityLevel = "Rendah (Core Cloud Aktif)",
+            affectedComponent = "app/build.gradle.kts & core/firebase/",
+            honestDefectExplanation = "Firestore named database, Firebase Auth Google Sign-In, Zero-Trust Rules, dan App Check sudah aktif. Tinggal Cloud Functions/FCM fan-out push antar perangkat.",
+            engineeringRoadmapFix = "Tambah Cloud Functions untuk dispatch FCM otomatis saat dokumen emergency_alerts baru dibuat."
         ),
         SystemDefectItem(
             defectId = "DEFECT-07",
-            title = "Auth Lokal PIN + Seed Default 1234",
+            title = "Auth Google Sign-In Tunggal Aktif (UI Login Duplikat, PIN & Demo Dihapus)",
             type = DefectType.CONCEPT_FLAW,
-            severityLevel = "Tinggi (Security)",
-            affectedComponent = "modules/auth/LoginAuthValidator.kt & .env.example",
-            honestDefectExplanation = "Login masih berbasis data lokal perangkat dan PIN dengan proteksi lokal; seed default berisiko bila tidak diganti sebelum rilis.",
-            engineeringRoadmapFix = "Pindah ke akun server (mis. Firebase Auth Phone), perkuat penyimpanan PIN, dan tolak kredensial default sebelum produksi."
+            severityLevel = "Rendah (Gated Google Auth)",
+            affectedComponent = "core/firebase/GoogleAuthManager.kt & modules/auth/",
+            honestDefectExplanation = "UI login lokal duplikat, field PIN registrasi, tombol DEMO, dan auto-seeding akun demo lokal telah dihapus. Biodata pendaftaran KTA otomatis tertaut ke Google UID saat user login.",
+            engineeringRoadmapFix = "Sinkronkan status screening persetujuan admin antar perangkat melalui Firestore listeners."
         ),
         SystemDefectItem(
             defectId = "DEFECT-08",
-            title = "Data Lokal Saja — Ganti HP = Hilang",
+            title = "Cadangan Cloud Terenkripsi AES-GCM Aktif (SQLite Lokal Belum SQLCipher)",
             type = DefectType.PRODUCTION_DEFECT,
-            severityLevel = "Tinggi (Data Loss)",
-            affectedComponent = "AndroidManifest allowBackup=false & Room v14",
-            honestDefectExplanation = "allowBackup=false tanpa cloud backup/sync. Ganti HP/reset/uninstal menghapus kas/forum/kontak lokal; SQLite belum terenkripsi (risiko data-at-rest).",
-            engineeringRoadmapFix = "Tambah export/import kas terenkripsi + cloud backup, dan evaluasi SQLCipher untuk data sensitif."
+            severityLevel = "Sedang (Hardening Opsional)",
+            affectedComponent = "core/backup/CloudBackupHelper.kt & Room v14",
+            honestDefectExplanation = "Pengguna kini bisa mencadangkan & memulihkan database terenkripsi AES-GCM ke Firestore (/users/{uid}/backups). File SQLite lokal saat runtime masih standar Room (bukan SQLCipher).",
+            engineeringRoadmapFix = "Evaluasi SQLCipher bila dibutuhkan enkripsi DB lokal saat runtime selain cloud backup terenkripsi."
         ),
         SystemDefectItem(
             defectId = "DEFECT-09",
-            title = "Signaling/Discovery P2P Belum Fungsional Lintas Perangkat",
+            title = "Signaling/Discovery P2P & WebRTC Signaling Telah Aktif",
             type = DefectType.CONCEPT_FLAW,
-            severityLevel = "Tinggi (Blocker Multi-User)",
+            severityLevel = "Rendah (Telah Terimplementasi)",
             affectedComponent = "core/p2p/P2PSignalingManager.kt & P2PManager.kt",
-            honestDefectExplanation = "Signaling kini berbasis antrean lokal (bukan broadcast debug palsu), namun SDP/ICE/discovery FCM/STUN-TURN nyata belum terbentuk end-to-end.",
-            engineeringRoadmapFix = "Implementasikan signaling FCM + pertukaran SDP/ICE penuh dan relay STUN/TURN saat siap."
+            honestDefectExplanation = "Signaling Firestore p2p_peers, p2p_signals (SDP offer/answer/ICE), dan FCM topic discovery kini aktif nyata dengan antrean offline Room sebagai fallback.",
+            engineeringRoadmapFix = "Monitoring real-time kestabilan NAT traversal peer-to-peer di berbagai operator seluler."
         ),
         SystemDefectItem(
             defectId = "DEFECT-10",

@@ -1,20 +1,8 @@
 package com.example.shared.models
 
-import com.example.ui.theme.DrgTealAccent
-import com.example.ui.theme.DrgOrangeWarning
-import com.example.ui.theme.DrgIndigoVioletAccent
-import com.example.ui.theme.DrgGreenPrimary
-import com.example.ui.theme.DrgGreenDark
-import com.example.ui.theme.DrgGreenContainer
-import com.example.ui.theme.DrgGlassTintBlueSoft
-import com.example.ui.theme.DrgGlassBorderGreenLight
-import com.example.ui.theme.DrgGlassBorderBlueLight
-import com.example.ui.theme.DrgEmeraldAccent
-import com.example.ui.theme.DrgBlueAccent
-import com.example.ui.theme.DrgAmberWarning
+import com.example.ui.theme.*
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import com.example.ui.theme.DrgGrabGreenPrimary
 
 /**
  * 3 Luminous Floating Glass Preset Themes shared across Dashboard, Profile, Settings, and Bottom Dock.
@@ -38,12 +26,12 @@ enum class AppVisualTheme(
         subtitle = "Segar Khas DRG",
         primaryColor = DrgGrabGreenPrimary,
         secondaryColor = DrgEmeraldAccent,
-        glassBg = Color(0xCCFFFFFF),
-        pillBg = Color(0xFFE3F8EC),
+        glassBg = DrgPresetGlassWhite,
+        pillBg = DrgPresetEmeraldPill,
         glassBorderColor = DrgGlassBorderGreenLight,
-        skyTop = Color(0xFF9DE8C1),
-        skyMid = Color(0xFFCFF4E1),
-        skyBottom = Color(0xFFECFBF2),
+        skyTop = DrgPresetEmeraldSkyTop,
+        skyMid = DrgPresetEmeraldSkyMid,
+        skyBottom = DrgPresetEmeraldSkyBot,
         orbPrimary = DrgGreenPrimary,
         orbSecondary = DrgAmberWarning
     ),
@@ -52,28 +40,28 @@ enum class AppVisualTheme(
         subtitle = "Frosted Sky Ice",
         primaryColor = DrgBlueAccent,
         secondaryColor = DrgIndigoVioletAccent,
-        glassBg = Color(0xD4FFFFFF),
+        glassBg = DrgPresetGlassPearl,
         pillBg = DrgGlassTintBlueSoft,
         glassBorderColor = DrgGlassBorderBlueLight,
-        skyTop = Color(0xFFBBD7FA),
-        skyMid = Color(0xFFE1EDFD),
-        skyBottom = Color(0xFFF4F8FF),
-        orbPrimary = Color(0xFF38BDF8),
-        orbSecondary = Color(0xFF818CF8)
+        skyTop = DrgPresetPearlSkyTop,
+        skyMid = DrgPresetPearlSkyMid,
+        skyBottom = DrgPresetPearlSkyBot,
+        orbPrimary = DrgPresetPearlOrbPrimary,
+        orbSecondary = DrgPresetPearlOrbSecondary
     ),
     DEEP_SUNSET_TEAL(
         title = "Sunset Teal",
         subtitle = "Horizon Senja",
         primaryColor = DrgTealAccent,
         secondaryColor = DrgOrangeWarning,
-        glassBg = Color(0xCCFFFDF9),
-        pillBg = Color(0xFFCCFBF1),
-        glassBorderColor = Color(0xFF5EEAD4),
-        skyTop = Color(0xFF8CE5DA),
-        skyMid = Color(0xFFD5F7F0),
-        skyBottom = Color(0xFFFFF4E6),
-        orbPrimary = Color(0xFF14B8A6),
-        orbSecondary = Color(0xFFFB923C)
+        glassBg = DrgPresetGlassWarm,
+        pillBg = DrgPresetSunsetPill,
+        glassBorderColor = DrgPresetSunsetBorder,
+        skyTop = DrgPresetSunsetSkyTop,
+        skyMid = DrgPresetSunsetSkyMid,
+        skyBottom = DrgPresetSunsetSkyBot,
+        orbPrimary = DrgPresetSunsetOrbPrimary,
+        orbSecondary = DrgPresetSunsetOrbSecondary
     );
 
     val backgroundGradient: Brush

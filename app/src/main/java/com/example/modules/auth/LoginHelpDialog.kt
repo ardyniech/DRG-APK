@@ -1,6 +1,5 @@
 package com.example.modules.auth
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -13,8 +12,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.core.sync.EmergencySmsFallbackHelper
 import com.example.shared.atoms.DrgLuminousGlassModal
 import com.example.shared.atoms.LocalAppVisualTheme
+import com.example.shared.utils.WhatsAppLauncher
 import com.example.ui.theme.DrgTextMuted
 import com.example.ui.theme.DrgTextSlate
 
@@ -24,8 +25,8 @@ fun LoginHelpDialog(onDismiss: () -> Unit) {
     val theme = LocalAppVisualTheme.current
 
     DrgLuminousGlassModal(
-        title = "Bantuan Lupa ID / KTA",
-        subtitle = "Pemulihan akses anggota resmi DRG Malang Raya",
+        title = "Bantuan Akses & KTA DRG",
+        subtitle = "Panduan masuk Google Sign-In & penautan KTA Malang Raya",
         icon = Icons.Default.SupportAgent,
         accentColor = theme.primaryColor,
         onDismiss = onDismiss,
@@ -37,7 +38,11 @@ fun LoginHelpDialog(onDismiss: () -> Unit) {
                 Button(
                     onClick = {
                         onDismiss()
-                        Toast.makeText(context, "Membuka WA Admin DRG Malang...", Toast.LENGTH_SHORT).show()
+                        WhatsAppLauncher.openChat(
+                            context,
+                            EmergencySmsFallbackHelper.DEFAULT_HOTLINE_TRC,
+                            "Halo Admin/Satgas DRG Malang Raya, saya butuh bantuan akses Google Sign-In & verifikasi KTA."
+                        )
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = theme.primaryColor),
                     shape = RoundedCornerShape(12.dp),
@@ -46,9 +51,9 @@ fun LoginHelpDialog(onDismiss: () -> Unit) {
             }
         }
     ) {
-        Text("Jangan khawatir, KTA digital Anda aman tersimpan di pangkalan data DRG Malang Raya.", fontSize = 12.sp, color = DrgTextSlate)
-        Text("Untuk mengetahui ID atau reset PIN Anda, Anda bisa:", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = DrgTextSlate)
-        Text("• Menanyakan kepada Ketua Basis / Admin Grup WA Basis Anda.", fontSize = 11.sp, color = DrgTextMuted)
-        Text("• Menghubungi Satgas Pelayanan Keanggotaan DRG via WhatsApp.", fontSize = 11.sp, color = DrgTextMuted)
+        Text("Akses DRG Driver kini menggunakan Google Sign-In terverifikasi untuk keamanan data & sinkronisasi cloud.", fontSize = 12.sp, color = DrgTextSlate)
+        Text("Jika mengalami kendala akun atau verifikasi KTA:", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = DrgTextSlate)
+        Text("• Ketuk 'Masuk dengan Google' di layar utama dengan akun Google aktif Anda.", fontSize = 11.sp, color = DrgTextMuted)
+        Text("• Belum punya KTA? Ketuk 'DAFTAR KTA' lalu hubungi Satgas Keanggotaan via WhatsApp.", fontSize = 11.sp, color = DrgTextMuted)
     }
 }

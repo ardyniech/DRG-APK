@@ -26,7 +26,7 @@ import com.example.ui.theme.DrgTextDark
 fun ForumAndWorkshopScreen(
     posts: List<ForumPost>,
     workshops: List<WorkshopPartner>,
-    currentMemberId: String = "DRG-001",
+    currentMemberId: String = "",
     currentMember: DriverMember? = null,
     onCreatePost: (String, String, ForumCategory, PostType) -> Unit,
     onToggleLike: (String, Boolean) -> Unit,

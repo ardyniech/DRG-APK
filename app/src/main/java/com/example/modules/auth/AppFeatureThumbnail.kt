@@ -92,13 +92,13 @@ object AppFeatureRepository {
         ),
         AppFeatureThumbnail(
             id = "ptt",
-            title = "Walkie-Talkie PTT (Simulasi UI)",
+            title = "Walkie-Talkie PTT (P2P Real)",
             category = "Komunikasi Suara",
-            description = "Antarmuka PTT/walkie-talkie (simulasi). Transmisi audio real-time antar-driver belum diimplementasikan.",
+            description = "Transmisi audio push-to-talk nyata dengan G.711 mu-law, signaling Firestore, dan antrean offline.",
             icon = Icons.Default.RecordVoiceOver,
             drawableResId = R.drawable.img_ptt_intercom_real_1789133521397,
-            badgeText = "Dalam Pengembangan",
-            accentColor = DrgOrangeWarning
+            badgeText = "Aktif P2P",
+            accentColor = DrgGrabGreenPrimary
         ),
         AppFeatureThumbnail(
             id = "about_app",

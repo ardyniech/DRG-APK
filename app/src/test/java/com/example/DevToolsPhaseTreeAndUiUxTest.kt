@@ -5,6 +5,7 @@ import com.example.modules.devtools.PhaseTreeScanner
 import com.example.modules.devtools.PhaseTreeStatus
 import com.example.modules.devtools.UiUxAuditEngine
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -32,10 +33,10 @@ class DevToolsPhaseTreeAndUiUxTest {
         assertTrue("In-scope equals total when no deferred features", phase2.inScopeFeatures == phase2.totalFeatures)
         assertEquals(PhaseTreeStatus.LULUS_SEMPURNA, phase2.overallStatus)
 
-        // Phase 3 has defects (PTT simulation); intercom helm removed
+        // Phase 3 shipped with real PTT audio and WebRTC signaling
         val phase3 = phases.first { it.phaseNumber == 3 }
-        assertTrue("Phase 3 must be flagged with defects", phase3.hasAnyDefect)
-        assertEquals(PhaseTreeStatus.TERKENDALA_CACAT, phase3.overallStatus)
+        assertFalse("Phase 3 is now fully shipped without defects", phase3.hasAnyDefect)
+        assertEquals(PhaseTreeStatus.LULUS_SEMPURNA, phase3.overallStatus)
         assertEquals(0, phase3.deferredFeatures)
 
         // Check each leaf has what & why

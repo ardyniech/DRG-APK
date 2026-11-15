@@ -51,9 +51,12 @@ class DevToolsMultiUserGapTest {
     fun testNodeTopologyHonestCloudDisconnected() {
         val online = NodeTopologyScanner.getClusterNodes(isNetworkOnline = true)
         assertEquals(5, online.size)
-        val cloud = online.first { it.nodeName.contains("Firestore") }
-        assertFalse("Firestore belum di-enable harus disconnected walau online", cloud.isConnected)
-        assertTrue(cloud.syncState.contains("Belum di-enable"))
+        val onlineCloud = online.first { it.nodeName.contains("Firestore") }
+        assertTrue("Firestore aktif harus terhubung saat online", onlineCloud.isConnected)
+
+        val offline = NodeTopologyScanner.getClusterNodes(isNetworkOnline = false)
+        val offlineCloud = offline.first { it.nodeName.contains("Firestore") }
+        assertFalse("Firestore harus offline saat jaringan mati", offlineCloud.isConnected)
     }
 
     @Test

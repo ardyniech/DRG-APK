@@ -13,9 +13,9 @@
     ]
   },
   "build": {
-    "version": "v1.10-85-g0b4837f",
-    "commit": "0b4837f",
-    "commitDate": "2026-11-14",
+    "version": "dev",
+    "commit": "v3.0.0",
+    "commitDate": "2026-11-13",
     "generatedBy": "generate_about_manifest.py"
   },
   "summary": {
@@ -25,9 +25,9 @@
     "inProgress": 12,
     "planned": 6,
     "modules": 18,
-    "totalSourceFiles": 574,
-    "totalLoc": 40749,
-    "testSuites": 68
+    "totalSourceFiles": 572,
+    "totalLoc": 40258,
+    "testSuites": 72
   },
   "phases": [
     {
@@ -80,12 +80,12 @@
     {
       "id": "auth",
       "name": "Autentikasi & Onboarding",
-      "description": "Landing, login PIN/KTA, registrasi anggota, dan area dropdown.",
+      "description": "Landing 360°, Google Sign-In tunggal (Credential Manager), registrasi KTA tertaut Google UID, dan area dropdown.",
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 20,
-      "loc": 1697,
+      "files": 10,
+      "loc": 763,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
@@ -111,8 +111,8 @@
       "phase": "phase-1",
       "status": "IN_PROGRESS",
       "progress": 70,
-      "files": 3,
-      "loc": 216,
+      "files": 7,
+      "loc": 433,
       "todos": 0,
       "tests": [
         "AudioRouteManagerTest",
@@ -215,7 +215,7 @@
       "status": "IN_PROGRESS",
       "progress": 70,
       "files": 3,
-      "loc": 174,
+      "loc": 193,
       "todos": 0,
       "tests": [
         "CacheAndBatteryTest",
@@ -328,8 +328,8 @@
       "phase": "phase-1",
       "status": "DONE",
       "progress": 100,
-      "files": 25,
-      "loc": 1949,
+      "files": 26,
+      "loc": 2034,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
@@ -360,8 +360,8 @@
       "phase": "phase-1",
       "status": "IN_PROGRESS",
       "progress": 70,
-      "files": 18,
-      "loc": 1412,
+      "files": 19,
+      "loc": 1489,
       "todos": 0,
       "tests": [
         "ViewModelRefactorAuditTest"
@@ -402,9 +402,9 @@
       "description": "Integrasi Firebase Cloud Messaging, Auth, dan Firebase AI untuk sinyal P2P & asisten.",
       "phase": "phase-2",
       "status": "IN_PROGRESS",
-      "progress": 65,
-      "files": 1,
-      "loc": 112,
+      "progress": 70,
+      "files": 10,
+      "loc": 828,
       "todos": 0,
       "tests": [
         "P2PSignalingTest"
@@ -417,8 +417,8 @@
       "phase": "phase-2",
       "status": "IN_PROGRESS",
       "progress": 70,
-      "files": 10,
-      "loc": 478,
+      "files": 11,
+      "loc": 567,
       "todos": 0,
       "tests": [
         "P2PConnectionTest",
@@ -434,7 +434,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 14,
-      "loc": 992,
+      "loc": 997,
       "todos": 0,
       "tests": [
         "AiAssistantKnowledgeTest",
@@ -553,36 +553,18 @@
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 5,
+    "total": 2,
     "blocker": 0,
-    "major": 2,
-    "minor": 3,
+    "major": 0,
+    "minor": 2,
     "note": 0
   },
   "minus": [
-    {
-      "severity": "MAJOR",
-      "category": "multi-user",
-      "detail": "Seed hanya bila members kosong → tiap HP baru punya data dummy sendiri, bukan data komunitas bersama.",
-      "fix": "Butuh backend + akun server agar komunitas sinkron."
-    },
     {
       "severity": "MINOR",
       "category": "security",
       "detail": "Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB.",
       "fix": "Enkripsi database atau minimal jelaskan risiko di docs."
-    },
-    {
-      "severity": "MAJOR",
-      "category": "database",
-      "detail": "Schema Room hilang ['1.json', '2.json', '3.json', '4.json', '8.json', '9.json'] (exportSchema=true tapi 1-4,8,9.json tidak commit) → verifikasi migrasi v1→v14 tidak lengkap.",
-      "fix": "Generate & commit schema hilang via Room export."
-    },
-    {
-      "severity": "MINOR",
-      "category": "code",
-      "detail": "Hardcode hex Color(0x...) di9 file — melanggar 'No Magic Numbers' AGENTS §1.",
-      "fix": "Pindah ke DesignTokens/Theme."
     },
     {
       "severity": "MINOR",

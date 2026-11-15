@@ -32,11 +32,11 @@ fun RegisterSuccessDialog(onDismiss: () -> Unit) {
                 colors = ButtonDefaults.buttonColors(containerColor = theme.primaryColor),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
-            ) { Text("Lanjut ke Halaman Login", fontWeight = FontWeight.Bold, color = Color.White) }
+            ) { Text("Kembali & Masuk dengan Google", fontWeight = FontWeight.Bold, color = Color.White) }
         }
     ) {
         Text(
-            "Data registrasi Anda telah tersimpan. Pengurus / Satgas akan memverifikasi berkas KTA Anda.",
+            "Data registrasi Anda telah tersimpan. Ketuk Masuk dengan Google di layar utama lalu pengurus / Satgas akan memverifikasi KTA Anda.",
             fontSize = 12.sp,
             color = DrgTextSlate
         )

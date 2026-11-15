@@ -1,16 +1,20 @@
 package com.example
 
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.core.audio.SosHapticManager
 import com.example.core.database.AppDatabase
+import com.example.core.firebase.configureAppCheck
 import com.example.core.repository.DRGRepository
 import com.example.core.viewmodel.CashManagementViewModel
 import com.example.core.viewmodel.DRGViewModel
@@ -20,16 +24,15 @@ import com.example.ui.theme.DRGDriverTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Minta izin notifikasi (Android 13+) agar worker bisa beri tahu update.
+
+        // STEP 1: Configure Firebase App Check BEFORE Compose UI, ViewModels, or Firebase ops
+        configureAppCheck(this, intent)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) !=
-                android.content.pm.PackageManager.PERMISSION_GRANTED
+                PackageManager.PERMISSION_GRANTED
             ) {
-                androidx.core.app.ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
-                    1001
-                )
+                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1001)
             }
         }
         enableEdgeToEdge()
@@ -40,9 +43,8 @@ class MainActivity : ComponentActivity() {
 
         val database = AppDatabase.getInstance(applicationContext)
         val repository = DRGRepository(database)
-        val sharedPrefs = applicationContext.getSharedPreferences("drg_prefs", android.content.Context.MODE_PRIVATE)
-
-        com.example.core.audio.SosHapticManager.initialize(applicationContext)
+        val sharedPrefs = applicationContext.getSharedPreferences("drg_prefs", MODE_PRIVATE)
+        SosHapticManager.initialize(applicationContext)
 
         setContent {
             val viewModel: DRGViewModel = viewModel(
@@ -53,7 +55,6 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             )
-
             val cashViewModel: CashManagementViewModel = viewModel(
                 factory = object : ViewModelProvider.Factory {
                     @Suppress("UNCHECKED_CAST")
@@ -62,7 +63,6 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             )
-
             DRGDriverTheme {
                 DrgAppContent(viewModel = viewModel, cashViewModel = cashViewModel)
             }
@@ -71,11 +71,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        // App transitions seamlessly to background state ("tenggelam") on Home / Recents
     }
 
-    fun sinkToBackground(): Boolean {
-        return moveTaskToBack(true)
-    }
+    fun sinkToBackground(): Boolean = moveTaskToBack(true)
 }
-

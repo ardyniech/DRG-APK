@@ -1,0 +1,43 @@
+package com.example.ui.theme
+
+import androidx.compose.ui.graphics.Color
+
+// Cinematic 360° & 3D Rider Canvas Palette
+val DrgSkyDawnTint = Color(0xFFD4EBD9)
+val DrgSkyCyberMint = Color(0xFFD0EBD7)
+val DrgRoadAsphaltUpper = Color(0xFF2B3A33)
+val DrgRoadCyberUpper = Color(0xFF23322B)
+val DrgRubberTyreDark = Color(0xFF14181B)
+val DrgRubberTyreCyber = Color(0xFF11171A)
+val DrgAlloyRimSlate = Color(0xFF475569)
+val DrgAlloyRimDeep = Color(0xFF4A5568)
+val DrgChassisSteel = Color(0xFF1E293B)
+val DrgTreadSlate = Color(0xFF334155)
+val DrgExhaustSilver = Color(0xFF64748B)
+val DrgForkSilver = Color(0xFFCBD5E1)
+val DrgHarnessSilver = Color(0xFFE2E8F0)
+val DrgHelmetVisorObsidian = Color(0xFF0F172A)
+val DrgOjolWindscreenGlassTint = Color(0x991E293B)
+val DrgTaillightCore = Color(0xFFFF8A80)
+val DrgSafetyReflectorYellow = Color(0xFFFACC15)
+
+// AppVisualTheme Preset Tokens
+val DrgPresetGlassWhite = Color(0xCCFFFFFF)
+val DrgPresetGlassPearl = Color(0xD4FFFFFF)
+val DrgPresetGlassWarm = Color(0xCCFFFDF9)
+val DrgPresetEmeraldPill = Color(0xFFE3F8EC)
+val DrgPresetEmeraldSkyTop = Color(0xFF9DE8C1)
+val DrgPresetEmeraldSkyMid = Color(0xFFCFF4E1)
+val DrgPresetEmeraldSkyBot = Color(0xFFECFBF2)
+val DrgPresetPearlSkyTop = Color(0xFFBBD7FA)
+val DrgPresetPearlSkyMid = Color(0xFFE1EDFD)
+val DrgPresetPearlSkyBot = Color(0xFFF4F8FF)
+val DrgPresetPearlOrbPrimary = Color(0xFF38BDF8)
+val DrgPresetPearlOrbSecondary = Color(0xFF818CF8)
+val DrgPresetSunsetPill = Color(0xFFCCFBF1)
+val DrgPresetSunsetBorder = Color(0xFF5EEAD4)
+val DrgPresetSunsetSkyTop = Color(0xFF8CE5DA)
+val DrgPresetSunsetSkyMid = Color(0xFFD5F7F0)
+val DrgPresetSunsetSkyBot = Color(0xFFFFF4E6)
+val DrgPresetSunsetOrbPrimary = Color(0xFF14B8A6)
+val DrgPresetSunsetOrbSecondary = Color(0xFFFB923C)

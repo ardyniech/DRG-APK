@@ -6,11 +6,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import com.example.ui.theme.DrgAsphaltDeep
-import com.example.ui.theme.DrgGrabGreenPrimary
-import com.example.ui.theme.DrgLaneMarker
-import com.example.ui.theme.DrgWarmGradientEnd
-import com.example.ui.theme.DrgWarmGradientStart
+import com.example.ui.theme.*
 
 fun DrawScope.drawCinematicRoadEnvironment(
     rushProgress: Float,
@@ -25,7 +21,7 @@ fun DrawScope.drawCinematicRoadEnvironment(
         brush = Brush.verticalGradient(
             0f to DrgWarmGradientStart.copy(alpha = 0.85f),
             0.65f to DrgWarmGradientEnd,
-            1f to Color(0xFFD4EBD9)
+            1f to DrgSkyDawnTint
         ),
         topLeft = Offset.Zero,
         size = Size(size.width, horizonY)
@@ -62,7 +58,7 @@ fun DrawScope.drawCinematicRoadEnvironment(
     drawPath(
         path = asphaltPath,
         brush = Brush.verticalGradient(
-            0f to Color(0xFF2B3A33),
+            0f to DrgRoadAsphaltUpper,
             1f to DrgAsphaltDeep
         )
     )

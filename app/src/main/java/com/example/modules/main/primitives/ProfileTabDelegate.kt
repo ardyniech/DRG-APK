@@ -4,9 +4,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import com.example.core.viewmodel.DRGViewModel
 import com.example.core.viewmodel.MainNavTab
-import com.example.core.viewmodel.logout
+import com.example.core.viewmodel.logoutSession
 import com.example.core.viewmodel.toggleSosAlarmSound
 import com.example.core.viewmodel.updateProfile
 import com.example.modules.dashboard.theme.DashboardVisualTheme
@@ -26,6 +27,7 @@ fun ProfileTabDelegate(
     scaffoldPadding: PaddingValues
 ) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     ProfileScreen(
         currentMember = currentMember,
         onUpdateProfile = { p, a, m, pl, pu, ad, b, ec, ep, s, k ->
@@ -38,7 +40,7 @@ fun ProfileTabDelegate(
         onOpenAdmin = { viewModel.selectTab(MainNavTab.ADMIN) },
         onOpenDevTools = { viewModel.selectTab(MainNavTab.DEV_TOOLS) },
         onOpenAbout = { viewModel.selectTab(MainNavTab.ABOUT) },
-        onLogout = { viewModel.logout() },
+        onLogout = { viewModel.logoutSession(context) },
         badges = badges,
         visualTheme = dashboardTheme,
         contentPadding = scaffoldPadding

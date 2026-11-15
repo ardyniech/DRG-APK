@@ -40,7 +40,7 @@ fun DevMaturityTab(
                                 selected = selectedFilter == stage,
                                 onClick = { selectedFilter = stage },
                                 label = { Text(stage.label.split(" ").first(), fontSize = 10.sp) },
-                                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(stage.badgeColorHex), selectedLabelColor = Color(stage.textColorHex))
+                                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = stage.badgeColor, selectedLabelColor = stage.textColor)
                             )
                         }
                     }
@@ -55,8 +55,8 @@ fun DevMaturityTab(
                             Text(item.name, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = DrgTextPrimary)
                             Text("Modul: ${item.module} • ${item.codeLineCount} baris", fontSize = 10.sp, color = DrgTextSecondary)
                         }
-                        Surface(shape = RoundedCornerShape(6.dp), color = Color(item.stage.badgeColorHex)) {
-                            Text(item.stage.label, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color(item.stage.textColorHex), modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
+                        Surface(shape = RoundedCornerShape(6.dp), color = item.stage.badgeColor) {
+                            Text(item.stage.label, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = item.stage.textColor, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
                         }
                     }
                     if (item.hasDeadButtons && item.deadButtonDetails != null) {

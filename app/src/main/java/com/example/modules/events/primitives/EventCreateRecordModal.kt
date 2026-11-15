@@ -39,7 +39,7 @@ fun EventCreateRecordModal(
     var dateText by remember { mutableStateOf("Sabtu, 29 Nov 2026 • 19:00 WIB") }
     var daysAhead by remember { mutableIntStateOf(7) }
     var location by remember { mutableStateOf("") }
-    var coordinatorName by remember { mutableStateOf(currentMember?.name ?: "Ketua Panitia DRG") }
+    var coordinatorName by remember { mutableStateOf(currentMember?.name ?: "Panitia DRG") }
     var budgetText by remember { mutableStateOf("2500000") }
     var collectedText by remember { mutableStateOf("1000000") }
     var targetAttendeesText by remember { mutableStateOf("50") }
@@ -47,7 +47,7 @@ fun EventCreateRecordModal(
     var readinessNotes by remember { mutableStateOf("") }
     var validationError by remember { mutableStateOf<String?>(null) }
     var draftTasks by remember {
-        mutableStateOf(EventReadinessCalculator.defaultTaskDrafts(currentMember?.id ?: "DRG-001", currentMember?.name ?: "Ketua Panitia"))
+        mutableStateOf(EventReadinessCalculator.defaultTaskDrafts(currentMember?.id.orEmpty(), currentMember?.name ?: "Panitia DRG"))
     }
 
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
@@ -79,7 +79,7 @@ fun EventCreateRecordModal(
                             targetAttendeesText, { targetAttendeesText = it }, budgetText, { budgetText = it },
                             collectedText, { collectedText = it }, description, { description = it }, readinessNotes, { readinessNotes = it }
                         )
-                        EventCreateTaskDraftSection(draftTasks, accent, currentMember?.id ?: "DRG-001", coordinatorName, { draftTasks = draftTasks + it }, { id -> draftTasks = draftTasks.filterNot { it.id == id } })
+                        EventCreateTaskDraftSection(draftTasks, accent, currentMember?.id.orEmpty(), coordinatorName, { draftTasks = draftTasks + it }, { id -> draftTasks = draftTasks.filterNot { it.id == id } })
                     }
 
                     Button(
@@ -91,7 +91,7 @@ fun EventCreateRecordModal(
                                 title.isBlank() || location.isBlank() -> validationError = "Nama Event dan Lokasi wajib diisi."
                                 rab <= 0L -> validationError = "Estimasi RAB harus lebih besar dari Rp 0."
                                 target <= 0 -> validationError = "Target peserta minimal 1 anggota."
-                                else -> onSubmit(title, category, description, dateText, System.currentTimeMillis() + daysAhead * 86_400_000L, location, currentMember?.id ?: "DRG-001", coordinatorName, rab, funds, target, readinessNotes, draftTasks)
+                                else -> onSubmit(title, category, description, dateText, System.currentTimeMillis() + daysAhead * 86_400_000L, location, currentMember?.id.orEmpty(), coordinatorName, rab, funds, target, readinessNotes, draftTasks)
                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = accent),

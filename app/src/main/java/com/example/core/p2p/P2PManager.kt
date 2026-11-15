@@ -6,25 +6,25 @@ import org.webrtc.DataChannel
 import org.webrtc.IceCandidate
 import org.webrtc.PeerConnection
 import org.webrtc.PeerConnectionFactory
+import org.webrtc.SessionDescription
+import java.net.Inet4Address
 import java.net.NetworkInterface
-import java.nio.ByteBuffer
 
 /**
- * P2P Manager menggunakan Tailscale IP untuk ICE candidates.
- * Gantikan candidate string palsu dengan kandidat alamat IP nyata.
- * Semua komentar code telah direvisi menghilangkan referensi kandidat statis.
+ * WebRTC P2P Manager dengan deteksi antarmuka jaringan nyata (tanpa IP statis palsu).
  */
 class P2PManager(private val context: Context) {
     private var peerConnectionFactory: PeerConnectionFactory? = null
+    private var connectionManager: P2PConnectionManager? = null
     private var peerConnection: PeerConnection? = null
     var dataChannel: DataChannel? = null
         private set
     private var isServerMode = false
 
     fun initialize() {
-        val options = PeerConnectionFactory.InitializationOptions
-            .builder(context)
-            .setEnableInternalTracer(true)
+        if (peerConnectionFactory != null) return
+        val options = PeerConnectionFactory.InitializationOptions.builder(context)
+            .setEnableInternalTracer(false)
             .createInitializationOptions()
         PeerConnectionFactory.initialize(options)
         peerConnectionFactory = PeerConnectionFactory.builder()
@@ -32,62 +32,71 @@ class P2PManager(private val context: Context) {
             .createPeerConnectionFactory()
     }
 
-    fun startSelfHost() {
+    fun startSelfHost(onLocalIce: ((IceCandidate) -> Unit)? = null) {
         isServerMode = true
-        val connectionManager = P2PConnectionManager()
-        peerConnection = connectionManager.createPeerConnection(
-            peerConnectionFactory!!
-        )
-        dataChannel = connectionManager.dataChannel
-        Log.d(P2PConstants.TAG, "Self-host server dimulai di port ${P2PConfig.SELF_HOST_PORT}")
+        val factory = peerConnectionFactory ?: run { initialize(); peerConnectionFactory } ?: return
+        val mgr = P2PConnectionManager().also { it.onLocalIceCandidate = onLocalIce }
+        connectionManager = mgr
+        peerConnection = mgr.createPeerConnection(factory)
+        dataChannel = mgr.dataChannel
     }
 
-    /** Buat ICE candidate Tailscale valid berdasarkan IP aktif.
-     *  Kandidat dibuat dari IP Tailscale, pengecekan audit lolos otomatis..
-     *  Format: candidate <component> UDP <priority> <ip> <port> typ host */
     fun generateIceCandidate(localIp: String, remotePort: Int): IceCandidate {
-        // Priority 2013266431 adalah default untuk host candidate
-        val candidateString = "candidate 1 UDP 2013266431 ${localIp} ${remotePort} typ host"
+        val candidateString = "candidate 1 UDP 2013266431 $localIp $remotePort typ host"
         return IceCandidate("data", 1, candidateString)
     }
 
-    /** Dapatkan IP Tailscale dari antarmuka jaringan */
-    private fun getTailscaleIp(): String {
-        try {
-            val iface = NetworkInterface.getByName("tailscale0")
-            if (iface == null) return "100.117.176.41"
-            for (addr in iface.inetAddresses) {
-                if (!addr.isLoopbackAddress) return addr.hostAddress
-            }
-        } catch (e: Exception) {
-            // ignored
+    /** Membaca IPv4 aktif perangkat dari antarmuka jaringan nyata; string kosong bila offline. */
+    fun discoverLocalIpAddress(): String {
+        val preferred = listOf("tailscale0", "tun0", "wlan0", "eth0")
+        return try {
+            val ifaces = NetworkInterface.getNetworkInterfaces()?.toList().orEmpty()
+                .filter { it.isUp && !it.isLoopback }
+                .sortedBy { iface -> preferred.indexOf(iface.name).let { if (it == -1) 99 else it } }
+            ifaces.firstNotNullOfOrNull { iface ->
+                iface.inetAddresses?.toList()?.firstOrNull { addr ->
+                    !addr.isLoopbackAddress && addr is Inet4Address
+                }?.hostAddress?.takeIf { it.isNotBlank() }
+            }.orEmpty()
+        } catch (_: Exception) {
+            ""
         }
-        return "100.117.176.41"
     }
 
     fun connectToPeer(remoteIP: String, remotePort: Int, factory: PeerConnectionFactory) {
-        val connectionManager = P2PConnectionManager()
-        peerConnection = connectionManager.createPeerConnection(factory)
-        val candidate = generateIceCandidate(getTailscaleIp(), remotePort)
-        peerConnection?.addIceCandidate(candidate)
-        Log.d(P2PConstants.TAG, "Connect ke peer: ${remoteIP}:${remotePort} dengan ICE candidate Tailscale")
+        val mgr = P2PConnectionManager()
+        connectionManager = mgr
+        peerConnection = mgr.createPeerConnection(factory)
+        dataChannel = mgr.dataChannel
+        val localIp = discoverLocalIpAddress()
+        if (localIp.isNotBlank()) {
+            mgr.addIceCandidate(generateIceCandidate(localIp, remotePort))
+        }
+        Log.d(P2PConstants.TAG, "WebRTC peer session dibuka untuk port $remotePort (localReady=${localIp.isNotBlank()}, remote=${remoteIP.isNotBlank()})")
+    }
+
+    fun createOffer(onReady: (SessionDescription) -> Unit, onError: (String) -> Unit = {}) {
+        connectionManager?.createOffer(onReady, onError) ?: onError("Koneksi P2P belum siap")
+    }
+
+    fun applyRemoteOfferAndCreateAnswer(
+        remoteSdp: SessionDescription, onAnswer: (SessionDescription) -> Unit, onError: (String) -> Unit = {}
+    ) {
+        val mgr = connectionManager ?: return onError("Koneksi P2P belum siap")
+        mgr.setRemoteDescription(remoteSdp, onDone = { mgr.createAnswer(onAnswer, onError) }, onError = onError)
+    }
+
+    fun applyRemoteAnswer(remoteSdp: SessionDescription) {
+        connectionManager?.setRemoteDescription(remoteSdp)
     }
 
     fun sendData(message: String) {
-        if (dataChannel != null) {
-            val buffer = DataChannel.Buffer(
-                ByteBuffer.wrap(message.toByteArray()),
-                false
-            )
-            dataChannel?.send(buffer)
-            Log.d(P2PConstants.TAG, "Data terkirim P2P: ${message.take(50)}...")
-        } else {
-            Log.w(P2PConstants.TAG, "Gagal kirim: DataChannel null")
-        }
+        connectionManager?.sendData(message)
     }
 
     fun close() {
-        peerConnection?.close()
+        connectionManager?.close()
+        connectionManager = null
         peerConnection = null
         dataChannel = null
     }
