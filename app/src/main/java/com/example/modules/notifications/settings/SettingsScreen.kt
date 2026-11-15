@@ -51,12 +51,15 @@ fun SettingsScreen(
     onClearCache: () -> Unit,
     notificationPref: NotificationPreference,
     onSaveNotificationPref: (NotificationPreference) -> Unit,
+    otaUpdateContent: @Composable () -> Unit = {},
     systemEntriesContent: @Composable ColumnScope.() -> Unit,
     onBack: () -> Unit,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableStateOf(SettingsHubTab.PERSONALISASI) }
+    val scrollState = rememberScrollState()
+    LaunchedEffect(selectedTab) { scrollState.scrollTo(0) }
     BackHandler { onBack() }
 
     Box(modifier = modifier.fillMaxSize().testTag("settings_hub_screen")) {
@@ -75,34 +78,37 @@ fun SettingsScreen(
                 visualTheme = visualTheme
             )
 
-            Crossfade(
-                targetState = selectedTab,
-                animationSpec = tween(200),
-                label = "settingsTabSwitch",
-                modifier = Modifier.weight(1f)
-            ) { tab ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(top = 12.dp, bottom = contentPadding.calculateBottomPadding() + 18.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    when (tab) {
-                        SettingsHubTab.PERSONALISASI -> SettingsPersonalizationTab(
-                            visualTheme, onSelectVisualTheme, focusMode, onSelectFocusMode, notificationPref, onSaveNotificationPref
-                        )
-                        SettingsHubTab.KEAMANAN -> SettingsSafetyTab(
-                            visualTheme, isSosAlarmEnabled, onToggleSosAlarm, onTestSosAlarm, onStopSosAlarm,
-                            isCrashGuardEnabled, onToggleCrashGuard, crashSensitivity, onSelectCrashSensitivity, onSimulateCrash
-                        )
-                        SettingsHubTab.GPS_PETA -> SettingsGpsCacheTab(
-                            visualTheme, isLocationSharingConsent, onToggleLocationSharing, cacheSizeDesc,
-                            selectedCachePolicy, onSelectCachePolicy, selectedSyncProfile, onSelectSyncProfile,
-                            isDataSaverEnabled, onToggleDataSaver, isPowerSaverEnabled, onTogglePowerSaver,
-                            onPrecacheMap, onClearCache
-                        )
-                        SettingsHubTab.SISTEM -> Column(verticalArrangement = Arrangement.spacedBy(12.dp), content = systemEntriesContent)
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(scrollState)
+                    .padding(top = 12.dp, bottom = contentPadding.calculateBottomPadding() + 18.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                otaUpdateContent()
+
+                Crossfade(
+                    targetState = selectedTab,
+                    animationSpec = tween(200),
+                    label = "settingsTabSwitch"
+                ) { tab ->
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        when (tab) {
+                            SettingsHubTab.PERSONALISASI -> SettingsPersonalizationTab(
+                                visualTheme, onSelectVisualTheme, focusMode, onSelectFocusMode, notificationPref, onSaveNotificationPref
+                            )
+                            SettingsHubTab.KEAMANAN -> SettingsSafetyTab(
+                                visualTheme, isSosAlarmEnabled, onToggleSosAlarm, onTestSosAlarm, onStopSosAlarm,
+                                isCrashGuardEnabled, onToggleCrashGuard, crashSensitivity, onSelectCrashSensitivity, onSimulateCrash
+                            )
+                            SettingsHubTab.GPS_PETA -> SettingsGpsCacheTab(
+                                visualTheme, isLocationSharingConsent, onToggleLocationSharing, cacheSizeDesc,
+                                selectedCachePolicy, onSelectCachePolicy, selectedSyncProfile, onSelectSyncProfile,
+                                isDataSaverEnabled, onToggleDataSaver, isPowerSaverEnabled, onTogglePowerSaver,
+                                onPrecacheMap, onClearCache
+                            )
+                            SettingsHubTab.SISTEM -> Column(verticalArrangement = Arrangement.spacedBy(12.dp), content = systemEntriesContent)
+                        }
                     }
                 }
             }

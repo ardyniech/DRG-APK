@@ -32,8 +32,8 @@ tetap sah dan Android menerima instalasi tanpa re-sign di perangkat.
 
 ## Alur di aplikasi
 
-1. Profil → kartu **"Pembaruan Aplikasi"**. Saat Profil dibuka, aplikasi otomatis
-   mengecek `update.json` (hanya ≈1 KB) — driver tidak perlu tap dulu.
+1. **Pengaturan → kartu "Pembaruan Aplikasi OTA"** (tampil langsung di bagian atas halaman Pengaturan). Saat Pengaturan dibuka, aplikasi otomatis
+   mengecek `update.json` (hanya ≈1 KB) — driver juga dapat menekan tombol **Cek** kapan saja.
 2. `UpdateManager.check()` mengambil `update.json` dari
    `https://github.com/ardyniech/DRG-APK/releases/latest/download/update.json`
    (bisa dioverride saat build via env `UPDATE_MANIFEST_URL`).
@@ -55,10 +55,11 @@ tetap sah dan Android menerima instalasi tanpa re-sign di perangkat.
 | `core/update/UpdateChecker.kt` | OkHttp fetch manifest, unduh dengan progres, sha256 |
 | `core/update/UpdateManager.kt` | State machine cek → unduh → apply → verifikasi |
 | `core/update/ApkInstaller.kt` | FileProvider + intent `application/vnd.android.package-archive` |
-| `modules/profile/ProfileUpdateEntry.kt` | Kartu UI di Profil (patch vs APK penuh, progres, Pasang) |
+| `modules/notifications/settings/SettingsScreen.kt` | Host utama slot kartu OTA agar langsung terlihat di Pengaturan |
+| `modules/profile/ProfileUpdateEntry.kt` | Kartu UI OTA (versi terpasang, patch vs APK penuh, progres, Pasang) |
 | `modules/profile/ProfileUpdateStatus.kt` | Teks status + format MB |
 | `.github/scripts/gen_delta_update.py` | Generator patch + `update.json` (bsdiff4) |
-| `.github/workflows/release_delta.yml` | Build → unduh rilis sebelumnya → patch → publish aset |
+| `.github/workflows/release_delta.yml` | Pre-release gate → build release APK & AAB → patch → SHA256SUMS → publish aset |
 | `res/xml/file_paths.xml` | Path cache `updates/` yang boleh dibagikan FileProvider |
 
 ## Cara merilis

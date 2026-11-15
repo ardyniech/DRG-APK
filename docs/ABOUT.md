@@ -4,9 +4,9 @@
 
 **Progres pengembangan keseluruhan: 69%** (13 selesai · 12 dikerjakan · 6 direncanakan)
 
-Versi `dev` · commit `v3.0.0` · 2026-11-13 · 18 modul · 572 file sumber · 40258 baris · 72 test suite
+Versi `dev` · commit `v3.0.0` · 2026-11-13 · 18 modul · 572 file sumber · 40284 baris · 72 test suite
 
-**Kekurangan (Bawel Audit): 2 temuan (0 BLOCKER · 0 MAJOR · 2 MINOR · 0 NOTE)**
+**Kekurangan (Bawel Audit): 3 temuan (0 BLOCKER · 0 MAJOR · 3 MINOR · 0 NOTE)**
 
 > **SINGLE SOURCE OF TRUTH** — dokumen ini adalah acuan tunggal untuk AI dev, DevTools in-app, dan in-app Tentang. Digenerate otomatis oleh `generate_about_manifest.py` (mengandung `.github/scripts/audit_minus.py --json`). Jangan tulis manual. Jangan merujuk ke DEVTOOLS.md/README untuk angka — rujuk ke sini.
 
@@ -74,6 +74,7 @@ Marketplace kebutuhan operasional driver (deferred).
 | Severity | Kategori | Detail | Perbaikan |
 |---|---|---|---|
 | **MINOR** | security | Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB. | Enkripsi database atau minimal jelaskan risiko di docs. |
+| **MINOR** | hygiene | gradlew tidak executable (mode 644) → ./gradlew lokal gagal tanpa chmod. | chmod +x atau commit mode 755. |
 | **MINOR** | test | androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented. | Tambah UI test untuk login, SOS, kas. |
 
 BLOCKER = dilarang klaim multi-user/sinkron sebelum diperbaiki. Jalankan `python3 .github/scripts/audit_minus.py --json` untuk detail mesin.

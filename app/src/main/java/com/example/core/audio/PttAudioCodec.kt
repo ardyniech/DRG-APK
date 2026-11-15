@@ -44,12 +44,17 @@ object PttAudioCodec {
         return if (base64.length <= MAX_BASE64_LENGTH) base64 else base64.take(MAX_BASE64_LENGTH)
     }
 
+    private val BASE64_PATTERN = Regex("^[A-Za-z0-9+/=]+$")
+
     fun decodeBase64ToPcm(base64: String): ShortArray {
-        if (base64.isBlank()) return ShortArray(0)
+        val compact = base64.replace("\\s".toRegex(), "")
+        if (compact.isEmpty() || compact.length % 4 == 1 || !BASE64_PATTERN.matches(compact)) {
+            return ShortArray(0)
+        }
         return try {
-            val bytes = Base64.decode(base64.trim(), Base64.DEFAULT)
+            val bytes = Base64.decode(compact, Base64.DEFAULT)
             ShortArray(bytes.size) { idx -> mulawToLinear(bytes[idx]) }
-        } catch (_: IllegalArgumentException) {
+        } catch (_: Exception) {
             ShortArray(0)
         }
     }

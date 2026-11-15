@@ -31,7 +31,7 @@ object CiCdStatusScanner {
         artifactRetentionDays = 14,
         steps = listOf(
             CiStepStatus(1, "Architecture Quality Audit", "python3 .github/scripts/check_file_length.py", true, "UNKNOWN di runtime (cek GitHub Actions)", "~", "HARD FAIL"),
-            CiStepStatus(2, "Bawel Minus Audit", "python3 .github/scripts/audit_minus.py || true", true, "UNKNOWN di runtime (warn-only di CI)", "~", "WARN"),
+            CiStepStatus(2, "Bawel Minus Audit", "python3 .github/scripts/audit_minus.py --fail-on-blocker", true, "UNKNOWN di runtime (cek GitHub Actions)", "~", "HARD FAIL on BLOCKER"),
             CiStepStatus(3, "Regenerate About Manifest", "python3 .github/scripts/generate_about_manifest.py", true, "UNKNOWN di runtime (cek GitHub Actions)", "~", "INFO"),
             CiStepStatus(4, "ktlint (warn-only)", "ktlint (CLI) || echo warn", false, "UNKNOWN di runtime (warn-only)", "~", "WARN"),
             CiStepStatus(5, "Android Lint", "./gradlew :app:lintDebug --no-daemon", true, "UNKNOWN di runtime (cek lint report)", "~", "FAIL on lint issues"),

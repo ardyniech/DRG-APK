@@ -26,7 +26,7 @@
     "planned": 6,
     "modules": 18,
     "totalSourceFiles": 572,
-    "totalLoc": 40258,
+    "totalLoc": 40284,
     "testSuites": 72
   },
   "phases": [
@@ -112,7 +112,7 @@
       "status": "IN_PROGRESS",
       "progress": 70,
       "files": 7,
-      "loc": 433,
+      "loc": 438,
       "todos": 0,
       "tests": [
         "AudioRouteManagerTest",
@@ -315,7 +315,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 16,
-      "loc": 1268,
+      "loc": 1272,
       "todos": 0,
       "tests": [
         "CacheAndBatteryTest"
@@ -329,7 +329,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 26,
-      "loc": 2034,
+      "loc": 2051,
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
@@ -553,10 +553,10 @@
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 2,
+    "total": 3,
     "blocker": 0,
     "major": 0,
-    "minor": 2,
+    "minor": 3,
     "note": 0
   },
   "minus": [
@@ -565,6 +565,12 @@
       "category": "security",
       "detail": "Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB.",
       "fix": "Enkripsi database atau minimal jelaskan risiko di docs."
+    },
+    {
+      "severity": "MINOR",
+      "category": "hygiene",
+      "detail": "gradlew tidak executable (mode 644) → ./gradlew lokal gagal tanpa chmod.",
+      "fix": "chmod +x atau commit mode 755."
     },
     {
       "severity": "MINOR",

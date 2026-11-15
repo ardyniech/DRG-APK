@@ -78,6 +78,7 @@ fun SettingsTabDelegate(
             viewModel.saveNotificationPref(pref)
             scope.launch { snackbarHostState.showSnackbar("Preferensi pengaturan disimpan") }
         },
+        otaUpdateContent = { ProfileUpdateEntry() },
         systemEntriesContent = {
             CloudBackupCard(
                 syncStatus = syncStatus,
@@ -89,7 +90,6 @@ fun SettingsTabDelegate(
                 onUploadBackup = { viewModel.uploadEncryptedCloudBackup() },
                 onRestoreBackup = { viewModel.restoreEncryptedCloudBackup() }
             )
-            ProfileUpdateEntry()
             ProfileAboutEntry(onOpenAbout = { viewModel.selectTab(MainNavTab.ABOUT) }, visualTheme = visualTheme)
         },
         onBack = { viewModel.selectTab(MainNavTab.PROFILE) },

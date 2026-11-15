@@ -8,6 +8,7 @@ import com.example.core.cache.LocationSyncPowerProfile
 import com.example.core.cache.MapCachePolicy
 import com.example.modules.notifications.settings.SettingsScreen
 import com.example.modules.profile.ProfileScreen
+import com.example.modules.profile.ProfileUpdateEntry
 import com.example.shared.models.*
 import org.junit.Assert.*
 import org.junit.Rule
@@ -127,5 +128,38 @@ class ProfileAndSettingsHubTest {
 
         composeRule.onNodeWithTag("settings_back_button").performClick()
         assertTrue(backCalled)
+    }
+
+    @Test
+    fun settingsDisplaysOtaUpdateCardImmediatelyOnOpen() {
+        composeRule.setContent {
+            SettingsScreen(
+                visualTheme = AppVisualTheme.EMERALD_AURORA,
+                onSelectVisualTheme = {},
+                focusMode = AppFocusMode.SATGAS_TRC,
+                onSelectFocusMode = {},
+                isSosAlarmEnabled = true, onToggleSosAlarm = {},
+                onTestSosAlarm = {}, onStopSosAlarm = {},
+                isCrashGuardEnabled = true, onToggleCrashGuard = {},
+                crashSensitivity = CrashSensitivity.MEDIUM, onSelectCrashSensitivity = {},
+                onSimulateCrash = {},
+                isLocationSharingConsent = true, onToggleLocationSharing = {},
+                cacheSizeDesc = "1.0 MB",
+                selectedCachePolicy = MapCachePolicy.CACHE_FIRST, onSelectCachePolicy = {},
+                selectedSyncProfile = LocationSyncPowerProfile.ADAPTIVE_ECO, onSelectSyncProfile = {},
+                isDataSaverEnabled = false, onToggleDataSaver = {},
+                isPowerSaverEnabled = false, onTogglePowerSaver = {},
+                onPrecacheMap = {}, onClearCache = {},
+                notificationPref = NotificationPreference("DRG-07"),
+                onSaveNotificationPref = {},
+                otaUpdateContent = { ProfileUpdateEntry(allowAutoCheck = false) },
+                systemEntriesContent = { Text("Sistem Slot Aktif") },
+                onBack = {}
+            )
+        }
+
+        composeRule.onNodeWithTag("settings_ota_update_card").assertIsDisplayed()
+        composeRule.onNodeWithTag("btn_check_ota_update").assertIsDisplayed()
+        composeRule.onNodeWithText("Cek").assertIsDisplayed()
     }
 }

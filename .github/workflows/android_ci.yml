@@ -38,11 +38,24 @@ jobs:
       - name: Grant Execute Permission for Gradle Wrapper
         run: chmod +x gradlew || true
 
-      - name: Prepare Local Environment Secrets & Keystore
+      - name: Prepare Local Environment Secrets, Firebase Config & Keystore
+        env:
+          MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
         run: |
-          touch .env
-          echo "GEMINI_API_KEY=dummy_ci_key" >> .env
-          echo "MAPS_API_KEY=dummy_ci_key" >> .env
+          set -euo pipefail
+          {
+            echo "GEMINI_API_KEY=${GEMINI_API_KEY:-dummy_ci_key}"
+            echo "MAPS_API_KEY=${MAPS_API_KEY:-dummy_ci_key}"
+          } > .env
+          if [ ! -f "app/google-services.json" ]; then
+            if [ -n "${GOOGLE_SERVICES_JSON_BASE64:-}" ]; then
+              echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 -d > app/google-services.json
+            elif [ -f "app/google-services.json.example" ]; then
+              cp app/google-services.json.example app/google-services.json
+            fi
+          fi
           if [ ! -f "debug.keystore" ]; then
             if [ -f "debug.keystore.base64" ]; then
               base64 -d debug.keystore.base64 > debug.keystore 2>/dev/null || base64 --decode debug.keystore.base64 > debug.keystore 2>/dev/null || true
@@ -63,8 +76,8 @@ jobs:
           chmod a+x ktlint
           ./ktlint --reporter=plain "app/src/**/*.kt" "buildSrc/**/*.kt" || echo "⚠️ ktlint found issues (warn-only, non-blocking)"
 
-      - name: Bawel Minus Audit (warn-only, deteksi semua minus)
-        run: python3 .github/scripts/audit_minus.py || echo "⚠️ audit_minus menemukan minus (lihat log) — warn-only, tidak fail CI"
+      - name: Bawel Minus Audit (Fail on BLOCKER)
+        run: python3 .github/scripts/audit_minus.py --fail-on-blocker
 
       - name: Regenerate About Manifest From Code Evidence
         run: python3 .github/scripts/generate_about_manifest.py

@@ -39,10 +39,10 @@
 | Sinkron offline | Outbox → cloud saat online | Antrean `SYNCED` saat terunggah, `OFFLINE_SAVED` saat offline | ✅ Selesai |
 | P2P / FCM discovery | Peer discovery via FCM + WebRTC | Kerangka WebRTC ada, signaling antar-HP masih bertahap | ⚠️ Menyusul (Point 3) |
 | Keamanan | Keystore, TLS 1.3, RBAC server-side, App Check | TLS strict + App Check + RBAC Rules + Backup AES-GCM | ✅ Aktif |
-| CI/CD | Audit + lint + test + release AAB | Audit/lint/test/debug APK ✅, release signing di CI secrets | ⚠️ Sebagian |
-| Update OTA | Update tanpa unduh APK penuh | Delta BSDIFF40: patch 2,4 MB vs APK 73,5 MB (hemat 96,7%) | ✅ Selesai (preview) |
+| CI/CD | Audit + lint + test + release APK/AAB | Quality gate (`--fail-on-blocker`) + signed APK/AAB + R8 mapping + SHA256SUMS (`release_delta.yml`) | ✅ Selesai |
+| Update OTA | Update tanpa unduh APK penuh | Delta BSDIFF40: patch 2,4 MB vs APK 73,5 MB (hemat 96,7%) | ✅ Selesai |
 
-Bacaan lanjut: [DEVTOOLS.md](DEVTOOLS.md) (peta bawel), [ROADMAP.md](ROADMAP.md) (jadwal fase), [docs/ABOUT.md](docs/ABOUT.md) (manifest auto), [docs/UPDATE_DELTA.md](docs/UPDATE_DELTA.md) (OTA hemat kuota).
+Bacaan lanjut: [DEVTOOLS.md](DEVTOOLS.md) (peta bawel), [ROADMAP.md](ROADMAP.md) (jadwal fase), [docs/ABOUT.md](docs/ABOUT.md) (manifest auto), [docs/UPDATE_DELTA.md](docs/UPDATE_DELTA.md) (OTA hemat kuota), [docs/RELEASE_CICD.md](docs/RELEASE_CICD.md) (panduan Release APK/AAB).
 
 ---
 
@@ -57,10 +57,10 @@ Patch diterapkan di HP ke APK terpasang, hasilnya byte-identik dengan APK yang
 ditandatangani CI → signature v2/v3 tetap sah, Android menerima instalasi.
 Kalau patch tidak cocok (APK dari sumber lain), aplikasi fallback ke APK penuh.
 
-* UI: Profil → kartu **"Pembaruan Aplikasi"** (`ProfileUpdateEntry.kt`).
+* UI: **Halaman Pengaturan** (`SettingsScreen.kt`) → kartu **"Pembaruan Aplikasi OTA"** (`ProfileUpdateEntry.kt`).
 * Engine: `core/update/` (`DeltaPatchApplier`, `UpdateChecker`, `UpdateManager`, `ApkInstaller`).
-* Rilis: `git tag v1.1 && git push origin v1.1` → workflow `Delta OTA Release` membuat patch + `update.json`.
-* Status: **kanal preview** (APK debug). Produksi butuh release keystore di secrets — detail & batasan di [docs/UPDATE_DELTA.md](docs/UPDATE_DELTA.md).
+* Rilis: `git tag v1.9 && git push origin v1.9` → workflow `Release & Delta OTA` menjalankan quality gate, build APK/AAB + R8 mapping + patch + `update.json` + `SHA256SUMS.txt`.
+* Panduan secrets & kanal rilis: [docs/RELEASE_CICD.md](docs/RELEASE_CICD.md) & [docs/UPDATE_DELTA.md](docs/UPDATE_DELTA.md).
 
 ---
 
