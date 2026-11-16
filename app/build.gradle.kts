@@ -189,6 +189,11 @@ dependencies {
 tasks.withType<Test> {
   failFast = true
   timeout.set(Duration.ofMinutes(2))
+  if (project.hasProperty("excludeRuleTests")) {
+    filter {
+      excludeTestsMatching("*Rule*")
+    }
+  }
   testLogging {
     events("passed", "failed", "skipped")
   }

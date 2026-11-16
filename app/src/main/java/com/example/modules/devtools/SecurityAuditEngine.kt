@@ -69,13 +69,18 @@ object SecurityAuditEngine {
             )
         )
 
+        val integrity = com.example.core.security.AppIntegrityVerifier.verify(context)
         list.add(
             SecurityCheckItem(
-                name = "Firebase App Check & Zero-Trust Rules",
-                category = "Cloud & Auth Security",
-                isSecure = true,
-                statusText = "Aktif (App Check + Google Credential Manager + RBAC Server Rules)",
-                riskDetail = "Firestore rules memblokir akses unauthenticated, membungkus PII terpisah, mencegah self-escalation role, dan melindungi role_audit_logs secara immutable."
+                name = "Firebase App Check & Anti-Tamper Integrity",
+                category = "Cloud & App Integrity",
+                isSecure = integrity.isIntegrityHealthy,
+                statusText = if (integrity.isIntegrityHealthy) {
+                    "Aktif (App Check + Signature SHA-256 + Anti-Hook Bersih)"
+                } else {
+                    "Peringatan Integritas (Debug/Hook atau Sertifikat Tidak Terbaca)"
+                },
+                riskDetail = "Installer=${integrity.installerPackage ?: "sideload"}, Debuggable=${integrity.isDebuggableFlagSet}, Rules zero-trust + RBAC aktif."
             )
         )
 

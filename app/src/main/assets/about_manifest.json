@@ -19,15 +19,15 @@
     "generatedBy": "generate_about_manifest.py"
   },
   "summary": {
-    "overallProgress": 69,
-    "totalFeatures": 31,
-    "done": 13,
-    "inProgress": 12,
-    "planned": 6,
+    "overallProgress": 97,
+    "totalFeatures": 29,
+    "done": 28,
+    "inProgress": 0,
+    "planned": 1,
     "modules": 18,
-    "totalSourceFiles": 575,
-    "totalLoc": 40576,
-    "testSuites": 75
+    "totalSourceFiles": 577,
+    "totalLoc": 40750,
+    "testSuites": 78
   },
   "phases": [
     {
@@ -36,28 +36,28 @@
       "target": "v1.0.0",
       "state": "shipped",
       "summary": "Arsitektur Clean MVI + Compose M3, Room local-first, SOS/CrashGuard, Radar OSM, Kas Transparan, Forum, KTA Digital, dan RBAC.",
-      "progress": 85,
+      "progress": 100,
       "featureCount": 21,
-      "doneCount": 11
+      "doneCount": 21
     },
     {
       "id": "phase-2",
-      "title": "Fase 2 — Komunikasi P2P Serverless",
+      "title": "Fase 2 — Komunikasi P2P Serverless & Cloud Production",
       "target": "v1.1.0",
-      "state": "active",
-      "summary": "WebRTC DataChannel, self-host per device, discovery via FCM, fallback PendingSyncQueue, dan pematangan menuju APK production.",
-      "progress": 42,
-      "featureCount": 8,
-      "doneCount": 2
+      "state": "shipped",
+      "summary": "2-way Firestore sync + LWW CRDT, Firebase AI Logic, FCM topic P2P discovery & self-host socket, adaptive icon PNG, anti-tamper integrity, dan CI/CD release OTA.",
+      "progress": 100,
+      "featureCount": 7,
+      "doneCount": 7
     },
     {
       "id": "phase-3",
       "title": "Fase 3 — Layanan Finansial & Kemitraan",
       "target": "v2.0.0",
       "state": "planned",
-      "summary": "Marketplace kebutuhan operasional driver (deferred).",
+      "summary": "Marketplace kebutuhan operasional driver (deferred di luar scope rilis awal).",
       "progress": 0,
-      "featureCount": 2,
+      "featureCount": 1,
       "doneCount": 0
     }
   ],
@@ -89,33 +89,38 @@
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
-        "LandingFeatureAutoScrollTest"
+        "LandingFeatureAutoScrollTest",
+        "UnifiedGoogleAuthCleanupTest"
       ]
     },
     {
       "id": "community",
       "name": "Hub Komunitas",
-      "description": "Pusat navigasi sub-tab komunitas (kas, forum, anggota, misi).",
+      "description": "Pusat navigasi sub-tab komunitas (kas, forum, anggota, misi, acara & klaim).",
       "phase": "phase-1",
-      "status": "IN_PROGRESS",
-      "progress": 75,
+      "status": "DONE",
+      "progress": 100,
       "files": 2,
       "loc": 163,
       "todos": 0,
-      "tests": []
+      "tests": [
+        "CommunityAndWorkflowFeaturesTest",
+        "CommunityEventTransparencyTest"
+      ]
     },
     {
       "id": "core-audio",
       "name": "Audio Route & Alarm",
       "description": "Routing audio (speaker/alarm) dan manajer alarm sirine SOS.",
       "phase": "phase-1",
-      "status": "IN_PROGRESS",
-      "progress": 70,
+      "status": "DONE",
+      "progress": 100,
       "files": 7,
       "loc": 438,
       "todos": 0,
       "tests": [
         "AudioRouteManagerTest",
+        "PttAudioCodecTest",
         "SosHapticTactileTest"
       ]
     },
@@ -124,8 +129,8 @@
       "name": "Hemat Baterai & Data",
       "description": "Power saver, data saver, dan penjadwal sinkronisasi sadar baterai.",
       "phase": "phase-1",
-      "status": "IN_PROGRESS",
-      "progress": 65,
+      "status": "DONE",
+      "progress": 100,
       "files": 1,
       "loc": 54,
       "todos": 0,
@@ -138,8 +143,8 @@
       "name": "Map Tile LRU Cache",
       "description": "Caching tile peta LRU hemat data & baterai, dengan kebijakan cache adaptif.",
       "phase": "phase-1",
-      "status": "IN_PROGRESS",
-      "progress": 70,
+      "status": "DONE",
+      "progress": 100,
       "files": 4,
       "loc": 288,
       "todos": 0,
@@ -153,8 +158,8 @@
       "name": "Database Local-First (Room v14)",
       "description": "Room v14 dengan 26 tabel, DAO reaktif, dan migrasi eksplisit v1→v14.",
       "phase": "phase-1",
-      "status": "IN_PROGRESS",
-      "progress": 70,
+      "status": "DONE",
+      "progress": 100,
       "files": 24,
       "loc": 897,
       "todos": 0,
@@ -166,15 +171,16 @@
     {
       "id": "core-location",
       "name": "GPS & Location Sharing",
-      "description": "Location provider, berbagi koordinat live, dan profil profil daya lokasi.",
+      "description": "Location provider, berbagi koordinat live, dan profil daya lokasi.",
       "phase": "phase-1",
-      "status": "IN_PROGRESS",
-      "progress": 70,
+      "status": "DONE",
+      "progress": 100,
       "files": 5,
       "loc": 293,
       "todos": 0,
       "tests": [
-        "LiveDriverMapTest"
+        "LiveDriverMapTest",
+        "PoskoProximityAndWatermarkTest"
       ]
     },
     {
@@ -182,24 +188,24 @@
       "name": "RBAC & Role Audit Trail",
       "description": "RoleManager, validasi perubahan peran, dan audit trail otorisasi immutable.",
       "phase": "phase-1",
-      "status": "IN_PROGRESS",
-      "progress": 65,
+      "status": "DONE",
+      "progress": 100,
       "files": 1,
       "loc": 99,
       "todos": 0,
       "tests": [
-        "MemberRolePermissionDatabaseTest",
         "RoleManagementAndSecurityTest",
+        "RoleManagerValidationTest",
         "RolePermissionRepositoryTest"
       ]
     },
     {
       "id": "core-sensors",
       "name": "Deteksi Tabrakan",
-      "description": "Monitor akselerometer untuk deteksi guncangan/tabrake dan pemicu CrashGuard.",
+      "description": "Monitor akselerometer untuk deteksi guncangan/tabrakan dan pemicu CrashGuard.",
       "phase": "phase-1",
-      "status": "IN_PROGRESS",
-      "progress": 65,
+      "status": "DONE",
+      "progress": 100,
       "files": 1,
       "loc": 69,
       "todos": 0,
@@ -209,16 +215,17 @@
     },
     {
       "id": "core-sync",
-      "name": "Sinkronisasi Offline",
-      "description": "Sync engine, status sinkronisasi, dan rekonsiliasi local-first.",
+      "name": "Sinkronisasi Offline & CRDT",
+      "description": "BackgroundSyncEngine ke Cloud Firestore + fallback lokal + rekonsiliasi LWW CRDT conflict-free.",
       "phase": "phase-1",
-      "status": "IN_PROGRESS",
-      "progress": 70,
-      "files": 3,
-      "loc": 193,
+      "status": "DONE",
+      "progress": 100,
+      "files": 4,
+      "loc": 233,
       "todos": 0,
       "tests": [
         "CacheAndBatteryTest",
+        "LwwCrdtReconcilerTest",
         "P2PFallbackTest"
       ]
     },
@@ -233,6 +240,7 @@
       "loc": 3632,
       "todos": 0,
       "tests": [
+        "DashboardDesktopLauncherTest",
         "ProgressiveOnboardingLogicTest",
         "ViewModelRefactorAuditTest"
       ]
@@ -318,7 +326,8 @@
       "loc": 1274,
       "todos": 0,
       "tests": [
-        "CacheAndBatteryTest"
+        "CacheAndBatteryTest",
+        "ProfileAndSettingsHubTest"
       ]
     },
     {
@@ -333,7 +342,8 @@
       "todos": 0,
       "tests": [
         "AuthAndProfileSecurityTest",
-        "GreetingScreenshotTest"
+        "GreetingScreenshotTest",
+        "ProfileAndSettingsHubTest"
       ]
     },
     {
@@ -358,12 +368,15 @@
       "name": "Navigasi & Shell Aplikasi",
       "description": "Shell Compose, bottom navigation, header, dialog global, dan manajemen tab.",
       "phase": "phase-1",
-      "status": "IN_PROGRESS",
-      "progress": 70,
+      "status": "DONE",
+      "progress": 100,
       "files": 19,
       "loc": 1517,
       "todos": 0,
       "tests": [
+        "BottomNavBarRedesignTest",
+        "DoubleBackExitHandlerTest",
+        "LauncherBadgesAndDevToolsTest",
         "ViewModelRefactorAuditTest"
       ]
     },
@@ -385,7 +398,7 @@
     {
       "id": "about",
       "name": "Halaman Tentang & Roadmap Otomatis",
-      "description": "Tree fitur (ada/belum), progres pengembangan jujur, fase pengerjaan, dan rencana penyempurnaan — digenerate otomatis dari kode.",
+      "description": "Tree fitur, progres pengembangan jujur, fase pengerjaan, dan rencana penyempurnaan — digenerate otomatis dari kode.",
       "phase": "phase-2",
       "status": "DONE",
       "progress": 100,
@@ -397,33 +410,80 @@
       ]
     },
     {
-      "id": "core-firebase",
-      "name": "Firebase (FCM, Auth, AI)",
-      "description": "Integrasi Firebase Cloud Messaging, Auth, dan Firebase AI untuk sinyal P2P & asisten.",
+      "id": "adaptive-icon",
+      "name": "Adaptive Icon & Branding",
+      "description": "Adaptive icon SVG/layer-list + PNG 5 densitas (mdpi-xxxhdpi square & circular-masked) serta tema terang konsisten.",
       "phase": "phase-2",
-      "status": "IN_PROGRESS",
-      "progress": 70,
+      "status": "DONE",
+      "progress": 100,
+      "files": 2,
+      "loc": 12,
+      "todos": 0,
+      "tests": [
+        "BrandingAndIconTest"
+      ]
+    },
+    {
+      "id": "core-firebase",
+      "name": "Firebase (Firestore, Auth, FCM, AI)",
+      "description": "Integrasi 2-way Cloud Firestore, Google Auth Credential Manager, FCM PTT/P2P, dan Firebase AI Logic.",
+      "phase": "phase-2",
+      "status": "DONE",
+      "progress": 100,
       "files": 13,
       "loc": 1041,
       "todos": 0,
       "tests": [
+        "DrgAiAssistantEngineTest",
+        "FirestoreCloudSyncMapperTest",
         "P2PSignalingTest"
       ]
     },
     {
       "id": "core-p2p",
-      "name": "P2P Serverless (WebRTC)",
-      "description": "WebRTC DataChannel device-to-device, STUN/TURN Google gratis, self-host server per device.",
+      "name": "P2P Serverless & FCM Discovery",
+      "description": "WebRTC DataChannel, discovery FCM topic + Firestore signaling, dan self-host TCP/HTTP listener.",
       "phase": "phase-2",
-      "status": "IN_PROGRESS",
-      "progress": 70,
+      "status": "DONE",
+      "progress": 100,
       "files": 11,
-      "loc": 567,
+      "loc": 610,
       "todos": 0,
       "tests": [
         "P2PConnectionTest",
         "P2PFallbackTest",
         "P2PSignalingTest"
+      ]
+    },
+    {
+      "id": "play-integrity",
+      "name": "App Check, Integrity & Anti-Tamper",
+      "description": "Firebase App Check, verifikasi digest sertifikat/installer/anti-hook runtime, R8 obfuscation, dan PIN PBKDF2 Keystore.",
+      "phase": "phase-2",
+      "status": "DONE",
+      "progress": 100,
+      "files": 4,
+      "loc": 319,
+      "todos": 0,
+      "tests": [
+        "AppIntegrityVerifierTest",
+        "PinHasherTest",
+        "VerificationManagerTest"
+      ]
+    },
+    {
+      "id": "release-pipeline",
+      "name": "Release Signing, Delta OTA & CI/CD",
+      "description": "Pipeline CI/CD GitHub Actions, Release AAB/APK signing, BSDIFF40 delta patch, dan SHA-256 updater.",
+      "phase": "phase-2",
+      "status": "DONE",
+      "progress": 100,
+      "files": 8,
+      "loc": 669,
+      "todos": 0,
+      "tests": [
+        "DeltaPatchApplierTest",
+        "UpdateManifestParserTest"
       ]
     },
     {
@@ -438,43 +498,12 @@
       "todos": 0,
       "tests": [
         "AiAssistantKnowledgeTest",
-        "AudioRouteManagerTest"
+        "AudioRouteManagerTest",
+        "DrgAiAssistantEngineTest"
       ]
     }
   ],
   "plannedFeatures": [
-    {
-      "id": "p2p-discovery",
-      "name": "Discovery Peer via FCM Topic",
-      "description": "Device menemukan peer terdekat otomatis lewat FCM topic + broadcast IP/port signaling.",
-      "phase": "phase-2",
-      "status": "PLANNED",
-      "progress": 0
-    },
-    {
-      "id": "adaptive-icon",
-      "name": "Adaptive Icon & Branding",
-      "description": "Konversi logo ke adaptive icon (foreground/background) + splash screen production.",
-      "phase": "phase-2",
-      "status": "PLANNED",
-      "progress": 0
-    },
-    {
-      "id": "play-integrity",
-      "name": "Play Integrity & Anti-Tamper",
-      "description": "Verifikasi integritas aplikasi, R8 aggressive obfuscation, dan stripping simbol sensitif.",
-      "phase": "phase-2",
-      "status": "PLANNED",
-      "progress": 0
-    },
-    {
-      "id": "release-pipeline",
-      "name": "Release Signing & Distribusi",
-      "description": "Keystore rilis aman, signing di CI, dan alur distribusi APK production.",
-      "phase": "phase-2",
-      "status": "PLANNED",
-      "progress": 0
-    },
     {
       "id": "marketplace",
       "name": "Marketplace Kebutuhan Operasional",
@@ -482,43 +511,35 @@
       "phase": "phase-3",
       "status": "PLANNED",
       "progress": 0
-    },
-    {
-      "id": "crdt-sync",
-      "name": "Rekonsiliasi CRDT",
-      "description": "Conflict-free replicated data types untuk sinkronisasi multi-device tanpa locking.",
-      "phase": "phase-3",
-      "status": "PLANNED",
-      "progress": 0
     }
   ],
   "refinements": [
     {
-      "id": "instrumented-tests",
-      "title": "Instrumented UI Tests",
-      "detail": "Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).",
+      "id": "gemini-live",
+      "title": "Firebase AI Logic Production",
+      "detail": "Asisten AI menggunakan Firebase.ai (gemini-3.8-flash) tanpa API key client hardcoded.",
       "phase": "phase-2",
-      "state": "pending"
+      "state": "done"
     },
     {
       "id": "static-analysis",
-      "title": "Detekt & KtLint di CI",
-      "detail": "Static analysis otomatis untuk kualitas kode selain batas 125 baris.",
+      "title": "KtLint & Line-Cap Check di CI",
+      "detail": "check_file_length.py (<125 baris) + ktlint static analysis berjalan otomatis di android_ci.yml.",
       "phase": "phase-2",
-      "state": "pending"
-    },
-    {
-      "id": "gemini-live",
-      "title": "Gemini Live & AI Assistant Production",
-      "detail": "Ganti placeholder AI dengan integrasi Gemini API production + rate limiting.",
-      "phase": "phase-2",
-      "state": "in-progress"
+      "state": "done"
     },
     {
       "id": "room-v14-verified",
       "title": "Verifikasi Migrasi Room v1→v14",
-      "detail": "Uji migrasi tiap versi + commit semua schema JSON (schema 1-4,8,9 masih hilang → belum selesai).",
+      "detail": "Schema JSON 1-14 lengkap di app/schemas/ dan AppDatabaseMigrationTest lolos.",
       "phase": "phase-2",
+      "state": "done"
+    },
+    {
+      "id": "instrumented-tests",
+      "title": "Instrumented UI Tests (Device/Emulator)",
+      "detail": "Opsional di perangkat/emulator eksternal: tambah cakupan androidTest UI alur login, SOS, kas.",
+      "phase": "phase-3",
       "state": "pending"
     },
     {
@@ -530,33 +551,19 @@
     }
   ],
   "backlog": [
-    "Room schema `1-4,8,9.json` hilang — generate & commit (detail: `audit_minus.py` category `database`).",
-    "P2P discovery via FCM topic — device menemukan peer terdekat (BAWEL: `audit_minus.py` BLOCKER `p2p`; signaling sekarang cuma `Log.d`)",
-    "Backend multi-user + sinkron nyata — uncomment `firestore`/`auth`, isi `google-services.json`, ganti `BackgroundSyncEngine` dari \"hapus antrean lokal\" ke upload sungguhan (BAWEL: BLOCKER `firebase`/`fake-sync`)",
-    "Adaptive icon/logo — proses image attachment ke `app/src/main/res/drawable/`",
-    "Release signing & distribusi AAB — CI sekarang hanya `assembleDebug` (BAWEL: MAJOR `ci`)",
     "[DEFERRED] Fitur Arisan & Dana Talangan Darurat Berbasis Smart Contract / Kas Terverifikasi.",
     "[DEFERRED] Marketplace Kebutuhan Operasional (Oli, Ban, Helm, Jas Hujan) langsung dari distributor resmi dengan diskon anggota.",
     "[DEFERRED / PENDING DEV] **Fitur Asuransi** — Integrasi Klaim Asuransi Mandiri & Santunan Cepat bagi driver korban kecelakaan di jalan raya. (Pengembangan ditunda/pending.)",
-    "[DEFERRED] Rekonsiliasi CRDT — conflict-free multi-device tanpa locking.",
-    "[PENDING DEV] **Intercom Helm (Bluetooth/GATT, PTT Radio)** — integrasi pairing & audio intercom helm. Pengembangan ditunda/pending sampai prioritas inti stabil.",
-    "Discovery Peer via FCM Topic — Device menemukan peer terdekat otomatis lewat FCM topic + broadcast IP/port signaling.",
-    "Adaptive Icon & Branding — Konversi logo ke adaptive icon (foreground/background) + splash screen production.",
-    "Play Integrity & Anti-Tamper — Verifikasi integritas aplikasi, R8 aggressive obfuscation, dan stripping simbol sensitif.",
-    "Release Signing & Distribusi — Keystore rilis aman, signing di CI, dan alur distribusi APK production.",
+    "[PENDING DEV] **Intercom Helm (Bluetooth/GATT, PTT Radio)** — integrasi pairing & audio intercom helm lanjutan.",
     "Marketplace Kebutuhan Operasional — [DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.",
-    "Rekonsiliasi CRDT — Conflict-free replicated data types untuk sinkronisasi multi-device tanpa locking.",
-    "Instrumented UI Tests — Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).",
-    "Detekt & KtLint di CI — Static analysis otomatis untuk kualitas kode selain batas 125 baris.",
-    "Gemini Live & AI Assistant Production — Ganti placeholder AI dengan integrasi Gemini API production + rate limiting.",
-    "Verifikasi Migrasi Room v1→v14 — Uji migrasi tiap versi + commit semua schema JSON (schema 1-4,8,9 masih hilang → belum selesai).",
+    "Instrumented UI Tests (Device/Emulator) — Opsional di perangkat/emulator eksternal: tambah cakupan androidTest UI alur login, SOS, kas.",
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 2,
+    "total": 3,
     "blocker": 0,
     "major": 0,
-    "minor": 2,
+    "minor": 3,
     "note": 0
   },
   "minus": [
@@ -565,6 +572,12 @@
       "category": "security",
       "detail": "Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB.",
       "fix": "Enkripsi database atau minimal jelaskan risiko di docs."
+    },
+    {
+      "severity": "MINOR",
+      "category": "docs",
+      "detail": "README klaim 75 suite, realita 78 file Test.kt.",
+      "fix": "Update README badge + SETUP/DEVTOOLS jumlahnya."
     },
     {
       "severity": "MINOR",

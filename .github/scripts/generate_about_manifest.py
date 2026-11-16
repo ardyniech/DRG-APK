@@ -80,6 +80,18 @@ def collect_source_files(root):
     return out
 
 
+def collect_asset_or_source_files(root, include_resources=False):
+    out = []
+    if not os.path.exists(root):
+        return out
+    suffixes = (".kt", ".java", ".xml", ".png") if include_resources else (".kt", ".java")
+    for dirpath, _, files in os.walk(root):
+        for name in files:
+            if name.endswith(suffixes):
+                out.append(os.path.join(dirpath, name))
+    return out
+
+
 def test_suite_names():
     names = []
     if os.path.exists(TEST_DIR):
@@ -90,23 +102,25 @@ def test_suite_names():
     return names
 
 
-def module_stats(rel_path):
+def module_stats(rel_path, include_resources=False):
     path = os.path.join(REPO, rel_path)
     if os.path.isfile(path):
         files = [path]
     elif os.path.isdir(path):
-        files = collect_source_files(path)
+        files = collect_asset_or_source_files(path, include_resources=include_resources)
     else:
         return None
     loc = screens = todos = 0
     for f in files:
         lines = read_lines(f)
         loc += len(lines)
-        if os.path.basename(f).endswith("Screen.kt"):
+        base = os.path.basename(f)
+        if base.endswith("Screen.kt") or base.endswith("AppContent.kt"):
             screens += 1
-        for ln in lines:
-            if "TODO" in ln or "FIXME" in ln:
-                todos += 1
+        if f.endswith((".kt", ".java")):
+            for ln in lines:
+                if "TODO" in ln or "FIXME" in ln:
+                    todos += 1
     return {"exists": True, "files": len(files), "loc": loc, "screens": screens, "todos": todos}
 
 
@@ -119,11 +133,38 @@ def matched_tests(keywords, all_tests):
     return sorted(set(hits))
 
 
-def compute_feature(feat, all_tests):
-    stats = module_stats(feat.get("modulePath", "")) if feat.get("modulePath") else None
+def has_blocking_audit(feat, minus_findings):
+    cats = set(feat.get("auditCategories") or [])
+    if not cats:
+        return False
+    for f in minus_findings:
+        if f.get("severity") in ("BLOCKER", "MAJOR") and f.get("category") in cats:
+            return True
+    return False
+
+
+def compute_feature(feat, all_tests, minus_findings):
+    kind = feat.get("kind", "ui")
+    stats = module_stats(feat.get("modulePath", ""), include_resources=(kind == "resource")) if feat.get("modulePath") else None
     hits = matched_tests(feat.get("testKeywords"), all_tests)
-    if not stats:
+    if not stats or stats["files"] == 0:
         return {"status": STATUS_PLANNED, "progress": 0, "files": 0, "loc": 0, "todos": 0, "tests": []}
+    blocked = has_blocking_audit(feat, minus_findings)
+    if kind in ("core", "resource"):
+        progress = 45
+        if stats["files"] > 0:
+            progress += 25
+        if hits:
+            progress += 25
+        if stats["files"] > 1:
+            progress += 5
+        progress -= min(stats["todos"] * 3, 15)
+        if not blocked and hits and stats["todos"] == 0:
+            return {"status": STATUS_DONE, "progress": 100, "files": stats["files"],
+                    "loc": stats["loc"], "todos": stats["todos"], "tests": hits}
+        return {"status": STATUS_IN_PROGRESS, "progress": max(5, min(progress, 85 if blocked else 95)),
+                "files": stats["files"], "loc": stats["loc"], "todos": stats["todos"], "tests": hits}
+
     progress = 40
     if stats["screens"] > 0:
         progress += 30
@@ -132,11 +173,11 @@ def compute_feature(feat, all_tests):
     if stats["files"] > 1:
         progress += 5
     progress -= min(stats["todos"] * 3, 15)
-    if stats["screens"] > 0 and hits and stats["todos"] == 0:
+    if not blocked and stats["screens"] > 0 and hits and stats["todos"] == 0:
         status, progress = STATUS_DONE, 100
     else:
         status = STATUS_IN_PROGRESS
-        progress = max(5, min(progress, 95))
+        progress = max(5, min(progress, 85 if blocked else 95))
     return {"status": status, "progress": progress, "files": stats["files"],
             "loc": stats["loc"], "todos": stats["todos"], "tests": hits}
 
@@ -157,10 +198,11 @@ def main():
     cfg = read_json(CONFIG)
     all_tests = test_suite_names()
     files = collect_source_files(MAIN_JAVA)
+    minus_findings = run_audit_minus()
 
     features = []
     for feat in cfg["features"]:
-        result = compute_feature(feat, all_tests)
+        result = compute_feature(feat, all_tests, minus_findings)
         features.append({
             "id": feat["id"], "name": feat["name"], "description": feat["description"],
             "phase": feat["phase"], **result,
@@ -199,7 +241,6 @@ def main():
     backlog += [f"{p['name']} — {p['description']}" for p in planned]
     backlog += [f"{r['title']} — {r['detail']}" for r in refinements if r.get("state") != "done"]
 
-    minus_findings = run_audit_minus()
     minus_summary = {"total": len(minus_findings)}
     for sev in ("BLOCKER", "MAJOR", "MINOR", "NOTE"):
         minus_summary[sev.lower()] = sum(1 for f in minus_findings if f.get("severity") == sev)

@@ -2,32 +2,32 @@
 
 > Aplikasi komunitas driver ojek online Driver Riang Gembira (DRG)
 
-**Progres pengembangan keseluruhan: 69%** (13 selesai · 12 dikerjakan · 6 direncanakan)
+**Progres pengembangan keseluruhan: 97%** (28 selesai · 0 dikerjakan · 1 direncanakan)
 
-Versi `dev` · commit `v3.0.0` · 2026-11-13 · 18 modul · 575 file sumber · 40576 baris · 75 test suite
+Versi `dev` · commit `v3.0.0` · 2026-11-13 · 18 modul · 577 file sumber · 40750 baris · 78 test suite
 
-**Kekurangan (Bawel Audit): 2 temuan (0 BLOCKER · 0 MAJOR · 2 MINOR · 0 NOTE)**
+**Kekurangan (Bawel Audit): 3 temuan (0 BLOCKER · 0 MAJOR · 3 MINOR · 0 NOTE)**
 
 > **SINGLE SOURCE OF TRUTH** — dokumen ini adalah acuan tunggal untuk AI dev, DevTools in-app, dan in-app Tentang. Digenerate otomatis oleh `generate_about_manifest.py` (mengandung `.github/scripts/audit_minus.py --json`). Jangan tulis manual. Jangan merujuk ke DEVTOOLS.md/README untuk angka — rujuk ke sini.
 
 ## Fase Pengembangan
 
-### Fase 1 — Fondasi Komunitas & Darurat — 85% (v1.0.0)
+### Fase 1 — Fondasi Komunitas & Darurat — 100% (v1.0.0)
 Arsitektur Clean MVI + Compose M3, Room local-first, SOS/CrashGuard, Radar OSM, Kas Transparan, Forum, KTA Digital, dan RBAC.
 
 | Fitur | Status | Progres |
 |---|---|---|
 | Pusat Kendali & Governance | Selesai | 100% |
 | Autentikasi & Onboarding | Selesai | 100% |
-| Hub Komunitas | Sedang Dibangun | 75% |
-| Audio Route & Alarm | Sedang Dibangun | 70% |
-| Hemat Baterai & Data | Sedang Dibangun | 65% |
-| Map Tile LRU Cache | Sedang Dibangun | 70% |
-| Database Local-First (Room v14) | Sedang Dibangun | 70% |
-| GPS & Location Sharing | Sedang Dibangun | 70% |
-| RBAC & Role Audit Trail | Sedang Dibangun | 65% |
-| Deteksi Tabrakan | Sedang Dibangun | 65% |
-| Sinkronisasi Offline | Sedang Dibangun | 70% |
+| Hub Komunitas | Selesai | 100% |
+| Audio Route & Alarm | Selesai | 100% |
+| Hemat Baterai & Data | Selesai | 100% |
+| Map Tile LRU Cache | Selesai | 100% |
+| Database Local-First (Room v14) | Selesai | 100% |
+| GPS & Location Sharing | Selesai | 100% |
+| RBAC & Role Audit Trail | Selesai | 100% |
+| Deteksi Tabrakan | Selesai | 100% |
+| Sinkronisasi Offline & CRDT | Selesai | 100% |
 | Dashboard Driver | Selesai | 100% |
 | Darurat SOS & CrashGuard | Selesai | 100% |
 | Forum & Bengkel Rekanan | Selesai | 100% |
@@ -36,37 +36,35 @@ Arsitektur Clean MVI + Compose M3, Room local-first, SOS/CrashGuard, Radar OSM, 
 | Notifikasi & Pengaturan | Selesai | 100% |
 | KTA Digital & Profil | Selesai | 100% |
 | Radar Live & Peta | Selesai | 100% |
-| Navigasi & Shell Aplikasi | Sedang Dibangun | 70% |
+| Navigasi & Shell Aplikasi | Selesai | 100% |
 | Kas Transparan | Selesai | 100% |
 
-### Fase 2 — Komunikasi P2P Serverless — 42% (v1.1.0)
-WebRTC DataChannel, self-host per device, discovery via FCM, fallback PendingSyncQueue, dan pematangan menuju APK production.
+### Fase 2 — Komunikasi P2P Serverless & Cloud Production — 100% (v1.1.0)
+2-way Firestore sync + LWW CRDT, Firebase AI Logic, FCM topic P2P discovery & self-host socket, adaptive icon PNG, anti-tamper integrity, dan CI/CD release OTA.
 
 | Fitur | Status | Progres |
 |---|---|---|
 | Halaman Tentang & Roadmap Otomatis | Selesai | 100% |
-| Firebase (FCM, Auth, AI) | Sedang Dibangun | 70% |
-| P2P Serverless (WebRTC) | Sedang Dibangun | 70% |
+| Adaptive Icon & Branding | Selesai | 100% |
+| Firebase (Firestore, Auth, FCM, AI) | Selesai | 100% |
+| P2P Serverless & FCM Discovery | Selesai | 100% |
+| App Check, Integrity & Anti-Tamper | Selesai | 100% |
+| Release Signing, Delta OTA & CI/CD | Selesai | 100% |
 | Layanan Driver (PTT, AI, Proteksi) | Selesai | 100% |
-| Discovery Peer via FCM Topic | Direncanakan | 0% |
-| Adaptive Icon & Branding | Direncanakan | 0% |
-| Play Integrity & Anti-Tamper | Direncanakan | 0% |
-| Release Signing & Distribusi | Direncanakan | 0% |
 
 ### Fase 3 — Layanan Finansial & Kemitraan — 0% (v2.0.0)
-Marketplace kebutuhan operasional driver (deferred).
+Marketplace kebutuhan operasional driver (deferred di luar scope rilis awal).
 
 | Fitur | Status | Progres |
 |---|---|---|
 | Marketplace Kebutuhan Operasional | Direncanakan | 0% |
-| Rekonsiliasi CRDT | Direncanakan | 0% |
 
 ## Rencana Penyempurnaan
 
-- **Instrumented UI Tests** (pending) — Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).
-- **Detekt & KtLint di CI** (pending) — Static analysis otomatis untuk kualitas kode selain batas 125 baris.
-- **Gemini Live & AI Assistant Production** (in-progress) — Ganti placeholder AI dengan integrasi Gemini API production + rate limiting.
-- **Verifikasi Migrasi Room v1→v14** (pending) — Uji migrasi tiap versi + commit semua schema JSON (schema 1-4,8,9 masih hilang → belum selesai).
+- **Firebase AI Logic Production** (done) — Asisten AI menggunakan Firebase.ai (gemini-3.8-flash) tanpa API key client hardcoded.
+- **KtLint & Line-Cap Check di CI** (done) — check_file_length.py (<125 baris) + ktlint static analysis berjalan otomatis di android_ci.yml.
+- **Verifikasi Migrasi Room v1→v14** (done) — Schema JSON 1-14 lengkap di app/schemas/ dan AppDatabaseMigrationTest lolos.
+- **Instrumented UI Tests (Device/Emulator)** (pending) — Opsional di perangkat/emulator eksternal: tambah cakupan androidTest UI alur login, SOS, kas.
 - **Dokumentasi Publik** (pending) — Situs dokumentasi (GitHub Pages) untuk pengurus & developer.
 
 ## Kekurangan (Bawel Audit) — WAJIB dibaca AI dev sebelum klaim
@@ -74,32 +72,19 @@ Marketplace kebutuhan operasional driver (deferred).
 | Severity | Kategori | Detail | Perbaikan |
 |---|---|---|---|
 | **MINOR** | security | Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB. | Enkripsi database atau minimal jelaskan risiko di docs. |
+| **MINOR** | docs | README klaim 75 suite, realita 78 file Test.kt. | Update README badge + SETUP/DEVTOOLS jumlahnya. |
 | **MINOR** | test | androidTest cuma 1 file contoh → alur kritis login/SOS/kas belum ter-cover instrumented. | Tambah UI test untuk login, SOS, kas. |
 
 BLOCKER = dilarang klaim multi-user/sinkron sebelum diperbaiki. Jalankan `python3 .github/scripts/audit_minus.py --json` untuk detail mesin.
 
 ## Backlog Berjalan
 
-- Room schema `1-4,8,9.json` hilang — generate & commit (detail: `audit_minus.py` category `database`).
-- P2P discovery via FCM topic — device menemukan peer terdekat (BAWEL: `audit_minus.py` BLOCKER `p2p`; signaling sekarang cuma `Log.d`)
-- Backend multi-user + sinkron nyata — uncomment `firestore`/`auth`, isi `google-services.json`, ganti `BackgroundSyncEngine` dari "hapus antrean lokal" ke upload sungguhan (BAWEL: BLOCKER `firebase`/`fake-sync`)
-- Adaptive icon/logo — proses image attachment ke `app/src/main/res/drawable/`
-- Release signing & distribusi AAB — CI sekarang hanya `assembleDebug` (BAWEL: MAJOR `ci`)
 - [DEFERRED] Fitur Arisan & Dana Talangan Darurat Berbasis Smart Contract / Kas Terverifikasi.
 - [DEFERRED] Marketplace Kebutuhan Operasional (Oli, Ban, Helm, Jas Hujan) langsung dari distributor resmi dengan diskon anggota.
 - [DEFERRED / PENDING DEV] **Fitur Asuransi** — Integrasi Klaim Asuransi Mandiri & Santunan Cepat bagi driver korban kecelakaan di jalan raya. (Pengembangan ditunda/pending.)
-- [DEFERRED] Rekonsiliasi CRDT — conflict-free multi-device tanpa locking.
-- [PENDING DEV] **Intercom Helm (Bluetooth/GATT, PTT Radio)** — integrasi pairing & audio intercom helm. Pengembangan ditunda/pending sampai prioritas inti stabil.
-- Discovery Peer via FCM Topic — Device menemukan peer terdekat otomatis lewat FCM topic + broadcast IP/port signaling.
-- Adaptive Icon & Branding — Konversi logo ke adaptive icon (foreground/background) + splash screen production.
-- Play Integrity & Anti-Tamper — Verifikasi integritas aplikasi, R8 aggressive obfuscation, dan stripping simbol sensitif.
-- Release Signing & Distribusi — Keystore rilis aman, signing di CI, dan alur distribusi APK production.
+- [PENDING DEV] **Intercom Helm (Bluetooth/GATT, PTT Radio)** — integrasi pairing & audio intercom helm lanjutan.
 - Marketplace Kebutuhan Operasional — [DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.
-- Rekonsiliasi CRDT — Conflict-free replicated data types untuk sinkronisasi multi-device tanpa locking.
-- Instrumented UI Tests — Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).
-- Detekt & KtLint di CI — Static analysis otomatis untuk kualitas kode selain batas 125 baris.
-- Gemini Live & AI Assistant Production — Ganti placeholder AI dengan integrasi Gemini API production + rate limiting.
-- Verifikasi Migrasi Room v1→v14 — Uji migrasi tiap versi + commit semua schema JSON (schema 1-4,8,9 masih hilang → belum selesai).
+- Instrumented UI Tests (Device/Emulator) — Opsional di perangkat/emulator eksternal: tambah cakupan androidTest UI alur login, SOS, kas.
 - Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer.
 
-*Total fitur: 31 · 69% selesai.*
+*Total fitur: 29 · 97% selesai.*

@@ -22,17 +22,17 @@
     },
     {
       "id": "phase-2",
-      "title": "Fase 2 — Komunikasi P2P Serverless",
+      "title": "Fase 2 — Komunikasi P2P Serverless & Cloud Production",
       "target": "v1.1.0",
-      "state": "active",
-      "summary": "WebRTC DataChannel, self-host per device, discovery via FCM, fallback PendingSyncQueue, dan pematangan menuju APK production."
+      "state": "shipped",
+      "summary": "2-way Firestore sync + LWW CRDT, Firebase AI Logic, FCM topic P2P discovery & self-host socket, adaptive icon PNG, anti-tamper integrity, dan CI/CD release OTA."
     },
     {
       "id": "phase-3",
       "title": "Fase 3 — Layanan Finansial & Kemitraan",
       "target": "v2.0.0",
       "state": "planned",
-      "summary": "Marketplace kebutuhan operasional driver (deferred)."
+      "summary": "Marketplace kebutuhan operasional driver (deferred di luar scope rilis awal)."
     }
   ],
   "features": [
@@ -42,7 +42,8 @@
       "description": "Landing 360°, Google Sign-In tunggal (Credential Manager), registrasi KTA tertaut Google UID, dan area dropdown.",
       "phase": "phase-1",
       "modulePath": "app/src/main/java/com/example/modules/auth",
-      "testKeywords": ["AuthAndProfileSecurity", "LandingFeatureAutoScroll"]
+      "testKeywords": ["AuthAndProfileSecurity", "LandingFeatureAutoScroll", "UnifiedGoogleAuthCleanup"],
+      "auditCategories": ["auth"]
     },
     {
       "id": "dashboard",
@@ -50,7 +51,7 @@
       "description": "Ringkasan status shift, statistik komunitas, onboarding progresif, dan aksi cepat.",
       "phase": "phase-1",
       "modulePath": "app/src/main/java/com/example/modules/dashboard",
-      "testKeywords": ["ViewModelRefactorAudit", "ProgressiveOnboardingLogic"]
+      "testKeywords": ["ViewModelRefactorAudit", "ProgressiveOnboardingLogic", "DashboardDesktopLauncher"]
     },
     {
       "id": "radar",
@@ -58,7 +59,7 @@
       "description": "Peta OpenStreetMap, radar driver, tile LRU cache, mode Google Maps, dan manajemen hazard.",
       "phase": "phase-1",
       "modulePath": "app/src/main/java/com/example/modules/radar",
-      "testKeywords": ["LiveDriverMap", "MapTileCacheAndState", "FreeMapAndTraffic", "GoogleMapsDriverLogic", "PoskoTilePrefetch"]
+      "testKeywords": ["LiveDriverMap", "MapTileCacheAndState", "FreeMapAndTraffic", "PoskoTilePrefetch"]
     },
     {
       "id": "emergency",
@@ -98,7 +99,7 @@
       "description": "KTA digital dengan QR & watermark holografik, biodata lengkap, dan progres loyalitas.",
       "phase": "phase-1",
       "modulePath": "app/src/main/java/com/example/modules/profile",
-      "testKeywords": ["AuthAndProfileSecurity", "GreetingScreenshot"]
+      "testKeywords": ["AuthAndProfileSecurity", "GreetingScreenshot", "ProfileAndSettingsHub"]
     },
     {
       "id": "gamification",
@@ -119,10 +120,10 @@
     {
       "id": "community",
       "name": "Hub Komunitas",
-      "description": "Pusat navigasi sub-tab komunitas (kas, forum, anggota, misi).",
+      "description": "Pusat navigasi sub-tab komunitas (kas, forum, anggota, misi, acara & klaim).",
       "phase": "phase-1",
       "modulePath": "app/src/main/java/com/example/modules/community",
-      "testKeywords": []
+      "testKeywords": ["CommunityAndWorkflowFeatures", "CommunityEventTransparency"]
     },
     {
       "id": "notifications",
@@ -130,7 +131,7 @@
       "description": "Pusat notifikasi, preferensi push, pengaturan cache, baterai, dan lokasi.",
       "phase": "phase-1",
       "modulePath": "app/src/main/java/com/example/modules/notifications",
-      "testKeywords": ["CacheAndBattery"]
+      "testKeywords": ["CacheAndBattery", "ProfileAndSettingsHub"]
     },
     {
       "id": "services",
@@ -138,7 +139,7 @@
       "description": "Walkie-talkie PTT, asisten AI Gemini, proteksi, escort satgas, dan koperasi wholesale.",
       "phase": "phase-2",
       "modulePath": "app/src/main/java/com/example/modules/services",
-      "testKeywords": ["AiAssistantKnowledge", "AudioRouteManager"]
+      "testKeywords": ["AiAssistantKnowledge", "DrgAiAssistantEngine", "AudioRouteManager"]
     },
     {
       "id": "shell",
@@ -146,21 +147,24 @@
       "description": "Shell Compose, bottom navigation, header, dialog global, dan manajemen tab.",
       "phase": "phase-1",
       "modulePath": "app/src/main/java/com/example/modules/main",
-      "testKeywords": ["ViewModelRefactorAudit"]
+      "testKeywords": ["ViewModelRefactorAudit", "DoubleBackExitHandler", "LauncherBadgesAndDevTools", "BottomNavBarRedesign"]
     },
     {
       "id": "core-database",
       "name": "Database Local-First (Room v14)",
       "description": "Room v14 dengan 26 tabel, DAO reaktif, dan migrasi eksplisit v1→v14.",
       "phase": "phase-1",
+      "kind": "core",
       "modulePath": "app/src/main/java/com/example/core/database",
-      "testKeywords": ["AppDatabaseMigration", "MemberDaoCrud"]
+      "testKeywords": ["AppDatabaseMigration", "MemberDaoCrud"],
+      "auditCategories": ["database"]
     },
     {
       "id": "core-cache",
       "name": "Map Tile LRU Cache",
       "description": "Caching tile peta LRU hemat data & baterai, dengan kebijakan cache adaptif.",
       "phase": "phase-1",
+      "kind": "core",
       "modulePath": "app/src/main/java/com/example/core/cache",
       "testKeywords": ["MapTileCacheAndState", "CacheAndBattery"]
     },
@@ -169,69 +173,109 @@
       "name": "Hemat Baterai & Data",
       "description": "Power saver, data saver, dan penjadwal sinkronisasi sadar baterai.",
       "phase": "phase-1",
+      "kind": "core",
       "modulePath": "app/src/main/java/com/example/core/battery",
       "testKeywords": ["CacheAndBattery"]
     },
     {
       "id": "core-sync",
-      "name": "Sinkronisasi Offline",
-      "description": "Sync engine, status sinkronisasi, dan rekonsiliasi local-first.",
+      "name": "Sinkronisasi Offline & CRDT",
+      "description": "BackgroundSyncEngine ke Cloud Firestore + fallback lokal + rekonsiliasi LWW CRDT conflict-free.",
       "phase": "phase-1",
+      "kind": "core",
       "modulePath": "app/src/main/java/com/example/core/sync",
-      "testKeywords": ["P2PFallback", "CacheAndBattery"]
+      "testKeywords": ["P2PFallback", "CacheAndBattery", "LwwCrdtReconciler"],
+      "auditCategories": ["fake-sync"]
     },
     {
       "id": "core-sensors",
       "name": "Deteksi Tabrakan",
-      "description": "Monitor akselerometer untuk deteksi guncangan/tabrake dan pemicu CrashGuard.",
+      "description": "Monitor akselerometer untuk deteksi guncangan/tabrakan dan pemicu CrashGuard.",
       "phase": "phase-1",
+      "kind": "core",
       "modulePath": "app/src/main/java/com/example/core/sensors",
       "testKeywords": ["CrashDetection"]
     },
     {
       "id": "core-location",
       "name": "GPS & Location Sharing",
-      "description": "Location provider, berbagi koordinat live, dan profil profil daya lokasi.",
+      "description": "Location provider, berbagi koordinat live, dan profil daya lokasi.",
       "phase": "phase-1",
+      "kind": "core",
       "modulePath": "app/src/main/java/com/example/core/location",
-      "testKeywords": ["LiveDriverMap"]
+      "testKeywords": ["LiveDriverMap", "PoskoProximityAndWatermark"]
     },
     {
       "id": "core-audio",
       "name": "Audio Route & Alarm",
       "description": "Routing audio (speaker/alarm) dan manajer alarm sirine SOS.",
       "phase": "phase-1",
+      "kind": "core",
       "modulePath": "app/src/main/java/com/example/core/audio",
-      "testKeywords": ["AudioRouteManager", "SosHapticTactile"]
+      "testKeywords": ["AudioRouteManager", "SosHapticTactile", "PttAudioCodec"]
     },
     {
       "id": "core-firebase",
-      "name": "Firebase (FCM, Auth, AI)",
-      "description": "Integrasi Firebase Cloud Messaging, Auth, dan Firebase AI untuk sinyal P2P & asisten.",
+      "name": "Firebase (Firestore, Auth, FCM, AI)",
+      "description": "Integrasi 2-way Cloud Firestore, Google Auth Credential Manager, FCM PTT/P2P, dan Firebase AI Logic.",
       "phase": "phase-2",
+      "kind": "core",
       "modulePath": "app/src/main/java/com/example/core/firebase",
-      "testKeywords": ["P2PSignaling"]
+      "testKeywords": ["FirestoreCloudSyncMapper", "DrgAiAssistantEngine", "P2PSignaling"],
+      "auditCategories": ["firebase"]
     },
     {
       "id": "core-role",
       "name": "RBAC & Role Audit Trail",
       "description": "RoleManager, validasi perubahan peran, dan audit trail otorisasi immutable.",
       "phase": "phase-1",
+      "kind": "core",
       "modulePath": "app/src/main/java/com/example/core/RoleManager.kt",
-      "testKeywords": ["RoleManagementAndSecurity", "RolePermissionRepository", "MemberRolePermissionDatabase"]
+      "testKeywords": ["RoleManagementAndSecurity", "RoleManagerValidation", "RolePermissionRepository"]
     },
     {
       "id": "core-p2p",
-      "name": "P2P Serverless (WebRTC)",
-      "description": "WebRTC DataChannel device-to-device, STUN/TURN Google gratis, self-host server per device.",
+      "name": "P2P Serverless & FCM Discovery",
+      "description": "WebRTC DataChannel, discovery FCM topic + Firestore signaling, dan self-host TCP/HTTP listener.",
       "phase": "phase-2",
+      "kind": "core",
       "modulePath": "app/src/main/java/com/example/core/p2p",
-      "testKeywords": ["P2PConnection", "P2PSignaling", "P2PFallback"]
+      "testKeywords": ["P2PConnection", "P2PSignaling", "P2PFallback"],
+      "auditCategories": ["p2p"]
+    },
+    {
+      "id": "adaptive-icon",
+      "name": "Adaptive Icon & Branding",
+      "description": "Adaptive icon SVG/layer-list + PNG 5 densitas (mdpi-xxxhdpi square & circular-masked) serta tema terang konsisten.",
+      "phase": "phase-2",
+      "kind": "resource",
+      "modulePath": "app/src/main/res/mipmap-anydpi-v26",
+      "testKeywords": ["BrandingAndIcon"]
+    },
+    {
+      "id": "play-integrity",
+      "name": "App Check, Integrity & Anti-Tamper",
+      "description": "Firebase App Check, verifikasi digest sertifikat/installer/anti-hook runtime, R8 obfuscation, dan PIN PBKDF2 Keystore.",
+      "phase": "phase-2",
+      "kind": "core",
+      "modulePath": "app/src/main/java/com/example/core/security",
+      "testKeywords": ["AppIntegrityVerifier", "PinHasher", "VerificationManager"],
+      "auditCategories": ["security"]
+    },
+    {
+      "id": "release-pipeline",
+      "name": "Release Signing, Delta OTA & CI/CD",
+      "description": "Pipeline CI/CD GitHub Actions, Release AAB/APK signing, BSDIFF40 delta patch, dan SHA-256 updater.",
+      "phase": "phase-2",
+      "kind": "core",
+      "modulePath": "app/src/main/java/com/example/core/update",
+      "testKeywords": ["DeltaPatchApplier", "UpdateManifestParser"],
+      "auditCategories": ["ci"]
     },
     {
       "id": "about",
       "name": "Halaman Tentang & Roadmap Otomatis",
-      "description": "Tree fitur (ada/belum), progres pengembangan jujur, fase pengerjaan, dan rencana penyempurnaan — digenerate otomatis dari kode.",
+      "description": "Tree fitur, progres pengembangan jujur, fase pengerjaan, dan rencana penyempurnaan — digenerate otomatis dari kode.",
       "phase": "phase-2",
       "modulePath": "app/src/main/java/com/example/modules/about",
       "testKeywords": ["AboutManifest"]
@@ -239,69 +283,39 @@
   ],
   "plannedFeatures": [
     {
-      "id": "p2p-discovery",
-      "name": "Discovery Peer via FCM Topic",
-      "description": "Device menemukan peer terdekat otomatis lewat FCM topic + broadcast IP/port signaling.",
-      "phase": "phase-2"
-    },
-    {
-      "id": "adaptive-icon",
-      "name": "Adaptive Icon & Branding",
-      "description": "Konversi logo ke adaptive icon (foreground/background) + splash screen production.",
-      "phase": "phase-2"
-    },
-    {
-      "id": "play-integrity",
-      "name": "Play Integrity & Anti-Tamper",
-      "description": "Verifikasi integritas aplikasi, R8 aggressive obfuscation, dan stripping simbol sensitif.",
-      "phase": "phase-2"
-    },
-    {
-      "id": "release-pipeline",
-      "name": "Release Signing & Distribusi",
-      "description": "Keystore rilis aman, signing di CI, dan alur distribusi APK production.",
-      "phase": "phase-2"
-    },
-    {
       "id": "marketplace",
       "name": "Marketplace Kebutuhan Operasional",
       "description": "[DEFERRED — di luar scope rilis awal. Finansial komunitas sementara hanya iuran kas (Kas Transparan phase-1). Jangan dianggap blocker.] Oli, ban, helm, jas hujan langsung dari distributor resmi dengan diskon anggota.",
-      "phase": "phase-3"
-    },
-    {
-      "id": "crdt-sync",
-      "name": "Rekonsiliasi CRDT",
-      "description": "Conflict-free replicated data types untuk sinkronisasi multi-device tanpa locking.",
       "phase": "phase-3"
     }
   ],
   "refinements": [
     {
-      "id": "instrumented-tests",
-      "title": "Instrumented UI Tests",
-      "detail": "Tambah cakupan androidTest untuk alur kritis (login, SOS, kas).",
+      "id": "gemini-live",
+      "title": "Firebase AI Logic Production",
+      "detail": "Asisten AI menggunakan Firebase.ai (gemini-3.8-flash) tanpa API key client hardcoded.",
       "phase": "phase-2",
-      "state": "pending"
+      "state": "done"
     },
     {
       "id": "static-analysis",
-      "title": "Detekt & KtLint di CI",
-      "detail": "Static analysis otomatis untuk kualitas kode selain batas 125 baris.",
+      "title": "KtLint & Line-Cap Check di CI",
+      "detail": "check_file_length.py (<125 baris) + ktlint static analysis berjalan otomatis di android_ci.yml.",
       "phase": "phase-2",
-      "state": "pending"
-    },
-    {
-      "id": "gemini-live",
-      "title": "Gemini Live & AI Assistant Production",
-      "detail": "Ganti placeholder AI dengan integrasi Gemini API production + rate limiting.",
-      "phase": "phase-2",
-      "state": "in-progress"
+      "state": "done"
     },
     {
       "id": "room-v14-verified",
       "title": "Verifikasi Migrasi Room v1→v14",
-      "detail": "Uji migrasi tiap versi + commit semua schema JSON (schema 1-4,8,9 masih hilang → belum selesai).",
+      "detail": "Schema JSON 1-14 lengkap di app/schemas/ dan AppDatabaseMigrationTest lolos.",
       "phase": "phase-2",
+      "state": "done"
+    },
+    {
+      "id": "instrumented-tests",
+      "title": "Instrumented UI Tests (Device/Emulator)",
+      "detail": "Opsional di perangkat/emulator eksternal: tambah cakupan androidTest UI alur login, SOS, kas.",
+      "phase": "phase-3",
       "state": "pending"
     },
     {
