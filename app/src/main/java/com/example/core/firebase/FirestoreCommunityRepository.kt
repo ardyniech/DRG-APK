@@ -28,20 +28,24 @@ class FirestoreCommunityRepository(
 
     suspend fun syncOwnProfile(member: DriverMember, savePii: Boolean = true): Result<Unit> = runCatching {
         val uid = requireUid()
-        val displayName = member.name.ifBlank { auth.currentUser?.displayName ?: "Driver DRG" }.take(80)
+        val currentUser = auth.currentUser
+        val isBootAdmin = currentUser?.isEmailVerified == true && currentUser.email == "ardy.syafii@gmail.com"
+        val initialRole = if (isBootAdmin) MemberRole.SUPER_ADMIN.name else MemberRole.ANGGOTA.name
+        val initialStatus = if (isBootAdmin) VerificationStatus.VERIFIED.name else VerificationStatus.PENDING_SCREENING.name
+        val displayName = member.name.ifBlank { currentUser?.displayName ?: "Driver DRG" }.take(80)
         val safeDriverId = member.driverId.ifBlank { "DRG-${uid.take(8).uppercase()}" }.take(48)
 
         upsertDoc("users/$uid", mapOf(
-            "userId" to uid, "displayName" to displayName, "email" to auth.currentUser?.email,
-            "driverId" to safeDriverId, "role" to "ANGGOTA",
+            "userId" to uid, "displayName" to displayName, "email" to currentUser?.email,
+            "driverId" to safeDriverId, "role" to initialRole,
             "createdAt" to FieldValue.serverTimestamp(), "updatedAt" to FieldValue.serverTimestamp()
-        ), mapOf("displayName" to displayName, "email" to auth.currentUser?.email, "updatedAt" to FieldValue.serverTimestamp()))
+        ), mapOf("displayName" to displayName, "email" to currentUser?.email, "updatedAt" to FieldValue.serverTimestamp()))
 
         upsertDoc("members/$uid", mapOf(
             "userId" to uid, "name" to displayName, "driverId" to safeDriverId,
             "baseArea" to member.baseArea.take(80), "motorcycleModel" to member.motorcycleModel.take(60),
-            "motorcyclePlate" to member.motorcyclePlate.take(24), "role" to "ANGGOTA",
-            "verificationStatus" to "PENDING_SCREENING", "loyaltyPoints" to member.loyaltyPoints.toLong(),
+            "motorcyclePlate" to member.motorcyclePlate.take(24), "role" to initialRole,
+            "verificationStatus" to initialStatus, "loyaltyPoints" to member.loyaltyPoints.toLong(),
             "isOnline" to member.isOnline,
             "createdAt" to FieldValue.serverTimestamp(), "updatedAt" to FieldValue.serverTimestamp()
         ), mapOf(

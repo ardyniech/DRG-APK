@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.core.firebase.FirestoreCloudSyncMapper
 import com.example.core.firebase.FirestoreCommunityRepository
 import com.example.core.firebase.FirestoreOperationsRepository
 import com.example.core.firebase.authStateFlow
@@ -32,7 +33,7 @@ fun rememberFirebaseAuthUser(context: Context): State<FirebaseUser?> {
 }
 
 /**
- * Menjalankan sinkronisasi Firestore hanya setelah pengguna terautentikasi penuh.
+ * Menjalankan sinkronisasi Firestore 2 arah ke Room DB setelah pengguna terautentikasi penuh.
  */
 @Composable
 fun CloudSyncSessionEffect(viewModel: DRGViewModel, firebaseUser: FirebaseUser, context: Context) {
@@ -40,6 +41,7 @@ fun CloudSyncSessionEffect(viewModel: DRGViewModel, firebaseUser: FirebaseUser, 
         if (!viewModel.isLoggedIn.value || viewModel.currentMemberId.value.isBlank()) {
             viewModel.completeGoogleSignIn(firebaseUser)
         }
+        viewModel.syncEngine.triggerBackgroundSync(viewModel.isPowerSaverMode.value)
     }
 
     LaunchedEffect(firebaseUser.uid) {
@@ -47,7 +49,10 @@ fun CloudSyncSessionEffect(viewModel: DRGViewModel, firebaseUser: FirebaseUser, 
         val communityRepo = runCatching { FirestoreCommunityRepository(context) }.getOrNull() ?: return@LaunchedEffect
         communityRepo.observeOwnMemberProfile(firebaseUser.uid)
             .catch { Log.w("CloudSync", "Member observer tertunda: ${it.message}") }
-            .collect { /* Snapshot listener mempertahankan sinkronisasi profil cloud aktif */ }
+            .collect { cloudMember ->
+                val localId = viewModel.currentMemberId.value.ifBlank { firebaseUser.uid }
+                FirestoreCloudSyncMapper.syncMemberToRoom(viewModel.repository.db, cloudMember, localId)
+            }
     }
 
     LaunchedEffect(firebaseUser.uid) {
@@ -55,6 +60,8 @@ fun CloudSyncSessionEffect(viewModel: DRGViewModel, firebaseUser: FirebaseUser, 
         val opsRepo = runCatching { FirestoreOperationsRepository(context) }.getOrNull() ?: return@LaunchedEffect
         opsRepo.observeActiveAlerts()
             .catch { Log.w("CloudSync", "Alert observer tertunda: ${it.message}") }
-            .collect { /* Snapshot listener mempertahankan pantauan SOS aktif */ }
+            .collect { alerts ->
+                FirestoreCloudSyncMapper.syncActiveAlertsToRoom(viewModel.repository.db, alerts)
+            }
     }
 }

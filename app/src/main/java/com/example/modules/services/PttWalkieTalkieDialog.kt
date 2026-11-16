@@ -24,7 +24,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.core.audio.AudioRouteManager
 import com.example.core.audio.PttAudioEngine
+import com.example.core.firebase.PttCloudChannelHelper
 import com.example.ui.theme.*
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 @Composable
@@ -36,39 +38,47 @@ fun PttWalkieTalkieDialog(onDismiss: () -> Unit) {
 
     var isTransmitting by remember { mutableStateOf(false) }
     var channelIndex by remember { mutableIntStateOf(0) }
-    val malangChannels = listOf("Kanal Utama Suhat", "Satgas Klojen", "Karanglo & Singosari", "Batu - Pujon")
-    val channelName = malangChannels[channelIndex]
+    val malangChannels = listOf("suhat_lowokwaru" to "Kanal Utama Suhat", "satgas_klojen" to "Satgas Klojen", "karanglo_singosari" to "Karanglo & Singosari", "batu_pujon" to "Batu - Pujon")
+    val (channelId, channelName) = malangChannels[channelIndex]
     var statusMessage by remember { mutableStateOf("Siap transmisi radio P2P & Firestore.") }
-    val rmsLevel by audioEngine.rmsLevel.collectAsState()
+    val playedIds = remember { mutableStateListOf<String>() }
     val audioDevice = remember { AudioRouteManager.getConnectedAudioDeviceType(context) }
 
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { grants ->
+    LaunchedEffect(channelId) {
+        val myUid = PttCloudChannelHelper.currentUid(context) ?: return@LaunchedEffect
+        PttCloudChannelHelper.observeIncomingBursts(context, channelId)
+            .catch { statusMessage = "Kanal cloud tertunda: ${it.localizedMessage}" }
+            .collect { docs ->
+                val incoming = docs.firstOrNull { it.userId != myUid && it.id.isNotBlank() && it.id !in playedIds }
+                if (incoming != null && !isTransmitting) {
+                    playedIds.add(incoming.id)
+                    statusMessage = "RX dari ${incoming.senderName} (${incoming.durationMs}ms)..."
+                    audioEngine.playAudioTransmission(incoming.audioBase64)
+                }
+            }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
         if (grants[Manifest.permission.RECORD_AUDIO] == true) {
             isTransmitting = true
             statusMessage = "Merekam suara 8kHz (mu-law)..."
             scope.launch {
                 audioEngine.recordTransmission { base64, durationMs ->
                     isTransmitting = false
-                    statusMessage = "Berhasil kirim PTT (${durationMs}ms, ${base64.length}B) ke $channelName."
+                    statusMessage = "Mengunggah transmisi PTT (${durationMs}ms)..."
+                    scope.launch {
+                        PttCloudChannelHelper.publishVoiceBurst(context, channelId, base64, durationMs)
+                            .onSuccess { statusMessage = "Terkirim ke $channelName (${durationMs}ms)." }
+                            .onFailure { statusMessage = "Gagal kirim PTT: ${it.localizedMessage}" }
+                    }
                 }
             }
-        } else {
-            statusMessage = "Izin mikrofon ditolak. Transmisi PTT tidak dapat dimulai."
-        }
+        } else statusMessage = "Izin mikrofon ditolak. Transmisi PTT tidak dapat dimulai."
     }
 
     Dialog(onDismissRequest = { if (!isTransmitting) onDismiss() }) {
-        Surface(
-            shape = RoundedCornerShape(24.dp), color = DrgSurface,
-            modifier = Modifier.fillMaxWidth().padding(12.dp).border(2.dp, DrgGrabGreenPrimary, RoundedCornerShape(24.dp))
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp).fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(14.dp)
-            ) {
+        Surface(shape = RoundedCornerShape(24.dp), color = DrgSurface, modifier = Modifier.fillMaxWidth().padding(12.dp).border(2.dp, DrgGrabGreenPrimary, RoundedCornerShape(24.dp))) {
+            Column(modifier = Modifier.padding(20.dp).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Icon(Icons.Default.Radio, contentDescription = "Radio", tint = DrgGrabGreenPrimary)
@@ -78,45 +88,23 @@ fun PttWalkieTalkieDialog(onDismiss: () -> Unit) {
                         Text(if (isTransmitting) "TX (Live)" else "RX (Ready)", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = if (isTransmitting) DrgRedDanger else DrgGrabGreenPrimary, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
                     }
                 }
-
-                Card(
-                    modifier = Modifier.fillMaxWidth().clickable {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        channelIndex = (channelIndex + 1) % malangChannels.size
-                    },
-                    shape = RoundedCornerShape(12.dp), colors = CardDefaults.cardColors(containerColor = DrgBackground)
-                ) {
+                Card(modifier = Modifier.fillMaxWidth().clickable { haptic.performHapticFeedback(HapticFeedbackType.LongPress); channelIndex = (channelIndex + 1) % malangChannels.size }, shape = RoundedCornerShape(12.dp), colors = CardDefaults.cardColors(containerColor = DrgBackground)) {
                     Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                        Column {
-                            Text("Saluran: $channelName", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary)
-                            Text("Audio: ${audioDevice.label}", fontSize = 10.sp, color = DrgGrabGreenPrimary)
-                        }
+                        Column { Text("Saluran: $channelName", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = DrgTextPrimary); Text("Audio: ${audioDevice.label}", fontSize = 10.sp, color = DrgGrabGreenPrimary) }
                         Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Audio Route", tint = DrgGrabGreenPrimary)
                     }
                 }
-
                 PttWaveformCanvas(isTransmitting = isTransmitting)
-
                 Text(statusMessage, fontSize = 11.sp, color = if (isTransmitting) DrgRedDanger else DrgTextSecondary, fontWeight = FontWeight.Medium)
-
-                PttTransmissionButton(
-                    isTransmitting = isTransmitting,
-                    onToggleTransmitting = {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        if (!isTransmitting) {
-                            val perms = mutableListOf(Manifest.permission.RECORD_AUDIO)
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) perms.add(Manifest.permission.BLUETOOTH_CONNECT)
-                            permissionLauncher.launch(perms.toTypedArray())
-                        } else {
-                            audioEngine.stopRecording()
-                            isTransmitting = false
-                        }
-                    }
-                )
-
-                TextButton(onClick = onDismiss, enabled = !isTransmitting, modifier = Modifier.fillMaxWidth()) {
-                    Text("Tutup", color = DrgTextSecondary, fontWeight = FontWeight.Bold)
-                }
+                PttTransmissionButton(isTransmitting = isTransmitting, onToggleTransmitting = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    if (!isTransmitting) {
+                        val perms = mutableListOf(Manifest.permission.RECORD_AUDIO)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) perms.add(Manifest.permission.BLUETOOTH_CONNECT)
+                        permissionLauncher.launch(perms.toTypedArray())
+                    } else { audioEngine.stopRecording(); isTransmitting = false }
+                })
+                TextButton(onClick = onDismiss, enabled = !isTransmitting, modifier = Modifier.fillMaxWidth()) { Text("Tutup", color = DrgTextSecondary, fontWeight = FontWeight.Bold) }
             }
         }
     }

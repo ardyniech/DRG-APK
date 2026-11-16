@@ -163,7 +163,7 @@ service cloud.firestore {
     // --- Collection Rules ---
     match /admins/{adminId} {
       allow get: if isValidId(adminId) && isSignedIn() && (request.auth.uid == adminId || isAdmin());
-      allow list: if isBootstrappedAdmin();
+      allow list: if isAdmin();
       allow create: if isValidId(adminId) && isAdmin() &&
                        incoming().uid == adminId &&
                        incoming().keys().hasAll(['uid', 'role', 'createdAt', 'updatedAt']) &&
@@ -182,7 +182,7 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow get: if isValidId(userId) && isSignedIn() && (request.auth.uid == userId || isAdmin());
-      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isBootstrappedAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
 
       allow create: if isValidId(userId) && isSignedIn() &&
                        (request.auth.uid == userId || isAdmin()) &&
@@ -267,7 +267,7 @@ service cloud.firestore {
 
     match /members/{memberId} {
       allow get: if isValidId(memberId) && isSignedIn() && (existing().userId == request.auth.uid || memberId == request.auth.uid || isAdmin());
-      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isBootstrappedAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
 
       allow create: if isValidId(memberId) && isSignedIn() &&
                        (request.auth.uid == memberId || isAdmin()) &&
@@ -297,7 +297,7 @@ service cloud.firestore {
 
     match /kas_transactions/{txId} {
       allow get: if isValidId(txId) && isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
-      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isBootstrappedAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
 
       allow create: if isValidId(txId) && isSignedIn() &&
                        incoming().userId == request.auth.uid &&
@@ -320,7 +320,7 @@ service cloud.firestore {
 
     match /emergency_alerts/{alertId} {
       allow get: if isValidId(alertId) && isSignedIn() && (existing().userId == request.auth.uid || existing().status == 'ACTIVE' || isAdmin());
-      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.status == 'ACTIVE' || isBootstrappedAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.status == 'ACTIVE' || isAdmin());
 
       allow create: if isValidId(alertId) && isSignedIn() &&
                        incoming().userId == request.auth.uid &&
@@ -347,7 +347,7 @@ service cloud.firestore {
 
     match /role_audit_logs/{logId} {
       allow get: if isValidId(logId) && isSignedIn() && (existing().targetUserId == request.auth.uid || existing().actorUid == request.auth.uid || isAdmin());
-      allow list: if isSignedIn() && (resource.data.targetUserId == request.auth.uid || resource.data.actorUid == request.auth.uid || isBootstrappedAdmin());
+      allow list: if isSignedIn() && (resource.data.targetUserId == request.auth.uid || resource.data.actorUid == request.auth.uid || isAdmin());
 
       allow create: if isValidId(logId) && isAdmin() &&
                        incoming().actorUid == request.auth.uid &&
@@ -361,7 +361,7 @@ service cloud.firestore {
 
     match /p2p_peers/{peerId} {
       allow get: if isValidId(peerId) && isSignedIn() && (request.auth.uid == peerId || (resource != null && (existing().userId == request.auth.uid || existing().status == 'ONLINE')) || isAdmin());
-      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.status == 'ONLINE' || isBootstrappedAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.status == 'ONLINE' || isAdmin());
 
       allow create: if isValidId(peerId) && isSignedIn() &&
                        request.auth.uid == peerId &&
@@ -413,7 +413,7 @@ service cloud.firestore {
 
     match /ptt_transmissions/{txId} {
       allow get: if isValidId(txId) && isSignedIn() && (existing().userId == request.auth.uid || existing().status == 'LIVE' || isAdmin());
-      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.status == 'LIVE' || isBootstrappedAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.status == 'LIVE' || isAdmin());
 
       allow create: if isValidId(txId) && isSignedIn() &&
                        incoming().userId == request.auth.uid &&

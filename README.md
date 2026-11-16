@@ -146,7 +146,7 @@ Detail skema dan panduan migrasi dapat dibaca di **[Dokumentasi Migrasi Database
 
 ## 🧪 Strategi Pengujian (Testing Suite)
 
-Proyek ini dilengkapi dengan 72 suite pengujian unit & integrasi otomatis berbasis **Robolectric**, **Roborazzi**, dan **Firebase Emulator Rules**:
+Proyek ini dilengkapi dengan 75 suite pengujian unit & integrasi otomatis berbasis **Robolectric**, **Roborazzi**, dan **Firebase Emulator Rules**:
 
 - `Ojol360TurntableTest.kt`: Pengujian turntable sequence 16-frame 360°, normalisasi sudut rotasi, mapping frame index, clamping level zoom, dan sanitasi bad input.
 

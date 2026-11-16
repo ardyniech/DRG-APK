@@ -399,3 +399,24 @@ test("P2P peers, WebRTC signals & PTT transmissions: bounds, participant isolati
   await assertSucceeds(alice.collection("ptt_transmissions").doc("ptt_1").update({ status: "ENDED", updatedAt: serverTs() }));
   await assertFails(alice.collection("ptt_transmissions").doc("ptt_1").update({ status: "LIVE", updatedAt: serverTs() }));
 });
+
+test("Delegated admin in /admins/{uid} can list members and role audit logs while regular member cannot", async () => {
+  const adm = adminDb();
+  const bob = bobDb();
+  const alice = aliceDb();
+
+  await assertSucceeds(
+    adm.collection("admins").doc(BOB_UID).set({
+      uid: BOB_UID,
+      email: "bob@drg.id",
+      role: "SEKRETARIS",
+      createdAt: serverTs(),
+      updatedAt: serverTs(),
+    })
+  );
+
+  await assertSucceeds(bob.collection("members").get());
+  await assertSucceeds(bob.collection("role_audit_logs").get());
+  await assertFails(alice.collection("members").get());
+  await assertFails(alice.collection("role_audit_logs").get());
+});

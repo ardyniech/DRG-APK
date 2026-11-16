@@ -44,10 +44,10 @@ class ProfileSessionCoordinator(
             val mappedId = if (isAdmin) "DRG-001" else user.uid
             val draft = PendingRegistrationPrefs.consume(sharedPrefs)
             val existing = repository.db.memberDao().getMemberById(mappedId)
-            val member = existing?.let {
-                if (draft != null) it.copy(name = draft.name, phone = draft.phone, motorcyclePlate = draft.plate, motorcycleModel = draft.model, baseArea = draft.area)
-                    .also { updated -> repository.updateMember(updated) }
-                else it
+            val member = existing?.let { current ->
+                val withDraft = if (draft != null) current.copy(name = draft.name, phone = draft.phone, motorcyclePlate = draft.plate, motorcycleModel = draft.model, baseArea = draft.area) else current
+                val ensured = if (isAdmin) withDraft.copy(role = MemberRole.SUPER_ADMIN, verificationStatus = VerificationStatus.VERIFIED) else withDraft
+                if (ensured != current) ensured.also { repository.updateMember(it) } else current
             } ?: PendingRegistrationPrefs.buildGoogleMember(mappedId, user, isAdmin, draft).also { repository.registerMember(it) }
             if (draft != null && draft.draftId.isNotBlank() && draft.draftId != mappedId) {
                 repository.db.memberDao().deleteMemberById(draft.draftId)

@@ -25,10 +25,13 @@ class PttAudioRecorder(private val context: Context) {
     private val minBufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat)
 
     suspend fun record(onCaptured: (String, Long) -> Unit) = withContext(Dispatchers.IO) {
-        if (!hasPermission() || !isRecording.compareAndSet(false, true)) return@withContext
+        val granted = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        if (!granted || !isRecording.compareAndSet(false, true)) return@withContext
         val bufSize = maxOf(minBufferSize, 2048)
         val recorder = try {
             AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, bufSize)
+        } catch (_: SecurityException) {
+            isRecording.set(false); return@withContext
         } catch (_: Exception) {
             isRecording.set(false); return@withContext
         }
@@ -63,7 +66,4 @@ class PttAudioRecorder(private val context: Context) {
     }
 
     fun stop() { isRecording.set(false) }
-
-    private fun hasPermission() =
-        ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
 }

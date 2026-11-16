@@ -9,6 +9,7 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialCancellationException
+import androidx.credentials.exceptions.NoCredentialException
 import com.example.R
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
@@ -54,6 +55,9 @@ object GoogleAuthManager {
         return try {
             val result = CredentialManager.create(context).getCredential(context, request)
             exchangeGoogleCredential(result.credential)
+        } catch (_: NoCredentialException) {
+            Log.d(TAG, "No authorized Google credential for silent sign-in")
+            GoogleAuthOutcome.Cancelled
         } catch (e: Exception) {
             Log.d(TAG, "Silent auto sign-in skipped: ${e.message}")
             GoogleAuthOutcome.Cancelled
@@ -70,6 +74,9 @@ object GoogleAuthManager {
         } catch (e: GetCredentialCancellationException) {
             Log.w(TAG, "Google Sign-In dibatalkan oleh pengguna", e)
             GoogleAuthOutcome.Cancelled
+        } catch (e: NoCredentialException) {
+            Log.w(TAG, "Akun Google tidak tersedia di perangkat", e)
+            GoogleAuthOutcome.Error("Tidak ada akun Google tersedia di perangkat ini.")
         } catch (e: Exception) {
             Log.e(TAG, "Google Sign-In gagal", e)
             GoogleAuthOutcome.Error(e.localizedMessage ?: "Gagal masuk dengan Google")

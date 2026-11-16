@@ -33,10 +33,16 @@ fun DRGViewModel.updateDutyStatus(status: String, isOnline: Boolean) {
 }
 
 fun DRGViewModel.triggerEmergency(type: EmergencyType, message: String, location: String) {
-    emergencyCoord.triggerEmergency(currentMember.value, type, message, location)
-    currentMember.value?.let { syncEmergencyToCloud(it.name, type.name, message, location, it.currentLat, it.currentLng) }
+    val alertId = emergencyCoord.triggerEmergency(currentMember.value, type, message, location)
+    val cur = currentMember.value
+    if (alertId != null && cur != null) {
+        syncEmergencyToCloud(alertId, cur.name, type.name, message, location, cur.currentLat, cur.currentLng)
+    }
 }
-fun DRGViewModel.resolveEmergency(alertId: String) = emergencyCoord.resolveEmergency(alertId, currentMember.value)
+fun DRGViewModel.resolveEmergency(alertId: String) {
+    emergencyCoord.resolveEmergency(alertId, currentMember.value)
+    resolveEmergencyInCloud(alertId)
+}
 fun DRGViewModel.respondEmergency(alertId: String) = emergencyCoord.respondEmergency(alertId)
 fun DRGViewModel.respondToEmergency(alertId: String) = respondEmergency(alertId)
 fun DRGViewModel.toggleSosAlarmSound(enabled: Boolean) = emergencyCoord.toggleSosAlarmSound(enabled)

@@ -4,6 +4,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import com.example.core.sync.EmergencySmsFallbackHelper
 import com.example.core.viewmodel.DRGViewModel
 import com.example.core.viewmodel.*
 import com.example.core.viewmodel.MainNavTab
@@ -89,8 +90,28 @@ fun CommunityTabDelegate(
         onUpdateMemberPermissions = { id, role, canKas, canVerify, canSos, canPosko, status ->
             viewModel.updateMemberPermissions(id, role, canKas, canVerify, canSos, canPosko, status)
         },
-        onOrderMarketItem = { item -> scope.launch { snackbarHostState.showSnackbar("Pesanan ${item.title} berhasil diajukan! Silakan ambil di ${item.poskoLocation}") } },
-        onClaimInsurance = { claim -> scope.launch { snackbarHostState.showSnackbar("Pengajuan ${claim.title} diterima & diproses tim pengurus!") } },
+        onOrderMarketItem = { item ->
+            val targetPhone = poskoList.firstOrNull { it.name.contains(item.poskoLocation, ignoreCase = true) && it.phone.isNotBlank() }?.phone
+                ?: EmergencySmsFallbackHelper.DEFAULT_HOTLINE_TRC
+            val orderId = "MKT-${item.id}-${System.currentTimeMillis()}"
+            viewModel.syncEngine.enqueueOptimisticAction(
+                entityType = "MARKET_ORDER",
+                id = orderId,
+                payload = """{"itemId":"${item.id}","title":"${item.title.replace("\"", "")}","posko":"${item.poskoLocation}","driverId":"${currentMember?.driverId ?: "-"}"}"""
+            )
+            WhatsAppLauncher.openChat(context, targetPhone, "Halo Koperasi DRG, saya ${currentMember?.name ?: "Driver"} (${currentMember?.driverId ?: "-"}) memesan ${item.title} untuk pengambilan di ${item.poskoLocation}.")
+            scope.launch { snackbarHostState.showSnackbar("Pesanan ${item.title} dicatat ke antrean sinkronisasi & diarahkan ke WhatsApp ${item.poskoLocation}.") }
+        },
+        onClaimInsurance = { claim ->
+            val claimId = "CLM-${claim.id}-${System.currentTimeMillis()}"
+            viewModel.syncEngine.enqueueOptimisticAction(
+                entityType = "INSURANCE_CLAIM",
+                id = claimId,
+                payload = """{"claimId":"${claim.id}","title":"${claim.title.replace("\"", "")}","driverId":"${currentMember?.driverId ?: "-"}"}"""
+            )
+            WhatsAppLauncher.openChat(context, EmergencySmsFallbackHelper.DEFAULT_HOTLINE_TRC, "Halo Pengurus/Satgas DRG, saya ${currentMember?.name ?: "Driver"} (${currentMember?.driverId ?: "-"}) mengajukan klaim: ${claim.title}.")
+            scope.launch { snackbarHostState.showSnackbar("Pengajuan ${claim.title} dicatat ke antrean sinkronisasi & diarahkan ke WhatsApp Pengurus.") }
+        },
         onAddPosko = { name, area, phone, lat, lng -> viewModel.addPosko(name, area, phone, lat, lng) }
     )
 }

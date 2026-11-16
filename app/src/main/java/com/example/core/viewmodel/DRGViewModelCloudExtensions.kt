@@ -55,12 +55,26 @@ fun DRGViewModel.syncKasTransactionToCloud(tx: KasTransaction) {
     }
 }
 
-fun DRGViewModel.syncEmergencyToCloud(driverName: String, alertType: String, message: String, location: String, lat: Double?, lng: Double?) {
+fun DRGViewModel.syncEmergencyToCloud(
+    alertId: String,
+    driverName: String,
+    alertType: String,
+    message: String,
+    location: String,
+    lat: Double?,
+    lng: Double?
+) {
     if (Firebase.auth.currentUser == null) return
     val repo = createCloudOpsRepo(getApplication()) ?: return
     viewModelScope.launch {
-        repo.publishEmergencyAlert(driverName = driverName, alertType = alertType, message = message, locationName = location, lat = lat, lng = lng)
+        repo.publishEmergencyAlert(alertId = alertId, driverName = driverName, alertType = alertType, message = message, locationName = location, lat = lat, lng = lng)
     }
+}
+
+fun DRGViewModel.resolveEmergencyInCloud(alertId: String) {
+    if (Firebase.auth.currentUser == null) return
+    val repo = createCloudOpsRepo(getApplication()) ?: return
+    viewModelScope.launch { repo.resolveEmergencyAlert(alertId) }
 }
 
 fun DRGViewModel.syncAdminRoleChangeToCloud(

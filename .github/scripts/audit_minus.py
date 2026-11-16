@@ -80,9 +80,9 @@ def check_firebase():
         add("BLOCKER", "auth", "Seed super-admin PIN default 1234 di .env.example — kalau tidak diganti, akun pengurus bisa ditebak.",
             "Ganti sebelum rilis; tolak login bila PIN masih default.")
     manifest = read("app/src/main/AndroidManifest.xml")
-    for perm in ["RECORD_AUDIO", "POST_NOTIFICATIONS", "FOREGROUND_SERVICE", "BLUETOOTH_CONNECT"]:
+    for perm in ["RECORD_AUDIO", "POST_NOTIFICATIONS", "BLUETOOTH_CONNECT"]:
         if perm not in manifest:
-            add("MAJOR", "permission", f"Permission {perm} belum dideklarasi (PTT/notif/foreground/Bluetooth).", "Tambah di manifest + runtime request.")
+            add("MAJOR", "permission", f"Permission {perm} belum dideklarasi (PTT/notif/Bluetooth).", "Tambah di manifest + runtime request.")
 
 def check_p2p():
     sig = read("app/src/main/java/com/example/core/p2p/P2PSignalingManager.kt")

@@ -25,9 +25,9 @@
     "inProgress": 12,
     "planned": 6,
     "modules": 18,
-    "totalSourceFiles": 572,
-    "totalLoc": 40284,
-    "testSuites": 72
+    "totalSourceFiles": 575,
+    "totalLoc": 40576,
+    "testSuites": 75
   },
   "phases": [
     {
@@ -315,7 +315,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 16,
-      "loc": 1272,
+      "loc": 1274,
       "todos": 0,
       "tests": [
         "CacheAndBatteryTest"
@@ -361,7 +361,7 @@
       "status": "IN_PROGRESS",
       "progress": 70,
       "files": 19,
-      "loc": 1489,
+      "loc": 1517,
       "todos": 0,
       "tests": [
         "ViewModelRefactorAuditTest"
@@ -403,8 +403,8 @@
       "phase": "phase-2",
       "status": "IN_PROGRESS",
       "progress": 70,
-      "files": 10,
-      "loc": 828,
+      "files": 13,
+      "loc": 1041,
       "todos": 0,
       "tests": [
         "P2PSignalingTest"
@@ -434,7 +434,7 @@
       "status": "DONE",
       "progress": 100,
       "files": 14,
-      "loc": 997,
+      "loc": 1014,
       "todos": 0,
       "tests": [
         "AiAssistantKnowledgeTest",
@@ -553,10 +553,10 @@
     "Dokumentasi Publik — Situs dokumentasi (GitHub Pages) untuk pengurus & developer."
   ],
   "minusSummary": {
-    "total": 3,
+    "total": 2,
     "blocker": 0,
     "major": 0,
-    "minor": 3,
+    "minor": 2,
     "note": 0
   },
   "minus": [
@@ -565,12 +565,6 @@
       "category": "security",
       "detail": "Room SQLite belum terenkripsi (SQLCipher tidak ada) — NIK/SIM/kas plain di file DB.",
       "fix": "Enkripsi database atau minimal jelaskan risiko di docs."
-    },
-    {
-      "severity": "MINOR",
-      "category": "hygiene",
-      "detail": "gradlew tidak executable (mode 644) → ./gradlew lokal gagal tanpa chmod.",
-      "fix": "chmod +x atau commit mode 755."
     },
     {
       "severity": "MINOR",

@@ -47,10 +47,11 @@ class EmergencyCoordinator(
         }
     }
 
-    fun triggerEmergency(cur: DriverMember?, type: EmergencyType, msg: String, loc: String) {
-        if (cur == null) return
+    fun triggerEmergency(cur: DriverMember?, type: EmergencyType, msg: String, loc: String): String? {
+        if (cur == null) return null
+        val alertId = "SOS-${UUID.randomUUID().toString().take(8)}"
         val alert = EmergencyAlert(
-            id = "SOS-${UUID.randomUUID().toString().take(8)}",
+            id = alertId,
             driverId = cur.id, driverName = cur.name, driverPhone = cur.phone,
             plateNumber = cur.motorcyclePlate, type = type, message = msg,
             lat = cur.currentLat, lng = cur.currentLng, locationName = loc, isActive = true
@@ -64,6 +65,7 @@ class EmergencyCoordinator(
                 showToast("Sinyal SOS Darurat berhasil dipancarkan ke seluruh Satgas & Anggota!")
             }.onFailure { error -> showToast("Gagal memancarkan SOS: ${error.localizedMessage}") }
         }
+        return alertId
     }
 
     fun resolveEmergency(alertId: String, cur: DriverMember?) {

@@ -22,6 +22,9 @@ object CloudBackupHelper {
         try {
             val exported = BackupManager.export(context, tempFile).getOrThrow()
             val cipherBytes = exported.readBytes()
+            require(BackupCrypto.isEncrypted(cipherBytes)) {
+                "Enkripsi Android Keystore tidak tersedia; unggah cadangan dibatalkan demi keamanan PII."
+            }
             val checksum = sha256Hex(cipherBytes)
             val encoded = Base64.encodeToString(cipherBytes, Base64.NO_WRAP)
             require(encoded.length <= MAX_BASE64_BYTES) {

@@ -29,7 +29,6 @@ android {
     versionName = System.getenv("VERSION_NAME") ?: "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    manifestPlaceholders["MAPS_API_KEY"] = "YOUR_GOOGLE_MAPS_API_KEY"
     buildConfigField("String", "UPDATE_MANIFEST_URL", "\"$updateManifestUrl\"")
   }
 
@@ -161,8 +160,8 @@ dependencies {
   implementation(libs.moshi.kotlin)
   implementation(libs.okhttp)
   implementation(libs.play.services.location)
-  implementation(libs.play.services.maps)
-  implementation(libs.maps.compose)
+  // implementation(libs.play.services.maps)
+  // implementation(libs.maps.compose)
   implementation(libs.commons.compress)
   implementation(libs.work.runtime.ktx)
   implementation(libs.retrofit)

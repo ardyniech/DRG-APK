@@ -9,6 +9,7 @@ import com.example.MainActivity
 import com.example.core.database.AppDatabase
 import com.example.core.p2p.P2PSignalingManager
 import com.example.shared.utils.NotificationService
+import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -28,7 +29,12 @@ class DRGFirebaseMessagingService : FirebaseMessagingService() {
         val priority = data["priority"] ?: "normal"
 
         when (type) {
-            "p2p_signal" -> P2PSignalingManager(AppDatabase.getInstance(applicationContext)).onMessageReceived(message)
+            "p2p_signal" -> {
+                val cloudRepo = if (FirebaseApp.getApps(applicationContext).isNotEmpty()) {
+                    runCatching { FirestoreP2pSignalingRepository(applicationContext) }.getOrNull()
+                } else null
+                P2PSignalingManager(AppDatabase.getInstance(applicationContext), cloudRepo).onMessageReceived(message)
+            }
             "sos_emergency", "hazard_alert" -> showAlertNotification(title, body)
             "community_post", "task_assigned" -> showGenericNotification(title, body, "normal")
             else -> showGenericNotification(title, body, priority)
